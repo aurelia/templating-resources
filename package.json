@@ -1,6 +1,6 @@
 {
   "name": "aurelia-templating-resources",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A standard set of behaviors, converters and other resources for use with the Aurelia templating library.",
   "keywords": [
     "aurelia",
