@@ -16,7 +16,7 @@
   "main": "dist/commonjs/index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/aurelia/templating-resources"
+    "url": "http://github.com/aurelia/templating-resources"
   },
   "jspm": {
     "main": "amd/index",
@@ -24,9 +24,10 @@
       "lib": "dist"
     },
     "dependencies": {
-      "aurelia-binding": "github:aurelia/binding@^0.0.1",
-      "aurelia-dependency-injection": "github:aurelia/dependency-injection@^0.0.3",
-      "aurelia-templating": "github:aurelia/templating@^0.0.1"
+      "aurelia-binding": "^0.1.0",
+      "aurelia-dependency-injection": "^0.1.0",
+      "aurelia-templating": "^0.1.0",
+      "es6-shim": "github:paulmillr/es6-shim@^0.21.1"
     }
   },
   "devDependencies": {
