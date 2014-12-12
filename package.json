@@ -26,7 +26,7 @@
     "dependencies": {
       "aurelia-binding": "^0.1.0",
       "aurelia-dependency-injection": "^0.1.0",
-      "aurelia-templating": "^0.1.0",
+      "aurelia-templating": "^0.2.0",
       "es6-shim": "github:paulmillr/es6-shim@^0.21.1"
     }
   },
