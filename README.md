@@ -14,6 +14,10 @@ This library is part of the [Aurelia](http://www.aurelia.io/) platform and conta
 * [aurelia-dependency-injection](https://github.com/aurelia/dependency-injection)
 * [aurelia-binding](https://github.com/aurelia/binding)
 
+## Used By
+
+* [aurelia-bootstrapper](https://github.com/aurelia/bootstrapper)
+
 ## Platform Support
 
 This library can be used in the **browser** only.
