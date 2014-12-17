@@ -24,9 +24,9 @@
       "lib": "dist"
     },
     "dependencies": {
-      "aurelia-binding": "^0.1.1",
-      "aurelia-dependency-injection": "^0.1.0",
-      "aurelia-templating": "^0.2.1",
+      "aurelia-binding": "^0.1.2",
+      "aurelia-dependency-injection": "^0.1.1",
+      "aurelia-templating": "^0.3.0",
       "es6-shim": "github:paulmillr/es6-shim@^0.21.1"
     }
   },
