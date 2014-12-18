@@ -1,3 +1,16 @@
+### 0.3.2 (2014-12-18)
+
+
+#### Bug Fixes
+
+* **package:** update templating to latest version ([c754589a](http://github.com/aurelia/templating-resources/commit/c754589a1972dc7346b41e3a2558b7d574d8ad28))
+
+
+#### Features
+
+* **compose:** view and view-model are now relative ([0b54a750](http://github.com/aurelia/templating-resources/commit/0b54a750c21211f2071723d08e767bc035dfb745))
+
+
 ### 0.3.1 (2014-12-18)
 
 

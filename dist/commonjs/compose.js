@@ -8,12 +8,14 @@ var ViewSlot = require('aurelia-templating').ViewSlot;
 var NoView = require('aurelia-templating').NoView;
 var UseView = require('aurelia-templating').UseView;
 var ViewEngine = require('aurelia-templating').ViewEngine;
+var ViewResources = require('aurelia-templating').ViewResources;
 var Compose = (function () {
-  var Compose = function Compose(container, resourceCoordinator, viewEngine, viewSlot) {
+  var Compose = function Compose(container, resourceCoordinator, viewEngine, viewSlot, viewResources) {
     this.container = container;
     this.resourceCoordinator = resourceCoordinator;
     this.viewEngine = viewEngine;
     this.viewSlot = viewSlot;
+    this.viewResources = viewResources;
   };
 
   Compose.annotations = function () {
@@ -21,7 +23,7 @@ var Compose = (function () {
   };
 
   Compose.inject = function () {
-    return [Container, ResourceCoordinator, ViewEngine, ViewSlot];
+    return [Container, ResourceCoordinator, ViewEngine, ViewSlot, ViewResources];
   };
 
   Compose.prototype.bind = function (executionContext) {
@@ -78,8 +80,13 @@ function processBehavior(composer, instruction, behavior) {
 function processInstruction(composer, instruction) {
   var useView, result, options, childContainer;
 
-  if (typeof instruction.viewModel == "string") {
-    composer.resourceCoordinator.loadAnonymousElement(composer.viewModel, null, instruction.view).then(function (type) {
+  if (instruction.view) {
+    instruction.view = composer.viewResources.relativeToView(instruction.view);
+  }
+
+  if (typeof instruction.viewModel === "string") {
+    instruction.viewModel = composer.viewResources.relativeToView(instruction.viewModel);
+    composer.resourceCoordinator.loadAnonymousElement(instruction.viewModel, null, instruction.view).then(function (type) {
       childContainer = composer.container.createChild();
       options = { suppressBind: true };
       result = type.create(childContainer, options);
