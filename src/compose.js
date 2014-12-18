@@ -6,7 +6,8 @@ import {
   ViewSlot,
   NoView,
   UseView,
-  ViewEngine
+  ViewEngine,
+  ViewResources
 } from 'aurelia-templating';
 
 export class Compose {
@@ -20,12 +21,13 @@ export class Compose {
       ];
   }
 
-  static inject(){ return [Container,ResourceCoordinator,ViewEngine,ViewSlot]; }
-	constructor(container, resourceCoordinator, viewEngine, viewSlot){
+  static inject(){ return [Container,ResourceCoordinator,ViewEngine,ViewSlot,ViewResources]; }
+	constructor(container, resourceCoordinator, viewEngine, viewSlot, viewResources){
 		this.container = container;
 		this.resourceCoordinator = resourceCoordinator;
 		this.viewEngine = viewEngine;
 		this.viewSlot = viewSlot;		
+    this.viewResources = viewResources;
 	}
 
 	bind(executionContext){
@@ -75,9 +77,13 @@ function processBehavior(composer, instruction, behavior){
 function processInstruction(composer, instruction){
 	var useView, result, options, childContainer;
 
-	if(typeof instruction.viewModel == 'string'){
-		//TODO: make instruction.viewModel relative to compose's containing view
-		composer.resourceCoordinator.loadAnonymousElement(composer.viewModel, null, instruction.view).then(type => {
+  if(instruction.view){
+    instruction.view = composer.viewResources.relativeToView(instruction.view);
+  }
+
+	if(typeof instruction.viewModel === 'string'){
+    instruction.viewModel = composer.viewResources.relativeToView(instruction.viewModel);
+		composer.resourceCoordinator.loadAnonymousElement(instruction.viewModel, null, instruction.view).then(type => {
 			childContainer= composer.container.createChild();
 			options = {suppressBind:true};
 			result = type.create(childContainer, options);
@@ -86,7 +92,6 @@ function processInstruction(composer, instruction){
 		});
 	}else{
 		if(instruction.view) {
-			//TODO: make instruction.view relative to compose's containing view
 			useView = new UseView(instruction.view);
 		}
 
