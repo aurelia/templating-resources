@@ -6,6 +6,7 @@ import {
   ViewSlot,
   NoView,
   UseView,
+  ViewStrategy,
   ViewEngine,
   ViewResources
 } from 'aurelia-templating';
@@ -40,7 +41,7 @@ export class Compose {
 	}
 
 	modelChanged(newValue, oldValue){
-		if(this.viewModel && this.viewModel.activate){
+		if(this.viewModel && typeof this.viewModel.activate === 'function'){
 			this.viewModel.activate(newValue);
 		}
   }
@@ -66,7 +67,7 @@ function swap(composer, behavior){
 }
 
 function processBehavior(composer, instruction, behavior){
-	if(instruction.model && 'activate' in instruction.viewModel) {
+	if(instruction.model && typeof instruction.viewModel.activate === 'function') {
 		var activated = instruction.viewModel.activate(instruction.model) || Promise.resolve();
 		activated.then(() => swap(composer, behavior));
 	}else{
@@ -74,36 +75,47 @@ function processBehavior(composer, instruction, behavior){
 	}
 }
 
-function processInstruction(composer, instruction){
-	var useView, result, options, childContainer;
+function processInstructionView(composer, instruction){
+  if(typeof instruction.view === 'string'){
+    instruction.view = new UseView(composer.viewResources.relativeToView(instruction.view));
+  } 
 
-  if(instruction.view){
-    instruction.view = composer.viewResources.relativeToView(instruction.view);
+  if(instruction.view && !(instruction.view instanceof ViewStrategy)){
+    throw new Error('The view must be a string or an instance of ViewStrategy.');
   }
+}
+
+function processViewModel(composer, instruction, container){
+  if('getViewStrategy' in instruction.viewModel && !instruction.view){
+    instruction.view = instruction.viewModel.getViewStrategy();
+    processInstructionView(composer, instruction);
+  }
+
+  CustomElement.anonymous(composer.container, instruction.viewModel, instruction.view).then(type => {
+    var childContainer = container || composer.container.createChild();
+    var behavior = type.create(childContainer, {executionContext:instruction.viewModel, suppressBind:true});
+    processBehavior(composer, instruction, behavior);
+  });
+}
+
+function processInstruction(composer, instruction){
+	var result, options, childContainer;
+
+  processInstructionView(composer, instruction);
 
 	if(typeof instruction.viewModel === 'string'){
     instruction.viewModel = composer.viewResources.relativeToView(instruction.viewModel);
-		composer.resourceCoordinator.loadAnonymousElement(instruction.viewModel, null, instruction.view).then(type => {
-			childContainer= composer.container.createChild();
-			options = {suppressBind:true};
-			result = type.create(childContainer, options);
-			instruction.viewModel = result.executionContext;
-			processBehavior(composer, instruction, result);
-		});
+		
+    composer.resourceCoordinator.loadViewModelType(instruction.viewModel).then(viewModelType => {
+      childContainer = composer.container.createChild();
+      instruction.viewModel = childContainer.get(viewModelType);
+      processViewModel(composer, instruction, childContainer);
+    });
 	}else{
-		if(instruction.view) {
-			useView = new UseView(instruction.view);
-		}
-
 		if(instruction.viewModel){
-			CustomElement.anonymous(composer.container, instruction.viewModel, useView).then(type => {
-				childContainer = composer.container.createChild();
-				options = {executionContext:instruction.viewModel, suppressBind:true};
-				result = type.create(childContainer, options);
-				processBehavior(composer, instruction, result);
-			});
-		} else if (useView){
-			useView.loadViewFactory(composer.viewEngine).then(viewFactory => {
+      processViewModel(composer, instruction);
+		} else if (instruction.view){
+			instruction.view.loadViewFactory(composer.viewEngine).then(viewFactory => {
 				childContainer = composer.container.createChild();
 				result = viewFactory.create(childContainer, composer.executionContext);
 				composer.viewSlot.swap(result);
