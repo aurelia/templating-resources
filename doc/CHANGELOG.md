@@ -1,3 +1,16 @@
+## 0.4.0 (2014-12-22)
+
+
+#### Bug Fixes
+
+* **package:** update templating dependency to latest version ([156def6a](http://github.com/aurelia/templating-resources/commit/156def6adb4384a10a3972bd6f46e0cedb49ed40))
+
+
+#### Features
+
+* **compose:** getViewStrategy hook added ([db7e0322](http://github.com/aurelia/templating-resources/commit/db7e0322018c4b8d2115822b214e7e64af26db78))
+
+
 ### 0.3.2 (2014-12-18)
 
 
