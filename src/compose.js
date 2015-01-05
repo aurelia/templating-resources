@@ -85,15 +85,26 @@ function processInstructionView(composer, instruction){
   }
 }
 
-function processViewModel(composer, instruction, container){
+function processViewModel(composer, instruction, container, viewModelInfo){
+  var childContainer = container || composer.container.createChild(),
+      target;
+
   if('getViewStrategy' in instruction.viewModel && !instruction.view){
     instruction.view = instruction.viewModel.getViewStrategy();
     processInstructionView(composer, instruction);
   }
 
-  CustomElement.anonymous(composer.container, instruction.viewModel, instruction.view).then(type => {
-    var childContainer = container || composer.container.createChild();
-    var behavior = type.create(childContainer, {executionContext:instruction.viewModel, suppressBind:true});
+  if(viewModelInfo){
+    return viewModelInfo.type.load(composer.container, viewModelInfo.value, instruction.view).then(behaviorType => {
+      var behavior = behaviorType.create(childContainer, {executionContext:instruction.viewModel, suppressBind:true});
+      processBehavior(composer, instruction, behavior);
+    });
+  }
+
+  target = instruction.viewModel.constructor;
+
+  new CustomElement().load(composer.container, target, instruction.view).then(behaviorType => {
+    var behavior = behaviorType.create(childContainer, {executionContext:instruction.viewModel, suppressBind:true});
     processBehavior(composer, instruction, behavior);
   });
 }
@@ -106,10 +117,10 @@ function processInstruction(composer, instruction){
 	if(typeof instruction.viewModel === 'string'){
     instruction.viewModel = composer.viewResources.relativeToView(instruction.viewModel);
 		
-    composer.resourceCoordinator.loadViewModelType(instruction.viewModel).then(viewModelType => {
+    composer.resourceCoordinator.loadViewModelInfo(instruction.viewModel).then(viewModelInfo => {
       childContainer = composer.container.createChild();
-      instruction.viewModel = childContainer.get(viewModelType);
-      processViewModel(composer, instruction, childContainer);
+      instruction.viewModel = childContainer.get(viewModelInfo.value);
+      processViewModel(composer, instruction, childContainer, viewModelInfo);
     });
 	}else{
 		if(instruction.viewModel){
