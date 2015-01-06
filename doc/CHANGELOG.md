@@ -1,3 +1,19 @@
+## 0.5.0 (2015-01-06)
+
+
+#### Bug Fixes
+
+* **compose:**
+  * use templating's new built-in composition engine ([9f50076d](http://github.com/aurelia/templating-resources/commit/9f50076dad42e399b4e19b74fdd4e3d3d49ec0e4))
+  * align with new view model load api ([a7c65fd6](http://github.com/aurelia/templating-resources/commit/a7c65fd6dab7b80a55e9c9e2e2c5e560b265868d))
+
+
+#### Features
+
+* **build:** update compile, switch to register modules, switch to core-js ([a7fe36c9](http://github.com/aurelia/templating-resources/commit/a7fe36c9a63055a3a7fbaa674b162307c3604a9b))
+* **resources:** enable plugin model ([c78cae82](http://github.com/aurelia/templating-resources/commit/c78cae82ba38cb2f2a464394613f780b314925e5))
+
+
 ## 0.4.0 (2014-12-22)
 
 

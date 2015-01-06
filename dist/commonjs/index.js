@@ -1,7 +1,19 @@
 "use strict";
 
-exports.Compose = require("./compose").Compose;
-exports.If = require("./if").If;
-exports.Repeat = require("./repeat").Repeat;
-exports.Show = require("./show").Show;
-exports.SelectedItem = require("./selected-item").SelectedItem;
+var Compose = require("./compose").Compose;
+var If = require("./if").If;
+var Repeat = require("./repeat").Repeat;
+var Show = require("./show").Show;
+var SelectedItem = require("./selected-item").SelectedItem;
+
+
+function install(aurelia) {
+  aurelia.withResources([Show, If, Repeat, Compose, SelectedItem]);
+}
+
+exports.Compose = Compose;
+exports.If = If;
+exports.Repeat = Repeat;
+exports.Show = Show;
+exports.SelectedItem = SelectedItem;
+exports.install = install;

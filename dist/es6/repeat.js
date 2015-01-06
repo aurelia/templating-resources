@@ -61,16 +61,17 @@ export class Repeat {
     var items = this.items,
         observer = this.observerLocator.getArrayObserver(items),
         viewSlot = this.viewSlot,
-        viewFactory = this.viewFactory;
+        viewFactory = this.viewFactory,
+        i, ii, row, view;
 
     if(this.disposeArraySubscription){
       this.disposeArraySubscription();
       viewSlot.removeAll();
     }
 
-    for(var i = 0, ii = items.length; i < ii; i++){
-      var row = this.createFullExecutionContext(items[i], i, ii);
-      var view = viewFactory.create(row);
+    for(i = 0, ii = items.length; i < ii; ++i){
+      row = this.createFullExecutionContext(items[i], i, ii);
+      view = viewFactory.create(row);
       viewSlot.add(view);
     }
 
@@ -117,11 +118,11 @@ export class Repeat {
     //TODO: track which views are moved instead of removed better
     //TODO: only update context after highest changed index
 
-    for (i = 0, ii = splices.length; i < ii; i++) {
+    for (i = 0, ii = splices.length; i < ii; ++i) {
       splice = splices[i];
       removed = splice.removed;
 
-      for (j = 0, jj = removed.length; j < jj; j++) {
+      for (j = 0, jj = removed.length; j < jj; ++j) {
         model = removed[j];
         view = viewSlot.removeAt(splice.index + removeDelta);
         
@@ -133,12 +134,12 @@ export class Repeat {
       removeDelta -= splice.addedCount;
     }
 
-    for (i = 0, ii = splices.length; i < ii; i++) {
+    for (i = 0, ii = splices.length; i < ii; ++i) {
       splice = splices[i];
       addIndex = splice.index;
       end = splice.index + splice.addedCount;
 
-      for (; addIndex < end; addIndex++) {
+      for (; addIndex < end; ++addIndex) {
         model = array[addIndex];
         view = viewLookup.get(model);
 
