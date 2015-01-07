@@ -1,3 +1,11 @@
+## 0.6.0 (2015-01-07)
+
+
+#### Bug Fixes
+
+* **package:** update dependencies to latest ([dac311ac](http://github.com/aurelia/templating-resources/commit/dac311acf54154a7f1022dabce3908008515b06f))
+
+
 ## 0.5.0 (2015-01-06)
 
 
