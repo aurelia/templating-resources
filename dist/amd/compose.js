@@ -1,6 +1,11 @@
 define(["exports", "aurelia-dependency-injection", "aurelia-templating"], function (exports, _aureliaDependencyInjection, _aureliaTemplating) {
   "use strict";
 
+  var _prototypeProperties = function (child, staticProps, instanceProps) {
+    if (staticProps) Object.defineProperties(child, staticProps);
+    if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
+  };
+
   var Container = _aureliaDependencyInjection.Container;
   var CustomElement = _aureliaTemplating.CustomElement;
   var CompositionEngine = _aureliaTemplating.CompositionEngine;
@@ -8,43 +13,75 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
   var ViewSlot = _aureliaTemplating.ViewSlot;
   var NoView = _aureliaTemplating.NoView;
   var ViewResources = _aureliaTemplating.ViewResources;
-  var Compose = function Compose(container, compositionEngine, viewSlot, viewResources) {
-    this.container = container;
-    this.compositionEngine = compositionEngine;
-    this.viewSlot = viewSlot;
-    this.viewResources = viewResources;
-  };
+  var Compose = (function () {
+    var Compose = function Compose(container, compositionEngine, viewSlot, viewResources) {
+      this.container = container;
+      this.compositionEngine = compositionEngine;
+      this.viewSlot = viewSlot;
+      this.viewResources = viewResources;
+    };
 
-  Compose.annotations = function () {
-    return [new CustomElement("compose"), new Property("model"), new Property("view"), new Property("viewModel"), new NoView()];
-  };
-
-  Compose.inject = function () {
-    return [Container, CompositionEngine, ViewSlot, ViewResources];
-  };
-
-  Compose.prototype.bind = function (executionContext) {
-    this.executionContext = executionContext;
-    processInstruction(this, {
-      view: this.view,
-      viewModel: this.viewModel,
-      model: this.model
+    _prototypeProperties(Compose, {
+      annotations: {
+        value: function () {
+          return [new CustomElement("compose"), new Property("model"), new Property("view"), new Property("viewModel"), new NoView()];
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      },
+      inject: {
+        value: function () {
+          return [Container, CompositionEngine, ViewSlot, ViewResources];
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      }
+    }, {
+      bind: {
+        value: function (executionContext) {
+          this.executionContext = executionContext;
+          processInstruction(this, {
+            view: this.view,
+            viewModel: this.viewModel,
+            model: this.model
+          });
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      },
+      modelChanged: {
+        value: function (newValue, oldValue) {
+          if (this.viewModel && typeof this.viewModel.activate === "function") {
+            this.viewModel.activate(newValue);
+          }
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      },
+      viewChanged: {
+        value: function (newValue, oldValue) {
+          processInstruction(this, { view: newValue });
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      },
+      viewModelChanged: {
+        value: function (newValue, oldValue) {
+          processInstruction(this, { viewModel: newValue });
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      }
     });
-  };
 
-  Compose.prototype.modelChanged = function (newValue, oldValue) {
-    if (this.viewModel && typeof this.viewModel.activate === "function") {
-      this.viewModel.activate(newValue);
-    }
-  };
-
-  Compose.prototype.viewChanged = function (newValue, oldValue) {
-    processInstruction(this, { view: newValue });
-  };
-
-  Compose.prototype.viewModelChanged = function (newValue, oldValue) {
-    processInstruction(this, { viewModel: newValue });
-  };
+    return Compose;
+  })();
 
   exports.Compose = Compose;
 

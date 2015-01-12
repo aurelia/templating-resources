@@ -1,3 +1,11 @@
+## 0.7.0 (2015-01-12)
+
+
+#### Bug Fixes
+
+* **package:** update Aurelia dependencies ([f121fbb1](http://github.com/aurelia/templating-resources/commit/f121fbb1b4149bb84878396d3eb6ea804eec1e47))
+
+
 ## 0.6.0 (2015-01-07)
 
 
