@@ -4,7 +4,7 @@ export class SelectedItem {
   static annotations(){
     return [
       new AttachedBehavior('selected-item'),
-      new Property('value', 'valueChanged', 'selected-item'),
+      new Property('value', 'valueChanged', 'selected-item').defaultBindingIsTwoWay(),
       new Children('options', 'optionsChanged', 'option')
     ];
   }
