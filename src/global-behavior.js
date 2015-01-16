@@ -13,13 +13,20 @@ export class GlobalBehavior {
     this.element = element;
   }
 
-  getGlobal(name){
-    name = GlobalBehavior.lookup[name] || name;
-    return window[name];
-  }
-
   bind(){
-    var settings = {};
+    var settings, lookup, globalObject;
+
+    lookup = GlobalBehavior.whitelist[this.aureliaAttrName];
+    if(!lookup){
+      throw new Error(`Conventional global binding behavior not whitelisted for ${this.aureliaAttrName}.`);
+    }
+
+    globalObject = window[lookup];
+    if(!globalObject){
+      throw new Error(`Conventional global ${lookup} was not found.`);
+    }
+
+    settings = {};
 
     for(var key in this){
       if(key === 'aureliaAttrName' || key === 'aureliaCommand' || !this.hasOwnProperty(key)){
@@ -29,14 +36,19 @@ export class GlobalBehavior {
       settings[key] = this[key];
     }
 
-    var globalObject = this.getGlobal(this.aureliaAttrName);
-
     try{
-      globalObject(this.element)[this.aureliaCommand](settings);
+      this.instance = globalObject(this.element)[this.aureliaCommand](settings);
     }catch(error){
       throw new Error('Conventional global binding behavior failed.', error);
     }
   }
+
+  unbind(){
+    if(this.instance && 'destroy' in this.instance){
+      this.instance.destroy();
+      this.instance = null;
+    }
+  }
 }
 
-GlobalBehavior.lookup = { jquery:'jQuery' };
+GlobalBehavior.whitelist = { jquery:'jQuery' };
