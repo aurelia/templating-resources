@@ -9,7 +9,7 @@ function addStyleString(str) {
 addStyleString('.aurelia-hide { display:none; }');
 
 export class Show {
-  static annotations(){
+  static metadata(){
     return [
       new AttachedBehavior('show'),
       new Property('value', 'valueChanged', 'show')

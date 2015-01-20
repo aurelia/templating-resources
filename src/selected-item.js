@@ -1,7 +1,7 @@
 import {AttachedBehavior, Property, Children} from 'aurelia-templating';
 
 export class SelectedItem {
-  static annotations(){
+  static metadata(){
     return [
       new AttachedBehavior('selected-item'),
       new Property('value', 'valueChanged', 'selected-item').defaultBindingIsTwoWay(),

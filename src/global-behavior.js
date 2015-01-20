@@ -1,7 +1,7 @@
 import {AttachedBehavior, OptionsProperty} from 'aurelia-templating';
 
 export class GlobalBehavior {
-  static annotations(){
+  static metadata(){
     return [
       new AttachedBehavior('global-behavior'),
       new OptionsProperty().dynamic()

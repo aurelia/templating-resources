@@ -9,7 +9,7 @@ import {
 } from 'aurelia-templating';
 
 export class Compose {
-  static annotations() {
+  static metadata() {
     return [
       new CustomElement('compose'),
       new Property('model'),

@@ -7,7 +7,7 @@ import {
 } from 'aurelia-templating';
 
 export class Repeat {
-  static annotations(){
+  static metadata(){
     return [
       new TemplateController('repeat'),
       new Property('items', 'itemsChanged', 'repeat'),

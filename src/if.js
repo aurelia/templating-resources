@@ -7,7 +7,7 @@ import {
 
 
 export class If {
-  static annotations() {
+  static metadata() {
     return [
       new TemplateController('if'),
       new Property('value', 'valueChanged', 'if')
