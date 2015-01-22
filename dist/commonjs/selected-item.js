@@ -5,27 +5,27 @@ var _prototypeProperties = function (child, staticProps, instanceProps) {
   if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
 };
 
-var AttachedBehavior = require("aurelia-templating").AttachedBehavior;
-var Property = require("aurelia-templating").Property;
-var Children = require("aurelia-templating").Children;
+var Behavior = require("aurelia-templating").Behavior;
 var SelectedItem = (function () {
-  var SelectedItem = function SelectedItem(element) {
+  function SelectedItem(element) {
     this.element = element;
     this.options = [];
     this.callback = this.selectedIndexChanged.bind(this);
-  };
+  }
 
   _prototypeProperties(SelectedItem, {
-    annotations: {
-      value: function () {
-        return [new AttachedBehavior("selected-item"), new Property("value", "valueChanged", "selected-item"), new Children("options", "optionsChanged", "option")];
+    metadata: {
+      value: function metadata() {
+        return Behavior.attachedBehavior("selected-item").withProperty("value", "valueChanged", "selected-item").and(function (x) {
+          return x.bindingIsTwoWay();
+        }).syncChildren("options", "optionsChanged", "option");
       },
       writable: true,
       enumerable: true,
       configurable: true
     },
     inject: {
-      value: function () {
+      value: function inject() {
         return [Element];
       },
       writable: true,
@@ -34,7 +34,7 @@ var SelectedItem = (function () {
     }
   }, {
     bind: {
-      value: function () {
+      value: function bind() {
         this.element.addEventListener("change", this.callback, false);
       },
       writable: true,
@@ -42,7 +42,7 @@ var SelectedItem = (function () {
       configurable: true
     },
     unbind: {
-      value: function () {
+      value: function unbind() {
         this.element.removeEventListener("change", this.callback);
       },
       writable: true,
@@ -50,7 +50,7 @@ var SelectedItem = (function () {
       configurable: true
     },
     valueChanged: {
-      value: function (newValue) {
+      value: function valueChanged(newValue) {
         this.optionsChanged();
       },
       writable: true,
@@ -58,7 +58,7 @@ var SelectedItem = (function () {
       configurable: true
     },
     selectedIndexChanged: {
-      value: function () {
+      value: function selectedIndexChanged() {
         var index = this.element.selectedIndex,
             option = this.options[index];
 
@@ -69,8 +69,12 @@ var SelectedItem = (function () {
       configurable: true
     },
     optionsChanged: {
-      value: function (mutations) {
-        var value = this.value, options = this.options, option, i, ii;
+      value: function optionsChanged(mutations) {
+        var value = this.value,
+            options = this.options,
+            option,
+            i,
+            ii;
 
         for (i = 0, ii = options.length; i < ii; ++i) {
           option = options[i];

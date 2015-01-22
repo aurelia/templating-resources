@@ -6,28 +6,27 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
     if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
   };
 
-  var TemplateController = _aureliaTemplating.TemplateController;
-  var Property = _aureliaTemplating.Property;
+  var Behavior = _aureliaTemplating.Behavior;
   var BoundViewFactory = _aureliaTemplating.BoundViewFactory;
   var ViewSlot = _aureliaTemplating.ViewSlot;
   var If = (function () {
-    var If = function If(viewFactory, viewSlot) {
+    function If(viewFactory, viewSlot) {
       this.viewFactory = viewFactory;
       this.viewSlot = viewSlot;
       this.showing = false;
-    };
+    }
 
     _prototypeProperties(If, {
-      annotations: {
-        value: function () {
-          return [new TemplateController("if"), new Property("value", "valueChanged", "if")];
+      metadata: {
+        value: function metadata() {
+          return Behavior.templateController("if").withProperty("value", "valueChanged", "if");
         },
         writable: true,
         enumerable: true,
         configurable: true
       },
       inject: {
-        value: function () {
+        value: function inject() {
           return [BoundViewFactory, ViewSlot];
         },
         writable: true,
@@ -36,7 +35,7 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
       }
     }, {
       valueChanged: {
-        value: function (newValue) {
+        value: function valueChanged(newValue) {
           if (!newValue) {
             if (this.view) {
               this.viewSlot.remove(this.view);

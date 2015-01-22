@@ -6,27 +6,27 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
     if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
   };
 
-  var AttachedBehavior = _aureliaTemplating.AttachedBehavior;
-  var Property = _aureliaTemplating.Property;
-  var Children = _aureliaTemplating.Children;
+  var Behavior = _aureliaTemplating.Behavior;
   var SelectedItem = (function () {
-    var SelectedItem = function SelectedItem(element) {
+    function SelectedItem(element) {
       this.element = element;
       this.options = [];
       this.callback = this.selectedIndexChanged.bind(this);
-    };
+    }
 
     _prototypeProperties(SelectedItem, {
-      annotations: {
-        value: function () {
-          return [new AttachedBehavior("selected-item"), new Property("value", "valueChanged", "selected-item"), new Children("options", "optionsChanged", "option")];
+      metadata: {
+        value: function metadata() {
+          return Behavior.attachedBehavior("selected-item").withProperty("value", "valueChanged", "selected-item").and(function (x) {
+            return x.bindingIsTwoWay();
+          }).syncChildren("options", "optionsChanged", "option");
         },
         writable: true,
         enumerable: true,
         configurable: true
       },
       inject: {
-        value: function () {
+        value: function inject() {
           return [Element];
         },
         writable: true,
@@ -35,7 +35,7 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
       }
     }, {
       bind: {
-        value: function () {
+        value: function bind() {
           this.element.addEventListener("change", this.callback, false);
         },
         writable: true,
@@ -43,7 +43,7 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
         configurable: true
       },
       unbind: {
-        value: function () {
+        value: function unbind() {
           this.element.removeEventListener("change", this.callback);
         },
         writable: true,
@@ -51,7 +51,7 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
         configurable: true
       },
       valueChanged: {
-        value: function (newValue) {
+        value: function valueChanged(newValue) {
           this.optionsChanged();
         },
         writable: true,
@@ -59,7 +59,7 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
         configurable: true
       },
       selectedIndexChanged: {
-        value: function () {
+        value: function selectedIndexChanged() {
           var index = this.element.selectedIndex,
               option = this.options[index];
 
@@ -70,8 +70,12 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
         configurable: true
       },
       optionsChanged: {
-        value: function (mutations) {
-          var value = this.value, options = this.options, option, i, ii;
+        value: function optionsChanged(mutations) {
+          var value = this.value,
+              options = this.options,
+              option,
+              i,
+              ii;
 
           for (i = 0, ii = options.length; i < ii; ++i) {
             option = options[i];

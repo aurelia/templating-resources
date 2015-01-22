@@ -5,28 +5,27 @@ var _prototypeProperties = function (child, staticProps, instanceProps) {
   if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
 };
 
-var TemplateController = require("aurelia-templating").TemplateController;
-var Property = require("aurelia-templating").Property;
+var Behavior = require("aurelia-templating").Behavior;
 var BoundViewFactory = require("aurelia-templating").BoundViewFactory;
 var ViewSlot = require("aurelia-templating").ViewSlot;
 var If = (function () {
-  var If = function If(viewFactory, viewSlot) {
+  function If(viewFactory, viewSlot) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
     this.showing = false;
-  };
+  }
 
   _prototypeProperties(If, {
-    annotations: {
-      value: function () {
-        return [new TemplateController("if"), new Property("value", "valueChanged", "if")];
+    metadata: {
+      value: function metadata() {
+        return Behavior.templateController("if").withProperty("value", "valueChanged", "if");
       },
       writable: true,
       enumerable: true,
       configurable: true
     },
     inject: {
-      value: function () {
+      value: function inject() {
         return [BoundViewFactory, ViewSlot];
       },
       writable: true,
@@ -35,7 +34,7 @@ var If = (function () {
     }
   }, {
     valueChanged: {
-      value: function (newValue) {
+      value: function valueChanged(newValue) {
         if (!newValue) {
           if (this.view) {
             this.viewSlot.remove(this.view);

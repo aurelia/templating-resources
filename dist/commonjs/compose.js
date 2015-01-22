@@ -6,31 +6,29 @@ var _prototypeProperties = function (child, staticProps, instanceProps) {
 };
 
 var Container = require("aurelia-dependency-injection").Container;
-var CustomElement = require("aurelia-templating").CustomElement;
+var Behavior = require("aurelia-templating").Behavior;
 var CompositionEngine = require("aurelia-templating").CompositionEngine;
-var Property = require("aurelia-templating").Property;
 var ViewSlot = require("aurelia-templating").ViewSlot;
-var NoView = require("aurelia-templating").NoView;
 var ViewResources = require("aurelia-templating").ViewResources;
 var Compose = (function () {
-  var Compose = function Compose(container, compositionEngine, viewSlot, viewResources) {
+  function Compose(container, compositionEngine, viewSlot, viewResources) {
     this.container = container;
     this.compositionEngine = compositionEngine;
     this.viewSlot = viewSlot;
     this.viewResources = viewResources;
-  };
+  }
 
   _prototypeProperties(Compose, {
-    annotations: {
-      value: function () {
-        return [new CustomElement("compose"), new Property("model"), new Property("view"), new Property("viewModel"), new NoView()];
+    metadata: {
+      value: function metadata() {
+        return Behavior.customElement("compose").withProperty("model").withProperty("view").withProperty("view-model").noView();
       },
       writable: true,
       enumerable: true,
       configurable: true
     },
     inject: {
-      value: function () {
+      value: function inject() {
         return [Container, CompositionEngine, ViewSlot, ViewResources];
       },
       writable: true,
@@ -39,7 +37,7 @@ var Compose = (function () {
     }
   }, {
     bind: {
-      value: function (executionContext) {
+      value: function bind(executionContext) {
         this.executionContext = executionContext;
         processInstruction(this, {
           view: this.view,
@@ -52,7 +50,7 @@ var Compose = (function () {
       configurable: true
     },
     modelChanged: {
-      value: function (newValue, oldValue) {
+      value: function modelChanged(newValue, oldValue) {
         if (this.viewModel && typeof this.viewModel.activate === "function") {
           this.viewModel.activate(newValue);
         }
@@ -62,7 +60,7 @@ var Compose = (function () {
       configurable: true
     },
     viewChanged: {
-      value: function (newValue, oldValue) {
+      value: function viewChanged(newValue, oldValue) {
         processInstruction(this, { view: newValue });
       },
       writable: true,
@@ -70,7 +68,7 @@ var Compose = (function () {
       configurable: true
     },
     viewModelChanged: {
-      value: function (newValue, oldValue) {
+      value: function viewModelChanged(newValue, oldValue) {
         processInstruction(this, { viewModel: newValue });
       },
       writable: true,

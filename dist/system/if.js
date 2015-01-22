@@ -1,11 +1,10 @@
 System.register(["aurelia-templating"], function (_export) {
   "use strict";
 
-  var TemplateController, Property, BoundViewFactory, ViewSlot, _prototypeProperties, If;
+  var Behavior, BoundViewFactory, ViewSlot, _prototypeProperties, If;
   return {
     setters: [function (_aureliaTemplating) {
-      TemplateController = _aureliaTemplating.TemplateController;
-      Property = _aureliaTemplating.Property;
+      Behavior = _aureliaTemplating.Behavior;
       BoundViewFactory = _aureliaTemplating.BoundViewFactory;
       ViewSlot = _aureliaTemplating.ViewSlot;
     }],
@@ -16,23 +15,23 @@ System.register(["aurelia-templating"], function (_export) {
       };
 
       If = (function () {
-        var If = function If(viewFactory, viewSlot) {
+        function If(viewFactory, viewSlot) {
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
           this.showing = false;
-        };
+        }
 
         _prototypeProperties(If, {
-          annotations: {
-            value: function () {
-              return [new TemplateController("if"), new Property("value", "valueChanged", "if")];
+          metadata: {
+            value: function metadata() {
+              return Behavior.templateController("if").withProperty("value", "valueChanged", "if");
             },
             writable: true,
             enumerable: true,
             configurable: true
           },
           inject: {
-            value: function () {
+            value: function inject() {
               return [BoundViewFactory, ViewSlot];
             },
             writable: true,
@@ -41,7 +40,7 @@ System.register(["aurelia-templating"], function (_export) {
           }
         }, {
           valueChanged: {
-            value: function (newValue) {
+            value: function valueChanged(newValue) {
               if (!newValue) {
                 if (this.view) {
                   this.viewSlot.remove(this.view);

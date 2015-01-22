@@ -8,29 +8,28 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
 
   var ObserverLocator = _aureliaBinding.ObserverLocator;
   var calcSplices = _aureliaBinding.calcSplices;
-  var TemplateController = _aureliaTemplating.TemplateController;
+  var Behavior = _aureliaTemplating.Behavior;
   var BoundViewFactory = _aureliaTemplating.BoundViewFactory;
   var ViewSlot = _aureliaTemplating.ViewSlot;
-  var Property = _aureliaTemplating.Property;
   var Repeat = (function () {
-    var Repeat = function Repeat(viewFactory, viewSlot, observerLocator) {
+    function Repeat(viewFactory, viewSlot, observerLocator) {
       this.viewFactory = viewFactory;
       this.viewSlot = viewSlot;
       this.observerLocator = observerLocator;
       this.local = "item";
-    };
+    }
 
     _prototypeProperties(Repeat, {
-      annotations: {
-        value: function () {
-          return [new TemplateController("repeat"), new Property("items", "itemsChanged", "repeat"), new Property("local")];
+      metadata: {
+        value: function metadata() {
+          return Behavior.templateController("repeat").withProperty("items", "itemsChanged", "repeat").withProperty("local");
         },
         writable: true,
         enumerable: true,
         configurable: true
       },
       inject: {
-        value: function () {
+        value: function inject() {
           return [BoundViewFactory, ViewSlot, ObserverLocator];
         },
         writable: true,
@@ -39,7 +38,7 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
       }
     }, {
       bind: {
-        value: function (executionContext) {
+        value: function bind(executionContext) {
           var _this = this;
           var items = this.items;
 
@@ -64,7 +63,7 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
         configurable: true
       },
       unbind: {
-        value: function () {
+        value: function unbind() {
           this.oldItems = this.items;
           this.lastBoundItems = this.items.slice(0);
 
@@ -78,7 +77,7 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
         configurable: true
       },
       itemsChanged: {
-        value: function () {
+        value: function itemsChanged() {
           this.processItems();
         },
         writable: true,
@@ -86,9 +85,16 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
         configurable: true
       },
       processItems: {
-        value: function () {
+        value: function processItems() {
           var _this2 = this;
-          var items = this.items, observer = this.observerLocator.getArrayObserver(items), viewSlot = this.viewSlot, viewFactory = this.viewFactory, i, ii, row, view;
+          var items = this.items,
+              observer = this.observerLocator.getArrayObserver(items),
+              viewSlot = this.viewSlot,
+              viewFactory = this.viewFactory,
+              i,
+              ii,
+              row,
+              view;
 
           if (this.disposeArraySubscription) {
             this.disposeArraySubscription();
@@ -110,7 +116,7 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
         configurable: true
       },
       createBaseExecutionContext: {
-        value: function (data) {
+        value: function createBaseExecutionContext(data) {
           var context = {};
           context[this.local] = data;
           return context;
@@ -120,7 +126,7 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
         configurable: true
       },
       createFullExecutionContext: {
-        value: function (data, index, length) {
+        value: function createFullExecutionContext(data, index, length) {
           var context = this.createBaseExecutionContext(data);
           return this.updateExecutionContext(context, index, length);
         },
@@ -129,7 +135,7 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
         configurable: true
       },
       updateExecutionContext: {
-        value: function (context, index, length) {
+        value: function updateExecutionContext(context, index, length) {
           var first = index === 0,
               last = index === length - 1,
               even = index % 2 === 0;
@@ -149,8 +155,25 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
         configurable: true
       },
       handleSplices: {
-        value: function (array, splices) {
-          var viewLookup = new Map(), removeDelta = 0, arrayLength = array.length, viewSlot = this.viewSlot, viewFactory = this.viewFactory, i, ii, j, jj, splice, removed, addIndex, end, model, view, children, length, row;
+        value: function handleSplices(array, splices) {
+          var viewLookup = new Map(),
+              removeDelta = 0,
+              arrayLength = array.length,
+              viewSlot = this.viewSlot,
+              viewFactory = this.viewFactory,
+              i,
+              ii,
+              j,
+              jj,
+              splice,
+              removed,
+              addIndex,
+              end,
+              model,
+              view,
+              children,
+              length,
+              row;
 
           for (i = 0, ii = splices.length; i < ii; ++i) {
             splice = splices[i];

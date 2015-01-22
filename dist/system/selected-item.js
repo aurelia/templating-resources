@@ -1,12 +1,10 @@
 System.register(["aurelia-templating"], function (_export) {
   "use strict";
 
-  var AttachedBehavior, Property, Children, _prototypeProperties, SelectedItem;
+  var Behavior, _prototypeProperties, SelectedItem;
   return {
     setters: [function (_aureliaTemplating) {
-      AttachedBehavior = _aureliaTemplating.AttachedBehavior;
-      Property = _aureliaTemplating.Property;
-      Children = _aureliaTemplating.Children;
+      Behavior = _aureliaTemplating.Behavior;
     }],
     execute: function () {
       _prototypeProperties = function (child, staticProps, instanceProps) {
@@ -15,23 +13,25 @@ System.register(["aurelia-templating"], function (_export) {
       };
 
       SelectedItem = (function () {
-        var SelectedItem = function SelectedItem(element) {
+        function SelectedItem(element) {
           this.element = element;
           this.options = [];
           this.callback = this.selectedIndexChanged.bind(this);
-        };
+        }
 
         _prototypeProperties(SelectedItem, {
-          annotations: {
-            value: function () {
-              return [new AttachedBehavior("selected-item"), new Property("value", "valueChanged", "selected-item"), new Children("options", "optionsChanged", "option")];
+          metadata: {
+            value: function metadata() {
+              return Behavior.attachedBehavior("selected-item").withProperty("value", "valueChanged", "selected-item").and(function (x) {
+                return x.bindingIsTwoWay();
+              }).syncChildren("options", "optionsChanged", "option");
             },
             writable: true,
             enumerable: true,
             configurable: true
           },
           inject: {
-            value: function () {
+            value: function inject() {
               return [Element];
             },
             writable: true,
@@ -40,7 +40,7 @@ System.register(["aurelia-templating"], function (_export) {
           }
         }, {
           bind: {
-            value: function () {
+            value: function bind() {
               this.element.addEventListener("change", this.callback, false);
             },
             writable: true,
@@ -48,7 +48,7 @@ System.register(["aurelia-templating"], function (_export) {
             configurable: true
           },
           unbind: {
-            value: function () {
+            value: function unbind() {
               this.element.removeEventListener("change", this.callback);
             },
             writable: true,
@@ -56,7 +56,7 @@ System.register(["aurelia-templating"], function (_export) {
             configurable: true
           },
           valueChanged: {
-            value: function (newValue) {
+            value: function valueChanged(newValue) {
               this.optionsChanged();
             },
             writable: true,
@@ -64,7 +64,7 @@ System.register(["aurelia-templating"], function (_export) {
             configurable: true
           },
           selectedIndexChanged: {
-            value: function () {
+            value: function selectedIndexChanged() {
               var index = this.element.selectedIndex,
                   option = this.options[index];
 
@@ -75,8 +75,12 @@ System.register(["aurelia-templating"], function (_export) {
             configurable: true
           },
           optionsChanged: {
-            value: function (mutations) {
-              var value = this.value, options = this.options, option, i, ii;
+            value: function optionsChanged(mutations) {
+              var value = this.value,
+                  options = this.options,
+                  option,
+                  i,
+                  ii;
 
               for (i = 0, ii = options.length; i < ii; ++i) {
                 option = options[i];

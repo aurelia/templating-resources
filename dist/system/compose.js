@@ -1,7 +1,7 @@
 System.register(["aurelia-dependency-injection", "aurelia-templating"], function (_export) {
   "use strict";
 
-  var Container, CustomElement, CompositionEngine, Property, ViewSlot, NoView, ViewResources, _prototypeProperties, Compose;
+  var Container, Behavior, CompositionEngine, ViewSlot, ViewResources, _prototypeProperties, Compose;
 
 
   function processInstruction(composer, instruction) {
@@ -19,11 +19,9 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
     setters: [function (_aureliaDependencyInjection) {
       Container = _aureliaDependencyInjection.Container;
     }, function (_aureliaTemplating) {
-      CustomElement = _aureliaTemplating.CustomElement;
+      Behavior = _aureliaTemplating.Behavior;
       CompositionEngine = _aureliaTemplating.CompositionEngine;
-      Property = _aureliaTemplating.Property;
       ViewSlot = _aureliaTemplating.ViewSlot;
-      NoView = _aureliaTemplating.NoView;
       ViewResources = _aureliaTemplating.ViewResources;
     }],
     execute: function () {
@@ -33,24 +31,24 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
       };
 
       Compose = (function () {
-        var Compose = function Compose(container, compositionEngine, viewSlot, viewResources) {
+        function Compose(container, compositionEngine, viewSlot, viewResources) {
           this.container = container;
           this.compositionEngine = compositionEngine;
           this.viewSlot = viewSlot;
           this.viewResources = viewResources;
-        };
+        }
 
         _prototypeProperties(Compose, {
-          annotations: {
-            value: function () {
-              return [new CustomElement("compose"), new Property("model"), new Property("view"), new Property("viewModel"), new NoView()];
+          metadata: {
+            value: function metadata() {
+              return Behavior.customElement("compose").withProperty("model").withProperty("view").withProperty("view-model").noView();
             },
             writable: true,
             enumerable: true,
             configurable: true
           },
           inject: {
-            value: function () {
+            value: function inject() {
               return [Container, CompositionEngine, ViewSlot, ViewResources];
             },
             writable: true,
@@ -59,7 +57,7 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
           }
         }, {
           bind: {
-            value: function (executionContext) {
+            value: function bind(executionContext) {
               this.executionContext = executionContext;
               processInstruction(this, {
                 view: this.view,
@@ -72,7 +70,7 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
             configurable: true
           },
           modelChanged: {
-            value: function (newValue, oldValue) {
+            value: function modelChanged(newValue, oldValue) {
               if (this.viewModel && typeof this.viewModel.activate === "function") {
                 this.viewModel.activate(newValue);
               }
@@ -82,7 +80,7 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
             configurable: true
           },
           viewChanged: {
-            value: function (newValue, oldValue) {
+            value: function viewChanged(newValue, oldValue) {
               processInstruction(this, { view: newValue });
             },
             writable: true,
@@ -90,7 +88,7 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
             configurable: true
           },
           viewModelChanged: {
-            value: function (newValue, oldValue) {
+            value: function viewModelChanged(newValue, oldValue) {
               processInstruction(this, { viewModel: newValue });
             },
             writable: true,

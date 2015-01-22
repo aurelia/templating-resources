@@ -7,29 +7,28 @@ var _prototypeProperties = function (child, staticProps, instanceProps) {
 
 var ObserverLocator = require("aurelia-binding").ObserverLocator;
 var calcSplices = require("aurelia-binding").calcSplices;
-var TemplateController = require("aurelia-templating").TemplateController;
+var Behavior = require("aurelia-templating").Behavior;
 var BoundViewFactory = require("aurelia-templating").BoundViewFactory;
 var ViewSlot = require("aurelia-templating").ViewSlot;
-var Property = require("aurelia-templating").Property;
 var Repeat = (function () {
-  var Repeat = function Repeat(viewFactory, viewSlot, observerLocator) {
+  function Repeat(viewFactory, viewSlot, observerLocator) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
     this.observerLocator = observerLocator;
     this.local = "item";
-  };
+  }
 
   _prototypeProperties(Repeat, {
-    annotations: {
-      value: function () {
-        return [new TemplateController("repeat"), new Property("items", "itemsChanged", "repeat"), new Property("local")];
+    metadata: {
+      value: function metadata() {
+        return Behavior.templateController("repeat").withProperty("items", "itemsChanged", "repeat").withProperty("local");
       },
       writable: true,
       enumerable: true,
       configurable: true
     },
     inject: {
-      value: function () {
+      value: function inject() {
         return [BoundViewFactory, ViewSlot, ObserverLocator];
       },
       writable: true,
@@ -38,7 +37,7 @@ var Repeat = (function () {
     }
   }, {
     bind: {
-      value: function (executionContext) {
+      value: function bind(executionContext) {
         var _this = this;
         var items = this.items;
 
@@ -63,7 +62,7 @@ var Repeat = (function () {
       configurable: true
     },
     unbind: {
-      value: function () {
+      value: function unbind() {
         this.oldItems = this.items;
         this.lastBoundItems = this.items.slice(0);
 
@@ -77,7 +76,7 @@ var Repeat = (function () {
       configurable: true
     },
     itemsChanged: {
-      value: function () {
+      value: function itemsChanged() {
         this.processItems();
       },
       writable: true,
@@ -85,9 +84,16 @@ var Repeat = (function () {
       configurable: true
     },
     processItems: {
-      value: function () {
+      value: function processItems() {
         var _this2 = this;
-        var items = this.items, observer = this.observerLocator.getArrayObserver(items), viewSlot = this.viewSlot, viewFactory = this.viewFactory, i, ii, row, view;
+        var items = this.items,
+            observer = this.observerLocator.getArrayObserver(items),
+            viewSlot = this.viewSlot,
+            viewFactory = this.viewFactory,
+            i,
+            ii,
+            row,
+            view;
 
         if (this.disposeArraySubscription) {
           this.disposeArraySubscription();
@@ -109,7 +115,7 @@ var Repeat = (function () {
       configurable: true
     },
     createBaseExecutionContext: {
-      value: function (data) {
+      value: function createBaseExecutionContext(data) {
         var context = {};
         context[this.local] = data;
         return context;
@@ -119,7 +125,7 @@ var Repeat = (function () {
       configurable: true
     },
     createFullExecutionContext: {
-      value: function (data, index, length) {
+      value: function createFullExecutionContext(data, index, length) {
         var context = this.createBaseExecutionContext(data);
         return this.updateExecutionContext(context, index, length);
       },
@@ -128,7 +134,7 @@ var Repeat = (function () {
       configurable: true
     },
     updateExecutionContext: {
-      value: function (context, index, length) {
+      value: function updateExecutionContext(context, index, length) {
         var first = index === 0,
             last = index === length - 1,
             even = index % 2 === 0;
@@ -148,8 +154,25 @@ var Repeat = (function () {
       configurable: true
     },
     handleSplices: {
-      value: function (array, splices) {
-        var viewLookup = new Map(), removeDelta = 0, arrayLength = array.length, viewSlot = this.viewSlot, viewFactory = this.viewFactory, i, ii, j, jj, splice, removed, addIndex, end, model, view, children, length, row;
+      value: function handleSplices(array, splices) {
+        var viewLookup = new Map(),
+            removeDelta = 0,
+            arrayLength = array.length,
+            viewSlot = this.viewSlot,
+            viewFactory = this.viewFactory,
+            i,
+            ii,
+            j,
+            jj,
+            splice,
+            removed,
+            addIndex,
+            end,
+            model,
+            view,
+            children,
+            length,
+            row;
 
         for (i = 0, ii = splices.length; i < ii; ++i) {
           splice = splices[i];

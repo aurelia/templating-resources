@@ -1,3 +1,21 @@
+## 0.8.0 (2015-01-22)
+
+
+#### Bug Fixes
+
+* **all:** update to latest metadata api ([62d40dbe](http://github.com/aurelia/templating-resources/commit/62d40dbe8cfda472ffa87bbe08b57b503711a113))
+* **global-behavior:** enforce whitelist and support standard widget destroy pattern ([c1e0ddb3](http://github.com/aurelia/templating-resources/commit/c1e0ddb3c15ee42d03388b245e330ecf5e09b987))
+* **package:** update dependencies ([3f77813b](http://github.com/aurelia/templating-resources/commit/3f77813b7cafcc8ae81c43456dbf43bd64f943fc))
+* **show:** switch over to using a class instead of style manipulation ([f63e023d](http://github.com/aurelia/templating-resources/commit/f63e023d022fbf32a57c2fbce388f72149e3662c))
+
+
+#### Features
+
+* **all:** update to use new fluent metadata ([90af3e51](http://github.com/aurelia/templating-resources/commit/90af3e51ffb49e5adf74240c282a8f44f77603e5))
+* **global-behavior:** enable automatic jQuery plugin support ([4633b7d0](http://github.com/aurelia/templating-resources/commit/4633b7d07bbc9b2814d2d50339a5f7a69b02c363))
+* **selected-item:** use default two-way binding now ([f0316e3f](http://github.com/aurelia/templating-resources/commit/f0316e3fb269d3c8bf340afce53697f7a94b1922))
+
+
 ## 0.7.0 (2015-01-12)
 
 

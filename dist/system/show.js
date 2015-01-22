@@ -1,11 +1,18 @@
 System.register(["aurelia-templating"], function (_export) {
   "use strict";
 
-  var AttachedBehavior, Property, _prototypeProperties, Show;
+  var Behavior, _prototypeProperties, Show;
+
+
+  function addStyleString(str) {
+    var node = document.createElement("style");
+    node.innerHTML = str;
+    document.body.appendChild(node);
+  }
+
   return {
     setters: [function (_aureliaTemplating) {
-      AttachedBehavior = _aureliaTemplating.AttachedBehavior;
-      Property = _aureliaTemplating.Property;
+      Behavior = _aureliaTemplating.Behavior;
     }],
     execute: function () {
       _prototypeProperties = function (child, staticProps, instanceProps) {
@@ -13,23 +20,24 @@ System.register(["aurelia-templating"], function (_export) {
         if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
       };
 
+      addStyleString(".aurelia-hide { display:none; }");
+
       Show = (function () {
-        var Show = function Show(element) {
+        function Show(element) {
           this.element = element;
-          this.displayStyle = element.style.display;
-        };
+        }
 
         _prototypeProperties(Show, {
-          annotations: {
-            value: function () {
-              return [new AttachedBehavior("show"), new Property("value", "valueChanged", "show")];
+          metadata: {
+            value: function metadata() {
+              return Behavior.attachedBehavior("show").withProperty("value", "valueChanged", "show");
             },
             writable: true,
             enumerable: true,
             configurable: true
           },
           inject: {
-            value: function () {
+            value: function inject() {
               return [Element];
             },
             writable: true,
@@ -38,12 +46,11 @@ System.register(["aurelia-templating"], function (_export) {
           }
         }, {
           valueChanged: {
-            value: function (newValue) {
+            value: function valueChanged(newValue) {
               if (newValue) {
-                this.element.style.display = this.displayStyle || "block";
+                this.element.classList.remove("aurelia-hide");
               } else {
-                this.displayStyle = this.element.style.display;
-                this.element.style.display = "none";
+                this.element.classList.add("aurelia-hide");
               }
             },
             writable: true,

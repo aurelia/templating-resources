@@ -7,31 +7,29 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
   };
 
   var Container = _aureliaDependencyInjection.Container;
-  var CustomElement = _aureliaTemplating.CustomElement;
+  var Behavior = _aureliaTemplating.Behavior;
   var CompositionEngine = _aureliaTemplating.CompositionEngine;
-  var Property = _aureliaTemplating.Property;
   var ViewSlot = _aureliaTemplating.ViewSlot;
-  var NoView = _aureliaTemplating.NoView;
   var ViewResources = _aureliaTemplating.ViewResources;
   var Compose = (function () {
-    var Compose = function Compose(container, compositionEngine, viewSlot, viewResources) {
+    function Compose(container, compositionEngine, viewSlot, viewResources) {
       this.container = container;
       this.compositionEngine = compositionEngine;
       this.viewSlot = viewSlot;
       this.viewResources = viewResources;
-    };
+    }
 
     _prototypeProperties(Compose, {
-      annotations: {
-        value: function () {
-          return [new CustomElement("compose"), new Property("model"), new Property("view"), new Property("viewModel"), new NoView()];
+      metadata: {
+        value: function metadata() {
+          return Behavior.customElement("compose").withProperty("model").withProperty("view").withProperty("view-model").noView();
         },
         writable: true,
         enumerable: true,
         configurable: true
       },
       inject: {
-        value: function () {
+        value: function inject() {
           return [Container, CompositionEngine, ViewSlot, ViewResources];
         },
         writable: true,
@@ -40,7 +38,7 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
       }
     }, {
       bind: {
-        value: function (executionContext) {
+        value: function bind(executionContext) {
           this.executionContext = executionContext;
           processInstruction(this, {
             view: this.view,
@@ -53,7 +51,7 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
         configurable: true
       },
       modelChanged: {
-        value: function (newValue, oldValue) {
+        value: function modelChanged(newValue, oldValue) {
           if (this.viewModel && typeof this.viewModel.activate === "function") {
             this.viewModel.activate(newValue);
           }
@@ -63,7 +61,7 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
         configurable: true
       },
       viewChanged: {
-        value: function (newValue, oldValue) {
+        value: function viewChanged(newValue, oldValue) {
           processInstruction(this, { view: newValue });
         },
         writable: true,
@@ -71,7 +69,7 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
         configurable: true
       },
       viewModelChanged: {
-        value: function (newValue, oldValue) {
+        value: function viewModelChanged(newValue, oldValue) {
           processInstruction(this, { viewModel: newValue });
         },
         writable: true,

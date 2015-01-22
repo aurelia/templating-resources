@@ -3,9 +3,10 @@ import {If} from './if';
 import {Repeat} from './repeat';
 import {Show} from './show';
 import {SelectedItem} from './selected-item';
+import {GlobalBehavior} from './global-behavior';
 
 function install(aurelia){
-  aurelia.withResources([Show, If, Repeat, Compose, SelectedItem]);
+  aurelia.withResources([Show, If, Repeat, Compose, SelectedItem, GlobalBehavior]);
 }
 
 export {
@@ -14,5 +15,6 @@ export {
   Repeat,
   Show,
   SelectedItem,
+  GlobalBehavior,
   install
 };
