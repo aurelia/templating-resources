@@ -1,18 +1,12 @@
 import {ObserverLocator, calcSplices} from 'aurelia-binding';
-import {
-  TemplateController,
-  BoundViewFactory,
-  ViewSlot,
-  Property
-} from 'aurelia-templating';
+import {Behavior, BoundViewFactory, ViewSlot} from 'aurelia-templating';
 
 export class Repeat {
   static metadata(){
-    return [
-      new TemplateController('repeat'),
-      new Property('items', 'itemsChanged', 'repeat'),
-      new Property('local')
-    ];
+    return Behavior
+      .templateController('repeat')
+      .withProperty('items', 'itemsChanged', 'repeat')
+      .withProperty('local');
   }
 
   static inject(){ return [BoundViewFactory,ViewSlot,ObserverLocator]; }

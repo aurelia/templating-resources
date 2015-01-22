@@ -1,4 +1,4 @@
-import {AttachedBehavior, Property} from 'aurelia-templating';
+import {Behavior} from 'aurelia-templating';
 
 function addStyleString(str) {
   var node = document.createElement('style');
@@ -10,10 +10,9 @@ addStyleString('.aurelia-hide { display:none; }');
 
 export class Show {
   static metadata(){
-    return [
-      new AttachedBehavior('show'),
-      new Property('value', 'valueChanged', 'show')
-    ];
+    return Behavior
+      .attachedBehavior('show')
+      .withProperty('value', 'valueChanged', 'show');
   }
 
   static inject() { return [Element]; }

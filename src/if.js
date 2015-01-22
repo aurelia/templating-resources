@@ -1,17 +1,10 @@
-import {
-  TemplateController,
-  Property,
-  BoundViewFactory,
-  ViewSlot
-} from 'aurelia-templating';
-
+import {Behavior, BoundViewFactory, ViewSlot} from 'aurelia-templating';
 
 export class If {
-  static metadata() {
-    return [
-      new TemplateController('if'),
-      new Property('value', 'valueChanged', 'if')
-    ];
+  static metadata(){
+    return Behavior
+      .templateController('if')
+      .withProperty('value', 'valueChanged', 'if');
   }
 
   static inject() { return [BoundViewFactory, ViewSlot]; }

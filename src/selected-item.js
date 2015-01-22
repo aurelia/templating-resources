@@ -1,12 +1,11 @@
-import {AttachedBehavior, Property, Children} from 'aurelia-templating';
+import {Behavior} from 'aurelia-templating';
 
 export class SelectedItem {
   static metadata(){
-    return [
-      new AttachedBehavior('selected-item'),
-      new Property('value', 'valueChanged', 'selected-item').defaultBindingIsTwoWay(),
-      new Children('options', 'optionsChanged', 'option')
-    ];
+    return Behavior
+      .attachedBehavior('selected-item')
+      .withProperty('value', 'valueChanged', 'selected-item').and(x => x.bindingIsTwoWay())
+      .syncChildren('options', 'optionsChanged', 'option');
   }
 
   static inject() { return [Element]; }

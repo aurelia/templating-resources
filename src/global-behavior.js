@@ -1,11 +1,10 @@
-import {AttachedBehavior, OptionsProperty} from 'aurelia-templating';
+import {Behavior} from 'aurelia-templating';
 
 export class GlobalBehavior {
-  static metadata(){
-    return [
-      new AttachedBehavior('global-behavior'),
-      new OptionsProperty().dynamic()
-    ];
+  static metadata(){ 
+    return Behavior
+      .attachedBehavior('global-behavior')
+      .withOptions().and(x => x.dynamic()); 
   }
 
   static inject() { return [Element]; }
