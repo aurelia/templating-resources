@@ -7,7 +7,7 @@ export class Compose {
       .customElement('compose')
       .withProperty('model')
       .withProperty('view')
-      .withProperty('view-model')
+      .withProperty('viewModel')
       .noView();
   }
 
