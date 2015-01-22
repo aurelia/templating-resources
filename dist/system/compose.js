@@ -41,7 +41,7 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
         _prototypeProperties(Compose, {
           metadata: {
             value: function metadata() {
-              return Behavior.customElement("compose").withProperty("model").withProperty("view").withProperty("view-model").noView();
+              return Behavior.customElement("compose").withProperty("model").withProperty("view").withProperty("viewModel").noView();
             },
             writable: true,
             enumerable: true,

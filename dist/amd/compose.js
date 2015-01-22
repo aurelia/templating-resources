@@ -22,7 +22,7 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
     _prototypeProperties(Compose, {
       metadata: {
         value: function metadata() {
-          return Behavior.customElement("compose").withProperty("model").withProperty("view").withProperty("view-model").noView();
+          return Behavior.customElement("compose").withProperty("model").withProperty("view").withProperty("viewModel").noView();
         },
         writable: true,
         enumerable: true,

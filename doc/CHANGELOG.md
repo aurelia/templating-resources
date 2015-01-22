@@ -1,3 +1,11 @@
+### 0.8.1 (2015-01-22)
+
+
+#### Bug Fixes
+
+* **compose:** incorrect property name ([57c40a00](http://github.com/aurelia/templating-resources/commit/57c40a001b2da551cae1e22777655606a0772d01))
+
+
 ## 0.8.0 (2015-01-22)
 
 
