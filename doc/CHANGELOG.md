@@ -1,3 +1,16 @@
+### 0.8.2 (2015-01-24)
+
+
+#### Bug Fixes
+
+* **package:** update deps and fix bower semver ranges ([5839f551](http://github.com/aurelia/templating-resources/commit/5839f551b7e95dad8e5f087208e87674ac3bfd1c))
+
+
+#### Features
+
+* **global-behavior:** flexible handlers with jQuery built-in ([298c1aeb](http://github.com/aurelia/templating-resources/commit/298c1aeb2eedf2d28e21d350435eadc5acb32d68))
+
+
 ### 0.8.1 (2015-01-22)
 
 

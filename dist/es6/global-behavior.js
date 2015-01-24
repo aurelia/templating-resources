@@ -13,41 +13,68 @@ export class GlobalBehavior {
   }
 
   bind(){
-    var settings, lookup, globalObject;
+    var handler = GlobalBehavior.handlers[this.aureliaAttrName];
 
-    lookup = GlobalBehavior.whitelist[this.aureliaAttrName];
-    if(!lookup){
-      throw new Error(`Conventional global binding behavior not whitelisted for ${this.aureliaAttrName}.`);
-    }
-
-    globalObject = window[lookup];
-    if(!globalObject){
-      throw new Error(`Conventional global ${lookup} was not found.`);
-    }
-
-    settings = {};
-
-    for(var key in this){
-      if(key === 'aureliaAttrName' || key === 'aureliaCommand' || !this.hasOwnProperty(key)){
-        continue;
-      }
-
-      settings[key] = this[key];
+    if(!handler){
+      throw new Error(`Conventional binding handler not found for ${this.aureliaAttrName}.`);
     }
 
     try{
-      this.instance = globalObject(this.element)[this.aureliaCommand](settings);
+      this.instance = handler.bind(this, this.element, this.aureliaCommand);
+      this.handler = handler;
     }catch(error){
-      throw new Error('Conventional global binding behavior failed.', error);
+      throw new Error('Conventional binding handler failed.', error);
+    }
+  }
+
+  attached(){
+    if(this.handler && 'attached' in this.handler && this.instance){
+      this.handler.attached(this.instance);
+    }
+  }
+
+  detached(){
+    if(this.handler && 'detached' in this.handler && this.instance){
+      this.handler.detached(this.instance);
     }
   }
 
   unbind(){
-    if(this.instance && 'destroy' in this.instance){
-      this.instance.destroy();
+    if(this.handler && 'unbind' in this.handler && this.instance){
+      this.handler.unbind(this.instance);
       this.instance = null;
+      this.handler = null;
     }
   }
 }
 
-GlobalBehavior.whitelist = { jquery:'jQuery' };
+GlobalBehavior.createSettingsFromBehavior = function(behavior){
+  var settings = {};
+
+  for(var key in behavior){
+    if(key === 'aureliaAttrName' || key === 'aureliaCommand' || !behavior.hasOwnProperty(key)){
+      continue;
+    }
+
+    settings[key] = behavior[key];
+  }
+
+  return settings;
+};
+
+GlobalBehavior.jQueryPlugins = {};
+
+GlobalBehavior.handlers = { 
+  jquery:{
+    bind(behavior, element, command){
+      var settings = GlobalBehavior.createSettingsFromBehavior(behavior);
+      var pluginName = GlobalBehavior.jQueryPlugins[command] || command;
+      return window.jQuery(element)[pluginName](settings);
+    },
+    unbind(instance){
+      if('destroy' in instance){
+        instance.destroy();
+      }
+    }
+  }
+};
