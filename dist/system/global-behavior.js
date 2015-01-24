@@ -46,8 +46,7 @@ System.register(["aurelia-templating"], function (_export) {
               }
 
               try {
-                this.instance = handler.bind(this, this.element, this.aureliaCommand);
-                this.handler = handler;
+                this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
               } catch (error) {
                 throw new Error("Conventional binding handler failed.", error);
               }
@@ -58,8 +57,8 @@ System.register(["aurelia-templating"], function (_export) {
           },
           attached: {
             value: function attached() {
-              if (this.handler && "attached" in this.handler && this.instance) {
-                this.handler.attached(this.instance);
+              if (this.handler && "attached" in this.handler) {
+                this.handler.attached(this, this.element);
               }
             },
             writable: true,
@@ -68,8 +67,8 @@ System.register(["aurelia-templating"], function (_export) {
           },
           detached: {
             value: function detached() {
-              if (this.handler && "detached" in this.handler && this.instance) {
-                this.handler.detached(this.instance);
+              if (this.handler && "detached" in this.handler) {
+                this.handler.detached(this, this.element);
               }
             },
             writable: true,
@@ -78,11 +77,11 @@ System.register(["aurelia-templating"], function (_export) {
           },
           unbind: {
             value: function unbind() {
-              if (this.handler && "unbind" in this.handler && this.instance) {
-                this.handler.unbind(this.instance);
-                this.instance = null;
-                this.handler = null;
+              if (this.handler && "unbind" in this.handler) {
+                this.handler.unbind(this, this.element);
               }
+
+              this.handler = null;
             },
             writable: true,
             enumerable: true,
@@ -115,11 +114,12 @@ System.register(["aurelia-templating"], function (_export) {
           bind: function bind(behavior, element, command) {
             var settings = GlobalBehavior.createSettingsFromBehavior(behavior);
             var pluginName = GlobalBehavior.jQueryPlugins[command] || command;
-            return window.jQuery(element)[pluginName](settings);
+            behavior.plugin = window.jQuery(element)[pluginName](settings);
           },
-          unbind: function unbind(instance) {
-            if ("destroy" in instance) {
-              instance.destroy();
+          unbind: function unbind(behavior, element) {
+            if ("destroy" in behavior.plugin) {
+              behavior.plugin.destroy();
+              behavior.plugin = null;
             }
           }
         }
