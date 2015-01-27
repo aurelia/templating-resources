@@ -3,6 +3,7 @@ import {Behavior} from 'aurelia-templating';
 function addStyleString(str) {
   var node = document.createElement('style');
   node.innerHTML = str;
+  node.type = 'text/css';
   document.head.appendChild(node);
 }
 
