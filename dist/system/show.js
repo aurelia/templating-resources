@@ -7,7 +7,8 @@ System.register(["aurelia-templating"], function (_export) {
   function addStyleString(str) {
     var node = document.createElement("style");
     node.innerHTML = str;
-    document.body.appendChild(node);
+    node.type = "text/css";
+    document.head.appendChild(node);
   }
 
   return {

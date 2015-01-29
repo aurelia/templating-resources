@@ -11,7 +11,8 @@ var Behavior = require("aurelia-templating").Behavior;
 function addStyleString(str) {
   var node = document.createElement("style");
   node.innerHTML = str;
-  document.body.appendChild(node);
+  node.type = "text/css";
+  document.head.appendChild(node);
 }
 
 addStyleString(".aurelia-hide { display:none; }");

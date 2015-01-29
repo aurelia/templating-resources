@@ -1,3 +1,13 @@
+### 0.8.4 (2015-01-29)
+
+
+#### Bug Fixes
+
+* **show:**
+  * Add type to the node as well ([f29153b0](http://github.com/aurelia/templating-resources/commit/f29153b0657ecb0fa74fa71958d24209f020112a))
+  * append aurelia-hide style to head ([0258d0df](http://github.com/aurelia/templating-resources/commit/0258d0df2cc99bfbc2b395c0146a350eec4c9ad4))
+
+
 ### 0.8.3 (2015-01-24)
 
 
