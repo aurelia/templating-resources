@@ -12,12 +12,9 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
       ViewSlot = _aureliaTemplating.ViewSlot;
     }],
     execute: function () {
-      _prototypeProperties = function (child, staticProps, instanceProps) {
-        if (staticProps) Object.defineProperties(child, staticProps);
-        if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-      };
+      _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
-      Repeat = (function () {
+      Repeat = _export("Repeat", (function () {
         function Repeat(viewFactory, viewSlot, observerLocator) {
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
@@ -31,7 +28,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               return Behavior.templateController("repeat").withProperty("items", "itemsChanged", "repeat").withProperty("local");
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           inject: {
@@ -39,7 +35,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               return [BoundViewFactory, ViewSlot, ObserverLocator];
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         }, {
@@ -65,7 +60,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               }
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           unbind: {
@@ -79,7 +73,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               }
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           itemsChanged: {
@@ -87,12 +80,11 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               this.processItems();
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           processItems: {
             value: function processItems() {
-              var _this2 = this;
+              var _this = this;
               var items = this.items,
                   observer = this.observerLocator.getArrayObserver(items),
                   viewSlot = this.viewSlot,
@@ -114,11 +106,10 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               }
 
               this.disposeArraySubscription = observer.subscribe(function (splices) {
-                _this2.handleSplices(items, splices);
+                _this.handleSplices(items, splices);
               });
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           createBaseExecutionContext: {
@@ -128,7 +119,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               return context;
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           createFullExecutionContext: {
@@ -137,7 +127,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               return this.updateExecutionContext(context, index, length);
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           updateExecutionContext: {
@@ -157,7 +146,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               return context;
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           handleSplices: {
@@ -229,14 +217,12 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               });
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         });
 
         return Repeat;
-      })();
-      _export("Repeat", Repeat);
+      })());
     }
   };
 });

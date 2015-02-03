@@ -1,13 +1,10 @@
 define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating) {
   "use strict";
 
-  var _prototypeProperties = function (child, staticProps, instanceProps) {
-    if (staticProps) Object.defineProperties(child, staticProps);
-    if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-  };
+  var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
   var Behavior = _aureliaTemplating.Behavior;
-  var GlobalBehavior = (function () {
+  var GlobalBehavior = exports.GlobalBehavior = (function () {
     function GlobalBehavior(element) {
       this.element = element;
     }
@@ -20,7 +17,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           });
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       inject: {
@@ -28,7 +24,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           return [Element];
         },
         writable: true,
-        enumerable: true,
         configurable: true
       }
     }, {
@@ -47,7 +42,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           }
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       attached: {
@@ -57,7 +51,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           }
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       detached: {
@@ -67,7 +60,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           }
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       unbind: {
@@ -79,15 +71,12 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           this.handler = null;
         },
         writable: true,
-        enumerable: true,
         configurable: true
       }
     });
 
     return GlobalBehavior;
   })();
-
-  exports.GlobalBehavior = GlobalBehavior;
 
 
   GlobalBehavior.createSettingsFromBehavior = function (behavior) {
@@ -114,11 +103,12 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
         behavior.plugin = window.jQuery(element)[pluginName](settings);
       },
       unbind: function unbind(behavior, element) {
-        if ("destroy" in behavior.plugin) {
+        if (typeof behavior.plugin.destroy === "function") {
           behavior.plugin.destroy();
           behavior.plugin = null;
         }
       }
     }
   };
+  exports.__esModule = true;
 });

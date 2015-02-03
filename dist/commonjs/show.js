@@ -1,9 +1,6 @@
 "use strict";
 
-var _prototypeProperties = function (child, staticProps, instanceProps) {
-  if (staticProps) Object.defineProperties(child, staticProps);
-  if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-};
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
 var Behavior = require("aurelia-templating").Behavior;
 
@@ -15,9 +12,9 @@ function addStyleString(str) {
   document.head.appendChild(node);
 }
 
-addStyleString(".aurelia-hide { display:none; }");
+addStyleString(".aurelia-hide { display:none !important; }");
 
-var Show = (function () {
+var Show = exports.Show = (function () {
   function Show(element) {
     this.element = element;
   }
@@ -28,7 +25,6 @@ var Show = (function () {
         return Behavior.attachedBehavior("show").withProperty("value", "valueChanged", "show");
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     inject: {
@@ -36,7 +32,6 @@ var Show = (function () {
         return [Element];
       },
       writable: true,
-      enumerable: true,
       configurable: true
     }
   }, {
@@ -49,12 +44,10 @@ var Show = (function () {
         }
       },
       writable: true,
-      enumerable: true,
       configurable: true
     }
   });
 
   return Show;
 })();
-
-exports.Show = Show;
+exports.__esModule = true;

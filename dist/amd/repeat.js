@@ -1,17 +1,14 @@
 define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, _aureliaBinding, _aureliaTemplating) {
   "use strict";
 
-  var _prototypeProperties = function (child, staticProps, instanceProps) {
-    if (staticProps) Object.defineProperties(child, staticProps);
-    if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-  };
+  var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
   var ObserverLocator = _aureliaBinding.ObserverLocator;
   var calcSplices = _aureliaBinding.calcSplices;
   var Behavior = _aureliaTemplating.Behavior;
   var BoundViewFactory = _aureliaTemplating.BoundViewFactory;
   var ViewSlot = _aureliaTemplating.ViewSlot;
-  var Repeat = (function () {
+  var Repeat = exports.Repeat = (function () {
     function Repeat(viewFactory, viewSlot, observerLocator) {
       this.viewFactory = viewFactory;
       this.viewSlot = viewSlot;
@@ -25,7 +22,6 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
           return Behavior.templateController("repeat").withProperty("items", "itemsChanged", "repeat").withProperty("local");
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       inject: {
@@ -33,7 +29,6 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
           return [BoundViewFactory, ViewSlot, ObserverLocator];
         },
         writable: true,
-        enumerable: true,
         configurable: true
       }
     }, {
@@ -59,7 +54,6 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
           }
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       unbind: {
@@ -73,7 +67,6 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
           }
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       itemsChanged: {
@@ -81,12 +74,11 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
           this.processItems();
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       processItems: {
         value: function processItems() {
-          var _this2 = this;
+          var _this = this;
           var items = this.items,
               observer = this.observerLocator.getArrayObserver(items),
               viewSlot = this.viewSlot,
@@ -108,11 +100,10 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
           }
 
           this.disposeArraySubscription = observer.subscribe(function (splices) {
-            _this2.handleSplices(items, splices);
+            _this.handleSplices(items, splices);
           });
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       createBaseExecutionContext: {
@@ -122,7 +113,6 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
           return context;
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       createFullExecutionContext: {
@@ -131,7 +121,6 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
           return this.updateExecutionContext(context, index, length);
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       updateExecutionContext: {
@@ -151,7 +140,6 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
           return context;
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       handleSplices: {
@@ -223,13 +211,11 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
           });
         },
         writable: true,
-        enumerable: true,
         configurable: true
       }
     });
 
     return Repeat;
   })();
-
-  exports.Repeat = Repeat;
+  exports.__esModule = true;
 });

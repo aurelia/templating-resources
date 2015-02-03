@@ -1,14 +1,13 @@
 "use strict";
 
-var _prototypeProperties = function (child, staticProps, instanceProps) {
-  if (staticProps) Object.defineProperties(child, staticProps);
-  if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-};
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
-var Behavior = require("aurelia-templating").Behavior;
-var BoundViewFactory = require("aurelia-templating").BoundViewFactory;
-var ViewSlot = require("aurelia-templating").ViewSlot;
-var If = (function () {
+var _aureliaTemplating = require("aurelia-templating");
+
+var Behavior = _aureliaTemplating.Behavior;
+var BoundViewFactory = _aureliaTemplating.BoundViewFactory;
+var ViewSlot = _aureliaTemplating.ViewSlot;
+var If = exports.If = (function () {
   function If(viewFactory, viewSlot) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
@@ -21,7 +20,6 @@ var If = (function () {
         return Behavior.templateController("if").withProperty("value", "valueChanged", "if");
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     inject: {
@@ -29,7 +27,6 @@ var If = (function () {
         return [BoundViewFactory, ViewSlot];
       },
       writable: true,
-      enumerable: true,
       configurable: true
     }
   }, {
@@ -60,12 +57,10 @@ var If = (function () {
         }
       },
       writable: true,
-      enumerable: true,
       configurable: true
     }
   });
 
   return If;
 })();
-
-exports.If = If;
+exports.__esModule = true;

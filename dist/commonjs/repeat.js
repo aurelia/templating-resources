@@ -1,16 +1,17 @@
 "use strict";
 
-var _prototypeProperties = function (child, staticProps, instanceProps) {
-  if (staticProps) Object.defineProperties(child, staticProps);
-  if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-};
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
-var ObserverLocator = require("aurelia-binding").ObserverLocator;
-var calcSplices = require("aurelia-binding").calcSplices;
-var Behavior = require("aurelia-templating").Behavior;
-var BoundViewFactory = require("aurelia-templating").BoundViewFactory;
-var ViewSlot = require("aurelia-templating").ViewSlot;
-var Repeat = (function () {
+var _aureliaBinding = require("aurelia-binding");
+
+var ObserverLocator = _aureliaBinding.ObserverLocator;
+var calcSplices = _aureliaBinding.calcSplices;
+var _aureliaTemplating = require("aurelia-templating");
+
+var Behavior = _aureliaTemplating.Behavior;
+var BoundViewFactory = _aureliaTemplating.BoundViewFactory;
+var ViewSlot = _aureliaTemplating.ViewSlot;
+var Repeat = exports.Repeat = (function () {
   function Repeat(viewFactory, viewSlot, observerLocator) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
@@ -24,7 +25,6 @@ var Repeat = (function () {
         return Behavior.templateController("repeat").withProperty("items", "itemsChanged", "repeat").withProperty("local");
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     inject: {
@@ -32,7 +32,6 @@ var Repeat = (function () {
         return [BoundViewFactory, ViewSlot, ObserverLocator];
       },
       writable: true,
-      enumerable: true,
       configurable: true
     }
   }, {
@@ -58,7 +57,6 @@ var Repeat = (function () {
         }
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     unbind: {
@@ -72,7 +70,6 @@ var Repeat = (function () {
         }
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     itemsChanged: {
@@ -80,12 +77,11 @@ var Repeat = (function () {
         this.processItems();
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     processItems: {
       value: function processItems() {
-        var _this2 = this;
+        var _this = this;
         var items = this.items,
             observer = this.observerLocator.getArrayObserver(items),
             viewSlot = this.viewSlot,
@@ -107,11 +103,10 @@ var Repeat = (function () {
         }
 
         this.disposeArraySubscription = observer.subscribe(function (splices) {
-          _this2.handleSplices(items, splices);
+          _this.handleSplices(items, splices);
         });
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     createBaseExecutionContext: {
@@ -121,7 +116,6 @@ var Repeat = (function () {
         return context;
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     createFullExecutionContext: {
@@ -130,7 +124,6 @@ var Repeat = (function () {
         return this.updateExecutionContext(context, index, length);
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     updateExecutionContext: {
@@ -150,7 +143,6 @@ var Repeat = (function () {
         return context;
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     handleSplices: {
@@ -222,12 +214,10 @@ var Repeat = (function () {
         });
       },
       writable: true,
-      enumerable: true,
       configurable: true
     }
   });
 
   return Repeat;
 })();
-
-exports.Repeat = Repeat;
+exports.__esModule = true;

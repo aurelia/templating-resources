@@ -1,10 +1,7 @@
 define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating) {
   "use strict";
 
-  var _prototypeProperties = function (child, staticProps, instanceProps) {
-    if (staticProps) Object.defineProperties(child, staticProps);
-    if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-  };
+  var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
   var Behavior = _aureliaTemplating.Behavior;
 
@@ -16,9 +13,9 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
     document.head.appendChild(node);
   }
 
-  addStyleString(".aurelia-hide { display:none; }");
+  addStyleString(".aurelia-hide { display:none !important; }");
 
-  var Show = (function () {
+  var Show = exports.Show = (function () {
     function Show(element) {
       this.element = element;
     }
@@ -29,7 +26,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           return Behavior.attachedBehavior("show").withProperty("value", "valueChanged", "show");
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       inject: {
@@ -37,7 +33,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           return [Element];
         },
         writable: true,
-        enumerable: true,
         configurable: true
       }
     }, {
@@ -50,13 +45,11 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           }
         },
         writable: true,
-        enumerable: true,
         configurable: true
       }
     });
 
     return Show;
   })();
-
-  exports.Show = Show;
+  exports.__esModule = true;
 });
