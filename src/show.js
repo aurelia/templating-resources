@@ -6,7 +6,7 @@ function addStyleString(str) {
   document.body.appendChild(node);
 }
 
-addStyleString('.aurelia-hide { display:none; }');
+addStyleString('.aurelia-hide { display:none !important; }');
 
 export class Show {
   static metadata(){
