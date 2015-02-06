@@ -39,6 +39,14 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
 
           this.executionContext = executionContext;
 
+          if (!items) {
+            if (this.oldItems) {
+              this.viewSlot.removeAll();
+            }
+
+            return;
+          }
+
           if (this.oldItems === items) {
             var splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
             var observer = this.observerLocator.getArrayObserver(items);
@@ -59,7 +67,10 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
       unbind: {
         value: function unbind() {
           this.oldItems = this.items;
-          this.lastBoundItems = this.items.slice(0);
+
+          if (this.items) {
+            this.lastBoundItems = this.items.slice(0);
+          }
 
           if (this.disposeArraySubscription) {
             this.disposeArraySubscription();
@@ -80,18 +91,24 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
         value: function processItems() {
           var _this = this;
           var items = this.items,
-              observer = this.observerLocator.getArrayObserver(items),
               viewSlot = this.viewSlot,
               viewFactory = this.viewFactory,
               i,
               ii,
               row,
-              view;
+              view,
+              observer;
 
           if (this.disposeArraySubscription) {
             this.disposeArraySubscription();
             viewSlot.removeAll();
           }
+
+          if (!items) {
+            return;
+          }
+
+          observer = this.observerLocator.getArrayObserver(items);
 
           for (i = 0, ii = items.length; i < ii; ++i) {
             row = this.createFullExecutionContext(items[i], i, ii);

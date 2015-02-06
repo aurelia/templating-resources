@@ -1,3 +1,11 @@
+### 0.8.7 (2015-02-06)
+
+
+#### Bug Fixes
+
+* **repeat:** error when items are undefined ([11809714](http://github.com/aurelia/templating-resources/commit/118097145e3d7a936280f9110c44b6724ed51ba2))
+
+
 ### 0.8.6 (2015-02-06)
 
 
