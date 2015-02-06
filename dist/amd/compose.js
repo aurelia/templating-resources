@@ -35,11 +35,7 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
       bind: {
         value: function bind(executionContext) {
           this.executionContext = executionContext;
-          processInstruction(this, {
-            view: this.view,
-            viewModel: this.viewModel,
-            model: this.model
-          });
+          processInstruction(this, { view: this.view, viewModel: this.viewModel, model: this.model });
         },
         writable: true,
         configurable: true
@@ -55,14 +51,14 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
       },
       viewChanged: {
         value: function viewChanged(newValue, oldValue) {
-          processInstruction(this, { view: newValue });
+          processInstruction(this, { view: newValue, viewModel: this.viewModel, model: this.model });
         },
         writable: true,
         configurable: true
       },
       viewModelChanged: {
         value: function viewModelChanged(newValue, oldValue) {
-          processInstruction(this, { viewModel: newValue });
+          processInstruction(this, { viewModel: newValue, view: this.view, model: this.model });
         },
         writable: true,
         configurable: true

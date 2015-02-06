@@ -1,3 +1,11 @@
+### 0.8.6 (2015-02-06)
+
+
+#### Bug Fixes
+
+* **compose:** all properties not responding to changes ([8c7cf24c](http://github.com/aurelia/templating-resources/commit/8c7cf24c94d8b35f8e6c2847ed427f840adff225), closes [#10](http://github.com/aurelia/templating-resources/issues/10))
+
+
 ### 0.8.5 (2015-02-03)
 
 

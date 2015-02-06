@@ -15,17 +15,13 @@ export class Compose {
 	constructor(container, compositionEngine, viewSlot, viewResources){
 		this.container = container;
 		this.compositionEngine = compositionEngine;
-		this.viewSlot = viewSlot;		
+		this.viewSlot = viewSlot;
     this.viewResources = viewResources;
 	}
 
 	bind(executionContext){
 		this.executionContext = executionContext;
-		processInstruction(this, {
-			view:this.view,
-      viewModel:this.viewModel,
-      model:this.model
-		});
+		processInstruction(this, { view:this.view, viewModel:this.viewModel, model:this.model });
 	}
 
 	modelChanged(newValue, oldValue){
@@ -35,11 +31,11 @@ export class Compose {
   }
 
   viewChanged(newValue, oldValue){
-  	processInstruction(this, { view:newValue });
+  	processInstruction(this, { view:newValue, viewModel:this.viewModel, model:this.model });
   }
 
   viewModelChanged(newValue, oldValue){
-  	processInstruction(this, { viewModel:newValue });
+  	processInstruction(this, { viewModel:newValue, view:this.view, model:this.model });
   }
 }
 
