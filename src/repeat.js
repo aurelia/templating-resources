@@ -1,4 +1,4 @@
-import {ObserverLocator, calcSplices} from 'aurelia-binding';
+import {ObserverLocator, calcSplices, getChangeRecords} from 'aurelia-binding';
 import {Behavior, BoundViewFactory, ViewSlot} from 'aurelia-templating';
 
 export class Repeat {
@@ -6,7 +6,8 @@ export class Repeat {
     return Behavior
       .templateController('repeat')
       .withProperty('items', 'itemsChanged', 'repeat')
-      .withProperty('local');
+      .withProperty('local')
+      .withProperty('local2');
   }
 
   static inject(){ return [BoundViewFactory,ViewSlot,ObserverLocator]; }
@@ -15,6 +16,7 @@ export class Repeat {
     this.viewSlot = viewSlot;
     this.observerLocator = observerLocator;
     this.local = 'item';
+    this.local2 = 'value';
   }
 
   bind(executionContext){
@@ -30,17 +32,28 @@ export class Repeat {
       return;
     }
 
-    if(this.oldItems === items){
-      var splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
-      var observer = this.observerLocator.getArrayObserver(items);
+    if (this.oldItems === items) {
+      if (items instanceof Map) {
+        var records = getChangeRecords(items);
+        var observer = this.observerLocator.getMapObserver(items);
 
-      this.handleSplices(items, splices);
-      this.lastBoundItems = this.oldItems = null;
+        this.handleMapChangeRecords(items, records);
 
-      this.disposeArraySubscription = observer.subscribe(splices => {
-        this.handleSplices(items, splices);
-      });
-    }else{
+        this.disposeSubscription = observer.subscribe(records => {
+          this.handleMapChangeRecords(items, records);
+        });
+      } else {
+        var splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
+        var observer = this.observerLocator.getArrayObserver(items);
+
+        this.handleArraySplices(items, splices);
+        this.lastBoundItems = this.oldItems = null;
+
+        this.disposeSubscription = observer.subscribe(splices => {
+          this.handleArraySplices(items, splices);
+        });
+      }
+    } else {
       this.processItems();
     }
   }
@@ -48,7 +61,7 @@ export class Repeat {
   unbind(){
     this.oldItems = this.items;
 
-    if(this.items){
+    if(this.items instanceof Array){
       this.lastBoundItems = this.items.slice(0);
     }
 
@@ -58,15 +71,9 @@ export class Repeat {
     }
   }
 
-  itemsChanged(){
-    this.processItems();
-  }
-
-  processItems(){
+  processItems() {
     var items = this.items,
-        viewSlot = this.viewSlot,
-        viewFactory = this.viewFactory,
-        i, ii, row, view, observer;
+      viewSlot = this.viewSlot;
 
     if (this.disposeArraySubscription) {
       this.disposeArraySubscription();
@@ -77,10 +84,22 @@ export class Repeat {
       return;
     }
 
+    if (items instanceof Map) {
+      this.processMapEntries(items);
+    } else {
+      this.processArrayItems(items);
+    }
+  }
+
+  processArrayItems(items){
+    var viewFactory = this.viewFactory,
+      viewSlot = this.viewSlot,
+      i, ii, row, view, observer;
+
     observer = this.observerLocator.getArrayObserver(items);
 
     for(i = 0, ii = items.length; i < ii; ++i){
-      row = this.createFullExecutionContext(items[i], i, ii);
+      row = this.createFullExecutionContext([items[i]], i, ii);
       view = viewFactory.create(row);
       viewSlot.add(view);
     }
@@ -90,9 +109,30 @@ export class Repeat {
     });
   }
 
+  processMapEntries(items) {
+    var viewFactory = this.viewFactory,
+      viewSlot = this.viewSlot,
+      row, view, observer;
+
+    observer = this.observerLocator.getMapObserver(items);
+
+    for (var [key, value] of items) {
+      row = this.createFullExecutionContext([key, value], key, items.size);
+      view = viewFactory.create(row);
+      viewSlot.add(view);
+    }
+
+    this.disposeSubscription = observer.subscribe(record => {
+      this.handleMapChangeRecords(items, record);
+    });
+  }
+
   createBaseExecutionContext(data){
     var context = {};
-    context[this.local] = data;
+    context[this.local] = data[0];
+    if(data[1]){
+      context[this.local2] = data[1];
+    }
     return context;
   }
 
@@ -157,7 +197,7 @@ export class Repeat {
           viewLookup.delete(model);
           viewSlot.insert(addIndex, view); //TODO: move
         } else {
-          row = this.createBaseExecutionContext(model);
+          row = this.createBaseExecutionContext([model]);
           view = this.viewFactory.create(row);
           viewSlot.insert(addIndex, view);
         }
@@ -172,5 +212,55 @@ export class Repeat {
     }
 
     viewLookup.forEach(x => x.unbind());
+  }
+
+  handleMapChangeRecords(map, records) {
+    var viewSlot = this.viewSlot,
+      key, i, ii, view, children, length, row, removeIndex, record;
+
+    for (i = 0, ii = records.length; i < ii; ++i) {
+      record = records[i];
+      key = record.key;
+      switch (record.type) {
+        case 'update':
+          removeIndex = this.getViewIndexByKey(key);
+          viewSlot.removeAt(removeIndex);
+          row = this.createBaseExecutionContext([key, map.get(key)]);
+          view = this.viewFactory.create(row);
+          viewSlot.insert(removeIndex, view);
+          break;
+        case 'add':
+          row = this.createBaseExecutionContext([key, map.get(key)]);
+          view = this.viewFactory.create(row);
+          viewSlot.insert(map.size, view);
+          break;
+        case 'delete':
+          if (!record.oldValue) { return; }
+          removeIndex = this.getViewIndexByKey(key);
+          viewSlot.removeAt(removeIndex);
+          break;
+        case 'clear':
+          viewSlot.removeAll();
+      }
+    }
+
+    children = viewSlot.children;
+    length = children.length;
+
+    for (i = 0; i < length; i++) {
+      this.updateExecutionContext(children[i].executionContext, i, length);
+    }
+  }
+
+  getViewIndexByKey(key) {
+    var viewSlot = this.viewSlot,
+      i, ii, child;
+
+    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) { // TODO (martingust) better way to get index?
+      child = viewSlot.children[i];
+      if (child.bindings[0].source.key === key) {
+        return i;
+      }
+    }
   }
 }
