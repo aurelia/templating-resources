@@ -1,16 +1,15 @@
 "use strict";
 
-var _prototypeProperties = function (child, staticProps, instanceProps) {
-  if (staticProps) Object.defineProperties(child, staticProps);
-  if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-};
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
 var Container = require("aurelia-dependency-injection").Container;
-var Behavior = require("aurelia-templating").Behavior;
-var CompositionEngine = require("aurelia-templating").CompositionEngine;
-var ViewSlot = require("aurelia-templating").ViewSlot;
-var ViewResources = require("aurelia-templating").ViewResources;
-var Compose = (function () {
+var _aureliaTemplating = require("aurelia-templating");
+
+var Behavior = _aureliaTemplating.Behavior;
+var CompositionEngine = _aureliaTemplating.CompositionEngine;
+var ViewSlot = _aureliaTemplating.ViewSlot;
+var ViewResources = _aureliaTemplating.ViewResources;
+var Compose = exports.Compose = (function () {
   function Compose(container, compositionEngine, viewSlot, viewResources) {
     this.container = container;
     this.compositionEngine = compositionEngine;
@@ -24,7 +23,6 @@ var Compose = (function () {
         return Behavior.customElement("compose").withProperty("model").withProperty("view").withProperty("viewModel").noView();
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     inject: {
@@ -32,21 +30,15 @@ var Compose = (function () {
         return [Container, CompositionEngine, ViewSlot, ViewResources];
       },
       writable: true,
-      enumerable: true,
       configurable: true
     }
   }, {
     bind: {
       value: function bind(executionContext) {
         this.executionContext = executionContext;
-        processInstruction(this, {
-          view: this.view,
-          viewModel: this.viewModel,
-          model: this.model
-        });
+        processInstruction(this, { view: this.view, viewModel: this.viewModel, model: this.model });
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     modelChanged: {
@@ -56,31 +48,26 @@ var Compose = (function () {
         }
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     viewChanged: {
       value: function viewChanged(newValue, oldValue) {
-        processInstruction(this, { view: newValue });
+        processInstruction(this, { view: newValue, viewModel: this.viewModel, model: this.model });
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     viewModelChanged: {
       value: function viewModelChanged(newValue, oldValue) {
-        processInstruction(this, { viewModel: newValue });
+        processInstruction(this, { viewModel: newValue, view: this.view, model: this.model });
       },
       writable: true,
-      enumerable: true,
       configurable: true
     }
   });
 
   return Compose;
 })();
-
-exports.Compose = Compose;
 
 
 function processInstruction(composer, instruction) {
@@ -94,3 +81,4 @@ function processInstruction(composer, instruction) {
     composer.current = next;
   });
 }
+exports.__esModule = true;

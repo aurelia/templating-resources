@@ -1,13 +1,10 @@
 define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating) {
   "use strict";
 
-  var _prototypeProperties = function (child, staticProps, instanceProps) {
-    if (staticProps) Object.defineProperties(child, staticProps);
-    if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-  };
+  var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
   var Behavior = _aureliaTemplating.Behavior;
-  var SelectedItem = (function () {
+  var SelectedItem = exports.SelectedItem = (function () {
     function SelectedItem(element) {
       this.element = element;
       this.options = [];
@@ -22,7 +19,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           }).syncChildren("options", "optionsChanged", "option");
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       inject: {
@@ -30,7 +26,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           return [Element];
         },
         writable: true,
-        enumerable: true,
         configurable: true
       }
     }, {
@@ -39,7 +34,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           this.element.addEventListener("change", this.callback, false);
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       unbind: {
@@ -47,7 +41,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           this.element.removeEventListener("change", this.callback);
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       valueChanged: {
@@ -55,7 +48,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           this.optionsChanged();
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       selectedIndexChanged: {
@@ -66,7 +58,6 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           this.value = option ? option.model : null;
         },
         writable: true,
-        enumerable: true,
         configurable: true
       },
       optionsChanged: {
@@ -92,13 +83,11 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
           this.element.selectedIndex = 0;
         },
         writable: true,
-        enumerable: true,
         configurable: true
       }
     });
 
     return SelectedItem;
   })();
-
-  exports.SelectedItem = SelectedItem;
+  exports.__esModule = true;
 });

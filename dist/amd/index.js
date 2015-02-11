@@ -22,4 +22,5 @@ define(["exports", "./compose", "./if", "./with", "./repeat", "./show", "./selec
   exports.SelectedItem = SelectedItem;
   exports.GlobalBehavior = GlobalBehavior;
   exports.install = install;
+  exports.__esModule = true;
 });

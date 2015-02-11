@@ -16,14 +16,11 @@ System.register(["aurelia-templating"], function (_export) {
       Behavior = _aureliaTemplating.Behavior;
     }],
     execute: function () {
-      _prototypeProperties = function (child, staticProps, instanceProps) {
-        if (staticProps) Object.defineProperties(child, staticProps);
-        if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-      };
+      _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
       addStyleString(".aurelia-hide { display:none !important; }");
 
-      Show = (function () {
+      Show = _export("Show", (function () {
         function Show(element) {
           this.element = element;
         }
@@ -34,7 +31,6 @@ System.register(["aurelia-templating"], function (_export) {
               return Behavior.attachedBehavior("show").withProperty("value", "valueChanged", "show");
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           inject: {
@@ -42,7 +38,6 @@ System.register(["aurelia-templating"], function (_export) {
               return [Element];
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         }, {
@@ -55,14 +50,12 @@ System.register(["aurelia-templating"], function (_export) {
               }
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         });
 
         return Show;
-      })();
-      _export("Show", Show);
+      })());
     }
   };
 });

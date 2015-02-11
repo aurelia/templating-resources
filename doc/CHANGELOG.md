@@ -1,3 +1,30 @@
+### 0.8.7 (2015-02-06)
+
+
+#### Bug Fixes
+
+* **repeat:** error when items are undefined ([11809714](http://github.com/aurelia/templating-resources/commit/118097145e3d7a936280f9110c44b6724ed51ba2))
+
+
+### 0.8.6 (2015-02-06)
+
+
+#### Bug Fixes
+
+* **compose:** all properties not responding to changes ([8c7cf24c](http://github.com/aurelia/templating-resources/commit/8c7cf24c94d8b35f8e6c2847ed427f840adff225), closes [#10](http://github.com/aurelia/templating-resources/issues/10))
+
+
+### 0.8.5 (2015-02-03)
+
+
+#### Bug Fixes
+
+* **global-behavior:** unsafe method invocation ([6e05bb98](http://github.com/aurelia/templating-resources/commit/6e05bb9882e4372a96d58e3e384c0bc0c56040ab))
+* **show:**
+  * css not inside ([d98e9a40](http://github.com/aurelia/templating-resources/commit/d98e9a40c51f75e229fa5e3caa5388301333feb7))
+  * Make sure this hide overrides everything ([e7a06176](http://github.com/aurelia/templating-resources/commit/e7a06176ed24795621414a1782b33da2174bef31))
+
+
 ### 0.8.4 (2015-01-29)
 
 

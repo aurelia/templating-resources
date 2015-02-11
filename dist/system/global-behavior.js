@@ -7,12 +7,9 @@ System.register(["aurelia-templating"], function (_export) {
       Behavior = _aureliaTemplating.Behavior;
     }],
     execute: function () {
-      _prototypeProperties = function (child, staticProps, instanceProps) {
-        if (staticProps) Object.defineProperties(child, staticProps);
-        if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-      };
+      _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
-      GlobalBehavior = (function () {
+      GlobalBehavior = _export("GlobalBehavior", (function () {
         function GlobalBehavior(element) {
           this.element = element;
         }
@@ -25,7 +22,6 @@ System.register(["aurelia-templating"], function (_export) {
               });
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           inject: {
@@ -33,7 +29,6 @@ System.register(["aurelia-templating"], function (_export) {
               return [Element];
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         }, {
@@ -52,7 +47,6 @@ System.register(["aurelia-templating"], function (_export) {
               }
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           attached: {
@@ -62,7 +56,6 @@ System.register(["aurelia-templating"], function (_export) {
               }
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           detached: {
@@ -72,7 +65,6 @@ System.register(["aurelia-templating"], function (_export) {
               }
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           unbind: {
@@ -84,14 +76,13 @@ System.register(["aurelia-templating"], function (_export) {
               this.handler = null;
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         });
 
         return GlobalBehavior;
-      })();
-      _export("GlobalBehavior", GlobalBehavior);
+      })());
+
 
       GlobalBehavior.createSettingsFromBehavior = function (behavior) {
         var settings = {};

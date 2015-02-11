@@ -9,12 +9,9 @@ System.register(["aurelia-templating"], function (_export) {
       ViewSlot = _aureliaTemplating.ViewSlot;
     }],
     execute: function () {
-      _prototypeProperties = function (child, staticProps, instanceProps) {
-        if (staticProps) Object.defineProperties(child, staticProps);
-        if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-      };
+      _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
-      If = (function () {
+      If = _export("If", (function () {
         function If(viewFactory, viewSlot) {
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
@@ -27,7 +24,6 @@ System.register(["aurelia-templating"], function (_export) {
               return Behavior.templateController("if").withProperty("value", "valueChanged", "if");
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           inject: {
@@ -35,7 +31,6 @@ System.register(["aurelia-templating"], function (_export) {
               return [BoundViewFactory, ViewSlot];
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         }, {
@@ -66,14 +61,12 @@ System.register(["aurelia-templating"], function (_export) {
               }
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         });
 
         return If;
-      })();
-      _export("If", If);
+      })());
     }
   };
 });

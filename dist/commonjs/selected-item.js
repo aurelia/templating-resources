@@ -1,12 +1,9 @@
 "use strict";
 
-var _prototypeProperties = function (child, staticProps, instanceProps) {
-  if (staticProps) Object.defineProperties(child, staticProps);
-  if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-};
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
 var Behavior = require("aurelia-templating").Behavior;
-var SelectedItem = (function () {
+var SelectedItem = exports.SelectedItem = (function () {
   function SelectedItem(element) {
     this.element = element;
     this.options = [];
@@ -21,7 +18,6 @@ var SelectedItem = (function () {
         }).syncChildren("options", "optionsChanged", "option");
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     inject: {
@@ -29,7 +25,6 @@ var SelectedItem = (function () {
         return [Element];
       },
       writable: true,
-      enumerable: true,
       configurable: true
     }
   }, {
@@ -38,7 +33,6 @@ var SelectedItem = (function () {
         this.element.addEventListener("change", this.callback, false);
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     unbind: {
@@ -46,7 +40,6 @@ var SelectedItem = (function () {
         this.element.removeEventListener("change", this.callback);
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     valueChanged: {
@@ -54,7 +47,6 @@ var SelectedItem = (function () {
         this.optionsChanged();
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     selectedIndexChanged: {
@@ -65,7 +57,6 @@ var SelectedItem = (function () {
         this.value = option ? option.model : null;
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     optionsChanged: {
@@ -91,12 +82,10 @@ var SelectedItem = (function () {
         this.element.selectedIndex = 0;
       },
       writable: true,
-      enumerable: true,
       configurable: true
     }
   });
 
   return SelectedItem;
 })();
-
-exports.SelectedItem = SelectedItem;
+exports.__esModule = true;

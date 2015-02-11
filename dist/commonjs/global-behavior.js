@@ -1,12 +1,9 @@
 "use strict";
 
-var _prototypeProperties = function (child, staticProps, instanceProps) {
-  if (staticProps) Object.defineProperties(child, staticProps);
-  if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-};
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
 var Behavior = require("aurelia-templating").Behavior;
-var GlobalBehavior = (function () {
+var GlobalBehavior = exports.GlobalBehavior = (function () {
   function GlobalBehavior(element) {
     this.element = element;
   }
@@ -19,7 +16,6 @@ var GlobalBehavior = (function () {
         });
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     inject: {
@@ -27,7 +23,6 @@ var GlobalBehavior = (function () {
         return [Element];
       },
       writable: true,
-      enumerable: true,
       configurable: true
     }
   }, {
@@ -46,7 +41,6 @@ var GlobalBehavior = (function () {
         }
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     attached: {
@@ -56,7 +50,6 @@ var GlobalBehavior = (function () {
         }
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     detached: {
@@ -66,7 +59,6 @@ var GlobalBehavior = (function () {
         }
       },
       writable: true,
-      enumerable: true,
       configurable: true
     },
     unbind: {
@@ -78,15 +70,12 @@ var GlobalBehavior = (function () {
         this.handler = null;
       },
       writable: true,
-      enumerable: true,
       configurable: true
     }
   });
 
   return GlobalBehavior;
 })();
-
-exports.GlobalBehavior = GlobalBehavior;
 
 
 GlobalBehavior.createSettingsFromBehavior = function (behavior) {
@@ -120,3 +109,4 @@ GlobalBehavior.handlers = {
     }
   }
 };
+exports.__esModule = true;

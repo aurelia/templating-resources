@@ -7,12 +7,9 @@ System.register(["aurelia-templating"], function (_export) {
       Behavior = _aureliaTemplating.Behavior;
     }],
     execute: function () {
-      _prototypeProperties = function (child, staticProps, instanceProps) {
-        if (staticProps) Object.defineProperties(child, staticProps);
-        if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-      };
+      _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
-      SelectedItem = (function () {
+      SelectedItem = _export("SelectedItem", (function () {
         function SelectedItem(element) {
           this.element = element;
           this.options = [];
@@ -27,7 +24,6 @@ System.register(["aurelia-templating"], function (_export) {
               }).syncChildren("options", "optionsChanged", "option");
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           inject: {
@@ -35,7 +31,6 @@ System.register(["aurelia-templating"], function (_export) {
               return [Element];
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         }, {
@@ -44,7 +39,6 @@ System.register(["aurelia-templating"], function (_export) {
               this.element.addEventListener("change", this.callback, false);
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           unbind: {
@@ -52,7 +46,6 @@ System.register(["aurelia-templating"], function (_export) {
               this.element.removeEventListener("change", this.callback);
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           valueChanged: {
@@ -60,7 +53,6 @@ System.register(["aurelia-templating"], function (_export) {
               this.optionsChanged();
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           selectedIndexChanged: {
@@ -71,7 +63,6 @@ System.register(["aurelia-templating"], function (_export) {
               this.value = option ? option.model : null;
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           optionsChanged: {
@@ -97,14 +88,12 @@ System.register(["aurelia-templating"], function (_export) {
               this.element.selectedIndex = 0;
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         });
 
         return SelectedItem;
-      })();
-      _export("SelectedItem", SelectedItem);
+      })());
     }
   };
 });

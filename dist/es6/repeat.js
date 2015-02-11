@@ -22,13 +22,21 @@ export class Repeat {
 
     this.executionContext = executionContext;
 
+    if(!items){
+      if(this.oldItems){
+        this.viewSlot.removeAll();
+      }
+
+      return;
+    }
+
     if(this.oldItems === items){
       var splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
       var observer = this.observerLocator.getArrayObserver(items);
 
       this.handleSplices(items, splices);
       this.lastBoundItems = this.oldItems = null;
-            
+
       this.disposeArraySubscription = observer.subscribe(splices => {
         this.handleSplices(items, splices);
       });
@@ -39,7 +47,10 @@ export class Repeat {
 
   unbind(){
     this.oldItems = this.items;
-    this.lastBoundItems = this.items.slice(0);
+
+    if(this.items){
+      this.lastBoundItems = this.items.slice(0);
+    }
 
     if(this.disposeArraySubscription){
       this.disposeArraySubscription();
@@ -53,15 +64,20 @@ export class Repeat {
 
   processItems(){
     var items = this.items,
-        observer = this.observerLocator.getArrayObserver(items),
         viewSlot = this.viewSlot,
         viewFactory = this.viewFactory,
-        i, ii, row, view;
+        i, ii, row, view, observer;
 
-    if(this.disposeArraySubscription){
+    if (this.disposeArraySubscription) {
       this.disposeArraySubscription();
       viewSlot.removeAll();
     }
+
+    if(!items){
+      return;
+    }
+
+    observer = this.observerLocator.getArrayObserver(items);
 
     for(i = 0, ii = items.length; i < ii; ++i){
       row = this.createFullExecutionContext(items[i], i, ii);
@@ -89,7 +105,7 @@ export class Repeat {
     var first = (index === 0),
         last = (index === length - 1),
         even = index % 2 === 0;
-    
+
     context.$parent = this.executionContext;
     context.$index = index;
     context.$first = first;
@@ -119,7 +135,7 @@ export class Repeat {
       for (j = 0, jj = removed.length; j < jj; ++j) {
         model = removed[j];
         view = viewSlot.removeAt(splice.index + removeDelta);
-        
+
         if (view) {
           viewLookup.set(model, view);
         }

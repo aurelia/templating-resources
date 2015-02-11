@@ -12,12 +12,9 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
       ViewSlot = _aureliaTemplating.ViewSlot;
     }],
     execute: function () {
-      _prototypeProperties = function (child, staticProps, instanceProps) {
-        if (staticProps) Object.defineProperties(child, staticProps);
-        if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-      };
+      _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
-      Repeat = (function () {
+      Repeat = _export("Repeat", (function () {
         function Repeat(viewFactory, viewSlot, observerLocator) {
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
@@ -31,7 +28,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               return Behavior.templateController("repeat").withProperty("items", "itemsChanged", "repeat").withProperty("local");
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           inject: {
@@ -39,7 +35,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               return [BoundViewFactory, ViewSlot, ObserverLocator];
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         }, {
@@ -49,6 +44,14 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               var items = this.items;
 
               this.executionContext = executionContext;
+
+              if (!items) {
+                if (this.oldItems) {
+                  this.viewSlot.removeAll();
+                }
+
+                return;
+              }
 
               if (this.oldItems === items) {
                 var splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
@@ -65,13 +68,15 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               }
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           unbind: {
             value: function unbind() {
               this.oldItems = this.items;
-              this.lastBoundItems = this.items.slice(0);
+
+              if (this.items) {
+                this.lastBoundItems = this.items.slice(0);
+              }
 
               if (this.disposeArraySubscription) {
                 this.disposeArraySubscription();
@@ -79,7 +84,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               }
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           itemsChanged: {
@@ -87,25 +91,30 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               this.processItems();
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           processItems: {
             value: function processItems() {
-              var _this2 = this;
+              var _this = this;
               var items = this.items,
-                  observer = this.observerLocator.getArrayObserver(items),
                   viewSlot = this.viewSlot,
                   viewFactory = this.viewFactory,
                   i,
                   ii,
                   row,
-                  view;
+                  view,
+                  observer;
 
               if (this.disposeArraySubscription) {
                 this.disposeArraySubscription();
                 viewSlot.removeAll();
               }
+
+              if (!items) {
+                return;
+              }
+
+              observer = this.observerLocator.getArrayObserver(items);
 
               for (i = 0, ii = items.length; i < ii; ++i) {
                 row = this.createFullExecutionContext(items[i], i, ii);
@@ -114,11 +123,10 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               }
 
               this.disposeArraySubscription = observer.subscribe(function (splices) {
-                _this2.handleSplices(items, splices);
+                _this.handleSplices(items, splices);
               });
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           createBaseExecutionContext: {
@@ -128,7 +136,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               return context;
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           createFullExecutionContext: {
@@ -137,7 +144,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               return this.updateExecutionContext(context, index, length);
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           updateExecutionContext: {
@@ -157,7 +163,6 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               return context;
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           handleSplices: {
@@ -229,14 +234,12 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
               });
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         });
 
         return Repeat;
-      })();
-      _export("Repeat", Repeat);
+      })());
     }
   };
 });

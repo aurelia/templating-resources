@@ -21,3 +21,4 @@ exports.Show = Show;
 exports.SelectedItem = SelectedItem;
 exports.GlobalBehavior = GlobalBehavior;
 exports.install = install;
+exports.__esModule = true;

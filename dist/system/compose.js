@@ -25,12 +25,9 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
       ViewResources = _aureliaTemplating.ViewResources;
     }],
     execute: function () {
-      _prototypeProperties = function (child, staticProps, instanceProps) {
-        if (staticProps) Object.defineProperties(child, staticProps);
-        if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
-      };
+      _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
-      Compose = (function () {
+      Compose = _export("Compose", (function () {
         function Compose(container, compositionEngine, viewSlot, viewResources) {
           this.container = container;
           this.compositionEngine = compositionEngine;
@@ -44,7 +41,6 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
               return Behavior.customElement("compose").withProperty("model").withProperty("view").withProperty("viewModel").noView();
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           inject: {
@@ -52,21 +48,15 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
               return [Container, CompositionEngine, ViewSlot, ViewResources];
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         }, {
           bind: {
             value: function bind(executionContext) {
               this.executionContext = executionContext;
-              processInstruction(this, {
-                view: this.view,
-                viewModel: this.viewModel,
-                model: this.model
-              });
+              processInstruction(this, { view: this.view, viewModel: this.viewModel, model: this.model });
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           modelChanged: {
@@ -76,30 +66,26 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
               }
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           viewChanged: {
             value: function viewChanged(newValue, oldValue) {
-              processInstruction(this, { view: newValue });
+              processInstruction(this, { view: newValue, viewModel: this.viewModel, model: this.model });
             },
             writable: true,
-            enumerable: true,
             configurable: true
           },
           viewModelChanged: {
             value: function viewModelChanged(newValue, oldValue) {
-              processInstruction(this, { viewModel: newValue });
+              processInstruction(this, { viewModel: newValue, view: this.view, model: this.model });
             },
             writable: true,
-            enumerable: true,
             configurable: true
           }
         });
 
         return Compose;
-      })();
-      _export("Compose", Compose);
+      })());
     }
   };
 });
