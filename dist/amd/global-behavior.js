@@ -114,7 +114,7 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
         behavior.plugin = window.jQuery(element)[pluginName](settings);
       },
       unbind: function unbind(behavior, element) {
-        if ("destroy" in behavior.plugin) {
+        if (typeof behavior.plugin.destroy === "function") {
           behavior.plugin.destroy();
           behavior.plugin = null;
         }

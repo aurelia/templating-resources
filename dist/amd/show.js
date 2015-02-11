@@ -16,7 +16,7 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
     document.head.appendChild(node);
   }
 
-  addStyleString(".aurelia-hide { display:none; }");
+  addStyleString(".aurelia-hide { display:none !important; }");
 
   var Show = (function () {
     function Show(element) {

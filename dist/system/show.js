@@ -21,7 +21,7 @@ System.register(["aurelia-templating"], function (_export) {
         if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
       };
 
-      addStyleString(".aurelia-hide { display:none; }");
+      addStyleString(".aurelia-hide { display:none !important; }");
 
       Show = (function () {
         function Show(element) {
