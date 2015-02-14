@@ -46,11 +46,11 @@ export class Repeat {
         var splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
         var observer = this.observerLocator.getArrayObserver(items);
 
-        this.handleArraySplices(items, splices);
+        this.handleSplices(items, splices);
         this.lastBoundItems = this.oldItems = null;
 
         this.disposeSubscription = observer.subscribe(splices => {
-          this.handleArraySplices(items, splices);
+          this.handleSplices(items, splices);
         });
       }
     } else {
@@ -65,9 +65,9 @@ export class Repeat {
       this.lastBoundItems = this.items.slice(0);
     }
 
-    if(this.disposeArraySubscription){
-      this.disposeArraySubscription();
-      this.disposeArraySubscription = null;
+    if(this.disposeSubscription){
+      this.disposeSubscription();
+      this.disposeSubscription = null;
     }
   }
 
@@ -75,8 +75,8 @@ export class Repeat {
     var items = this.items,
       viewSlot = this.viewSlot;
 
-    if (this.disposeArraySubscription) {
-      this.disposeArraySubscription();
+    if (this.disposeSubscription) {
+      this.disposeSubscription();
       viewSlot.removeAll();
     }
 
@@ -99,12 +99,12 @@ export class Repeat {
     observer = this.observerLocator.getArrayObserver(items);
 
     for(i = 0, ii = items.length; i < ii; ++i){
-      row = this.createFullExecutionContext([items[i]], i, ii);
+      row = this.createFullExecutionContext(items[i], i, ii);
       view = viewFactory.create(row);
       viewSlot.add(view);
     }
 
-    this.disposeArraySubscription = observer.subscribe(splices => {
+    this.disposeSubscription = observer.subscribe(splices => {
       this.handleSplices(items, splices);
     });
   }
@@ -116,11 +116,11 @@ export class Repeat {
 
     observer = this.observerLocator.getMapObserver(items);
 
-    for (var [key, value] of items) {
-      row = this.createFullExecutionContext([key, value], key, items.size);
+    items.forEach((value, key) => {
+      row = this.createFullExecutionKvpContext(key, value, items.size);
       view = viewFactory.create(row);
       viewSlot.add(view);
-    }
+    });
 
     this.disposeSubscription = observer.subscribe(record => {
       this.handleMapChangeRecords(items, record);
@@ -129,16 +129,25 @@ export class Repeat {
 
   createBaseExecutionContext(data){
     var context = {};
-    context[this.local] = data[0];
-    if(data[1]){
-      context[this.local2] = data[1];
-    }
+    context[this.local] = data;
+    return context;
+  }
+
+  createBaseExecutionKvpContext(key, value){
+    var context = {};
+    context[this.local] = key;
+    context[this.local2] = value;
     return context;
   }
 
   createFullExecutionContext(data, index, length){
     var context = this.createBaseExecutionContext(data);
     return this.updateExecutionContext(context, index, length);
+  }
+
+  createFullExecutionKvpContext(key, value, length){
+    var context = this.createBaseExecutionKvpContext(key, value);
+    return this.updateExecutionContext(context, key, length);
   }
 
   updateExecutionContext(context, index, length){
@@ -197,7 +206,7 @@ export class Repeat {
           viewLookup.delete(model);
           viewSlot.insert(addIndex, view); //TODO: move
         } else {
-          row = this.createBaseExecutionContext([model]);
+          row = this.createBaseExecutionContext(model);
           view = this.viewFactory.create(row);
           viewSlot.insert(addIndex, view);
         }
@@ -225,12 +234,12 @@ export class Repeat {
         case 'update':
           removeIndex = this.getViewIndexByKey(key);
           viewSlot.removeAt(removeIndex);
-          row = this.createBaseExecutionContext([key, map.get(key)]);
+          row = this.createBaseExecutionKvpContext(key, map.get(key));
           view = this.viewFactory.create(row);
           viewSlot.insert(removeIndex, view);
           break;
         case 'add':
-          row = this.createBaseExecutionContext([key, map.get(key)]);
+          row = this.createBaseExecutionKvpContext(key, map.get(key));
           view = this.viewFactory.create(row);
           viewSlot.insert(map.size, view);
           break;
