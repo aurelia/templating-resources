@@ -7,7 +7,8 @@ export class Repeat {
       .templateController('repeat')
       .withProperty('items', 'itemsChanged', 'repeat')
       .withProperty('local')
-      .withProperty('local2');
+      .withProperty('key')
+      .withProperty('value');
   }
 
   static inject(){ return [BoundViewFactory,ViewSlot,ObserverLocator]; }
@@ -16,7 +17,8 @@ export class Repeat {
     this.viewSlot = viewSlot;
     this.observerLocator = observerLocator;
     this.local = 'item';
-    this.local2 = 'value';
+    this.key = 'key';
+    this.value = 'value';
   }
 
   bind(executionContext){
@@ -135,8 +137,8 @@ export class Repeat {
 
   createBaseExecutionKvpContext(key, value){
     var context = {};
-    context[this.local] = key;
-    context[this.local2] = value;
+    context[this.key] = key;
+    context[this.value] = value;
     return context;
   }
 
@@ -267,7 +269,7 @@ export class Repeat {
 
     for (i = 0, ii = viewSlot.children.length; i < ii; ++i) { // TODO (martingust) better way to get index?
       child = viewSlot.children[i];
-      if (child.bindings[0].source.key === key) {
+      if (child.bindings[0].source[this.key] === key) {
         return i;
       }
     }
