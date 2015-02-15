@@ -114,14 +114,16 @@ export class Repeat {
   processMapEntries(items) {
     var viewFactory = this.viewFactory,
       viewSlot = this.viewSlot,
+      index = 0,
       row, view, observer;
 
     observer = this.observerLocator.getMapObserver(items);
 
     items.forEach((value, key) => {
-      row = this.createFullExecutionKvpContext(key, value, items.size);
+      row = this.createFullExecutionKvpContext(key, value, index, items.size);
       view = viewFactory.create(row);
       viewSlot.add(view);
+      ++index;
     });
 
     this.disposeSubscription = observer.subscribe(record => {
@@ -147,9 +149,9 @@ export class Repeat {
     return this.updateExecutionContext(context, index, length);
   }
 
-  createFullExecutionKvpContext(key, value, length){
+  createFullExecutionKvpContext(key, value, index, length){
     var context = this.createBaseExecutionKvpContext(key, value);
-    return this.updateExecutionContext(context, key, length);
+    return this.updateExecutionContext(context, index, length);
   }
 
   updateExecutionContext(context, index, length){
