@@ -27,6 +27,7 @@
     "dependencies": {
       "aurelia-binding": "^0.3.2",
       "aurelia-dependency-injection": "^0.4.1",
+      "aurelia-logging": "^0.2.2",
       "aurelia-templating": "^0.8.4",
       "core-js": "npm:core-js@^0.4.1"
     }

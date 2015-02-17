@@ -11,6 +11,7 @@ System.config({
   "map": {
     "aurelia-binding": "github:aurelia/binding@0.3.2",
     "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.4.1",
+    "aurelia-logging": "github:aurelia/logging@0.2.2",
     "aurelia-templating": "github:aurelia/templating@0.8.4",
     "core-js": "npm:core-js@0.4.6",
     "github:aurelia/binding@0.3.2": {
