@@ -11,32 +11,14 @@ export class With {
   constructor(viewFactory, viewSlot){
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
-    this.context;
+    this.view = this.viewFactory.create();
+    this.viewSlot.add(this.view);
+    this.view.bind(this.value);
   }
 
   valueChanged(newValue){
-    if (!newValue) {
-      if(this.view){
-        this.viewSlot.remove(this.view);
-        this.view.unbind();
-      }
 
-      this.context = null;
-      return;
-    }
+    this.view.bind(newValue);
 
-    if(!this.view){
-      this.view = this.viewFactory.create();
-    }
-    console.log(this.context);
-    if (!this.context) {
-      this.context = newValue;
-
-      if(!this.view.bound){
-        this.view.bind(this.context);
-      }
-
-      this.viewSlot.add(this.view);
-    }
   }
 }
