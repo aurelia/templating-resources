@@ -73,6 +73,10 @@ export class Repeat {
     }
   }
 
+  itemsChanged() {
+    this.processItems();
+  }
+
   processItems() {
     var items = this.items,
       viewSlot = this.viewSlot;
