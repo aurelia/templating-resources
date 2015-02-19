@@ -11,14 +11,14 @@ export class With {
   constructor(viewFactory, viewSlot){
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
-    this.view = this.viewFactory.create();
-    this.viewSlot.add(this.view);
-    this.view.bind(this.value);
   }
 
   valueChanged(newValue){
-
-    this.view.bind(newValue);
-
+    if(!this.view){
+      this.view = this.viewFactory.create(newValue);
+      this.viewSlot.add(this.view);
+    }else{
+      this.view.bind(newValue);
+    }
   }
 }
