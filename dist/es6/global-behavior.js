@@ -1,10 +1,11 @@
 import {Behavior} from 'aurelia-templating';
+import * as LogManager from 'aurelia-logging';
 
 export class GlobalBehavior {
-  static metadata(){ 
+  static metadata(){
     return Behavior
       .attachedBehavior('global-behavior')
-      .withOptions().and(x => x.dynamic()); 
+      .withOptions().and(x => x.dynamic());
   }
 
   static inject() { return [Element]; }
@@ -63,12 +64,25 @@ GlobalBehavior.createSettingsFromBehavior = function(behavior){
 
 GlobalBehavior.jQueryPlugins = {};
 
-GlobalBehavior.handlers = { 
+GlobalBehavior.handlers = {
   jquery:{
     bind(behavior, element, command){
       var settings = GlobalBehavior.createSettingsFromBehavior(behavior);
       var pluginName = GlobalBehavior.jQueryPlugins[command] || command;
-      behavior.plugin = window.jQuery(element)[pluginName](settings);
+      var jqueryElement = window.jQuery(element);
+
+      if(!jqueryElement[pluginName]){
+        LogManager.getLogger('templating-resources')
+          .warn(`Could not find the jQuery plugin ${pluginName}, possibly due to case mismatch. Trying to enumerate jQuery methods in lowercase. Add the correctly cased plugin name to the GlobalBehavior to avoid this performance hit.`);
+
+        for(var prop in jqueryElement){
+          if(prop.toLowerCase() === pluginName){
+            pluginName = prop;
+          }
+        }
+      }
+
+      behavior.plugin = jqueryElement[pluginName](settings);
     },
     unbind(behavior, element){
       if(typeof behavior.plugin.destroy === 'function'){

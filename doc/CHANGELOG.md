@@ -1,3 +1,24 @@
+### 0.8.8 (2015-02-19)
+
+
+#### Bug Fixes
+
+* **all:** add logging dependency ([3ca23734](http://github.com/aurelia/templating-resources/commit/3ca23734cbb652c2e4ed3e459bcd059f0cd6818e))
+* **build:** add missing bower bump ([d7b588de](http://github.com/aurelia/templating-resources/commit/d7b588de7280799b89cbe93f56da9388567d934f))
+* **repeat:**
+  * regression with missing items changed handler ([1b17a858](http://github.com/aurelia/templating-resources/commit/1b17a858c7ff1084aa76120e1c43cdb91518b603))
+  * provide index not key to updateExecutionContext ([3f026d70](http://github.com/aurelia/templating-resources/commit/3f026d70350dc872ac74a1c206313738b1d6e927))
+
+
+#### Features
+
+* **repeat:** implement support for map ([15f8b0aa](http://github.com/aurelia/templating-resources/commit/15f8b0aa9554171dba01bae323f8cbde84784aaa))
+* **templating-resources:**
+  * add defaultSanitizer method to inner-html ([9353b477](http://github.com/aurelia/templating-resources/commit/9353b477769cae4cd2a342f5bdb9c455a7d4bbca))
+  * add innerHTML attached behavior ([f6e28fe1](http://github.com/aurelia/templating-resources/commit/f6e28fe1e7e37b4f4b60ec066dddaff18dc6912b))
+* **with:** Add WIP with binding ([b8de3ec4](http://github.com/aurelia/templating-resources/commit/b8de3ec44c3b29bd9b4c8cf5d42178bbd560fdc9))
+
+
 ### 0.8.7 (2015-02-06)
 
 

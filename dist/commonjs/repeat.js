@@ -6,6 +6,7 @@ var _aureliaBinding = require("aurelia-binding");
 
 var ObserverLocator = _aureliaBinding.ObserverLocator;
 var calcSplices = _aureliaBinding.calcSplices;
+var getChangeRecords = _aureliaBinding.getChangeRecords;
 var _aureliaTemplating = require("aurelia-templating");
 
 var Behavior = _aureliaTemplating.Behavior;
@@ -17,12 +18,14 @@ var Repeat = exports.Repeat = (function () {
     this.viewSlot = viewSlot;
     this.observerLocator = observerLocator;
     this.local = "item";
+    this.key = "key";
+    this.value = "value";
   }
 
   _prototypeProperties(Repeat, {
     metadata: {
       value: function metadata() {
-        return Behavior.templateController("repeat").withProperty("items", "itemsChanged", "repeat").withProperty("local");
+        return Behavior.templateController("repeat").withProperty("items", "itemsChanged", "repeat").withProperty("local").withProperty("key").withProperty("value");
       },
       writable: true,
       configurable: true
@@ -51,15 +54,26 @@ var Repeat = exports.Repeat = (function () {
         }
 
         if (this.oldItems === items) {
-          var splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
-          var observer = this.observerLocator.getArrayObserver(items);
+          if (items instanceof Map) {
+            var records = getChangeRecords(items);
+            var observer = this.observerLocator.getMapObserver(items);
 
-          this.handleSplices(items, splices);
-          this.lastBoundItems = this.oldItems = null;
+            this.handleMapChangeRecords(items, records);
 
-          this.disposeArraySubscription = observer.subscribe(function (splices) {
-            _this.handleSplices(items, splices);
-          });
+            this.disposeSubscription = observer.subscribe(function (records) {
+              _this.handleMapChangeRecords(items, records);
+            });
+          } else {
+            var splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
+            var observer = this.observerLocator.getArrayObserver(items);
+
+            this.handleSplices(items, splices);
+            this.lastBoundItems = this.oldItems = null;
+
+            this.disposeSubscription = observer.subscribe(function (splices) {
+              _this.handleSplices(items, splices);
+            });
+          }
         } else {
           this.processItems();
         }
@@ -71,13 +85,13 @@ var Repeat = exports.Repeat = (function () {
       value: function unbind() {
         this.oldItems = this.items;
 
-        if (this.items) {
+        if (this.items instanceof Array) {
           this.lastBoundItems = this.items.slice(0);
         }
 
-        if (this.disposeArraySubscription) {
-          this.disposeArraySubscription();
-          this.disposeArraySubscription = null;
+        if (this.disposeSubscription) {
+          this.disposeSubscription();
+          this.disposeSubscription = null;
         }
       },
       writable: true,
@@ -92,24 +106,37 @@ var Repeat = exports.Repeat = (function () {
     },
     processItems: {
       value: function processItems() {
-        var _this = this;
         var items = this.items,
-            viewSlot = this.viewSlot,
-            viewFactory = this.viewFactory,
-            i,
-            ii,
-            row,
-            view,
-            observer;
+            viewSlot = this.viewSlot;
 
-        if (this.disposeArraySubscription) {
-          this.disposeArraySubscription();
+        if (this.disposeSubscription) {
+          this.disposeSubscription();
           viewSlot.removeAll();
         }
 
         if (!items) {
           return;
         }
+
+        if (items instanceof Map) {
+          this.processMapEntries(items);
+        } else {
+          this.processArrayItems(items);
+        }
+      },
+      writable: true,
+      configurable: true
+    },
+    processArrayItems: {
+      value: function processArrayItems(items) {
+        var _this = this;
+        var viewFactory = this.viewFactory,
+            viewSlot = this.viewSlot,
+            i,
+            ii,
+            row,
+            view,
+            observer;
 
         observer = this.observerLocator.getArrayObserver(items);
 
@@ -119,8 +146,34 @@ var Repeat = exports.Repeat = (function () {
           viewSlot.add(view);
         }
 
-        this.disposeArraySubscription = observer.subscribe(function (splices) {
+        this.disposeSubscription = observer.subscribe(function (splices) {
           _this.handleSplices(items, splices);
+        });
+      },
+      writable: true,
+      configurable: true
+    },
+    processMapEntries: {
+      value: function processMapEntries(items) {
+        var _this = this;
+        var viewFactory = this.viewFactory,
+            viewSlot = this.viewSlot,
+            index = 0,
+            row,
+            view,
+            observer;
+
+        observer = this.observerLocator.getMapObserver(items);
+
+        items.forEach(function (value, key) {
+          row = _this.createFullExecutionKvpContext(key, value, index, items.size);
+          view = viewFactory.create(row);
+          viewSlot.add(view);
+          ++index;
+        });
+
+        this.disposeSubscription = observer.subscribe(function (record) {
+          _this.handleMapChangeRecords(items, record);
         });
       },
       writable: true,
@@ -135,9 +188,27 @@ var Repeat = exports.Repeat = (function () {
       writable: true,
       configurable: true
     },
+    createBaseExecutionKvpContext: {
+      value: function createBaseExecutionKvpContext(key, value) {
+        var context = {};
+        context[this.key] = key;
+        context[this.value] = value;
+        return context;
+      },
+      writable: true,
+      configurable: true
+    },
     createFullExecutionContext: {
       value: function createFullExecutionContext(data, index, length) {
         var context = this.createBaseExecutionContext(data);
+        return this.updateExecutionContext(context, index, length);
+      },
+      writable: true,
+      configurable: true
+    },
+    createFullExecutionKvpContext: {
+      value: function createFullExecutionKvpContext(key, value, index, length) {
+        var context = this.createBaseExecutionKvpContext(key, value);
         return this.updateExecutionContext(context, index, length);
       },
       writable: true,
@@ -229,6 +300,74 @@ var Repeat = exports.Repeat = (function () {
         viewLookup.forEach(function (x) {
           return x.unbind();
         });
+      },
+      writable: true,
+      configurable: true
+    },
+    handleMapChangeRecords: {
+      value: function handleMapChangeRecords(map, records) {
+        var viewSlot = this.viewSlot,
+            key,
+            i,
+            ii,
+            view,
+            children,
+            length,
+            row,
+            removeIndex,
+            record;
+
+        for (i = 0, ii = records.length; i < ii; ++i) {
+          record = records[i];
+          key = record.key;
+          switch (record.type) {
+            case "update":
+              removeIndex = this.getViewIndexByKey(key);
+              viewSlot.removeAt(removeIndex);
+              row = this.createBaseExecutionKvpContext(key, map.get(key));
+              view = this.viewFactory.create(row);
+              viewSlot.insert(removeIndex, view);
+              break;
+            case "add":
+              row = this.createBaseExecutionKvpContext(key, map.get(key));
+              view = this.viewFactory.create(row);
+              viewSlot.insert(map.size, view);
+              break;
+            case "delete":
+              if (!record.oldValue) {
+                return;
+              }
+              removeIndex = this.getViewIndexByKey(key);
+              viewSlot.removeAt(removeIndex);
+              break;
+            case "clear":
+              viewSlot.removeAll();
+          }
+        }
+
+        children = viewSlot.children;
+        length = children.length;
+
+        for (i = 0; i < length; i++) {
+          this.updateExecutionContext(children[i].executionContext, i, length);
+        }
+      },
+      writable: true,
+      configurable: true
+    },
+    getViewIndexByKey: {
+      value: function getViewIndexByKey(key) {
+        var viewSlot = this.viewSlot,
+            i,
+            ii,
+            child;
+
+        for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
+          child = viewSlot.children[i];
+          if (child.bindings[0].source[this.key] === key) {
+            return i;
+          }
+        }
       },
       writable: true,
       configurable: true

@@ -1,11 +1,11 @@
-System.register(["./compose", "./if", "./repeat", "./show", "./selected-item", "./global-behavior"], function (_export) {
+System.register(["./compose", "./if", "./with", "./repeat", "./show", "./selected-item", "./global-behavior", "./inner-html"], function (_export) {
   "use strict";
 
-  var Compose, If, Repeat, Show, SelectedItem, GlobalBehavior;
+  var Compose, If, With, Repeat, Show, SelectedItem, GlobalBehavior, InnerHTML;
 
 
   function install(aurelia) {
-    aurelia.withResources([Show, If, Repeat, Compose, SelectedItem, GlobalBehavior]);
+    aurelia.withResources([Show, If, With, Repeat, Compose, SelectedItem, GlobalBehavior, InnerHTML]);
   }
 
   return {
@@ -13,6 +13,8 @@ System.register(["./compose", "./if", "./repeat", "./show", "./selected-item", "
       Compose = _compose.Compose;
     }, function (_if) {
       If = _if.If;
+    }, function (_with) {
+      With = _with.With;
     }, function (_repeat) {
       Repeat = _repeat.Repeat;
     }, function (_show) {
@@ -21,15 +23,21 @@ System.register(["./compose", "./if", "./repeat", "./show", "./selected-item", "
       SelectedItem = _selectedItem.SelectedItem;
     }, function (_globalBehavior) {
       GlobalBehavior = _globalBehavior.GlobalBehavior;
+    }, function (_innerHtml) {
+      InnerHTML = _innerHtml.InnerHTML;
     }],
     execute: function () {
       _export("Compose", Compose);
 
       _export("If", If);
 
+      _export("With", With);
+
       _export("Repeat", Repeat);
 
       _export("Show", Show);
+
+      _export("InnerHTML", InnerHTML);
 
       _export("SelectedItem", SelectedItem);
 
