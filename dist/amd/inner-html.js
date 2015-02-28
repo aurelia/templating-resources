@@ -3,9 +3,14 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
 
   var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
+  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
   var Behavior = _aureliaTemplating.Behavior;
+
   var InnerHTML = exports.InnerHTML = (function () {
     function InnerHTML(element) {
+      _classCallCheck(this, InnerHTML);
+
       this.element = element;
       this.sanitizer = InnerHTML.defaultSanitizer;
     }
@@ -68,5 +73,8 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
 
     return InnerHTML;
   })();
-  exports.__esModule = true;
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 });

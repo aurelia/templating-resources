@@ -10,7 +10,6 @@ define(["exports", "./compose", "./if", "./with", "./repeat", "./show", "./selec
   var GlobalBehavior = _globalBehavior.GlobalBehavior;
   var InnerHTML = _innerHtml.InnerHTML;
 
-
   function install(aurelia) {
     aurelia.withResources([Show, If, With, Repeat, Compose, SelectedItem, GlobalBehavior, InnerHTML]);
   }
@@ -24,5 +23,7 @@ define(["exports", "./compose", "./if", "./with", "./repeat", "./show", "./selec
   exports.SelectedItem = SelectedItem;
   exports.GlobalBehavior = GlobalBehavior;
   exports.install = install;
-  exports.__esModule = true;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 });

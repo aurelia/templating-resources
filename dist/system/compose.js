@@ -1,8 +1,5 @@
 System.register(["aurelia-dependency-injection", "aurelia-templating"], function (_export) {
-  "use strict";
-
-  var Container, Behavior, CompositionEngine, ViewSlot, ViewResources, _prototypeProperties, Compose;
-
+  var Container, Behavior, CompositionEngine, ViewSlot, ViewResources, _prototypeProperties, _classCallCheck, Compose;
 
   function processInstruction(composer, instruction) {
     composer.compositionEngine.compose(Object.assign(instruction, {
@@ -25,10 +22,16 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
       ViewResources = _aureliaTemplating.ViewResources;
     }],
     execute: function () {
+      "use strict";
+
       _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
       Compose = _export("Compose", (function () {
         function Compose(container, compositionEngine, viewSlot, viewResources) {
+          _classCallCheck(this, Compose);
+
           this.container = container;
           this.compositionEngine = compositionEngine;
           this.viewSlot = viewSlot;

@@ -4,11 +4,16 @@ var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? ob
 
 var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
 var Behavior = require("aurelia-templating").Behavior;
+
 var LogManager = _interopRequireWildcard(require("aurelia-logging"));
 
 var GlobalBehavior = exports.GlobalBehavior = (function () {
   function GlobalBehavior(element) {
+    _classCallCheck(this, GlobalBehavior);
+
     this.element = element;
   }
 
@@ -81,7 +86,6 @@ var GlobalBehavior = exports.GlobalBehavior = (function () {
   return GlobalBehavior;
 })();
 
-
 GlobalBehavior.createSettingsFromBehavior = function (behavior) {
   var settings = {};
 
@@ -125,4 +129,6 @@ GlobalBehavior.handlers = {
     }
   }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});

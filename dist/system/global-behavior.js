@@ -1,7 +1,6 @@
 System.register(["aurelia-templating", "aurelia-logging"], function (_export) {
-  "use strict";
+  var Behavior, LogManager, _prototypeProperties, _classCallCheck, GlobalBehavior;
 
-  var Behavior, LogManager, _prototypeProperties, GlobalBehavior;
   return {
     setters: [function (_aureliaTemplating) {
       Behavior = _aureliaTemplating.Behavior;
@@ -9,10 +8,16 @@ System.register(["aurelia-templating", "aurelia-logging"], function (_export) {
       LogManager = _aureliaLogging;
     }],
     execute: function () {
+      "use strict";
+
       _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
       GlobalBehavior = _export("GlobalBehavior", (function () {
         function GlobalBehavior(element) {
+          _classCallCheck(this, GlobalBehavior);
+
           this.element = element;
         }
 
@@ -84,7 +89,6 @@ System.register(["aurelia-templating", "aurelia-logging"], function (_export) {
 
         return GlobalBehavior;
       })());
-
 
       GlobalBehavior.createSettingsFromBehavior = function (behavior) {
         var settings = {};

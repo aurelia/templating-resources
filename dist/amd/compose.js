@@ -3,13 +3,18 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
 
   var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
+  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
   var Container = _aureliaDependencyInjection.Container;
   var Behavior = _aureliaTemplating.Behavior;
   var CompositionEngine = _aureliaTemplating.CompositionEngine;
   var ViewSlot = _aureliaTemplating.ViewSlot;
   var ViewResources = _aureliaTemplating.ViewResources;
+
   var Compose = exports.Compose = (function () {
     function Compose(container, compositionEngine, viewSlot, viewResources) {
+      _classCallCheck(this, Compose);
+
       this.container = container;
       this.compositionEngine = compositionEngine;
       this.viewSlot = viewSlot;
@@ -68,7 +73,6 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
     return Compose;
   })();
 
-
   function processInstruction(composer, instruction) {
     composer.compositionEngine.compose(Object.assign(instruction, {
       executionContext: composer.executionContext,
@@ -80,5 +84,7 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
       composer.current = next;
     });
   }
-  exports.__esModule = true;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 });

@@ -2,13 +2,18 @@
 
 var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
 var _aureliaTemplating = require("aurelia-templating");
 
 var Behavior = _aureliaTemplating.Behavior;
 var BoundViewFactory = _aureliaTemplating.BoundViewFactory;
 var ViewSlot = _aureliaTemplating.ViewSlot;
+
 var If = exports.If = (function () {
   function If(viewFactory, viewSlot) {
+    _classCallCheck(this, If);
+
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
     this.showing = false;
@@ -63,4 +68,7 @@ var If = exports.If = (function () {
 
   return If;
 })();
-exports.__esModule = true;
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});

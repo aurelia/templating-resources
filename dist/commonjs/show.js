@@ -2,8 +2,9 @@
 
 var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
-var Behavior = require("aurelia-templating").Behavior;
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
+var Behavior = require("aurelia-templating").Behavior;
 
 function addStyleString(str) {
   var node = document.createElement("style");
@@ -16,6 +17,8 @@ addStyleString(".aurelia-hide { display:none !important; }");
 
 var Show = exports.Show = (function () {
   function Show(element) {
+    _classCallCheck(this, Show);
+
     this.element = element;
   }
 
@@ -50,4 +53,7 @@ var Show = exports.Show = (function () {
 
   return Show;
 })();
-exports.__esModule = true;
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});

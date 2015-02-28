@@ -2,18 +2,24 @@
 
 var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
 var _aureliaBinding = require("aurelia-binding");
 
 var ObserverLocator = _aureliaBinding.ObserverLocator;
 var calcSplices = _aureliaBinding.calcSplices;
 var getChangeRecords = _aureliaBinding.getChangeRecords;
+
 var _aureliaTemplating = require("aurelia-templating");
 
 var Behavior = _aureliaTemplating.Behavior;
 var BoundViewFactory = _aureliaTemplating.BoundViewFactory;
 var ViewSlot = _aureliaTemplating.ViewSlot;
+
 var Repeat = exports.Repeat = (function () {
   function Repeat(viewFactory, viewSlot, observerLocator) {
+    _classCallCheck(this, Repeat);
+
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
     this.observerLocator = observerLocator;
@@ -41,6 +47,7 @@ var Repeat = exports.Repeat = (function () {
     bind: {
       value: function bind(executionContext) {
         var _this = this;
+
         var items = this.items;
 
         this.executionContext = executionContext;
@@ -130,6 +137,7 @@ var Repeat = exports.Repeat = (function () {
     processArrayItems: {
       value: function processArrayItems(items) {
         var _this = this;
+
         var viewFactory = this.viewFactory,
             viewSlot = this.viewSlot,
             i,
@@ -156,6 +164,7 @@ var Repeat = exports.Repeat = (function () {
     processMapEntries: {
       value: function processMapEntries(items) {
         var _this = this;
+
         var viewFactory = this.viewFactory,
             viewSlot = this.viewSlot,
             index = 0,
@@ -254,6 +263,9 @@ var Repeat = exports.Repeat = (function () {
             length,
             row;
 
+        //TODO: track which views are moved instead of removed better
+        //TODO: only update context after highest changed index
+
         for (i = 0, ii = splices.length; i < ii; ++i) {
           splice = splices[i];
           removed = splice.removed;
@@ -281,7 +293,7 @@ var Repeat = exports.Repeat = (function () {
 
             if (view) {
               viewLookup["delete"](model);
-              viewSlot.insert(addIndex, view);
+              viewSlot.insert(addIndex, view); //TODO: move
             } else {
               row = this.createBaseExecutionContext(model);
               view = this.viewFactory.create(row);
@@ -363,6 +375,7 @@ var Repeat = exports.Repeat = (function () {
             child;
 
         for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
+          // TODO (martingust) better way to get index?
           child = viewSlot.children[i];
           if (child.bindings[0].source[this.key] === key) {
             return i;
@@ -376,4 +389,7 @@ var Repeat = exports.Repeat = (function () {
 
   return Repeat;
 })();
-exports.__esModule = true;
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});

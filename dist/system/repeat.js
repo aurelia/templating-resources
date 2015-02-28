@@ -1,7 +1,6 @@
 System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
-  "use strict";
+  var ObserverLocator, calcSplices, getChangeRecords, Behavior, BoundViewFactory, ViewSlot, _prototypeProperties, _classCallCheck, Repeat;
 
-  var ObserverLocator, calcSplices, getChangeRecords, Behavior, BoundViewFactory, ViewSlot, _prototypeProperties, Repeat;
   return {
     setters: [function (_aureliaBinding) {
       ObserverLocator = _aureliaBinding.ObserverLocator;
@@ -13,10 +12,16 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
       ViewSlot = _aureliaTemplating.ViewSlot;
     }],
     execute: function () {
+      "use strict";
+
       _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
       Repeat = _export("Repeat", (function () {
         function Repeat(viewFactory, viewSlot, observerLocator) {
+          _classCallCheck(this, Repeat);
+
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
           this.observerLocator = observerLocator;
@@ -44,6 +49,7 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
           bind: {
             value: function bind(executionContext) {
               var _this = this;
+
               var items = this.items;
 
               this.executionContext = executionContext;
@@ -133,6 +139,7 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
           processArrayItems: {
             value: function processArrayItems(items) {
               var _this = this;
+
               var viewFactory = this.viewFactory,
                   viewSlot = this.viewSlot,
                   i,
@@ -159,6 +166,7 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
           processMapEntries: {
             value: function processMapEntries(items) {
               var _this = this;
+
               var viewFactory = this.viewFactory,
                   viewSlot = this.viewSlot,
                   index = 0,
@@ -257,6 +265,9 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
                   length,
                   row;
 
+              //TODO: track which views are moved instead of removed better
+              //TODO: only update context after highest changed index
+
               for (i = 0, ii = splices.length; i < ii; ++i) {
                 splice = splices[i];
                 removed = splice.removed;
@@ -284,7 +295,7 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
 
                   if (view) {
                     viewLookup["delete"](model);
-                    viewSlot.insert(addIndex, view);
+                    viewSlot.insert(addIndex, view); //TODO: move
                   } else {
                     row = this.createBaseExecutionContext(model);
                     view = this.viewFactory.create(row);
@@ -366,6 +377,7 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
                   child;
 
               for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
+                // TODO (martingust) better way to get index?
                 child = viewSlot.children[i];
                 if (child.bindings[0].source[this.key] === key) {
                   return i;

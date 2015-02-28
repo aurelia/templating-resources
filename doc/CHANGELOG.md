@@ -1,3 +1,11 @@
+### 0.8.9 (2015-02-28)
+
+
+#### Bug Fixes
+
+* **package:** update dependencies ([3775b621](http://github.com/aurelia/templating-resources/commit/3775b6218f3d37fffbb032c3490f5a41c78b8891))
+
+
 ### 0.8.8 (2015-02-19)
 
 

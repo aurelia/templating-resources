@@ -1,16 +1,21 @@
 System.register(["aurelia-templating"], function (_export) {
-  "use strict";
+  var Behavior, _prototypeProperties, _classCallCheck, SelectedItem;
 
-  var Behavior, _prototypeProperties, SelectedItem;
   return {
     setters: [function (_aureliaTemplating) {
       Behavior = _aureliaTemplating.Behavior;
     }],
     execute: function () {
+      "use strict";
+
       _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
       SelectedItem = _export("SelectedItem", (function () {
         function SelectedItem(element) {
+          _classCallCheck(this, SelectedItem);
+
           this.element = element;
           this.options = [];
           this.callback = this.selectedIndexChanged.bind(this);

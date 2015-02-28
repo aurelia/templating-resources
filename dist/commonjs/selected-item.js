@@ -2,9 +2,14 @@
 
 var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
 var Behavior = require("aurelia-templating").Behavior;
+
 var SelectedItem = exports.SelectedItem = (function () {
   function SelectedItem(element) {
+    _classCallCheck(this, SelectedItem);
+
     this.element = element;
     this.options = [];
     this.callback = this.selectedIndexChanged.bind(this);
@@ -88,4 +93,7 @@ var SelectedItem = exports.SelectedItem = (function () {
 
   return SelectedItem;
 })();
-exports.__esModule = true;
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});

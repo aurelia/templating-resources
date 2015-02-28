@@ -1,8 +1,5 @@
 System.register(["aurelia-templating"], function (_export) {
-  "use strict";
-
-  var Behavior, _prototypeProperties, Show;
-
+  var Behavior, _prototypeProperties, _classCallCheck, Show;
 
   function addStyleString(str) {
     var node = document.createElement("style");
@@ -16,12 +13,18 @@ System.register(["aurelia-templating"], function (_export) {
       Behavior = _aureliaTemplating.Behavior;
     }],
     execute: function () {
+      "use strict";
+
       _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
       addStyleString(".aurelia-hide { display:none !important; }");
 
       Show = _export("Show", (function () {
         function Show(element) {
+          _classCallCheck(this, Show);
+
           this.element = element;
         }
 

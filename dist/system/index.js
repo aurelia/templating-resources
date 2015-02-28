@@ -1,8 +1,5 @@
 System.register(["./compose", "./if", "./with", "./repeat", "./show", "./selected-item", "./global-behavior", "./inner-html"], function (_export) {
-  "use strict";
-
   var Compose, If, With, Repeat, Show, SelectedItem, GlobalBehavior, InnerHTML;
-
 
   function install(aurelia) {
     aurelia.withResources([Show, If, With, Repeat, Compose, SelectedItem, GlobalBehavior, InnerHTML]);
@@ -27,6 +24,8 @@ System.register(["./compose", "./if", "./with", "./repeat", "./show", "./selecte
       InnerHTML = _innerHtml.InnerHTML;
     }],
     execute: function () {
+      "use strict";
+
       _export("Compose", Compose);
 
       _export("If", If);

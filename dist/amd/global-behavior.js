@@ -3,10 +3,15 @@ define(["exports", "aurelia-templating", "aurelia-logging"], function (exports, 
 
   var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
+  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
   var Behavior = _aureliaTemplating.Behavior;
   var LogManager = _aureliaLogging;
+
   var GlobalBehavior = exports.GlobalBehavior = (function () {
     function GlobalBehavior(element) {
+      _classCallCheck(this, GlobalBehavior);
+
       this.element = element;
     }
 
@@ -79,7 +84,6 @@ define(["exports", "aurelia-templating", "aurelia-logging"], function (exports, 
     return GlobalBehavior;
   })();
 
-
   GlobalBehavior.createSettingsFromBehavior = function (behavior) {
     var settings = {};
 
@@ -123,5 +127,7 @@ define(["exports", "aurelia-templating", "aurelia-logging"], function (exports, 
       }
     }
   };
-  exports.__esModule = true;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 });

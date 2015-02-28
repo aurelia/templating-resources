@@ -3,8 +3,9 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
 
   var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
 
-  var Behavior = _aureliaTemplating.Behavior;
+  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
+  var Behavior = _aureliaTemplating.Behavior;
 
   function addStyleString(str) {
     var node = document.createElement("style");
@@ -17,6 +18,8 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
 
   var Show = exports.Show = (function () {
     function Show(element) {
+      _classCallCheck(this, Show);
+
       this.element = element;
     }
 
@@ -51,5 +54,8 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
 
     return Show;
   })();
-  exports.__esModule = true;
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 });

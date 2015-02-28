@@ -1,7 +1,6 @@
 System.register(["aurelia-templating"], function (_export) {
-  "use strict";
+  var Behavior, BoundViewFactory, ViewSlot, _prototypeProperties, _classCallCheck, If;
 
-  var Behavior, BoundViewFactory, ViewSlot, _prototypeProperties, If;
   return {
     setters: [function (_aureliaTemplating) {
       Behavior = _aureliaTemplating.Behavior;
@@ -9,10 +8,16 @@ System.register(["aurelia-templating"], function (_export) {
       ViewSlot = _aureliaTemplating.ViewSlot;
     }],
     execute: function () {
+      "use strict";
+
       _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
       If = _export("If", (function () {
         function If(viewFactory, viewSlot) {
+          _classCallCheck(this, If);
+
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
           this.showing = false;
