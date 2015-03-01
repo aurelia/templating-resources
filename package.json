@@ -19,16 +19,16 @@
     "url": "http://github.com/aurelia/templating-resources"
   },
   "jspm": {
-    "main": "system/index",
+    "main": "index",
     "format": "register",
     "directories": {
-      "lib": "dist"
+      "lib": "dist/system"
     },
     "dependencies": {
-      "aurelia-binding": "github:aurelia/binding@^0.3.6",
-      "aurelia-dependency-injection": "github:aurelia/dependency-injection@^0.4.4",
-      "aurelia-logging": "github:aurelia/logging@^0.2.4",
-      "aurelia-templating": "github:aurelia/templating@^0.8.13",
+      "aurelia-binding": "github:aurelia/binding@^0.3.7",
+      "aurelia-dependency-injection": "github:aurelia/dependency-injection@^0.4.5",
+      "aurelia-logging": "github:aurelia/logging@^0.2.5",
+      "aurelia-templating": "github:aurelia/templating@^0.8.14",
       "core-js": "npm:core-js@^0.4.1"
     }
   },
