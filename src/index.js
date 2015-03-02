@@ -8,7 +8,16 @@ import {GlobalBehavior} from './global-behavior';
 import {InnerHTML} from './inner-html';
 
 function install(aurelia){
-  aurelia.withResources([Show, If, With, Repeat, Compose, SelectedItem, GlobalBehavior, InnerHTML]);
+  aurelia.withResources(
+    './compose',
+    './if',
+    './with',
+    './repeat',
+    './show',
+    './selected-item',
+    './global-behavior',
+    './inner-html'
+  );
 }
 
 export {
