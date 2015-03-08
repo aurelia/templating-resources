@@ -8,7 +8,7 @@ import {GlobalBehavior} from './global-behavior';
 import {InnerHTML} from './inner-html';
 
 function install(aurelia){
-  aurelia.withResources(
+  aurelia.globalizeResources(
     './compose',
     './if',
     './with',
