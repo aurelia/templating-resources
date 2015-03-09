@@ -8,7 +8,7 @@ import {GlobalBehavior} from './global-behavior';
 import {SanitizeHtmlValueConverter} from './sanitize-html';
 
 function install(aurelia){
-  aurelia.withResources(
+  aurelia.globalizeResources(
     './compose',
     './if',
     './with',
