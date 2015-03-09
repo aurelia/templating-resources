@@ -5,7 +5,7 @@ import {Repeat} from './repeat';
 import {Show} from './show';
 import {SelectedItem} from './selected-item';
 import {GlobalBehavior} from './global-behavior';
-import {InnerHTML} from './inner-html';
+import {SanitizeHtmlValueConverter} from './sanitize-html';
 
 function install(aurelia){
   aurelia.withResources(
@@ -16,7 +16,7 @@ function install(aurelia){
     './show',
     './selected-item',
     './global-behavior',
-    './inner-html'
+    './sanitize-html'
   );
 }
 
@@ -26,7 +26,7 @@ export {
   With,
   Repeat,
   Show,
-  InnerHTML,
+  SanitizeHtmlValueConverter,
   SelectedItem,
   GlobalBehavior,
   install
