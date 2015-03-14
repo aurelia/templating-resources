@@ -138,6 +138,7 @@ export class Repeat {
   createBaseExecutionContext(data){
     var context = {};
     context[this.local] = data;
+    context.$parent = this.executionContext;
     return context;
   }
 
@@ -145,6 +146,7 @@ export class Repeat {
     var context = {};
     context[this.key] = key;
     context[this.value] = value;
+    context.$parent = this.executionContext;
     return context;
   }
 
@@ -163,7 +165,6 @@ export class Repeat {
         last = (index === length - 1),
         even = index % 2 === 0;
 
-    context.$parent = this.executionContext;
     context.$index = index;
     context.$first = first;
     context.$last = last;
