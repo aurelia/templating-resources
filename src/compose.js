@@ -25,13 +25,15 @@ export class Compose {
 	}
 
 	modelChanged(newValue, oldValue){
-		if(this.viewModel && typeof this.viewModel.activate === 'function'){
-			this.viewModel.activate(newValue);
+    var vm = this.currentViewModel;
+
+		if(vm && typeof vm.activate === 'function'){
+      vm.activate(newValue);
 		}
   }
 
   viewChanged(newValue, oldValue){
-  	processInstruction(this, { view:newValue, viewModel:this.viewModel, model:this.model });
+  	processInstruction(this, { view:newValue, viewModel:this.currentViewModel || this.viewModel, model:this.model });
   }
 
   viewModelChanged(newValue, oldValue){
@@ -45,8 +47,9 @@ function processInstruction(composer, instruction){
     container:composer.container,
     viewSlot:composer.viewSlot,
     viewResources:composer.viewResources,
-    currentBehavior:composer.current
+    currentBehavior:composer.currentBehavior
   })).then(next => {
-    composer.current = next;
+    composer.currentBehavior = next;
+    composer.currentViewModel = next.executionContext;
   });
 }
