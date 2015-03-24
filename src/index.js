@@ -3,7 +3,6 @@ import {If} from './if';
 import {With} from './with';
 import {Repeat} from './repeat';
 import {Show} from './show';
-import {SelectedItem} from './selected-item';
 import {GlobalBehavior} from './global-behavior';
 import {SanitizeHtmlValueConverter} from './sanitize-html';
 
@@ -14,7 +13,6 @@ function install(aurelia){
     './with',
     './repeat',
     './show',
-    './selected-item',
     './global-behavior',
     './sanitize-html'
   );
@@ -27,7 +25,6 @@ export {
   Repeat,
   Show,
   SanitizeHtmlValueConverter,
-  SelectedItem,
   GlobalBehavior,
   install
 };
