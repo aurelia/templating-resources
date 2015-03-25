@@ -1,3 +1,11 @@
+### 0.9.1 (2015-03-25)
+
+
+#### Bug Fixes
+
+* **sanitize-html:** incorrect value converter name ([aec6395b](http://github.com/aurelia/templating-resources/commit/aec6395b9e7dbb01dcb2e682b4b4cb641e2ede21))
+
+
 ## 0.9.0 (2015-03-25)
 
 #### Features

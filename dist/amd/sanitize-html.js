@@ -19,7 +19,7 @@ define(["exports", "aurelia-templating"], function (exports, _aureliaTemplating)
     _prototypeProperties(SanitizeHtmlValueConverter, {
       metadata: {
         value: function metadata() {
-          return Behavior.valueConverter("sanitize-html");
+          return Behavior.valueConverter("sanitizeHtml");
         },
         writable: true,
         configurable: true

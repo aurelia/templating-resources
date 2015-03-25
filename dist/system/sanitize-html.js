@@ -23,7 +23,7 @@ System.register(["aurelia-templating"], function (_export) {
         _prototypeProperties(SanitizeHtmlValueConverter, {
           metadata: {
             value: function metadata() {
-              return Behavior.valueConverter("sanitize-html");
+              return Behavior.valueConverter("sanitizeHtml");
             },
             writable: true,
             configurable: true

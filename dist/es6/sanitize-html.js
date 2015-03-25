@@ -4,7 +4,7 @@ var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 
 export class SanitizeHtmlValueConverter {
   static metadata(){
-    return Behavior.valueConverter('sanitize-html');
+    return Behavior.valueConverter('sanitizeHtml');
   }
 
   static defaultSanitizer(untrustedMarkup){

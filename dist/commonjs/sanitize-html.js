@@ -18,7 +18,7 @@ var SanitizeHtmlValueConverter = exports.SanitizeHtmlValueConverter = (function 
   _prototypeProperties(SanitizeHtmlValueConverter, {
     metadata: {
       value: function metadata() {
-        return Behavior.valueConverter("sanitize-html");
+        return Behavior.valueConverter("sanitizeHtml");
       },
       writable: true,
       configurable: true
