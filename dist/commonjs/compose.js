@@ -49,8 +49,10 @@ var Compose = exports.Compose = (function () {
     },
     modelChanged: {
       value: function modelChanged(newValue, oldValue) {
-        if (this.viewModel && typeof this.viewModel.activate === "function") {
-          this.viewModel.activate(newValue);
+        var vm = this.currentViewModel;
+
+        if (vm && typeof vm.activate === "function") {
+          vm.activate(newValue);
         }
       },
       writable: true,
@@ -58,7 +60,7 @@ var Compose = exports.Compose = (function () {
     },
     viewChanged: {
       value: function viewChanged(newValue, oldValue) {
-        processInstruction(this, { view: newValue, viewModel: this.viewModel, model: this.model });
+        processInstruction(this, { view: newValue, viewModel: this.currentViewModel || this.viewModel, model: this.model });
       },
       writable: true,
       configurable: true
@@ -81,9 +83,10 @@ function processInstruction(composer, instruction) {
     container: composer.container,
     viewSlot: composer.viewSlot,
     viewResources: composer.viewResources,
-    currentBehavior: composer.current
+    currentBehavior: composer.currentBehavior
   })).then(function (next) {
-    composer.current = next;
+    composer.currentBehavior = next;
+    composer.currentViewModel = next.executionContext;
   });
 }
 Object.defineProperty(exports, "__esModule", {

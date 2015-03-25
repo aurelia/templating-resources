@@ -3,12 +3,19 @@ import {If} from './if';
 import {With} from './with';
 import {Repeat} from './repeat';
 import {Show} from './show';
-import {SelectedItem} from './selected-item';
 import {GlobalBehavior} from './global-behavior';
-import {InnerHTML} from './inner-html';
+import {SanitizeHtmlValueConverter} from './sanitize-html';
 
 function install(aurelia){
-  aurelia.withResources([Show, If, With, Repeat, Compose, SelectedItem, GlobalBehavior, InnerHTML]);
+  aurelia.globalizeResources(
+    './compose',
+    './if',
+    './with',
+    './repeat',
+    './show',
+    './global-behavior',
+    './sanitize-html'
+  );
 }
 
 export {
@@ -17,8 +24,7 @@ export {
   With,
   Repeat,
   Show,
-  InnerHTML,
-  SelectedItem,
+  SanitizeHtmlValueConverter,
   GlobalBehavior,
   install
 };

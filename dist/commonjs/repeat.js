@@ -192,6 +192,7 @@ var Repeat = exports.Repeat = (function () {
       value: function createBaseExecutionContext(data) {
         var context = {};
         context[this.local] = data;
+        context.$parent = this.executionContext;
         return context;
       },
       writable: true,
@@ -202,6 +203,7 @@ var Repeat = exports.Repeat = (function () {
         var context = {};
         context[this.key] = key;
         context[this.value] = value;
+        context.$parent = this.executionContext;
         return context;
       },
       writable: true,
@@ -229,7 +231,6 @@ var Repeat = exports.Repeat = (function () {
             last = index === length - 1,
             even = index % 2 === 0;
 
-        context.$parent = this.executionContext;
         context.$index = index;
         context.$first = first;
         context.$last = last;

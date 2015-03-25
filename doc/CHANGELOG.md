@@ -1,3 +1,15 @@
+## 0.9.0 (2015-03-25)
+
+
+#### Bug Fixes
+
+* **all:** update plugin to use new global resource api ([09d41036](http://github.com/aurelia/templating-resources/commit/09d41036e2b26b487a51873fad90cc80334c50d5))
+* **compose:** activate not called on string vm's after initial compose ([62c19215](http://github.com/aurelia/templating-resources/commit/62c19215c78c1adbc787c522cc31be5b3cf07217), closes [#15](http://github.com/aurelia/templating-resources/issues/15))
+* **index:** plugin now uses new id-base api for resources ([f2cf8bf7](http://github.com/aurelia/templating-resources/commit/f2cf8bf7fdb794f40d309cb3e1f4d532a30b1d14))
+* **sanitize-html:**  use explicit metadata ([8aa3a130](http://github.com/aurelia/templating-resources/commit/8aa3a1306d8dea0d11e99a611a51029442d1a791))
+* **selected-item:** remove selected-item behavior ([ef130a76](http://github.com/aurelia/templating-resources/commit/ef130a76fade7bcb2244bbb94a95d60326d1eee1))
+
+
 ### 0.8.10 (2015-02-28)
 
 

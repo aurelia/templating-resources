@@ -10,14 +10,12 @@ var Repeat = require("./repeat").Repeat;
 
 var Show = require("./show").Show;
 
-var SelectedItem = require("./selected-item").SelectedItem;
-
 var GlobalBehavior = require("./global-behavior").GlobalBehavior;
 
-var InnerHTML = require("./inner-html").InnerHTML;
+var SanitizeHtmlValueConverter = require("./sanitize-html").SanitizeHtmlValueConverter;
 
 function install(aurelia) {
-  aurelia.withResources([Show, If, With, Repeat, Compose, SelectedItem, GlobalBehavior, InnerHTML]);
+  aurelia.globalizeResources("./compose", "./if", "./with", "./repeat", "./show", "./global-behavior", "./sanitize-html");
 }
 
 exports.Compose = Compose;
@@ -25,8 +23,7 @@ exports.If = If;
 exports.With = With;
 exports.Repeat = Repeat;
 exports.Show = Show;
-exports.InnerHTML = InnerHTML;
-exports.SelectedItem = SelectedItem;
+exports.SanitizeHtmlValueConverter = SanitizeHtmlValueConverter;
 exports.GlobalBehavior = GlobalBehavior;
 exports.install = install;
 Object.defineProperty(exports, "__esModule", {

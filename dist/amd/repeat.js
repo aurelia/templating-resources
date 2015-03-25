@@ -188,6 +188,7 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
         value: function createBaseExecutionContext(data) {
           var context = {};
           context[this.local] = data;
+          context.$parent = this.executionContext;
           return context;
         },
         writable: true,
@@ -198,6 +199,7 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
           var context = {};
           context[this.key] = key;
           context[this.value] = value;
+          context.$parent = this.executionContext;
           return context;
         },
         writable: true,
@@ -225,7 +227,6 @@ define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, 
               last = index === length - 1,
               even = index % 2 === 0;
 
-          context.$parent = this.executionContext;
           context.$index = index;
           context.$first = first;
           context.$last = last;

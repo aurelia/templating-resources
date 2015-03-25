@@ -1,4 +1,4 @@
-define(["exports", "./compose", "./if", "./with", "./repeat", "./show", "./selected-item", "./global-behavior", "./inner-html"], function (exports, _compose, _if, _with, _repeat, _show, _selectedItem, _globalBehavior, _innerHtml) {
+define(["exports", "./compose", "./if", "./with", "./repeat", "./show", "./global-behavior", "./sanitize-html"], function (exports, _compose, _if, _with, _repeat, _show, _globalBehavior, _sanitizeHtml) {
   "use strict";
 
   var Compose = _compose.Compose;
@@ -6,12 +6,11 @@ define(["exports", "./compose", "./if", "./with", "./repeat", "./show", "./selec
   var With = _with.With;
   var Repeat = _repeat.Repeat;
   var Show = _show.Show;
-  var SelectedItem = _selectedItem.SelectedItem;
   var GlobalBehavior = _globalBehavior.GlobalBehavior;
-  var InnerHTML = _innerHtml.InnerHTML;
+  var SanitizeHtmlValueConverter = _sanitizeHtml.SanitizeHtmlValueConverter;
 
   function install(aurelia) {
-    aurelia.withResources([Show, If, With, Repeat, Compose, SelectedItem, GlobalBehavior, InnerHTML]);
+    aurelia.globalizeResources("./compose", "./if", "./with", "./repeat", "./show", "./global-behavior", "./sanitize-html");
   }
 
   exports.Compose = Compose;
@@ -19,8 +18,7 @@ define(["exports", "./compose", "./if", "./with", "./repeat", "./show", "./selec
   exports.With = With;
   exports.Repeat = Repeat;
   exports.Show = Show;
-  exports.InnerHTML = InnerHTML;
-  exports.SelectedItem = SelectedItem;
+  exports.SanitizeHtmlValueConverter = SanitizeHtmlValueConverter;
   exports.GlobalBehavior = GlobalBehavior;
   exports.install = install;
   Object.defineProperty(exports, "__esModule", {

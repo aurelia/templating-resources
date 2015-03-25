@@ -1,8 +1,8 @@
-System.register(["./compose", "./if", "./with", "./repeat", "./show", "./selected-item", "./global-behavior", "./inner-html"], function (_export) {
-  var Compose, If, With, Repeat, Show, SelectedItem, GlobalBehavior, InnerHTML;
+System.register(["./compose", "./if", "./with", "./repeat", "./show", "./global-behavior", "./sanitize-html"], function (_export) {
+  var Compose, If, With, Repeat, Show, GlobalBehavior, SanitizeHtmlValueConverter;
 
   function install(aurelia) {
-    aurelia.withResources([Show, If, With, Repeat, Compose, SelectedItem, GlobalBehavior, InnerHTML]);
+    aurelia.globalizeResources("./compose", "./if", "./with", "./repeat", "./show", "./global-behavior", "./sanitize-html");
   }
 
   return {
@@ -16,12 +16,10 @@ System.register(["./compose", "./if", "./with", "./repeat", "./show", "./selecte
       Repeat = _repeat.Repeat;
     }, function (_show) {
       Show = _show.Show;
-    }, function (_selectedItem) {
-      SelectedItem = _selectedItem.SelectedItem;
     }, function (_globalBehavior) {
       GlobalBehavior = _globalBehavior.GlobalBehavior;
-    }, function (_innerHtml) {
-      InnerHTML = _innerHtml.InnerHTML;
+    }, function (_sanitizeHtml) {
+      SanitizeHtmlValueConverter = _sanitizeHtml.SanitizeHtmlValueConverter;
     }],
     execute: function () {
       "use strict";
@@ -36,9 +34,7 @@ System.register(["./compose", "./if", "./with", "./repeat", "./show", "./selecte
 
       _export("Show", Show);
 
-      _export("InnerHTML", InnerHTML);
-
-      _export("SelectedItem", SelectedItem);
+      _export("SanitizeHtmlValueConverter", SanitizeHtmlValueConverter);
 
       _export("GlobalBehavior", GlobalBehavior);
 
