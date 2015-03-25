@@ -1,5 +1,8 @@
 ## 0.9.0 (2015-03-25)
 
+#### Features
+
+* **SanitizeHtmlValueConverter:** switched html sanitization to converter
 
 #### Bug Fixes
 
@@ -234,4 +237,3 @@
 #### Bug Fixes
 
 * **package:** add missing polyfill ([c3fe9aa4](http://github.com/aurelia/templating-resources/commit/c3fe9aa4ea00e517ceb8107dbe8ff3c3f577c44f))
-
