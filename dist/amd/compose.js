@@ -84,7 +84,7 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
       currentBehavior: composer.currentBehavior
     })).then(function (next) {
       composer.currentBehavior = next;
-      composer.currentViewModel = next.executionContext;
+      composer.currentViewModel = next ? next.executionContext : null;
     });
   }
   Object.defineProperty(exports, "__esModule", {

@@ -1,3 +1,11 @@
+### 0.9.2 (2015-03-27)
+
+
+#### Bug Fixes
+
+* **compose:** null/undefined components should not cause error ([14d26539](http://github.com/aurelia/templating-resources/commit/14d2653986a119ac6e27c792b11c2d75bf811a0f), closes [#31](http://github.com/aurelia/templating-resources/issues/31))
+
+
 ### 0.9.1 (2015-03-25)
 
 

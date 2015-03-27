@@ -10,7 +10,7 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
       currentBehavior: composer.currentBehavior
     })).then(function (next) {
       composer.currentBehavior = next;
-      composer.currentViewModel = next.executionContext;
+      composer.currentViewModel = next ? next.executionContext : null;
     });
   }
   return {

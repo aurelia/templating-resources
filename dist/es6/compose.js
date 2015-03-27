@@ -50,6 +50,6 @@ function processInstruction(composer, instruction){
     currentBehavior:composer.currentBehavior
   })).then(next => {
     composer.currentBehavior = next;
-    composer.currentViewModel = next.executionContext;
+    composer.currentViewModel = next ? next.executionContext : null;
   });
 }
