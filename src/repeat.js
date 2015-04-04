@@ -180,12 +180,12 @@ export class Repeat {
       removeDelta = 0,
       view, i, ii, j, jj, row, splice,
       addIndex, end, itemsLeftToAdd,
-      removed, model;
+      removed, model, totalAdded, totalRemoved;
 
     // TODO better way to handle Array.prototype.reverse()? Could this be a path for other use cases than reverse?
     if(splices.length === 2){
-      var totalAdded = splices[0].addedCount + splices[1].addedCount;
-      var totalRemoved = splices[0].removed.length + splices[1].removed.length;
+      totalAdded = splices[0].addedCount + splices[1].addedCount;
+      totalRemoved = splices[0].removed.length + splices[1].removed.length;
       if(totalAdded === totalRemoved){
         for(i = 0, ii = viewSlot.children.length; i < ii; ++i){
           view = this.viewSlot.children[i];
