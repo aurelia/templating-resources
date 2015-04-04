@@ -175,61 +175,57 @@ export class Repeat {
     return context;
   }
 
-  handleSplices(array, splices){
-    var viewLookup = new Map(),
-        removeDelta = 0,
-        arrayLength = array.length,
-        viewSlot = this.viewSlot,
-        viewFactory = this.viewFactory,
-        i, ii, j, jj, splice, removed, addIndex, end, model, view, children, length, row;
+  handleSplices(array, splices) {
+    var viewSlot = this.viewSlot,
+      removeDelta = 0,
+      view, i, ii, j, jj, row, splice,
+      addIndex, end, itemsLeftToAdd,
+      removed, model;
 
-    //TODO: track which views are moved instead of removed better
-    //TODO: only update context after highest changed index
-
-    for (i = 0, ii = splices.length; i < ii; ++i) {
-      splice = splices[i];
-      removed = splice.removed;
-
-      for (j = 0, jj = removed.length; j < jj; ++j) {
-        model = removed[j];
-        view = viewSlot.removeAt(splice.index + removeDelta);
-
-        if (view) {
-          viewLookup.set(model, view);
+    // TODO better way to handle Array.prototype.reverse()? Could this be a path for other use cases than reverse?
+    if(splices.length === 2){
+      var totalAdded = splices[0].addedCount + splices[1].addedCount;
+      var totalRemoved = splices[0].removed.length + splices[1].removed.length;
+      if(totalAdded === totalRemoved){
+        for(i = 0, ii = viewSlot.children.length; i < ii; ++i){
+          view = this.viewSlot.children[i];
+          view.executionContext = this.updateExecutionContext(view.executionContext, i, array.length);
+          view.executionContext[this.local] = array[i];
         }
+        return;
       }
-
-      removeDelta -= splice.addedCount;
     }
 
     for (i = 0, ii = splices.length; i < ii; ++i) {
       splice = splices[i];
       addIndex = splice.index;
+      itemsLeftToAdd = splice.addedCount;
       end = splice.index + splice.addedCount;
+      removed = splice.removed;
 
-      for (; addIndex < end; ++addIndex) {
-        model = array[addIndex];
-        view = viewLookup.get(model);
-
-        if (view) {
-          viewLookup.delete(model);
-          viewSlot.insert(addIndex, view); //TODO: move
+      for (j = 0, jj = removed.length; j < jj; ++j) {
+        if (itemsLeftToAdd > 0) {
+          view = viewSlot.children[splice.index + j];
+          view.executionContext[this.local] = array[addIndex + j];
+          --itemsLeftToAdd;
         } else {
-          row = this.createBaseExecutionContext(model);
-          view = this.viewFactory.create(row);
-          viewSlot.insert(addIndex, view);
+          view = viewSlot.removeAt(addIndex + splice.addedCount + removeDelta);
         }
       }
+
+      addIndex += removed.length;
+
+      for (; 0 < itemsLeftToAdd; ++addIndex) {
+        model = array[addIndex];
+        row = this.createBaseExecutionContext(model);
+        view = this.viewFactory.create(row);
+        viewSlot.insert(addIndex, view);
+        view.executionContext = this.updateExecutionContext(view.executionContext, addIndex, array.length);
+        --itemsLeftToAdd;
+      }
+
+      removeDelta -= splice.addedCount;
     }
-
-    children = viewSlot.children;
-    length = children.length;
-
-    for(i = 0; i < length; i++){
-      this.updateExecutionContext(children[i].executionContext, i, length);
-    }
-
-    viewLookup.forEach(x => x.unbind());
   }
 
   handleMapChangeRecords(map, records) {
