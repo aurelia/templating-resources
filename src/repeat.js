@@ -1,17 +1,14 @@
+import {inject} from 'aurelia-dependency-injection';
 import {ObserverLocator, calcSplices, getChangeRecords} from 'aurelia-binding';
-import {Behavior, BoundViewFactory, ViewSlot} from 'aurelia-templating';
+import {BoundViewFactory, ViewSlot, customAttribute, bindableProperty, templateController} from 'aurelia-templating';
 
+@customAttribute('repeat')
+@bindableProperty('items')
+@bindableProperty('local')
+@bindableProperty('key')
+@templateController
+@inject(BoundViewFactory, ViewSlot, ObserverLocator)
 export class Repeat {
-  static metadata(){
-    return Behavior
-      .templateController('repeat')
-      .withProperty('items', 'itemsChanged', 'repeat')
-      .withProperty('local')
-      .withProperty('key')
-      .withProperty('value');
-  }
-
-  static inject(){ return [BoundViewFactory,ViewSlot,ObserverLocator]; }
   constructor(viewFactory, viewSlot, observerLocator){
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;

@@ -1,13 +1,10 @@
-import {Behavior, BoundViewFactory, ViewSlot} from 'aurelia-templating';
+import {inject} from 'aurelia-dependency-injection';
+import {BoundViewFactory, ViewSlot, customAttribute, templateController} from 'aurelia-templating';
 
+@customAttribute('with')
+@templateController
+@inject(BoundViewFactory, ViewSlot)
 export class With {
-  static metadata(){
-    return Behavior
-      .templateController('with')
-      .withProperty('value', 'valueChanged', 'with');
-  }
-
-  static inject() { return [BoundViewFactory, ViewSlot]; }
   constructor(viewFactory, viewSlot){
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
