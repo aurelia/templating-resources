@@ -22,7 +22,8 @@ export class Repeat {
   }
 
   bind(executionContext){
-    var items = this.items;
+    var items = this.items,
+      observer;
 
     this.executionContext = executionContext;
 
@@ -37,7 +38,7 @@ export class Repeat {
     if (this.oldItems === items) {
       if (items instanceof Map) {
         var records = getChangeRecords(items);
-        var observer = this.observerLocator.getMapObserver(items);
+        observer = this.observerLocator.getMapObserver(items);
 
         this.handleMapChangeRecords(items, records);
 
@@ -46,7 +47,7 @@ export class Repeat {
         });
       } else {
         var splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
-        var observer = this.observerLocator.getArrayObserver(items);
+        observer = this.observerLocator.getArrayObserver(items);
 
         this.handleSplices(items, splices);
         this.lastBoundItems = this.oldItems = null;
@@ -177,24 +178,10 @@ export class Repeat {
 
   handleSplices(array, splices) {
     var viewSlot = this.viewSlot,
-      removeDelta = 0,
+      spliceIndexLow = splices[0].index,
       view, i, ii, j, jj, row, splice,
       addIndex, end, itemsLeftToAdd,
-      removed, model, totalAdded, totalRemoved;
-
-    // TODO better way to handle Array.prototype.reverse()? Could this be a path for other use cases than reverse?
-    if(splices.length === 2){
-      totalAdded = splices[0].addedCount + splices[1].addedCount;
-      totalRemoved = splices[0].removed.length + splices[1].removed.length;
-      if(totalAdded === totalRemoved){
-        for(i = 0, ii = viewSlot.children.length; i < ii; ++i){
-          view = this.viewSlot.children[i];
-          view.executionContext = this.updateExecutionContext(view.executionContext, i, array.length);
-          view.executionContext[this.local] = array[i];
-        }
-        return;
-      }
-    }
+      removed, model, children, length;
 
     for (i = 0, ii = splices.length; i < ii; ++i) {
       splice = splices[i];
@@ -202,6 +189,9 @@ export class Repeat {
       itemsLeftToAdd = splice.addedCount;
       end = splice.index + splice.addedCount;
       removed = splice.removed;
+      if(spliceIndexLow > splice.index){
+        spliceIndexLow = splice.index;
+      }
 
       for (j = 0, jj = removed.length; j < jj; ++j) {
         if (itemsLeftToAdd > 0) {
@@ -209,7 +199,7 @@ export class Repeat {
           view.executionContext[this.local] = array[addIndex + j];
           --itemsLeftToAdd;
         } else {
-          view = viewSlot.removeAt(addIndex + splice.addedCount + removeDelta);
+          view = viewSlot.removeAt(addIndex + splice.addedCount);
         }
       }
 
@@ -220,11 +210,19 @@ export class Repeat {
         row = this.createBaseExecutionContext(model);
         view = this.viewFactory.create(row);
         viewSlot.insert(addIndex, view);
-        view.executionContext = this.updateExecutionContext(view.executionContext, addIndex, array.length);
         --itemsLeftToAdd;
       }
+    }
 
-      removeDelta -= splice.addedCount;
+    children = this.viewSlot.children;
+    length = children.length;
+
+    if(spliceIndexLow > 0){
+      spliceIndexLow = spliceIndexLow - 1;
+    }
+
+    for(; spliceIndexLow < length; ++spliceIndexLow){
+      this.updateExecutionContext(children[spliceIndexLow].executionContext, spliceIndexLow, length);
     }
   }
 
