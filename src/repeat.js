@@ -19,7 +19,8 @@ export class Repeat {
   }
 
   bind(executionContext){
-    var items = this.items;
+    var items = this.items,
+      observer;
 
     this.executionContext = executionContext;
 
@@ -34,7 +35,7 @@ export class Repeat {
     if (this.oldItems === items) {
       if (items instanceof Map) {
         var records = getChangeRecords(items);
-        var observer = this.observerLocator.getMapObserver(items);
+        observer = this.observerLocator.getMapObserver(items);
 
         this.handleMapChangeRecords(items, records);
 
@@ -43,7 +44,7 @@ export class Repeat {
         });
       } else {
         var splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
-        var observer = this.observerLocator.getArrayObserver(items);
+        observer = this.observerLocator.getArrayObserver(items);
 
         this.handleSplices(items, splices);
         this.lastBoundItems = this.oldItems = null;
@@ -172,61 +173,54 @@ export class Repeat {
     return context;
   }
 
-  handleSplices(array, splices){
-    var viewLookup = new Map(),
-        removeDelta = 0,
-        arrayLength = array.length,
-        viewSlot = this.viewSlot,
-        viewFactory = this.viewFactory,
-        i, ii, j, jj, splice, removed, addIndex, end, model, view, children, length, row;
-
-    //TODO: track which views are moved instead of removed better
-    //TODO: only update context after highest changed index
-
-    for (i = 0, ii = splices.length; i < ii; ++i) {
-      splice = splices[i];
-      removed = splice.removed;
-
-      for (j = 0, jj = removed.length; j < jj; ++j) {
-        model = removed[j];
-        view = viewSlot.removeAt(splice.index + removeDelta);
-
-        if (view) {
-          viewLookup.set(model, view);
-        }
-      }
-
-      removeDelta -= splice.addedCount;
-    }
+  handleSplices(array, splices) {
+    var viewSlot = this.viewSlot,
+      spliceIndexLow = splices[0].index,
+      view, i, ii, j, jj, row, splice,
+      addIndex, end, itemsLeftToAdd,
+      removed, model, children, length;
 
     for (i = 0, ii = splices.length; i < ii; ++i) {
       splice = splices[i];
       addIndex = splice.index;
+      itemsLeftToAdd = splice.addedCount;
       end = splice.index + splice.addedCount;
+      removed = splice.removed;
+      if(spliceIndexLow > splice.index){
+        spliceIndexLow = splice.index;
+      }
 
-      for (; addIndex < end; ++addIndex) {
-        model = array[addIndex];
-        view = viewLookup.get(model);
-
-        if (view) {
-          viewLookup.delete(model);
-          viewSlot.insert(addIndex, view); //TODO: move
+      for (j = 0, jj = removed.length; j < jj; ++j) {
+        if (itemsLeftToAdd > 0) {
+          view = viewSlot.children[splice.index + j];
+          view.executionContext[this.local] = array[addIndex + j];
+          --itemsLeftToAdd;
         } else {
-          row = this.createBaseExecutionContext(model);
-          view = this.viewFactory.create(row);
-          viewSlot.insert(addIndex, view);
+          view = viewSlot.removeAt(addIndex + splice.addedCount);
         }
+      }
+
+      addIndex += removed.length;
+
+      for (; 0 < itemsLeftToAdd; ++addIndex) {
+        model = array[addIndex];
+        row = this.createBaseExecutionContext(model);
+        view = this.viewFactory.create(row);
+        viewSlot.insert(addIndex, view);
+        --itemsLeftToAdd;
       }
     }
 
-    children = viewSlot.children;
+    children = this.viewSlot.children;
     length = children.length;
 
-    for(i = 0; i < length; i++){
-      this.updateExecutionContext(children[i].executionContext, i, length);
+    if(spliceIndexLow > 0){
+      spliceIndexLow = spliceIndexLow - 1;
     }
 
-    viewLookup.forEach(x => x.unbind());
+    for(; spliceIndexLow < length; ++spliceIndexLow){
+      this.updateExecutionContext(children[spliceIndexLow].executionContext, spliceIndexLow, length);
+    }
   }
 
   handleMapChangeRecords(map, records) {
