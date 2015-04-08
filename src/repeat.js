@@ -1,11 +1,11 @@
 import {inject} from 'aurelia-dependency-injection';
 import {ObserverLocator, calcSplices, getChangeRecords} from 'aurelia-binding';
-import {BoundViewFactory, ViewSlot, customAttribute, bindableProperty, templateController} from 'aurelia-templating';
+import {BoundViewFactory, ViewSlot, customAttribute, bindable, templateController} from 'aurelia-templating';
 
 @customAttribute('repeat')
-@bindableProperty('items')
-@bindableProperty('local')
-@bindableProperty('key')
+@bindable('items')
+@bindable('local')
+@bindable('key')
 @templateController
 @inject(BoundViewFactory, ViewSlot, ObserverLocator)
 export class Repeat {

@@ -1,13 +1,13 @@
 import {Container,inject} from 'aurelia-dependency-injection';
 import {
   CompositionEngine, ViewSlot, ViewResources,
-  customElement, bindableProperty, noView
+  customElement, bindable, noView
 } from 'aurelia-templating';
 
 @customElement('compose')
-@bindableProperty('model')
-@bindableProperty('view')
-@bindableProperty('viewModel')
+@bindable('model')
+@bindable('view')
+@bindable('viewModel')
 @noView
 @inject(Container, CompositionEngine, ViewSlot, ViewResources)
 export class Compose {
