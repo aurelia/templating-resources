@@ -1,17 +1,16 @@
-import {Container} from 'aurelia-dependency-injection';
-import {Behavior, CompositionEngine, ViewSlot, ViewResources} from 'aurelia-templating';
+import {Container,inject} from 'aurelia-dependency-injection';
+import {
+  CompositionEngine, ViewSlot, ViewResources,
+  customElement, bindable, noView
+} from 'aurelia-templating';
 
+@customElement('compose')
+@bindable('model')
+@bindable('view')
+@bindable('viewModel')
+@noView
+@inject(Container, CompositionEngine, ViewSlot, ViewResources)
 export class Compose {
-  static metadata(){
-    return Behavior
-      .customElement('compose')
-      .withProperty('model')
-      .withProperty('view')
-      .withProperty('viewModel')
-      .noView();
-  }
-
-  static inject(){ return [Container,CompositionEngine,ViewSlot,ViewResources]; }
 	constructor(container, compositionEngine, viewSlot, viewResources){
 		this.container = container;
 		this.compositionEngine = compositionEngine;

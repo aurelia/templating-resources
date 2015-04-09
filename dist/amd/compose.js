@@ -1,17 +1,15 @@
-define(["exports", "aurelia-dependency-injection", "aurelia-templating"], function (exports, _aureliaDependencyInjection, _aureliaTemplating) {
-  "use strict";
+define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], function (exports, _aureliaDependencyInjection, _aureliaTemplating) {
+  'use strict';
 
-  var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  var Container = _aureliaDependencyInjection.Container;
-  var Behavior = _aureliaTemplating.Behavior;
-  var CompositionEngine = _aureliaTemplating.CompositionEngine;
-  var ViewSlot = _aureliaTemplating.ViewSlot;
-  var ViewResources = _aureliaTemplating.ViewResources;
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
 
-  var Compose = exports.Compose = (function () {
+  var Compose = (function () {
     function Compose(container, compositionEngine, viewSlot, viewResources) {
       _classCallCheck(this, Compose);
 
@@ -21,59 +19,43 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
       this.viewResources = viewResources;
     }
 
-    _prototypeProperties(Compose, {
-      metadata: {
-        value: function metadata() {
-          return Behavior.customElement("compose").withProperty("model").withProperty("view").withProperty("viewModel").noView();
-        },
-        writable: true,
-        configurable: true
-      },
-      inject: {
-        value: function inject() {
-          return [Container, CompositionEngine, ViewSlot, ViewResources];
-        },
-        writable: true,
-        configurable: true
+    _createClass(Compose, [{
+      key: 'bind',
+      value: function bind(executionContext) {
+        this.executionContext = executionContext;
+        processInstruction(this, { view: this.view, viewModel: this.viewModel, model: this.model });
       }
     }, {
-      bind: {
-        value: function bind(executionContext) {
-          this.executionContext = executionContext;
-          processInstruction(this, { view: this.view, viewModel: this.viewModel, model: this.model });
-        },
-        writable: true,
-        configurable: true
-      },
-      modelChanged: {
-        value: function modelChanged(newValue, oldValue) {
-          var vm = this.currentViewModel;
+      key: 'modelChanged',
+      value: function modelChanged(newValue, oldValue) {
+        var vm = this.currentViewModel;
 
-          if (vm && typeof vm.activate === "function") {
-            vm.activate(newValue);
-          }
-        },
-        writable: true,
-        configurable: true
-      },
-      viewChanged: {
-        value: function viewChanged(newValue, oldValue) {
-          processInstruction(this, { view: newValue, viewModel: this.currentViewModel || this.viewModel, model: this.model });
-        },
-        writable: true,
-        configurable: true
-      },
-      viewModelChanged: {
-        value: function viewModelChanged(newValue, oldValue) {
-          processInstruction(this, { viewModel: newValue, view: this.view, model: this.model });
-        },
-        writable: true,
-        configurable: true
+        if (vm && typeof vm.activate === 'function') {
+          vm.activate(newValue);
+        }
       }
-    });
+    }, {
+      key: 'viewChanged',
+      value: function viewChanged(newValue, oldValue) {
+        processInstruction(this, { view: newValue, viewModel: this.currentViewModel || this.viewModel, model: this.model });
+      }
+    }, {
+      key: 'viewModelChanged',
+      value: function viewModelChanged(newValue, oldValue) {
+        processInstruction(this, { viewModel: newValue, view: this.view, model: this.model });
+      }
+    }]);
 
+    exports.Compose = Compose = customElement('compose')(Compose) || Compose;
+    exports.Compose = Compose = bindable('model')(Compose) || Compose;
+    exports.Compose = Compose = bindable('view')(Compose) || Compose;
+    exports.Compose = Compose = bindable('viewModel')(Compose) || Compose;
+    exports.Compose = Compose = noView(Compose) || Compose;
+    exports.Compose = Compose = inject(Container, CompositionEngine, ViewSlot, ViewResources)(Compose) || Compose;
     return Compose;
   })();
+
+  exports.Compose = Compose;
 
   function processInstruction(composer, instruction) {
     composer.compositionEngine.compose(Object.assign(instruction, {
@@ -87,7 +69,4 @@ define(["exports", "aurelia-dependency-injection", "aurelia-templating"], functi
       composer.currentViewModel = next ? next.executionContext : null;
     });
   }
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
 });

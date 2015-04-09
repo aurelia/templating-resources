@@ -1,14 +1,12 @@
-import {Behavior} from 'aurelia-templating';
+import {inject} from 'aurelia-dependency-injection';
+import {customAttribute,dynamicOptions} from 'aurelia-templating';
+import {AggregateError} from 'aurelia-logging';
 import * as LogManager from 'aurelia-logging';
 
+@customAttribute('global-behavior')
+@dynamicOptions
+@inject(Element)
 export class GlobalBehavior {
-  static metadata(){
-    return Behavior
-      .attachedBehavior('global-behavior')
-      .withOptions().and(x => x.dynamic());
-  }
-
-  static inject() { return [Element]; }
   constructor(element) {
     this.element = element;
   }
@@ -23,7 +21,7 @@ export class GlobalBehavior {
     try{
       this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
     }catch(error){
-      throw new Error('Conventional binding handler failed.', error);
+      throw AggregateError('Conventional binding handler failed.', error);
     }
   }
 

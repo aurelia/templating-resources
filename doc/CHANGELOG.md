@@ -1,3 +1,19 @@
+## 0.10.0 (2015-04-09)
+
+
+#### Bug Fixes
+
+* **GlobalBehavior:** throw AggregateError ([e31875a4](http://github.com/aurelia/templating-resources/commit/e31875a454afd8ef5863f0b8cfc3f3b024f789eb))
+* **repeat:** correctly update execution context ([e0d11cd6](http://github.com/aurelia/templating-resources/commit/e0d11cd689ce524b0f7e05f94deac191c5f4bb7c))
+
+
+#### Features
+
+* **all:**
+  * update to work with latest decorators ([1c35b506](http://github.com/aurelia/templating-resources/commit/1c35b506d625474efda1c7595028c63e670dfb8b))
+  * update to decorators ([3e4a3fa8](http://github.com/aurelia/templating-resources/commit/3e4a3fa8fe898151114e8de79739cbf4c170e398))
+
+
 ### 0.9.2 (2015-03-27)
 
 

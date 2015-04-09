@@ -1,20 +1,23 @@
-System.register(["aurelia-templating"], function (_export) {
-  var Behavior, BoundViewFactory, ViewSlot, _prototypeProperties, _classCallCheck, If;
+System.register(['aurelia-templating', 'aurelia-dependency-injection'], function (_export) {
+  var BoundViewFactory, ViewSlot, customAttribute, templateController, inject, _classCallCheck, _createClass, If;
 
   return {
     setters: [function (_aureliaTemplating) {
-      Behavior = _aureliaTemplating.Behavior;
       BoundViewFactory = _aureliaTemplating.BoundViewFactory;
       ViewSlot = _aureliaTemplating.ViewSlot;
+      customAttribute = _aureliaTemplating.customAttribute;
+      templateController = _aureliaTemplating.templateController;
+    }, function (_aureliaDependencyInjection) {
+      inject = _aureliaDependencyInjection.inject;
     }],
     execute: function () {
-      "use strict";
+      'use strict';
 
-      _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+      _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-      If = _export("If", (function () {
+      If = (function () {
         function If(viewFactory, viewSlot) {
           _classCallCheck(this, If);
 
@@ -23,55 +26,45 @@ System.register(["aurelia-templating"], function (_export) {
           this.showing = false;
         }
 
-        _prototypeProperties(If, {
-          metadata: {
-            value: function metadata() {
-              return Behavior.templateController("if").withProperty("value", "valueChanged", "if");
-            },
-            writable: true,
-            configurable: true
-          },
-          inject: {
-            value: function inject() {
-              return [BoundViewFactory, ViewSlot];
-            },
-            writable: true,
-            configurable: true
+        _createClass(If, [{
+          key: 'valueChanged',
+          value: function valueChanged(newValue) {
+            if (!newValue) {
+              if (this.view) {
+                this.viewSlot.remove(this.view);
+                this.view.unbind();
+              }
+
+              this.showing = false;
+              return;
+            }
+
+            if (!this.view) {
+              this.view = this.viewFactory.create();
+            }
+
+            if (!this.showing) {
+              this.showing = true;
+
+              if (!this.view.bound) {
+                this.view.bind();
+              }
+
+              this.viewSlot.add(this.view);
+            }
           }
-        }, {
-          valueChanged: {
-            value: function valueChanged(newValue) {
-              if (!newValue) {
-                if (this.view) {
-                  this.viewSlot.remove(this.view);
-                  this.view.unbind();
-                }
+        }]);
 
-                this.showing = false;
-                return;
-              }
+        _export('If', If = customAttribute('if')(If) || If);
 
-              if (!this.view) {
-                this.view = this.viewFactory.create();
-              }
+        _export('If', If = templateController(If) || If);
 
-              if (!this.showing) {
-                this.showing = true;
-
-                if (!this.view.bound) {
-                  this.view.bind();
-                }
-
-                this.viewSlot.add(this.view);
-              }
-            },
-            writable: true,
-            configurable: true
-          }
-        });
+        _export('If', If = inject(BoundViewFactory, ViewSlot)(If) || If);
 
         return If;
-      })());
+      })();
+
+      _export('If', If);
     }
   };
 });

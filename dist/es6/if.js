@@ -1,13 +1,10 @@
-import {Behavior, BoundViewFactory, ViewSlot} from 'aurelia-templating';
+import {BoundViewFactory, ViewSlot, customAttribute, templateController} from 'aurelia-templating';
+import {inject} from 'aurelia-dependency-injection';
 
+@customAttribute('if')
+@templateController
+@inject(BoundViewFactory, ViewSlot)
 export class If {
-  static metadata(){
-    return Behavior
-      .templateController('if')
-      .withProperty('value', 'valueChanged', 'if');
-  }
-
-  static inject() { return [BoundViewFactory, ViewSlot]; }
   constructor(viewFactory, viewSlot){
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;

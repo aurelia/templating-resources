@@ -1,16 +1,18 @@
-"use strict";
+'use strict';
 
-var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _aureliaTemplating = require("aurelia-templating");
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
 
-var Behavior = _aureliaTemplating.Behavior;
-var BoundViewFactory = _aureliaTemplating.BoundViewFactory;
-var ViewSlot = _aureliaTemplating.ViewSlot;
+var _inject = require('aurelia-dependency-injection');
 
-var With = exports.With = (function () {
+var _BoundViewFactory$ViewSlot$customAttribute$templateController = require('aurelia-templating');
+
+var With = (function () {
   function With(viewFactory, viewSlot) {
     _classCallCheck(this, With);
 
@@ -18,39 +20,22 @@ var With = exports.With = (function () {
     this.viewSlot = viewSlot;
   }
 
-  _prototypeProperties(With, {
-    metadata: {
-      value: function metadata() {
-        return Behavior.templateController("with").withProperty("value", "valueChanged", "with");
-      },
-      writable: true,
-      configurable: true
-    },
-    inject: {
-      value: function inject() {
-        return [BoundViewFactory, ViewSlot];
-      },
-      writable: true,
-      configurable: true
+  _createClass(With, [{
+    key: 'valueChanged',
+    value: function valueChanged(newValue) {
+      if (!this.view) {
+        this.view = this.viewFactory.create(newValue);
+        this.viewSlot.add(this.view);
+      } else {
+        this.view.bind(newValue);
+      }
     }
-  }, {
-    valueChanged: {
-      value: function valueChanged(newValue) {
-        if (!this.view) {
-          this.view = this.viewFactory.create(newValue);
-          this.viewSlot.add(this.view);
-        } else {
-          this.view.bind(newValue);
-        }
-      },
-      writable: true,
-      configurable: true
-    }
-  });
+  }]);
 
+  exports.With = With = customAttribute('with')(With) || With;
+  exports.With = With = templateController(With) || With;
+  exports.With = With = inject(BoundViewFactory, ViewSlot)(With) || With;
   return With;
 })();
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+exports.With = With;

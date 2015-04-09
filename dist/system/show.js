@@ -1,64 +1,54 @@
-System.register(["aurelia-templating"], function (_export) {
-  var Behavior, _prototypeProperties, _classCallCheck, Show;
+System.register(['aurelia-dependency-injection', 'aurelia-templating'], function (_export) {
+  var inject, customAttribute, _classCallCheck, _createClass, Show;
 
   function addStyleString(str) {
-    var node = document.createElement("style");
+    var node = document.createElement('style');
     node.innerHTML = str;
-    node.type = "text/css";
+    node.type = 'text/css';
     document.head.appendChild(node);
   }
 
   return {
-    setters: [function (_aureliaTemplating) {
-      Behavior = _aureliaTemplating.Behavior;
+    setters: [function (_aureliaDependencyInjection) {
+      inject = _aureliaDependencyInjection.inject;
+    }, function (_aureliaTemplating) {
+      customAttribute = _aureliaTemplating.customAttribute;
     }],
     execute: function () {
-      "use strict";
+      'use strict';
 
-      _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+      _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-      addStyleString(".aurelia-hide { display:none !important; }");
+      addStyleString('.aurelia-hide { display:none !important; }');
 
-      Show = _export("Show", (function () {
+      Show = (function () {
         function Show(element) {
           _classCallCheck(this, Show);
 
           this.element = element;
         }
 
-        _prototypeProperties(Show, {
-          metadata: {
-            value: function metadata() {
-              return Behavior.attachedBehavior("show").withProperty("value", "valueChanged", "show");
-            },
-            writable: true,
-            configurable: true
-          },
-          inject: {
-            value: function inject() {
-              return [Element];
-            },
-            writable: true,
-            configurable: true
+        _createClass(Show, [{
+          key: 'valueChanged',
+          value: function valueChanged(newValue) {
+            if (newValue) {
+              this.element.classList.remove('aurelia-hide');
+            } else {
+              this.element.classList.add('aurelia-hide');
+            }
           }
-        }, {
-          valueChanged: {
-            value: function valueChanged(newValue) {
-              if (newValue) {
-                this.element.classList.remove("aurelia-hide");
-              } else {
-                this.element.classList.add("aurelia-hide");
-              }
-            },
-            writable: true,
-            configurable: true
-          }
-        });
+        }]);
+
+        _export('Show', Show = customAttribute('show')(Show) || Show);
+
+        _export('Show', Show = inject(Element)(Show) || Show);
 
         return Show;
-      })());
+      })();
+
+      _export('Show', Show);
     }
   };
 });

@@ -1,5 +1,5 @@
-System.register(["aurelia-dependency-injection", "aurelia-templating"], function (_export) {
-  var Container, Behavior, CompositionEngine, ViewSlot, ViewResources, _prototypeProperties, _classCallCheck, Compose;
+System.register(['aurelia-dependency-injection', 'aurelia-templating'], function (_export) {
+  var Container, inject, CompositionEngine, ViewSlot, ViewResources, customElement, bindable, noView, _classCallCheck, _createClass, Compose;
 
   function processInstruction(composer, instruction) {
     composer.compositionEngine.compose(Object.assign(instruction, {
@@ -16,20 +16,23 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
   return {
     setters: [function (_aureliaDependencyInjection) {
       Container = _aureliaDependencyInjection.Container;
+      inject = _aureliaDependencyInjection.inject;
     }, function (_aureliaTemplating) {
-      Behavior = _aureliaTemplating.Behavior;
       CompositionEngine = _aureliaTemplating.CompositionEngine;
       ViewSlot = _aureliaTemplating.ViewSlot;
       ViewResources = _aureliaTemplating.ViewResources;
+      customElement = _aureliaTemplating.customElement;
+      bindable = _aureliaTemplating.bindable;
+      noView = _aureliaTemplating.noView;
     }],
     execute: function () {
-      "use strict";
+      'use strict';
 
-      _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+      _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-      Compose = _export("Compose", (function () {
+      Compose = (function () {
         function Compose(container, compositionEngine, viewSlot, viewResources) {
           _classCallCheck(this, Compose);
 
@@ -39,59 +42,49 @@ System.register(["aurelia-dependency-injection", "aurelia-templating"], function
           this.viewResources = viewResources;
         }
 
-        _prototypeProperties(Compose, {
-          metadata: {
-            value: function metadata() {
-              return Behavior.customElement("compose").withProperty("model").withProperty("view").withProperty("viewModel").noView();
-            },
-            writable: true,
-            configurable: true
-          },
-          inject: {
-            value: function inject() {
-              return [Container, CompositionEngine, ViewSlot, ViewResources];
-            },
-            writable: true,
-            configurable: true
+        _createClass(Compose, [{
+          key: 'bind',
+          value: function bind(executionContext) {
+            this.executionContext = executionContext;
+            processInstruction(this, { view: this.view, viewModel: this.viewModel, model: this.model });
           }
         }, {
-          bind: {
-            value: function bind(executionContext) {
-              this.executionContext = executionContext;
-              processInstruction(this, { view: this.view, viewModel: this.viewModel, model: this.model });
-            },
-            writable: true,
-            configurable: true
-          },
-          modelChanged: {
-            value: function modelChanged(newValue, oldValue) {
-              var vm = this.currentViewModel;
+          key: 'modelChanged',
+          value: function modelChanged(newValue, oldValue) {
+            var vm = this.currentViewModel;
 
-              if (vm && typeof vm.activate === "function") {
-                vm.activate(newValue);
-              }
-            },
-            writable: true,
-            configurable: true
-          },
-          viewChanged: {
-            value: function viewChanged(newValue, oldValue) {
-              processInstruction(this, { view: newValue, viewModel: this.currentViewModel || this.viewModel, model: this.model });
-            },
-            writable: true,
-            configurable: true
-          },
-          viewModelChanged: {
-            value: function viewModelChanged(newValue, oldValue) {
-              processInstruction(this, { viewModel: newValue, view: this.view, model: this.model });
-            },
-            writable: true,
-            configurable: true
+            if (vm && typeof vm.activate === 'function') {
+              vm.activate(newValue);
+            }
           }
-        });
+        }, {
+          key: 'viewChanged',
+          value: function viewChanged(newValue, oldValue) {
+            processInstruction(this, { view: newValue, viewModel: this.currentViewModel || this.viewModel, model: this.model });
+          }
+        }, {
+          key: 'viewModelChanged',
+          value: function viewModelChanged(newValue, oldValue) {
+            processInstruction(this, { viewModel: newValue, view: this.view, model: this.model });
+          }
+        }]);
+
+        _export('Compose', Compose = customElement('compose')(Compose) || Compose);
+
+        _export('Compose', Compose = bindable('model')(Compose) || Compose);
+
+        _export('Compose', Compose = bindable('view')(Compose) || Compose);
+
+        _export('Compose', Compose = bindable('viewModel')(Compose) || Compose);
+
+        _export('Compose', Compose = noView(Compose) || Compose);
+
+        _export('Compose', Compose = inject(Container, CompositionEngine, ViewSlot, ViewResources)(Compose) || Compose);
 
         return Compose;
-      })());
+      })();
+
+      _export('Compose', Compose);
     }
   };
 });
