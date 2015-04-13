@@ -175,8 +175,7 @@ export class Repeat {
 
   handleSplices(array, splices) {
     var viewSlot = this.viewSlot,
-      spliceIndexLow = splices[0].index,
-      view, i, ii, j, jj, row, splice,
+      spliceIndexLow, view, i, ii, j, jj, row, splice,
       addIndex, end, itemsLeftToAdd,
       removed, model, children, length;
 
@@ -186,7 +185,7 @@ export class Repeat {
       itemsLeftToAdd = splice.addedCount;
       end = splice.index + splice.addedCount;
       removed = splice.removed;
-      if(spliceIndexLow > splice.index){
+      if(typeof spliceIndexLow === 'undefined' || spliceIndexLow === null || spliceIndexLow > splice.index){
         spliceIndexLow = splice.index;
       }
 
