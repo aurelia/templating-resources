@@ -2,6 +2,12 @@ import {valueConverter} from 'aurelia-binding';
 
 var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 
+/**
+* Default Html Sanitizer to prevent script injection
+*
+* @class SanitizeHtml
+* @constructor
+*/
 @valueConverter('sanitizeHtml')
 export class SanitizeHtmlValueConverter {
   static defaultSanitizer(untrustedMarkup){
