@@ -2,14 +2,29 @@ import {inject} from 'aurelia-dependency-injection';
 import {ObserverLocator, calcSplices, getChangeRecords} from 'aurelia-binding';
 import {BoundViewFactory, ViewSlot, customAttribute, bindable, templateController} from 'aurelia-templating';
 
+/**
+* Binding to iterate over an array and repeat a template
+*
+* @class Repeat
+* @constructor
+* @param {BoundViewFactory} viewFactory The factory generating the view
+* @param {ViewSlot} viewSlot The slot the view is injected in to
+* @param {ObserverLocator} observerLocator The observer locator instance
+*/
 @customAttribute('repeat')
-@bindable('items')
-@bindable('local')
-@bindable('key')
-@bindable('value')
 @templateController
 @inject(BoundViewFactory, ViewSlot, ObserverLocator)
 export class Repeat {
+  /**
+  * List of items to bind the repeater to
+  *
+  * @property items
+  * @type {Array}
+  */
+  @bindable items
+  @bindable local
+  @bindable key
+  @bindable value
   constructor(viewFactory, viewSlot, observerLocator){
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;

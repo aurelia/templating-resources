@@ -10,6 +10,14 @@ function addStyleString(str) {
 
 addStyleString('.aurelia-hide { display:none !important; }');
 
+/**
+* Binding to conditionally show markup in the DOM based on the value.
+* - different from if in that the markup is still added to the DOM, simply not shown
+*
+* @class Show
+* @constructor
+* @param {Element} element The element that the to bind to
+*/
 @customAttribute('show')
 @inject(Element)
 export class Show {
