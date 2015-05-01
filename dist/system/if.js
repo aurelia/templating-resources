@@ -1,5 +1,5 @@
 System.register(['aurelia-templating', 'aurelia-dependency-injection'], function (_export) {
-  var BoundViewFactory, ViewSlot, customAttribute, templateController, inject, _classCallCheck, _createClass, If;
+  var BoundViewFactory, ViewSlot, customAttribute, templateController, inject, _classCallCheck, If;
 
   return {
     setters: [function (_aureliaTemplating) {
@@ -15,52 +15,46 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection'], function
 
       _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-      _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
       If = (function () {
         function If(viewFactory, viewSlot) {
-          _classCallCheck(this, If);
+          _classCallCheck(this, _If);
 
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
           this.showing = false;
         }
 
-        _createClass(If, [{
-          key: 'valueChanged',
-          value: function valueChanged(newValue) {
-            if (!newValue) {
-              if (this.view) {
-                this.viewSlot.remove(this.view);
-                this.view.unbind();
-              }
+        var _If = If;
 
-              this.showing = false;
-              return;
+        _If.prototype.valueChanged = function valueChanged(newValue) {
+          if (!newValue) {
+            if (this.view) {
+              this.viewSlot.remove(this.view);
+              this.view.unbind();
             }
 
-            if (!this.view) {
-              this.view = this.viewFactory.create();
-            }
-
-            if (!this.showing) {
-              this.showing = true;
-
-              if (!this.view.bound) {
-                this.view.bind();
-              }
-
-              this.viewSlot.add(this.view);
-            }
+            this.showing = false;
+            return;
           }
-        }]);
 
-        _export('If', If = customAttribute('if')(If) || If);
+          if (!this.view) {
+            this.view = this.viewFactory.create();
+          }
 
-        _export('If', If = templateController(If) || If);
+          if (!this.showing) {
+            this.showing = true;
 
-        _export('If', If = inject(BoundViewFactory, ViewSlot)(If) || If);
+            if (!this.view.bound) {
+              this.view.bind();
+            }
 
+            this.viewSlot.add(this.view);
+          }
+        };
+
+        If = inject(BoundViewFactory, ViewSlot)(If) || If;
+        If = templateController(If) || If;
+        If = customAttribute('if')(If) || If;
         return If;
       })();
 

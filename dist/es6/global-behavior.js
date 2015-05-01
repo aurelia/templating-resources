@@ -15,7 +15,7 @@ export class GlobalBehavior {
     var handler = GlobalBehavior.handlers[this.aureliaAttrName];
 
     if(!handler){
-      throw new Error(`Conventional binding handler not found for ${this.aureliaAttrName}.`);
+      throw new Error(`Binding handler not found for '${this.aureliaAttrName}.${this.aureliaCommand}'. Element:\n${this.element.outerHTML}\n`);
     }
 
     try{

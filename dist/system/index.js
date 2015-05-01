@@ -1,7 +1,7 @@
 System.register(['./compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html'], function (_export) {
   var Compose, If, With, Repeat, Show, GlobalBehavior, SanitizeHtmlValueConverter;
 
-  function install(aurelia) {
+  function configure(aurelia) {
     aurelia.globalizeResources('./compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html');
   }
 
@@ -38,7 +38,7 @@ System.register(['./compose', './if', './with', './repeat', './show', './global-
 
       _export('GlobalBehavior', GlobalBehavior);
 
-      _export('install', install);
+      _export('configure', configure);
     }
   };
 });

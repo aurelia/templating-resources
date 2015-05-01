@@ -6,7 +6,7 @@ import {Show} from './show';
 import {GlobalBehavior} from './global-behavior';
 import {SanitizeHtmlValueConverter} from './sanitize-html';
 
-function install(aurelia){
+function configure(aurelia){
   aurelia.globalizeResources(
     './compose',
     './if',
@@ -26,5 +26,5 @@ export {
   Show,
   SanitizeHtmlValueConverter,
   GlobalBehavior,
-  install
+  configure
 };

@@ -1,5 +1,5 @@
 System.register(['aurelia-dependency-injection', 'aurelia-templating'], function (_export) {
-  var inject, customAttribute, _classCallCheck, _createClass, Show;
+  var inject, customAttribute, _classCallCheck, Show;
 
   function addStyleString(str) {
     var node = document.createElement('style');
@@ -19,32 +19,27 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
 
       _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-      _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
       addStyleString('.aurelia-hide { display:none !important; }');
 
       Show = (function () {
         function Show(element) {
-          _classCallCheck(this, Show);
+          _classCallCheck(this, _Show);
 
           this.element = element;
         }
 
-        _createClass(Show, [{
-          key: 'valueChanged',
-          value: function valueChanged(newValue) {
-            if (newValue) {
-              this.element.classList.remove('aurelia-hide');
-            } else {
-              this.element.classList.add('aurelia-hide');
-            }
+        var _Show = Show;
+
+        _Show.prototype.valueChanged = function valueChanged(newValue) {
+          if (newValue) {
+            this.element.classList.remove('aurelia-hide');
+          } else {
+            this.element.classList.add('aurelia-hide');
           }
-        }]);
+        };
 
-        _export('Show', Show = customAttribute('show')(Show) || Show);
-
-        _export('Show', Show = inject(Element)(Show) || Show);
-
+        Show = inject(Element)(Show) || Show;
+        Show = customAttribute('show')(Show) || Show;
         return Show;
       })();
 

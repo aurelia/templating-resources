@@ -1,8 +1,6 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
+exports.__esModule = true;
 
 var _Compose = require('./compose');
 
@@ -18,7 +16,7 @@ var _GlobalBehavior = require('./global-behavior');
 
 var _SanitizeHtmlValueConverter = require('./sanitize-html');
 
-function install(aurelia) {
+function configure(aurelia) {
   aurelia.globalizeResources('./compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html');
 }
 
@@ -29,4 +27,4 @@ exports.Repeat = _Repeat.Repeat;
 exports.Show = _Show.Show;
 exports.SanitizeHtmlValueConverter = _SanitizeHtmlValueConverter.SanitizeHtmlValueConverter;
 exports.GlobalBehavior = _GlobalBehavior.GlobalBehavior;
-exports.install = install;
+exports.configure = configure;

@@ -1,3 +1,16 @@
+## 0.11.0 (2015-05-01)
+
+
+#### Bug Fixes
+
+* **GlobalBehavior:** improve handler-not-found message Fixes aurelia/binding#85 ([8decd4d6](http://github.com/aurelia/templating-resources/commit/8decd4d628fe722e027d832a653ff16499fbc40b))
+* **all:** update to latest plugin api ([c3adb5e2](http://github.com/aurelia/templating-resources/commit/c3adb5e2299e8fa51568f4a31cbec47ed2dc6788))
+* **repeat:**
+  * add value as bindable ([8752ecab](http://github.com/aurelia/templating-resources/commit/8752ecab51a77941c5fcd8b442582f7ade1c4da3))
+  * regression with recreating view" ([1b40be47](http://github.com/aurelia/templating-resources/commit/1b40be47c646749b21bbfea9a2fafcab34302e00), closes [#37](http://github.com/aurelia/templating-resources/issues/37))
+  * null/undefined should not cause error ([86f4a310](http://github.com/aurelia/templating-resources/commit/86f4a3107a4a924e6620c5c7b5386e5262543b05), closes [#35](http://github.com/aurelia/templating-resources/issues/35))
+
+
 ## 0.10.0 (2015-04-09)
 
 

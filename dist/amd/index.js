@@ -1,11 +1,9 @@
 define(['exports', './compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html'], function (exports, _compose, _if, _with, _repeat, _show, _globalBehavior, _sanitizeHtml) {
   'use strict';
 
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
+  exports.__esModule = true;
 
-  function install(aurelia) {
+  function configure(aurelia) {
     aurelia.globalizeResources('./compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html');
   }
 
@@ -16,5 +14,5 @@ define(['exports', './compose', './if', './with', './repeat', './show', './globa
   exports.Show = _show.Show;
   exports.SanitizeHtmlValueConverter = _sanitizeHtml.SanitizeHtmlValueConverter;
   exports.GlobalBehavior = _globalBehavior.GlobalBehavior;
-  exports.install = install;
+  exports.configure = configure;
 });

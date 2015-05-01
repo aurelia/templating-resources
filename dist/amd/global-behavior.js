@@ -3,62 +3,54 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
 
   var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
+  exports.__esModule = true;
 
   var GlobalBehavior = (function () {
     function GlobalBehavior(element) {
-      _classCallCheck(this, GlobalBehavior);
+      _classCallCheck(this, _GlobalBehavior);
 
       this.element = element;
     }
 
-    _createClass(GlobalBehavior, [{
-      key: 'bind',
-      value: function bind() {
-        var handler = GlobalBehavior.handlers[this.aureliaAttrName];
+    var _GlobalBehavior = GlobalBehavior;
 
-        if (!handler) {
-          throw new Error('Conventional binding handler not found for ' + this.aureliaAttrName + '.');
-        }
+    _GlobalBehavior.prototype.bind = function bind() {
+      var handler = GlobalBehavior.handlers[this.aureliaAttrName];
 
-        try {
-          this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
-        } catch (error) {
-          throw _aureliaLogging.AggregateError('Conventional binding handler failed.', error);
-        }
+      if (!handler) {
+        throw new Error('Binding handler not found for \'' + this.aureliaAttrName + '.' + this.aureliaCommand + '\'. Element:\n' + this.element.outerHTML + '\n');
       }
-    }, {
-      key: 'attached',
-      value: function attached() {
-        if (this.handler && 'attached' in this.handler) {
-          this.handler.attached(this, this.element);
-        }
-      }
-    }, {
-      key: 'detached',
-      value: function detached() {
-        if (this.handler && 'detached' in this.handler) {
-          this.handler.detached(this, this.element);
-        }
-      }
-    }, {
-      key: 'unbind',
-      value: function unbind() {
-        if (this.handler && 'unbind' in this.handler) {
-          this.handler.unbind(this, this.element);
-        }
 
-        this.handler = null;
+      try {
+        this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
+      } catch (error) {
+        throw _aureliaLogging.AggregateError('Conventional binding handler failed.', error);
       }
-    }]);
+    };
 
-    exports.GlobalBehavior = GlobalBehavior = customAttribute('global-behavior')(GlobalBehavior) || GlobalBehavior;
-    exports.GlobalBehavior = GlobalBehavior = dynamicOptions(GlobalBehavior) || GlobalBehavior;
-    exports.GlobalBehavior = GlobalBehavior = inject(Element)(GlobalBehavior) || GlobalBehavior;
+    _GlobalBehavior.prototype.attached = function attached() {
+      if (this.handler && 'attached' in this.handler) {
+        this.handler.attached(this, this.element);
+      }
+    };
+
+    _GlobalBehavior.prototype.detached = function detached() {
+      if (this.handler && 'detached' in this.handler) {
+        this.handler.detached(this, this.element);
+      }
+    };
+
+    _GlobalBehavior.prototype.unbind = function unbind() {
+      if (this.handler && 'unbind' in this.handler) {
+        this.handler.unbind(this, this.element);
+      }
+
+      this.handler = null;
+    };
+
+    GlobalBehavior = _aureliaDependencyInjection.inject(Element)(GlobalBehavior) || GlobalBehavior;
+    GlobalBehavior = _aureliaTemplating.dynamicOptions(GlobalBehavior) || GlobalBehavior;
+    GlobalBehavior = _aureliaTemplating.customAttribute('global-behavior')(GlobalBehavior) || GlobalBehavior;
     return GlobalBehavior;
   })();
 

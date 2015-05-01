@@ -1,5 +1,5 @@
 System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-logging'], function (_export) {
-  var inject, customAttribute, dynamicOptions, AggregateError, LogManager, _classCallCheck, _createClass, GlobalBehavior;
+  var inject, customAttribute, dynamicOptions, AggregateError, LogManager, _classCallCheck, GlobalBehavior;
 
   return {
     setters: [function (_aureliaDependencyInjection) {
@@ -16,61 +16,52 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
 
       _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-      _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
       GlobalBehavior = (function () {
         function GlobalBehavior(element) {
-          _classCallCheck(this, GlobalBehavior);
+          _classCallCheck(this, _GlobalBehavior);
 
           this.element = element;
         }
 
-        _createClass(GlobalBehavior, [{
-          key: 'bind',
-          value: function bind() {
-            var handler = GlobalBehavior.handlers[this.aureliaAttrName];
+        var _GlobalBehavior = GlobalBehavior;
 
-            if (!handler) {
-              throw new Error('Conventional binding handler not found for ' + this.aureliaAttrName + '.');
-            }
+        _GlobalBehavior.prototype.bind = function bind() {
+          var handler = GlobalBehavior.handlers[this.aureliaAttrName];
 
-            try {
-              this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
-            } catch (error) {
-              throw AggregateError('Conventional binding handler failed.', error);
-            }
+          if (!handler) {
+            throw new Error('Binding handler not found for \'' + this.aureliaAttrName + '.' + this.aureliaCommand + '\'. Element:\n' + this.element.outerHTML + '\n');
           }
-        }, {
-          key: 'attached',
-          value: function attached() {
-            if (this.handler && 'attached' in this.handler) {
-              this.handler.attached(this, this.element);
-            }
+
+          try {
+            this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
+          } catch (error) {
+            throw AggregateError('Conventional binding handler failed.', error);
           }
-        }, {
-          key: 'detached',
-          value: function detached() {
-            if (this.handler && 'detached' in this.handler) {
-              this.handler.detached(this, this.element);
-            }
+        };
+
+        _GlobalBehavior.prototype.attached = function attached() {
+          if (this.handler && 'attached' in this.handler) {
+            this.handler.attached(this, this.element);
           }
-        }, {
-          key: 'unbind',
-          value: function unbind() {
-            if (this.handler && 'unbind' in this.handler) {
-              this.handler.unbind(this, this.element);
-            }
+        };
 
-            this.handler = null;
+        _GlobalBehavior.prototype.detached = function detached() {
+          if (this.handler && 'detached' in this.handler) {
+            this.handler.detached(this, this.element);
           }
-        }]);
+        };
 
-        _export('GlobalBehavior', GlobalBehavior = customAttribute('global-behavior')(GlobalBehavior) || GlobalBehavior);
+        _GlobalBehavior.prototype.unbind = function unbind() {
+          if (this.handler && 'unbind' in this.handler) {
+            this.handler.unbind(this, this.element);
+          }
 
-        _export('GlobalBehavior', GlobalBehavior = dynamicOptions(GlobalBehavior) || GlobalBehavior);
+          this.handler = null;
+        };
 
-        _export('GlobalBehavior', GlobalBehavior = inject(Element)(GlobalBehavior) || GlobalBehavior);
-
+        GlobalBehavior = inject(Element)(GlobalBehavior) || GlobalBehavior;
+        GlobalBehavior = dynamicOptions(GlobalBehavior) || GlobalBehavior;
+        GlobalBehavior = customAttribute('global-behavior')(GlobalBehavior) || GlobalBehavior;
         return GlobalBehavior;
       })();
 
