@@ -5,14 +5,42 @@ import {
   customElement, bindable, noView
 } from 'aurelia-templating';
 
+/**
+* Used to compose a new view / view-model template or bind to an existing instance
+*
+* @class Compose
+* @constructor
+* @param {Container} container The containing container
+* @param {CompositionEngine} compositionEngine The engine used when composing this view
+* @param {ViewSlot} viewSlot The slot the view will be inserted in to
+* @param {ViewResources} viewResources The resources available in the current viewSlot
+*/
 @customElement('compose')
-@bindable('model')
-@bindable('view')
-@bindable('viewModel')
 @noView
 @inject(Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue)
 export class Compose {
-	constructor(element, container, compositionEngine, viewSlot, viewResources, taskQueue){
+  /**
+  * Model to bind the custom element to
+  *
+  * @property model
+  * @type {CustomElement}
+  */
+  @bindable model
+  /**
+  * View to bind the custom element to
+  *
+  * @property view
+  * @type {HtmlElement}
+  */
+  @bindable view
+  /**
+  * View-model to bind the custom element's template to
+  *
+  * @property viewModel
+  * @type {Class}
+  */
+  @bindable viewModel
+  constructor(element, container, compositionEngine, viewSlot, viewResources, taskQueue){
     this.element = element;
 		this.container = container;
 		this.compositionEngine = compositionEngine;
@@ -21,6 +49,12 @@ export class Compose {
     this.taskQueue = taskQueue;
 	}
 
+  /**
+  * Used to set the executionContext
+  *
+  * @method bind
+  * @param {ExecutionContext} executionContext The context in which the view model is executed in
+  */
 	bind(executionContext){
 		this.executionContext = executionContext;
 		processInstruction(this, createInstruction(this, {
