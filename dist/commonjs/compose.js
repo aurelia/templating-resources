@@ -6,42 +6,95 @@ exports.__esModule = true;
 
 var _Container$inject = require('aurelia-dependency-injection');
 
+var _TaskQueue = require('aurelia-task-queue');
+
 var _CompositionEngine$ViewSlot$ViewResources$customElement$bindable$noView = require('aurelia-templating');
 
 var Compose = (function () {
-  function Compose(container, compositionEngine, viewSlot, viewResources) {
+  function Compose(container, compositionEngine, viewSlot, viewResources, taskQueue) {
     _classCallCheck(this, _Compose);
 
     this.container = container;
     this.compositionEngine = compositionEngine;
     this.viewSlot = viewSlot;
     this.viewResources = viewResources;
+    this.taskQueue = taskQueue;
   }
 
   var _Compose = Compose;
 
   _Compose.prototype.bind = function bind(executionContext) {
     this.executionContext = executionContext;
-    processInstruction(this, { view: this.view, viewModel: this.viewModel, model: this.model });
+    processInstruction(this, createInstruction(this, {
+      view: this.view,
+      viewModel: this.viewModel,
+      model: this.model
+    }));
   };
 
   _Compose.prototype.modelChanged = function modelChanged(newValue, oldValue) {
-    var vm = this.currentViewModel;
+    var _this = this;
 
-    if (vm && typeof vm.activate === 'function') {
-      vm.activate(newValue);
+    if (this.currentInstruction) {
+      this.currentInstruction.model = newValue;
+      return;
     }
+
+    this.taskQueue.queueMicroTask(function () {
+      if (_this.currentInstruction) {
+        _this.currentInstruction.model = newValue;
+        return;
+      }
+
+      var vm = _this.currentViewModel;
+
+      if (vm && typeof vm.activate === 'function') {
+        vm.activate(newValue);
+      }
+    });
   };
 
   _Compose.prototype.viewChanged = function viewChanged(newValue, oldValue) {
-    processInstruction(this, { view: newValue, viewModel: this.currentViewModel || this.viewModel, model: this.model });
+    var _this2 = this;
+
+    var instruction = createInstruction(this, {
+      view: newValue,
+      viewModel: this.currentViewModel || this.viewModel,
+      model: this.model
+    });
+
+    if (this.currentInstruction) {
+      this.currentInstruction = instruction;
+      return;
+    }
+
+    this.currentInstruction = instruction;
+    this.taskQueue.queueMicroTask(function () {
+      return processInstruction(_this2, _this2.currentInstruction);
+    });
   };
 
   _Compose.prototype.viewModelChanged = function viewModelChanged(newValue, oldValue) {
-    processInstruction(this, { viewModel: newValue, view: this.view, model: this.model });
+    var _this3 = this;
+
+    var instruction = createInstruction(this, {
+      viewModel: newValue,
+      view: this.view,
+      model: this.model
+    });
+
+    if (this.currentInstruction) {
+      this.currentInstruction = instruction;
+      return;
+    }
+
+    this.currentInstruction = instruction;
+    this.taskQueue.queueMicroTask(function () {
+      return processInstruction(_this3, _this3.currentInstruction);
+    });
   };
 
-  Compose = _Container$inject.inject(_Container$inject.Container, _CompositionEngine$ViewSlot$ViewResources$customElement$bindable$noView.CompositionEngine, _CompositionEngine$ViewSlot$ViewResources$customElement$bindable$noView.ViewSlot, _CompositionEngine$ViewSlot$ViewResources$customElement$bindable$noView.ViewResources)(Compose) || Compose;
+  Compose = _Container$inject.inject(_Container$inject.Container, _CompositionEngine$ViewSlot$ViewResources$customElement$bindable$noView.CompositionEngine, _CompositionEngine$ViewSlot$ViewResources$customElement$bindable$noView.ViewSlot, _CompositionEngine$ViewSlot$ViewResources$customElement$bindable$noView.ViewResources, _TaskQueue.TaskQueue)(Compose) || Compose;
   Compose = _CompositionEngine$ViewSlot$ViewResources$customElement$bindable$noView.noView(Compose) || Compose;
   Compose = _CompositionEngine$ViewSlot$ViewResources$customElement$bindable$noView.bindable('viewModel')(Compose) || Compose;
   Compose = _CompositionEngine$ViewSlot$ViewResources$customElement$bindable$noView.bindable('view')(Compose) || Compose;
@@ -52,14 +105,19 @@ var Compose = (function () {
 
 exports.Compose = Compose;
 
-function processInstruction(composer, instruction) {
-  composer.compositionEngine.compose(Object.assign(instruction, {
+function createInstruction(composer, instruction) {
+  return Object.assign(instruction, {
     executionContext: composer.executionContext,
     container: composer.container,
     viewSlot: composer.viewSlot,
     viewResources: composer.viewResources,
     currentBehavior: composer.currentBehavior
-  })).then(function (next) {
+  });
+}
+
+function processInstruction(composer, instruction) {
+  composer.currentInstruction = null;
+  composer.compositionEngine.compose(instruction).then(function (next) {
     composer.currentBehavior = next;
     composer.currentViewModel = next ? next.executionContext : null;
   });
