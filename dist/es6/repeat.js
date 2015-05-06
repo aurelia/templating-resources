@@ -89,10 +89,14 @@ export class Repeat {
       return;
     }
 
-    if (items instanceof Map) {
-      this.processMapEntries(items);
-    } else {
+    if (items instanceof Array) {
       this.processArrayItems(items);
+    } else if(items instanceof Map) {
+      this.processMapEntries(items);
+    } else if((typeof items === 'number')){
+      this.processNumber(items);
+    }else{
+      throw new Error('Object in "repeat" must be of type Array, Map or Number');
     }
   }
 
@@ -132,6 +136,18 @@ export class Repeat {
     this.disposeSubscription = observer.subscribe(record => {
       this.handleMapChangeRecords(items, record);
     });
+  }
+
+  processNumber(value){
+    var viewFactory = this.viewFactory,
+      viewSlot = this.viewSlot,
+      i, ii, row, view;
+
+    for(i = 0, ii = Math.floor(value); i < ii; ++i){
+      row = this.createFullExecutionContext(i, i, ii);
+      view = viewFactory.create(row);
+      viewSlot.add(view);
+    }
   }
 
   createBaseExecutionContext(data){

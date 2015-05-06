@@ -1,6 +1,6 @@
 {
   "name": "aurelia-templating-resources",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "A standard set of behaviors, converters and other resources for use with the Aurelia templating library.",
   "keywords": [
     "aurelia",
@@ -25,11 +25,11 @@
       "lib": "dist/system"
     },
     "dependencies": {
-      "aurelia-binding": "github:aurelia/binding@^0.6.0",
-      "aurelia-dependency-injection": "github:aurelia/dependency-injection@^0.7.0",
+      "aurelia-binding": "github:aurelia/binding@^0.6.1",
+      "aurelia-dependency-injection": "github:aurelia/dependency-injection@^0.7.1",
       "aurelia-logging": "github:aurelia/logging@^0.4.0",
       "aurelia-task-queue": "github:aurelia/task-queue@^0.4.0",
-      "aurelia-templating": "github:aurelia/templating@^0.11.0",
+      "aurelia-templating": "github:aurelia/templating@^0.11.1",
       "core-js": "npm:core-js@^0.9.5"
     },
     "devDependencies": {

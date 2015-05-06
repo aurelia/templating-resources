@@ -1,3 +1,16 @@
+### 0.11.1 (2015-05-06)
+
+
+#### Bug Fixes
+
+* **compose:** address multi-prop update with compose ([160b4a00](http://github.com/aurelia/templating-resources/commit/160b4a00f25af71fc9c1be6c04e69988db132bc9))
+
+
+#### Features
+
+* **repeat:** add support for iterating numbers ([9eba93dc](http://github.com/aurelia/templating-resources/commit/9eba93dc2965d28e87315c2d9038da867bd658c4), closes [#50](http://github.com/aurelia/templating-resources/issues/50))
+
+
 ## 0.11.0 (2015-05-01)
 
 
