@@ -5,6 +5,7 @@ import {Repeat} from './repeat';
 import {Show} from './show';
 import {GlobalBehavior} from './global-behavior';
 import {SanitizeHtmlValueConverter} from './sanitize-html';
+import {Replaceable} from './replaceable';
 
 function configure(aurelia){
   aurelia.globalizeResources(
@@ -13,6 +14,7 @@ function configure(aurelia){
     './with',
     './repeat',
     './show',
+    './replaceable',
     './global-behavior',
     './sanitize-html'
   );
@@ -26,5 +28,6 @@ export {
   Show,
   SanitizeHtmlValueConverter,
   GlobalBehavior,
+  Replaceable,
   configure
 };
