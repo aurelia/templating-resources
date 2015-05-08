@@ -10,9 +10,10 @@ import {
 @bindable('view')
 @bindable('viewModel')
 @noView
-@inject(Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue)
+@inject(Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue)
 export class Compose {
-	constructor(container, compositionEngine, viewSlot, viewResources, taskQueue){
+	constructor(element, container, compositionEngine, viewSlot, viewResources, taskQueue){
+    this.element = element;
 		this.container = container;
 		this.compositionEngine = compositionEngine;
 		this.viewSlot = viewSlot;
@@ -88,7 +89,8 @@ function createInstruction(composer, instruction){
     container:composer.container,
     viewSlot:composer.viewSlot,
     viewResources:composer.viewResources,
-    currentBehavior:composer.currentBehavior
+    currentBehavior:composer.currentBehavior,
+    host:composer.element
   });
 }
 
