@@ -38,7 +38,7 @@ export class If {
     if (!this.showing) {
       this.showing = true;
 
-      if(!this.view.bound){
+      if(!this.view.isBound){
         this.view.bind();
       }
 
