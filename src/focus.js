@@ -1,8 +1,9 @@
 ﻿import {customAttribute} from 'aurelia-templating';
+import {bindingMode} from 'aurelia-binding';
 import {inject} from 'aurelia-dependency-injection';
 import {TaskQueue} from 'aurelia-task-queue';
 
-@customAttribute('focus')
+@customAttribute('focus', bindingMode.twoWay)
 @inject(Element, TaskQueue)
 export class Focus {
   constructor(element, taskQueue) {
