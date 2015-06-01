@@ -93,11 +93,17 @@ export class Repeat {
 
   processItems() {
     var items = this.items,
-      viewSlot = this.viewSlot;
+      viewSlot = this.viewSlot,
+      views, i;
 
     if (this.disposeSubscription) {
       this.disposeSubscription();
+      views = viewSlot.children;
       viewSlot.removeAll();
+      i = views.length;
+      while(i--) {
+        views[i].unbind();
+      }
     }
 
     if(!items){
