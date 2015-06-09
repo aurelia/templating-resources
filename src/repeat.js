@@ -42,7 +42,7 @@ export class Repeat {
 
     if(!items){
       if(this.oldItems){
-        this.viewSlot.removeAll();
+        this.removeAll();
       }
 
       return;
@@ -68,10 +68,14 @@ export class Repeat {
         this.disposeSubscription = observer.subscribe(splices => {
           this.handleSplices(items, splices);
         });
+
+        return;
       }
-    } else {
-      this.processItems();
+    } else if (this.oldItems) {
+      this.removeAll();
     }
+
+    this.processItems();
   }
 
   unbind(){
@@ -92,18 +96,11 @@ export class Repeat {
   }
 
   processItems() {
-    var items = this.items,
-      viewSlot = this.viewSlot,
-      views, i;
+    var items = this.items;
 
     if (this.disposeSubscription) {
       this.disposeSubscription();
-      views = viewSlot.children;
-      viewSlot.removeAll();
-      i = views.length;
-      while(i--) {
-        views[i].unbind();
-      }
+      this.removeAll();
     }
 
     if(!items){
@@ -333,6 +330,18 @@ export class Repeat {
       if (child.bindings[0].source[this.key] === key) {
         return i;
       }
+    }
+  }
+
+  removeAll(){
+    var viewSlot = this.viewSlot,
+      views, i;
+
+    views = viewSlot.children;
+    viewSlot.removeAll();
+    i = views.length;
+    while(i--) {
+      views[i].unbind();
     }
   }
 }
