@@ -2,29 +2,35 @@
 
 exports.__esModule = true;
 
-var _Compose = require('./compose');
+var _compose = require('./compose');
 
-var _If = require('./if');
+var _if = require('./if');
 
-var _With = require('./with');
+var _with = require('./with');
 
-var _Repeat = require('./repeat');
+var _repeat = require('./repeat');
 
-var _Show = require('./show');
+var _show = require('./show');
 
-var _GlobalBehavior = require('./global-behavior');
+var _globalBehavior = require('./global-behavior');
 
-var _SanitizeHtmlValueConverter = require('./sanitize-html');
+var _sanitizeHtml = require('./sanitize-html');
+
+var _replaceable = require('./replaceable');
+
+var _focus = require('./focus');
 
 function configure(aurelia) {
-  aurelia.globalizeResources('./compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html');
+  aurelia.globalizeResources('./compose', './if', './with', './repeat', './show', './replaceable', './global-behavior', './sanitize-html', './focus');
 }
 
-exports.Compose = _Compose.Compose;
-exports.If = _If.If;
-exports.With = _With.With;
-exports.Repeat = _Repeat.Repeat;
-exports.Show = _Show.Show;
-exports.SanitizeHtmlValueConverter = _SanitizeHtmlValueConverter.SanitizeHtmlValueConverter;
-exports.GlobalBehavior = _GlobalBehavior.GlobalBehavior;
+exports.Compose = _compose.Compose;
+exports.If = _if.If;
+exports.With = _with.With;
+exports.Repeat = _repeat.Repeat;
+exports.Show = _show.Show;
+exports.SanitizeHtmlValueConverter = _sanitizeHtml.SanitizeHtmlValueConverter;
+exports.GlobalBehavior = _globalBehavior.GlobalBehavior;
+exports.Replaceable = _replaceable.Replaceable;
+exports.Focus = _focus.Focus;
 exports.configure = configure;

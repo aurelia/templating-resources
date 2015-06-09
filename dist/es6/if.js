@@ -1,6 +1,15 @@
 import {BoundViewFactory, ViewSlot, customAttribute, templateController} from 'aurelia-templating';
 import {inject} from 'aurelia-dependency-injection';
 
+/**
+* Binding to conditionally include or not include template logic depending on returned result
+* - value should be Boolean or will be treated as such (truthy / falsey)
+*
+* @class If
+* @constructor
+* @param {ViewFactory} viewFactory The factory used to create the view
+* @param {ViewSlot} viewSlot The slot the view will be inserted in to
+*/
 @customAttribute('if')
 @templateController
 @inject(BoundViewFactory, ViewSlot)
@@ -9,6 +18,12 @@ export class If {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
     this.showing = false;
+  }
+
+  bind(executionContext) {
+    // Store parent executionContext, so we can pass it down
+    this.executionContext = executionContext;
+    this.valueChanged(this.value);
   }
 
   valueChanged(newValue){
@@ -23,13 +38,13 @@ export class If {
     }
 
     if(!this.view){
-      this.view = this.viewFactory.create();
+      this.view = this.viewFactory.create(this.executionContext);
     }
 
     if (!this.showing) {
       this.showing = true;
 
-      if(!this.view.bound){
+      if(!this.view.isBound){
         this.view.bind();
       }
 

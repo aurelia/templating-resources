@@ -1,12 +1,12 @@
 'use strict';
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
 exports.__esModule = true;
 
-var _inject = require('aurelia-dependency-injection');
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _customAttribute = require('aurelia-templating');
+var _aureliaDependencyInjection = require('aurelia-dependency-injection');
+
+var _aureliaTemplating = require('aurelia-templating');
 
 function addStyleString(str) {
   var node = document.createElement('style');
@@ -34,8 +34,8 @@ var Show = (function () {
     }
   };
 
-  Show = _inject.inject(Element)(Show) || Show;
-  Show = _customAttribute.customAttribute('show')(Show) || Show;
+  Show = (0, _aureliaDependencyInjection.inject)(Element)(Show) || Show;
+  Show = (0, _aureliaTemplating.customAttribute)('show')(Show) || Show;
   return Show;
 })();
 

@@ -1,5 +1,9 @@
 System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-logging'], function (_export) {
-  var inject, customAttribute, dynamicOptions, AggregateError, LogManager, _classCallCheck, GlobalBehavior;
+  'use strict';
+
+  var inject, customAttribute, dynamicOptions, AggregateError, LogManager, GlobalBehavior;
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   return {
     setters: [function (_aureliaDependencyInjection) {
@@ -12,10 +16,6 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
       LogManager = _aureliaLogging;
     }],
     execute: function () {
-      'use strict';
-
-      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
       GlobalBehavior = (function () {
         function GlobalBehavior(element) {
           _classCallCheck(this, _GlobalBehavior);

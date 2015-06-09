@@ -1,5 +1,9 @@
 System.register(['aurelia-dependency-injection', 'aurelia-templating'], function (_export) {
-  var inject, customAttribute, _classCallCheck, Show;
+  'use strict';
+
+  var inject, customAttribute, Show;
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   function addStyleString(str) {
     var node = document.createElement('style');
@@ -15,10 +19,6 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
       customAttribute = _aureliaTemplating.customAttribute;
     }],
     execute: function () {
-      'use strict';
-
-      _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
       addStyleString('.aurelia-hide { display:none !important; }');
 
       Show = (function () {

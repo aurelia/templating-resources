@@ -2,14 +2,29 @@ import {inject} from 'aurelia-dependency-injection';
 import {ObserverLocator, calcSplices, getChangeRecords} from 'aurelia-binding';
 import {BoundViewFactory, ViewSlot, customAttribute, bindable, templateController} from 'aurelia-templating';
 
+/**
+* Binding to iterate over an array and repeat a template
+*
+* @class Repeat
+* @constructor
+* @param {BoundViewFactory} viewFactory The factory generating the view
+* @param {ViewSlot} viewSlot The slot the view is injected in to
+* @param {ObserverLocator} observerLocator The observer locator instance
+*/
 @customAttribute('repeat')
-@bindable('items')
-@bindable('local')
-@bindable('key')
-@bindable('value')
 @templateController
 @inject(BoundViewFactory, ViewSlot, ObserverLocator)
 export class Repeat {
+  /**
+  * List of items to bind the repeater to
+  *
+  * @property items
+  * @type {Array}
+  */
+  @bindable items
+  @bindable local
+  @bindable key
+  @bindable value
   constructor(viewFactory, viewSlot, observerLocator){
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
@@ -78,11 +93,17 @@ export class Repeat {
 
   processItems() {
     var items = this.items,
-      viewSlot = this.viewSlot;
+      viewSlot = this.viewSlot,
+      views, i;
 
     if (this.disposeSubscription) {
       this.disposeSubscription();
+      views = viewSlot.children;
       viewSlot.removeAll();
+      i = views.length;
+      while(i--) {
+        views[i].unbind();
+      }
     }
 
     if(!items){
@@ -193,7 +214,8 @@ export class Repeat {
   handleSplices(array, splices) {
     var viewLookup = new Map(),
       viewSlot = this.viewSlot,
-      spliceIndexLow, view, i, ii, j, jj, row, splice,
+      spliceIndexLow, viewOrPromise, view,
+      i, ii, j, jj, row, splice,
       addIndex, end, itemsLeftToAdd,
       removed, model, children, length;
 
@@ -213,9 +235,9 @@ export class Repeat {
           view.executionContext[this.local] = array[addIndex + j];
           --itemsLeftToAdd;
         } else {
-          view = viewSlot.removeAt(addIndex + splice.addedCount);
-          if(view){
-            viewLookup.set(removed[j], view);
+          viewOrPromise = viewSlot.removeAt(addIndex + splice.addedCount);
+          if(viewOrPromise){
+            viewLookup.set(removed[j], viewOrPromise);
           }
         }
       }
@@ -224,10 +246,17 @@ export class Repeat {
 
       for (; 0 < itemsLeftToAdd; ++addIndex) {
         model = array[addIndex];
-        view = viewLookup.get(model);
-        if(view){
+        viewOrPromise = viewLookup.get(model);
+        if(viewOrPromise instanceof Promise){
+          ((localAddIndex, localModel) => {
+            viewOrPromise.then(view => {
+              viewLookup.delete(localModel);
+              viewSlot.insert(localAddIndex, view);
+            });
+          })(addIndex, model);
+        }else if(viewOrPromise){
           viewLookup.delete(model);
-          viewSlot.insert(addIndex, view);
+          viewSlot.insert(addIndex, viewOrPromise);
         }else{
           row = this.createBaseExecutionContext(model);
           view = this.viewFactory.create(row);
@@ -248,7 +277,13 @@ export class Repeat {
       this.updateExecutionContext(children[spliceIndexLow].executionContext, spliceIndexLow, length);
     }
 
-    viewLookup.forEach(x => x.unbind());
+    viewLookup.forEach(x => {
+      if(x instanceof Promise){
+        x.then(y => y.unbind());
+      }else{
+        x.unbind();
+      }
+    });
   }
 
   handleMapChangeRecords(map, records) {

@@ -1,18 +1,18 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (typeof obj === 'object' && obj !== null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } };
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
 exports.__esModule = true;
 
-var _inject = require('aurelia-dependency-injection');
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-var _customAttribute$dynamicOptions = require('aurelia-templating');
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _AggregateError = require('aurelia-logging');
+var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
-var LogManager = _interopRequireWildcard(_AggregateError);
+var _aureliaTemplating = require('aurelia-templating');
+
+var _aureliaLogging = require('aurelia-logging');
+
+var LogManager = _interopRequireWildcard(_aureliaLogging);
 
 var GlobalBehavior = (function () {
   function GlobalBehavior(element) {
@@ -33,7 +33,7 @@ var GlobalBehavior = (function () {
     try {
       this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
     } catch (error) {
-      throw _AggregateError.AggregateError('Conventional binding handler failed.', error);
+      throw (0, _aureliaLogging.AggregateError)('Conventional binding handler failed.', error);
     }
   };
 
@@ -57,9 +57,9 @@ var GlobalBehavior = (function () {
     this.handler = null;
   };
 
-  GlobalBehavior = _inject.inject(Element)(GlobalBehavior) || GlobalBehavior;
-  GlobalBehavior = _customAttribute$dynamicOptions.dynamicOptions(GlobalBehavior) || GlobalBehavior;
-  GlobalBehavior = _customAttribute$dynamicOptions.customAttribute('global-behavior')(GlobalBehavior) || GlobalBehavior;
+  GlobalBehavior = (0, _aureliaDependencyInjection.inject)(Element)(GlobalBehavior) || GlobalBehavior;
+  GlobalBehavior = (0, _aureliaTemplating.dynamicOptions)(GlobalBehavior) || GlobalBehavior;
+  GlobalBehavior = (0, _aureliaTemplating.customAttribute)('global-behavior')(GlobalBehavior) || GlobalBehavior;
   return GlobalBehavior;
 })();
 

@@ -1,12 +1,12 @@
 'use strict';
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
 exports.__esModule = true;
 
-var _BoundViewFactory$ViewSlot$customAttribute$templateController = require('aurelia-templating');
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _inject = require('aurelia-dependency-injection');
+var _aureliaTemplating = require('aurelia-templating');
+
+var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
 var If = (function () {
   function If(viewFactory, viewSlot) {
@@ -18,6 +18,11 @@ var If = (function () {
   }
 
   var _If = If;
+
+  _If.prototype.bind = function bind(executionContext) {
+    this.executionContext = executionContext;
+    this.valueChanged(this.value);
+  };
 
   _If.prototype.valueChanged = function valueChanged(newValue) {
     if (!newValue) {
@@ -31,13 +36,13 @@ var If = (function () {
     }
 
     if (!this.view) {
-      this.view = this.viewFactory.create();
+      this.view = this.viewFactory.create(this.executionContext);
     }
 
     if (!this.showing) {
       this.showing = true;
 
-      if (!this.view.bound) {
+      if (!this.view.isBound) {
         this.view.bind();
       }
 
@@ -45,9 +50,9 @@ var If = (function () {
     }
   };
 
-  If = _inject.inject(_BoundViewFactory$ViewSlot$customAttribute$templateController.BoundViewFactory, _BoundViewFactory$ViewSlot$customAttribute$templateController.ViewSlot)(If) || If;
-  If = _BoundViewFactory$ViewSlot$customAttribute$templateController.templateController(If) || If;
-  If = _BoundViewFactory$ViewSlot$customAttribute$templateController.customAttribute('if')(If) || If;
+  If = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(If) || If;
+  If = (0, _aureliaTemplating.templateController)(If) || If;
+  If = (0, _aureliaTemplating.customAttribute)('if')(If) || If;
   return If;
 })();
 

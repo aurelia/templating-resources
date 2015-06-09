@@ -1,9 +1,9 @@
 define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], function (exports, _aureliaDependencyInjection, _aureliaTemplating) {
   'use strict';
 
-  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
   exports.__esModule = true;
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   function addStyleString(str) {
     var node = document.createElement('style');
@@ -31,8 +31,8 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], functi
       }
     };
 
-    Show = _aureliaDependencyInjection.inject(Element)(Show) || Show;
-    Show = _aureliaTemplating.customAttribute('show')(Show) || Show;
+    Show = (0, _aureliaDependencyInjection.inject)(Element)(Show) || Show;
+    Show = (0, _aureliaTemplating.customAttribute)('show')(Show) || Show;
     return Show;
   })();
 

@@ -1,13 +1,27 @@
 define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-templating'], function (exports, _aureliaDependencyInjection, _aureliaBinding, _aureliaTemplating) {
   'use strict';
 
-  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
   exports.__esModule = true;
 
+  var _createDecoratedClass = (function () { function defineProperties(target, descriptors, initializers) { for (var i = 0; i < descriptors.length; i++) { var descriptor = descriptors[i]; var decorators = descriptor.decorators; var key = descriptor.key; delete descriptor.key; delete descriptor.decorators; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor || descriptor.initializer) descriptor.writable = true; if (decorators) { for (var f = 0; f < decorators.length; f++) { var decorator = decorators[f]; if (typeof decorator === 'function') { descriptor = decorator(target, key, descriptor) || descriptor; } else { throw new TypeError('The decorator for method ' + descriptor.key + ' is of the invalid type ' + typeof decorator); } } if (descriptor.initializer !== undefined) { initializers[key] = descriptor; continue; } } Object.defineProperty(target, key, descriptor); } } return function (Constructor, protoProps, staticProps, protoInitializers, staticInitializers) { if (protoProps) defineProperties(Constructor.prototype, protoProps, protoInitializers); if (staticProps) defineProperties(Constructor, staticProps, staticInitializers); return Constructor; }; })();
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+  function _defineDecoratedPropertyDescriptor(target, key, descriptors) { var _descriptor = descriptors[key]; if (!_descriptor) return; var descriptor = {}; for (var _key in _descriptor) descriptor[_key] = _descriptor[_key]; descriptor.value = descriptor.initializer.call(target); Object.defineProperty(target, key, descriptor); }
+
   var Repeat = (function () {
+    var _instanceInitializers = {};
+
     function Repeat(viewFactory, viewSlot, observerLocator) {
       _classCallCheck(this, _Repeat);
+
+      _defineDecoratedPropertyDescriptor(this, 'items', _instanceInitializers);
+
+      _defineDecoratedPropertyDescriptor(this, 'local', _instanceInitializers);
+
+      _defineDecoratedPropertyDescriptor(this, 'key', _instanceInitializers);
+
+      _defineDecoratedPropertyDescriptor(this, 'value', _instanceInitializers);
 
       this.viewFactory = viewFactory;
       this.viewSlot = viewSlot;
@@ -37,7 +51,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
 
       if (this.oldItems === items) {
         if (items instanceof Map) {
-          var records = _aureliaBinding.getChangeRecords(items);
+          var records = (0, _aureliaBinding.getChangeRecords)(items);
           observer = this.observerLocator.getMapObserver(items);
 
           this.handleMapChangeRecords(items, records);
@@ -46,7 +60,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
             _this.handleMapChangeRecords(items, records);
           });
         } else {
-          var splices = _aureliaBinding.calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
+          var splices = (0, _aureliaBinding.calcSplices)(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
           observer = this.observerLocator.getArrayObserver(items);
 
           this.handleSplices(items, splices);
@@ -80,11 +94,18 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
 
     _Repeat.prototype.processItems = function processItems() {
       var items = this.items,
-          viewSlot = this.viewSlot;
+          viewSlot = this.viewSlot,
+          views,
+          i;
 
       if (this.disposeSubscription) {
         this.disposeSubscription();
+        views = viewSlot.children;
         viewSlot.removeAll();
+        i = views.length;
+        while (i--) {
+          views[i].unbind();
+        }
       }
 
       if (!items) {
@@ -209,6 +230,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       var viewLookup = new Map(),
           viewSlot = this.viewSlot,
           spliceIndexLow,
+          viewOrPromise,
           view,
           i,
           ii,
@@ -240,9 +262,9 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
             view.executionContext[this.local] = array[addIndex + j];
             --itemsLeftToAdd;
           } else {
-            view = viewSlot.removeAt(addIndex + splice.addedCount);
-            if (view) {
-              viewLookup.set(removed[j], view);
+            viewOrPromise = viewSlot.removeAt(addIndex + splice.addedCount);
+            if (viewOrPromise) {
+              viewLookup.set(removed[j], viewOrPromise);
             }
           }
         }
@@ -251,10 +273,17 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
 
         for (; 0 < itemsLeftToAdd; ++addIndex) {
           model = array[addIndex];
-          view = viewLookup.get(model);
-          if (view) {
+          viewOrPromise = viewLookup.get(model);
+          if (viewOrPromise instanceof Promise) {
+            (function (localAddIndex, localModel) {
+              viewOrPromise.then(function (view) {
+                viewLookup['delete'](localModel);
+                viewSlot.insert(localAddIndex, view);
+              });
+            })(addIndex, model);
+          } else if (viewOrPromise) {
             viewLookup['delete'](model);
-            viewSlot.insert(addIndex, view);
+            viewSlot.insert(addIndex, viewOrPromise);
           } else {
             row = this.createBaseExecutionContext(model);
             view = this.viewFactory.create(row);
@@ -276,7 +305,13 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       }
 
       viewLookup.forEach(function (x) {
-        return x.unbind();
+        if (x instanceof Promise) {
+          x.then(function (y) {
+            return y.unbind();
+          });
+        } else {
+          x.unbind();
+        }
       });
     };
 
@@ -342,13 +377,31 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       }
     };
 
-    Repeat = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot, _aureliaBinding.ObserverLocator)(Repeat) || Repeat;
-    Repeat = _aureliaTemplating.templateController(Repeat) || Repeat;
-    Repeat = _aureliaTemplating.bindable('value')(Repeat) || Repeat;
-    Repeat = _aureliaTemplating.bindable('key')(Repeat) || Repeat;
-    Repeat = _aureliaTemplating.bindable('local')(Repeat) || Repeat;
-    Repeat = _aureliaTemplating.bindable('items')(Repeat) || Repeat;
-    Repeat = _aureliaTemplating.customAttribute('repeat')(Repeat) || Repeat;
+    _createDecoratedClass(_Repeat, [{
+      key: 'items',
+      decorators: [_aureliaTemplating.bindable],
+      initializer: null,
+      enumerable: true
+    }, {
+      key: 'local',
+      decorators: [_aureliaTemplating.bindable],
+      initializer: null,
+      enumerable: true
+    }, {
+      key: 'key',
+      decorators: [_aureliaTemplating.bindable],
+      initializer: null,
+      enumerable: true
+    }, {
+      key: 'value',
+      decorators: [_aureliaTemplating.bindable],
+      initializer: null,
+      enumerable: true
+    }], null, _instanceInitializers);
+
+    Repeat = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot, _aureliaBinding.ObserverLocator)(Repeat) || Repeat;
+    Repeat = (0, _aureliaTemplating.templateController)(Repeat) || Repeat;
+    Repeat = (0, _aureliaTemplating.customAttribute)('repeat')(Repeat) || Repeat;
     return Repeat;
   })();
 

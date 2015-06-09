@@ -1,9 +1,9 @@
 define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
   'use strict';
 
-  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
   exports.__esModule = true;
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 
@@ -28,7 +28,7 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
       return this.sanitizer(untrustedMarkup);
     };
 
-    SanitizeHtmlValueConverter = _aureliaBinding.valueConverter('sanitizeHtml')(SanitizeHtmlValueConverter) || SanitizeHtmlValueConverter;
+    SanitizeHtmlValueConverter = (0, _aureliaBinding.valueConverter)('sanitizeHtml')(SanitizeHtmlValueConverter) || SanitizeHtmlValueConverter;
     return SanitizeHtmlValueConverter;
   })();
 

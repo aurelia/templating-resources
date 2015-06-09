@@ -1,9 +1,9 @@
 define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], function (exports, _aureliaDependencyInjection, _aureliaTemplating) {
   'use strict';
 
-  var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
   exports.__esModule = true;
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   var With = (function () {
     function With(viewFactory, viewSlot) {
@@ -24,9 +24,9 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], functi
       }
     };
 
-    With = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(With) || With;
-    With = _aureliaTemplating.templateController(With) || With;
-    With = _aureliaTemplating.customAttribute('with')(With) || With;
+    With = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(With) || With;
+    With = (0, _aureliaTemplating.templateController)(With) || With;
+    With = (0, _aureliaTemplating.customAttribute)('with')(With) || With;
     return With;
   })();
 

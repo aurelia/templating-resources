@@ -1,8 +1,10 @@
-System.register(['./compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html'], function (_export) {
-  var Compose, If, With, Repeat, Show, GlobalBehavior, SanitizeHtmlValueConverter;
+System.register(['./compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html', './replaceable', './focus'], function (_export) {
+  'use strict';
+
+  var Compose, If, With, Repeat, Show, GlobalBehavior, SanitizeHtmlValueConverter, Replaceable, Focus;
 
   function configure(aurelia) {
-    aurelia.globalizeResources('./compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html');
+    aurelia.globalizeResources('./compose', './if', './with', './repeat', './show', './replaceable', './global-behavior', './sanitize-html', './focus');
   }
 
   return {
@@ -20,10 +22,12 @@ System.register(['./compose', './if', './with', './repeat', './show', './global-
       GlobalBehavior = _globalBehavior.GlobalBehavior;
     }, function (_sanitizeHtml) {
       SanitizeHtmlValueConverter = _sanitizeHtml.SanitizeHtmlValueConverter;
+    }, function (_replaceable) {
+      Replaceable = _replaceable.Replaceable;
+    }, function (_focus) {
+      Focus = _focus.Focus;
     }],
     execute: function () {
-      'use strict';
-
       _export('Compose', Compose);
 
       _export('If', If);
@@ -37,6 +41,10 @@ System.register(['./compose', './if', './with', './repeat', './show', './global-
       _export('SanitizeHtmlValueConverter', SanitizeHtmlValueConverter);
 
       _export('GlobalBehavior', GlobalBehavior);
+
+      _export('Replaceable', Replaceable);
+
+      _export('Focus', Focus);
 
       _export('configure', configure);
     }

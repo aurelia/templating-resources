@@ -1,3 +1,25 @@
+## 0.12.0 (2015-06-08)
+
+
+#### Bug Fixes
+
+* **if:**
+  * fix passing context binding to the view factory ([ecfa3ce4](http://github.com/aurelia/templating-resources/commit/ecfa3ce4b18ed9cd9bb32178e3fa3360e58bafbe), closes [#56](http://github.com/aurelia/templating-resources/issues/56))
+  * fix multiple view.bind() call ([172bdfae](http://github.com/aurelia/templating-resources/commit/172bdfaee29f224bb14d5ee8dd981ed7c4ba9b9c))
+* **repeat:**
+  * unbind children on property change ([96a2065c](http://github.com/aurelia/templating-resources/commit/96a2065c6a82743c86827bcb56850afb9b33d4f9))
+  * handle promises returned by view-slot ([28338958](http://github.com/aurelia/templating-resources/commit/28338958ccff3d4764687ae4605068aec760410b), closes [#54](http://github.com/aurelia/templating-resources/issues/54))
+
+
+#### Features
+
+* **all:** add focus attached behavior ([ecd300ae](http://github.com/aurelia/templating-resources/commit/ecd300ae9f0922cc393cbe9e368ec9be35e1f955))
+* **compose:** suppost syncChildren ([0240d5ca](http://github.com/aurelia/templating-resources/commit/0240d5cad778555312e931813b4131c112e7950f))
+* **docs:** Initial YUIDocs ([745131b0](http://github.com/aurelia/templating-resources/commit/745131b0201cf3a9d9aa14d66a7a68c72b784504))
+* **focus:** set two-way as default binding mode ([96ef5d43](http://github.com/aurelia/templating-resources/commit/96ef5d4333a2dbbb288576cf41ce5a0ad4df99e7))
+* **replaceable:** add the replaceable attribute for use with replaceable parts ([a5a17bc6](http://github.com/aurelia/templating-resources/commit/a5a17bc67d08ff192b98459cdb217a0908d06b5e))
+
+
 ### 0.11.1 (2015-05-06)
 
 
