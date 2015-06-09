@@ -48,7 +48,7 @@ var Repeat = (function () {
 
     if (!items) {
       if (this.oldItems) {
-        this.viewSlot.removeAll();
+        this.removeAll();
       }
 
       return;
@@ -74,10 +74,14 @@ var Repeat = (function () {
         this.disposeSubscription = observer.subscribe(function (splices) {
           _this.handleSplices(items, splices);
         });
+
+        return;
       }
-    } else {
-      this.processItems();
+    } else if (this.oldItems) {
+      this.removeAll();
     }
+
+    this.processItems();
   };
 
   _Repeat.prototype.unbind = function unbind() {
@@ -98,19 +102,11 @@ var Repeat = (function () {
   };
 
   _Repeat.prototype.processItems = function processItems() {
-    var items = this.items,
-        viewSlot = this.viewSlot,
-        views,
-        i;
+    var items = this.items;
 
     if (this.disposeSubscription) {
       this.disposeSubscription();
-      views = viewSlot.children;
-      viewSlot.removeAll();
-      i = views.length;
-      while (i--) {
-        views[i].unbind();
-      }
+      this.removeAll();
     }
 
     if (!items) {
@@ -379,6 +375,19 @@ var Repeat = (function () {
       if (child.bindings[0].source[this.key] === key) {
         return i;
       }
+    }
+  };
+
+  _Repeat.prototype.removeAll = function removeAll() {
+    var viewSlot = this.viewSlot,
+        views,
+        i;
+
+    views = viewSlot.children;
+    viewSlot.removeAll();
+    i = views.length;
+    while (i--) {
+      views[i].unbind();
     }
   };
 

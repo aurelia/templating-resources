@@ -1,3 +1,11 @@
+### 0.12.1 (2015-06-09)
+
+
+#### Bug Fixes
+
+* **repeat:** remove views when bindning new items ([fb9314cf](http://github.com/aurelia/templating-resources/commit/fb9314cfa5909c42f20b8a78f4f9226145d10c86), closes [#69](http://github.com/aurelia/templating-resources/issues/69))
+
+
 ## 0.12.0 (2015-06-08)
 
 
