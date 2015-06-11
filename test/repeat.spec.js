@@ -6,9 +6,13 @@ import {BoundViewFactory} from 'aurelia-templating';
 class ViewSlotMock {
   removeAll(){}
   add(){}
+  insert(){}
 }
 
 class ViewMock {
+  bind(){}
+  attached(){}
+  detached(){}
   unbind(){}
 }
 
@@ -92,4 +96,62 @@ xdescribe('repeat', () => {
       expect(view2.unbind).toHaveBeenCalled();
     });
   });
+
+  describe('handleSplices', () => {
+    let view1, view2, view3, items, splices;
+
+    beforeEach(() => {
+      repeat.local = 'item';
+      view1 = new ViewMock();
+      view2 = new ViewMock();
+      view3 = new ViewMock();
+      view1.executionContext = {};
+      view2.executionContext = { item: 'qux' };
+      view3.executionContext = {};
+
+      viewSlot.children = [view1, view2, view3];
+    });
+
+    it('should preserve full view lifecycle when re-using views', () => {
+      items = ['Bar', 'Foo', 'Baz'];
+      splices = [{
+        addedCount: 2,
+        index: 1,
+        removed: ['qux']
+      }];
+
+      spyOn(view2, 'detached');
+      spyOn(view2, 'bind');
+      spyOn(view2, 'attached');
+
+      repeat.handleSplices(items, splices);
+
+      expect(view2.detached).toHaveBeenCalled();
+      expect(view2.bind).toHaveBeenCalled();
+      expect(view2.attached).toHaveBeenCalled();
+    });
+
+    it('should update execution context when re-using views', () => {
+      items = ['Bar', 'Foo', 'Baz'];
+      splices = [{
+        addedCount: 2,
+        index: 1,
+        removed: ['qux']
+      }];
+
+      spyOn(view2, 'bind');
+
+      repeat.handleSplices(items, splices);
+
+      let context = { item: 'Foo',
+        $parent: undefined,
+        $index: 1,
+        $first: false,
+        $last: false,
+        $middle: true,
+        $odd: true,
+        $even: false };
+      expect(view2.bind).toHaveBeenCalledWith(context);
+    });
+  })
 });
