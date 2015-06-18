@@ -32,4 +32,8 @@ export class Show {
       this.element.classList.add('aurelia-hide');
     }
   }
+
+  bind(executionContext) {
+    this.valueChanged(this.value);
+  }
 }
