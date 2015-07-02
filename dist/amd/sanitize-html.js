@@ -28,7 +28,7 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
       return this.sanitizer(untrustedMarkup);
     };
 
-    SanitizeHtmlValueConverter = (0, _aureliaBinding.valueConverter)('sanitizeHtml')(SanitizeHtmlValueConverter) || SanitizeHtmlValueConverter;
+    SanitizeHtmlValueConverter = _aureliaBinding.valueConverter('sanitizeHtml')(SanitizeHtmlValueConverter) || SanitizeHtmlValueConverter;
     return SanitizeHtmlValueConverter;
   })();
 

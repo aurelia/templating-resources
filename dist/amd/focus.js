@@ -54,8 +54,8 @@ define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-dependency-
       this.element.removeEventListener('blur', this.blurListener);
     };
 
-    Focus = (0, _aureliaDependencyInjection.inject)(Element, _aureliaTaskQueue.TaskQueue)(Focus) || Focus;
-    Focus = (0, _aureliaTemplating.customAttribute)('focus', _aureliaBinding.bindingMode.twoWay)(Focus) || Focus;
+    Focus = _aureliaDependencyInjection.inject(Element, _aureliaTaskQueue.TaskQueue)(Focus) || Focus;
+    Focus = _aureliaTemplating.customAttribute('focus', _aureliaBinding.bindingMode.twoWay)(Focus) || Focus;
     return Focus;
   })();
 

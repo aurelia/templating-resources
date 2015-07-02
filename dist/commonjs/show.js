@@ -34,8 +34,12 @@ var Show = (function () {
     }
   };
 
-  Show = (0, _aureliaDependencyInjection.inject)(Element)(Show) || Show;
-  Show = (0, _aureliaTemplating.customAttribute)('show')(Show) || Show;
+  _Show.prototype.bind = function bind(executionContext) {
+    this.valueChanged(this.value);
+  };
+
+  Show = _aureliaDependencyInjection.inject(Element)(Show) || Show;
+  Show = _aureliaTemplating.customAttribute('show')(Show) || Show;
   return Show;
 })();
 

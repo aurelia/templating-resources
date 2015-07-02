@@ -50,9 +50,9 @@ var If = (function () {
     }
   };
 
-  If = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(If) || If;
-  If = (0, _aureliaTemplating.templateController)(If) || If;
-  If = (0, _aureliaTemplating.customAttribute)('if')(If) || If;
+  If = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(If) || If;
+  If = _aureliaTemplating.templateController(If) || If;
+  If = _aureliaTemplating.customAttribute('if')(If) || If;
   return If;
 })();
 

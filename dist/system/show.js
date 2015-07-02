@@ -38,6 +38,10 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
           }
         };
 
+        _Show.prototype.bind = function bind(executionContext) {
+          this.valueChanged(this.value);
+        };
+
         Show = inject(Element)(Show) || Show;
         Show = customAttribute('show')(Show) || Show;
         return Show;

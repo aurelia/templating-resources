@@ -27,9 +27,9 @@ var With = (function () {
     }
   };
 
-  With = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(With) || With;
-  With = (0, _aureliaTemplating.templateController)(With) || With;
-  With = (0, _aureliaTemplating.customAttribute)('with')(With) || With;
+  With = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(With) || With;
+  With = _aureliaTemplating.templateController(With) || With;
+  With = _aureliaTemplating.customAttribute('with')(With) || With;
   return With;
 })();
 

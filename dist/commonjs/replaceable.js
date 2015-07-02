@@ -16,9 +16,9 @@ var Replaceable = (function () {
   }
 
   var _Replaceable = Replaceable;
-  Replaceable = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(Replaceable) || Replaceable;
-  Replaceable = (0, _aureliaTemplating.templateController)(Replaceable) || Replaceable;
-  Replaceable = (0, _aureliaTemplating.customAttribute)('replaceable')(Replaceable) || Replaceable;
+  Replaceable = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(Replaceable) || Replaceable;
+  Replaceable = _aureliaTemplating.templateController(Replaceable) || Replaceable;
+  Replaceable = _aureliaTemplating.customAttribute('replaceable')(Replaceable) || Replaceable;
   return Replaceable;
 })();
 

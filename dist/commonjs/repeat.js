@@ -56,7 +56,7 @@ var Repeat = (function () {
 
     if (this.oldItems === items) {
       if (items instanceof Map) {
-        var records = (0, _aureliaBinding.getChangeRecords)(items);
+        var records = _aureliaBinding.getChangeRecords(items);
         observer = this.observerLocator.getMapObserver(items);
 
         this.handleMapChangeRecords(items, records);
@@ -65,7 +65,7 @@ var Repeat = (function () {
           _this.handleMapChangeRecords(items, records);
         });
       } else {
-        var splices = (0, _aureliaBinding.calcSplices)(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
+        var splices = _aureliaBinding.calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
         observer = this.observerLocator.getArrayObserver(items);
 
         this.handleSplices(items, splices);
@@ -245,22 +245,27 @@ var Repeat = (function () {
         removed,
         model,
         children,
-        length;
+        length,
+        context,
+        spliceIndex;
 
     for (i = 0, ii = splices.length; i < ii; ++i) {
       splice = splices[i];
-      addIndex = splice.index;
+      addIndex = spliceIndex = splice.index;
       itemsLeftToAdd = splice.addedCount;
       end = splice.index + splice.addedCount;
       removed = splice.removed;
       if (typeof spliceIndexLow === 'undefined' || spliceIndexLow === null || spliceIndexLow > splice.index) {
-        spliceIndexLow = splice.index;
+        spliceIndexLow = spliceIndex;
       }
 
       for (j = 0, jj = removed.length; j < jj; ++j) {
         if (itemsLeftToAdd > 0) {
-          view = viewSlot.children[splice.index + j];
-          view.executionContext[this.local] = array[addIndex + j];
+          view = viewSlot.children[spliceIndex + j];
+          view.detached();
+          context = this.createFullExecutionContext(array[addIndex + j], spliceIndex + j, array.length);
+          view.bind(context);
+          view.attached();
           --itemsLeftToAdd;
         } else {
           viewOrPromise = viewSlot.removeAt(addIndex + splice.addedCount);
@@ -413,9 +418,9 @@ var Repeat = (function () {
     enumerable: true
   }], null, _instanceInitializers);
 
-  Repeat = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot, _aureliaBinding.ObserverLocator)(Repeat) || Repeat;
-  Repeat = (0, _aureliaTemplating.templateController)(Repeat) || Repeat;
-  Repeat = (0, _aureliaTemplating.customAttribute)('repeat')(Repeat) || Repeat;
+  Repeat = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot, _aureliaBinding.ObserverLocator)(Repeat) || Repeat;
+  Repeat = _aureliaTemplating.templateController(Repeat) || Repeat;
+  Repeat = _aureliaTemplating.customAttribute('repeat')(Repeat) || Repeat;
   return Repeat;
 })();
 

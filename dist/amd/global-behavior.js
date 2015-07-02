@@ -24,7 +24,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
       try {
         this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
       } catch (error) {
-        throw (0, _aureliaLogging.AggregateError)('Conventional binding handler failed.', error);
+        throw _aureliaLogging.AggregateError('Conventional binding handler failed.', error);
       }
     };
 
@@ -48,9 +48,9 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
       this.handler = null;
     };
 
-    GlobalBehavior = (0, _aureliaDependencyInjection.inject)(Element)(GlobalBehavior) || GlobalBehavior;
-    GlobalBehavior = (0, _aureliaTemplating.dynamicOptions)(GlobalBehavior) || GlobalBehavior;
-    GlobalBehavior = (0, _aureliaTemplating.customAttribute)('global-behavior')(GlobalBehavior) || GlobalBehavior;
+    GlobalBehavior = _aureliaDependencyInjection.inject(Element)(GlobalBehavior) || GlobalBehavior;
+    GlobalBehavior = _aureliaTemplating.dynamicOptions(GlobalBehavior) || GlobalBehavior;
+    GlobalBehavior = _aureliaTemplating.customAttribute('global-behavior')(GlobalBehavior) || GlobalBehavior;
     return GlobalBehavior;
   })();
 

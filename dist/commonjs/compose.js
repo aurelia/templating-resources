@@ -124,9 +124,9 @@ var Compose = (function () {
     enumerable: true
   }], null, _instanceInitializers);
 
-  Compose = (0, _aureliaDependencyInjection.inject)(Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue)(Compose) || Compose;
-  Compose = (0, _aureliaTemplating.noView)(Compose) || Compose;
-  Compose = (0, _aureliaTemplating.customElement)('compose')(Compose) || Compose;
+  Compose = _aureliaDependencyInjection.inject(Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue)(Compose) || Compose;
+  Compose = _aureliaTemplating.noView(Compose) || Compose;
+  Compose = _aureliaTemplating.customElement('compose')(Compose) || Compose;
   return Compose;
 })();
 

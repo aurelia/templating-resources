@@ -214,22 +214,25 @@ export class Repeat {
       spliceIndexLow, viewOrPromise, view,
       i, ii, j, jj, row, splice,
       addIndex, end, itemsLeftToAdd,
-      removed, model, children, length;
+      removed, model, children, length, context, spliceIndex;
 
     for (i = 0, ii = splices.length; i < ii; ++i) {
       splice = splices[i];
-      addIndex = splice.index;
+      addIndex = spliceIndex = splice.index;
       itemsLeftToAdd = splice.addedCount;
       end = splice.index + splice.addedCount;
       removed = splice.removed;
       if(typeof spliceIndexLow === 'undefined' || spliceIndexLow === null || spliceIndexLow > splice.index){
-        spliceIndexLow = splice.index;
+        spliceIndexLow = spliceIndex;
       }
 
       for (j = 0, jj = removed.length; j < jj; ++j) {
         if (itemsLeftToAdd > 0) {
-          view = viewSlot.children[splice.index + j];
-          view.executionContext[this.local] = array[addIndex + j];
+          view = viewSlot.children[spliceIndex + j];
+          view.detached();
+          context = this.createFullExecutionContext(array[addIndex + j], spliceIndex + j, array.length);
+          view.bind(context);
+          view.attached();
           --itemsLeftToAdd;
         } else {
           viewOrPromise = viewSlot.removeAt(addIndex + splice.addedCount);

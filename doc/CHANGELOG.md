@@ -1,3 +1,12 @@
+## 0.13.0 (2015-07-02)
+
+
+#### Bug Fixes
+
+* **repeat:** preserve lifecycle when re-using views ([7806a81b](http://github.com/aurelia/templating-resources/commit/7806a81b326d4e50e98321d6a3fe32b766aab2f5), closes [#45](http://github.com/aurelia/templating-resources/issues/45))
+* **show:** use bind hook to handle undefined values ([09f5d59f](http://github.com/aurelia/templating-resources/commit/09f5d59f622fd80b94a6c8f4fe809913222be49c))
+
+
 ### 0.12.1 (2015-06-09)
 
 
