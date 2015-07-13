@@ -1,3 +1,11 @@
+### 0.13.1 (2015-07-13)
+
+
+#### Bug Fixes
+
+* **show:** enable the show attribute to work inside shadow DOM ([81918c13](http://github.com/aurelia/templating-resources/commit/81918c135379f793db0a2788910c0634c09e00d2))
+
+
 ## 0.13.0 (2015-07-02)
 
 

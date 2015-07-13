@@ -15,7 +15,11 @@ function addStyleString(str) {
   document.head.appendChild(node);
 }
 
-addStyleString('.aurelia-hide { display:none !important; }');
+if (!!HTMLElement.prototype.createShadowRoot) {
+  addStyleString('body /deep/ .aurelia-hide { display:none !important; }');
+} else {
+  addStyleString('.aurelia-hide { display:none !important; }');
+}
 
 var Show = (function () {
   function Show(element) {

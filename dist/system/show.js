@@ -19,7 +19,11 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
       customAttribute = _aureliaTemplating.customAttribute;
     }],
     execute: function () {
-      addStyleString('.aurelia-hide { display:none !important; }');
+      if (!!HTMLElement.prototype.createShadowRoot) {
+        addStyleString('body /deep/ .aurelia-hide { display:none !important; }');
+      } else {
+        addStyleString('.aurelia-hide { display:none !important; }');
+      }
 
       Show = (function () {
         function Show(element) {
