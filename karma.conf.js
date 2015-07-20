@@ -36,7 +36,7 @@ module.exports = function(config) {
     'babelPreprocessor': {
       options: {
         sourceMap: 'inline',
-        modules: 'system',
+        modules: 'amd',
         moduleIds: false,
         loose: "all",
         optional: [
