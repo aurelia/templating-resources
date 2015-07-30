@@ -1,3 +1,11 @@
+### 0.13.3 (2015-07-30)
+
+
+#### Bug Fixes
+
+* **if:** only remove when previously shown ([99125493](http://github.com/aurelia/templating-resources/commit/99125493304089e85509a2fd510e0a8380a293e2))
+
+
 ### 0.13.2 (2015-07-29)
 
 

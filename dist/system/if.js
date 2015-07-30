@@ -33,7 +33,7 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection'], function
 
         _If.prototype.valueChanged = function valueChanged(newValue) {
           if (!newValue) {
-            if (this.view) {
+            if (this.view && this.showing) {
               this.viewSlot.remove(this.view);
               this.view.unbind();
             }

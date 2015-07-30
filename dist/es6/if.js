@@ -28,7 +28,7 @@ export class If {
 
   valueChanged(newValue){
     if (!newValue) {
-      if(this.view){
+      if(this.view && this.showing){
         this.viewSlot.remove(this.view);
         this.view.unbind();
       }

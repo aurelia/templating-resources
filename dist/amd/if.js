@@ -23,7 +23,7 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection'], functi
 
     _If.prototype.valueChanged = function valueChanged(newValue) {
       if (!newValue) {
-        if (this.view) {
+        if (this.view && this.showing) {
           this.viewSlot.remove(this.view);
           this.view.unbind();
         }
