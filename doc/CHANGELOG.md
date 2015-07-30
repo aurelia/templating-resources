@@ -1,3 +1,11 @@
+### 0.13.2 (2015-07-29)
+
+
+#### Bug Fixes
+
+* **repeat:** handle changes for numbers ([e3084523](http://github.com/aurelia/templating-resources/commit/e30845237531756793dcda0e5c42aa7f2f9cbfed), closes [#81](http://github.com/aurelia/templating-resources/issues/81))
+
+
 ### 0.13.1 (2015-07-13)
 
 
