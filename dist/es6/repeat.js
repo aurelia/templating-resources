@@ -103,7 +103,7 @@ export class Repeat {
       this.removeAll();
     }
 
-    if(!items){
+    if(!items && items !== 0){
       return;
     }
 
@@ -159,9 +159,23 @@ export class Repeat {
   processNumber(value){
     var viewFactory = this.viewFactory,
       viewSlot = this.viewSlot,
-      i, ii, row, view;
+      childrenLength = viewSlot.children.length,
+      i, ii, row, view, viewsToRemove;
 
-    for(i = 0, ii = Math.floor(value); i < ii; ++i){
+    value = Math.floor(value);
+    viewsToRemove = childrenLength - value;
+
+    if(viewsToRemove > 0) {
+      if(viewsToRemove > childrenLength) {
+        viewsToRemove = childrenLength;
+      }
+      for(i = 0, ii = viewsToRemove; i < ii; ++i){
+        viewSlot.removeAt(childrenLength - (i + 1));
+      }
+      return;
+    }
+
+    for(i = childrenLength, ii = value; i < ii; ++i){
       row = this.createFullExecutionContext(i, i, ii);
       view = viewFactory.create(row);
       viewSlot.add(view);
