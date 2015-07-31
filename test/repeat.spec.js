@@ -1,55 +1,37 @@
-
 import {Repeat} from '../src/repeat';
 import {ObserverLocator} from 'aurelia-binding';
-import {BoundViewFactory} from 'aurelia-templating';
+import {BoundViewFactory, BehaviorInstance, ViewSlot, ViewFactory} from 'aurelia-templating';
+import {Container} from 'aurelia-dependency-injection';
 
-class ViewSlotMock {
-  constructor() {
-    this.children = [];
-  }
-  removeAll(){}
-  add(view){
-    this.children.push(view);
-  }
-  insert(){}
-  removeAt(index){
-    if(index < 0) {
-      throw "negative index";
-    }
-    this.children.splice(index, 1);
-  }
-}
+describe('repeat', () => {
+  let repeat, viewSlot, viewFactory;
 
-class ViewMock {
-  bind(){}
-  attached(){}
-  detached(){}
-  unbind(){}
-}
+  beforeEach(() => {
+    let container = new Container();
+    viewSlot = new ViewSlotMock();
+    viewFactory = new BoundViewFactoryMock();
+    container.registerInstance(ViewSlot, viewSlot);
+    container.registerInstance(BoundViewFactory, viewFactory);
+    container.registerInstance(ObserverLocator, new ObserverLocator());
+    container.makeGlobal();
+    repeat = BehaviorInstance.createForUnitTest(Repeat);
+  });
 
-xdescribe('repeat', () => {
   describe('bind', () => {
-    let repeat, viewSlot, viewFactory, view1, view2;
-
+    let view1, view2;
     beforeEach(() => {
-      viewSlot = new ViewSlotMock();
-      viewFactory = new BoundViewFactory();
-      repeat = new Repeat(viewFactory, viewSlot, new ObserverLocator());
-      viewSlot.children = [];
-      spyOn(viewFactory, 'create').and.callFake(() => {});
-    });
-
-    it('should remove and unbind all old views if it has old items and provided with new items', () => {
       view1 = new ViewMock();
       view2 = new ViewMock();
       viewSlot.children = [view1, view2];
-
-      repeat.items = ['1', '2'];
-      repeat.oldItems = ['a', 'b'];
-
       spyOn(viewSlot, 'removeAll');
       spyOn(view1, 'unbind');
       spyOn(view2, 'unbind');
+    });
+
+    it('should remove and unbind all old views if it has old items and provided with new items', () => {
+      repeat.itemsChanged = () => {};
+      repeat.items = ['1', '2'];
+      repeat.oldItems = ['a', 'b'];
 
       repeat.bind();
 
@@ -59,16 +41,8 @@ xdescribe('repeat', () => {
     });
 
     it('should remove and unbind all old views if it has old items and no new items', () => {
-      view1 = new ViewMock();
-      view2 = new ViewMock();
-      viewSlot.children = [view1, view2];
-
       repeat.items = undefined;
       repeat.oldItems = ['a', 'b'];
-
-      spyOn(viewSlot, 'removeAll');
-      spyOn(view1, 'unbind');
-      spyOn(view2, 'unbind');
 
       repeat.bind();
 
@@ -79,20 +53,9 @@ xdescribe('repeat', () => {
   });
 
   describe('itemsChanged', () => {
-    let repeat, viewSlot, viewFactory, view1, view2;
-
-    beforeEach(() => {
-      viewSlot = new ViewSlotMock();
-      viewFactory = new BoundViewFactory();
-      repeat = new Repeat(viewFactory, viewSlot, new ObserverLocator());
-      viewSlot.children = [];
-      spyOn(viewFactory, 'create').and.callFake(() => {});
-    });
-
     it('should call disposeSubscription when has disposeSubscription', () => {
       let disposeSubscription = () => {};
       repeat.disposeSubscription = disposeSubscription;
-
       spyOn(repeat, 'disposeSubscription');
 
       repeat.itemsChanged();
@@ -102,10 +65,9 @@ xdescribe('repeat', () => {
 
     it('should remove all and unbind all view when has disposeSubscription', () => {
       repeat.disposeSubscription = () => {};
-      view1 = new ViewMock();
-      view2 = new ViewMock();
+      let view1 = new ViewMock();
+      let view2 = new ViewMock();
       viewSlot.children = [view1, view2];
-
       spyOn(viewSlot, 'removeAll');
       spyOn(view1, 'unbind');
       spyOn(view2, 'unbind');
@@ -119,26 +81,20 @@ xdescribe('repeat', () => {
   });
 
   describe('handleSplices', () => {
-    let repeat, viewSlot, viewFactory, view1, view2, view3, items, splices;
+    let view1, view2, view3, items, splices;
 
     beforeEach(() => {
-      viewSlot = new ViewSlotMock();
-      viewFactory = new BoundViewFactory();
       repeat = new Repeat(viewFactory, viewSlot, new ObserverLocator());
-      viewSlot.children = [];
-      spyOn(viewFactory, 'create').and.callFake(() => {});
-    });
-
-    beforeEach(() => {
       repeat.local = 'item';
+      viewSlot.children = [];
       view1 = new ViewMock();
       view2 = new ViewMock();
       view3 = new ViewMock();
       view1.executionContext = {};
       view2.executionContext = { item: 'qux' };
       view3.executionContext = {};
-
       viewSlot.children = [view1, view2, view3];
+      spyOn(viewFactory, 'create').and.callFake(() => {});
     });
 
     it('should preserve full view lifecycle when re-using views', () => {
@@ -148,7 +104,6 @@ xdescribe('repeat', () => {
         index: 1,
         removed: ['qux']
       }];
-
       spyOn(view2, 'detached');
       spyOn(view2, 'bind');
       spyOn(view2, 'attached');
@@ -167,7 +122,6 @@ xdescribe('repeat', () => {
         index: 1,
         removed: ['qux']
       }];
-
       spyOn(view2, 'bind');
 
       repeat.handleSplices(items, splices);
@@ -184,22 +138,9 @@ xdescribe('repeat', () => {
     });
   });
   describe('processNumber', () => {
-    class ViewFactoryMock {
-      create(context){
-        let view = new ViewMock();
-        view.executionContext = context;
-        return view;
-      }
-    }
-
-    let repeat, viewSlot, viewFactory, view1, view2;
-
     beforeEach(() => {
-      viewSlot = new ViewSlotMock();
-      viewFactory = new BoundViewFactory();
       repeat = new Repeat(new ViewFactoryMock(), viewSlot, new ObserverLocator());
       viewSlot.children = [];
-      spyOn(viewFactory, 'create').and.callFake(() => { return new ViewMock()});
     });
 
     it('should create provided number of views with correct context', () => {
@@ -264,3 +205,40 @@ xdescribe('repeat', () => {
     });
   });
 });
+
+class ViewSlotMock {
+  constructor() {
+    this.children = [];
+  }
+  removeAll(){}
+  add(view){
+    this.children.push(view);
+  }
+  insert(){}
+  removeAt(index){
+    if(index < 0) {
+      throw "negative index";
+    }
+    this.children.splice(index, 1);
+  }
+}
+
+class ViewMock {
+  bind(){}
+  attached(){}
+  detached(){}
+  unbind(){}
+}
+
+class BoundViewFactoryMock {
+  create(){};
+  removeAll(){};
+}
+
+class ViewFactoryMock {
+  create(context){
+    let view = new ViewMock();
+    view.executionContext = context;
+    return view;
+  }
+}
