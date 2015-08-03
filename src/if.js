@@ -1,5 +1,6 @@
 import {BoundViewFactory, ViewSlot, customAttribute, templateController} from 'aurelia-templating';
 import {inject} from 'aurelia-dependency-injection';
+import {TaskQueue} from 'aurelia-task-queue';
 
 /**
 * Binding to conditionally include or not include template logic depending on returned result
@@ -12,12 +13,13 @@ import {inject} from 'aurelia-dependency-injection';
 */
 @customAttribute('if')
 @templateController
-@inject(BoundViewFactory, ViewSlot)
+@inject(BoundViewFactory, ViewSlot, TaskQueue)
 export class If {
-  constructor(viewFactory, viewSlot){
+  constructor(viewFactory, viewSlot, taskQueue){
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
     this.showing = false;
+    this.taskQueue = taskQueue;
   }
 
   bind(executionContext) {
@@ -29,8 +31,10 @@ export class If {
   valueChanged(newValue){
     if (!newValue) {
       if(this.view && this.showing){
-        this.viewSlot.remove(this.view);
-        this.view.unbind();
+        this.taskQueue.queueMicroTask(() => {
+          this.viewSlot.remove(this.view);
+          this.view.unbind();
+        });
       }
 
       this.showing = false;
