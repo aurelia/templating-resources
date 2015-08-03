@@ -3,29 +3,116 @@ import {BoundViewFactory, ViewSlot, View} from 'aurelia-templating';
 import {TaskQueue} from 'aurelia-task-queue';
 
 describe('if', () => {
-  it('should remove and unbind view when showing and value is falsy', () => {
-    let viewSlot = new ViewSlotMock();
-    let taskQueue = new TaskQueue();
-    let ifAttribute = new If(new BoundViewFactory(), viewSlot, taskQueue);
-    ifAttribute.showing = true;
+  let viewSlot, taskQueue, sut, viewFactory;
+
+  beforeEach(() => {
+    viewSlot = new ViewSlotMock();
+    taskQueue = new TaskQueue();
+    viewFactory = new BoundViewFactoryMock();
+    sut = new If(viewFactory, viewSlot, taskQueue);
+  });
+
+  it('should remove and unbind view when showing and provided value is falsy', () => {
     let view = new ViewMock();
-    ifAttribute.view = view;
+    sut.view = view;
+    sut.showing = true;
     spyOn(viewSlot, 'remove');
     spyOn(view, 'unbind');
 
-    ifAttribute.bind();
+    sut.valueChanged(false);
     taskQueue.flushMicroTaskQueue();
 
     expect(viewSlot.remove).toHaveBeenCalledWith(view);
     expect(view.unbind).toHaveBeenCalled();
-    expect(ifAttribute.showing).toBe(false);
+    expect(sut.showing).toBe(false);
+  });
+
+  it('should do nothing when not showing and provided value is falsy', () => {
+    let view = new ViewMock();
+    sut.view = view;
+    sut.showing = false;
+    spyOn(viewSlot, 'remove');
+    spyOn(view, 'unbind');
+
+    sut.valueChanged(false);
+    taskQueue.flushMicroTaskQueue();
+
+    expect(viewSlot.remove).not.toHaveBeenCalled();
+    expect(view.unbind).not.toHaveBeenCalled();
+    expect(sut.showing).toBe(false);
+  });
+
+  it('should do nothing when showing, províded value is falsy and has no view', () => {
+    let view = new ViewMock();
+    sut.view = undefined;
+    sut.showing = true;
+    spyOn(viewSlot, 'remove');
+    spyOn(view, 'unbind');
+
+    sut.valueChanged(false);
+    taskQueue.flushMicroTaskQueue();
+
+    expect(viewSlot.remove).not.toHaveBeenCalled();
+    expect(view.unbind).not.toHaveBeenCalled();
+    expect(sut.showing).toBe(false);
+  });
+
+  it('should create the view when provided value is truthy and has no view', () => {
+    sut.view = undefined;
+
+    sut.valueChanged(true);
+
+    expect(sut.view).toEqual(jasmine.any(ViewMock));
+  });
+
+  it('should create the view with provided execution context', () => {
+    sut.value = true;
+    sut.view = undefined;
+    spyOn(viewFactory, 'create').and.callFake(() => {
+      return new ViewMock();
+    });
+    let context = 42;
+
+    sut.bind(context);
+
+    expect(viewFactory.create).toHaveBeenCalledWith(context);
+  });
+
+  it('should show the view when provided value is truthy and currently not showing', () => {
+    sut.showing = false;
+    sut.view = new ViewMock();
+    spyOn(viewSlot, 'add');
+
+    sut.valueChanged(true);
+
+    expect(sut.showing).toBe(true);
+    expect(viewSlot.add).toHaveBeenCalledWith(sut.view);
+  });
+
+  it('should bind the view if not bound', () => {
+    sut.showing = false;
+    let view = new ViewMock();
+    sut.view = view;
+    spyOn(view, 'bind');
+
+    sut.valueChanged(true);
+
+    expect(view.bind).toHaveBeenCalled();
   });
 });
 
 class ViewSlotMock {
   remove() {}
+  add () {}
 }
 
 class ViewMock {
+  bind() {}
   unbind() {}
+}
+
+class BoundViewFactoryMock {
+  create() {
+    return new ViewMock();
+  }
 }
