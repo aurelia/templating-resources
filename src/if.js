@@ -24,7 +24,7 @@ export class If {
 
   bind(executionContext) {
     // Store parent executionContext, so we can pass it down
-    this.executionContext = executionContext;
+    this.$parent = executionContext;
     this.valueChanged(this.value);
   }
 
@@ -42,7 +42,7 @@ export class If {
     }
 
     if(!this.view){
-      this.view = this.viewFactory.create(this.executionContext);
+      this.view = this.viewFactory.create(this.$parent);
     }
 
     if (!this.showing) {
