@@ -1,7 +1,7 @@
-System.register(['aurelia-templating', 'aurelia-dependency-injection'], function (_export) {
+System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-task-queue'], function (_export) {
   'use strict';
 
-  var BoundViewFactory, ViewSlot, customAttribute, templateController, inject, If;
+  var BoundViewFactory, ViewSlot, customAttribute, templateController, inject, TaskQueue, If;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -13,29 +13,36 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection'], function
       templateController = _aureliaTemplating.templateController;
     }, function (_aureliaDependencyInjection) {
       inject = _aureliaDependencyInjection.inject;
+    }, function (_aureliaTaskQueue) {
+      TaskQueue = _aureliaTaskQueue.TaskQueue;
     }],
     execute: function () {
       If = (function () {
-        function If(viewFactory, viewSlot) {
+        function If(viewFactory, viewSlot, taskQueue) {
           _classCallCheck(this, _If);
 
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
           this.showing = false;
+          this.taskQueue = taskQueue;
         }
 
         var _If = If;
 
         _If.prototype.bind = function bind(executionContext) {
-          this.executionContext = executionContext;
+          this.$parent = executionContext;
           this.valueChanged(this.value);
         };
 
         _If.prototype.valueChanged = function valueChanged(newValue) {
+          var _this = this;
+
           if (!newValue) {
             if (this.view && this.showing) {
-              this.viewSlot.remove(this.view);
-              this.view.unbind();
+              this.taskQueue.queueMicroTask(function () {
+                _this.viewSlot.remove(_this.view);
+                _this.view.unbind();
+              });
             }
 
             this.showing = false;
@@ -43,7 +50,7 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection'], function
           }
 
           if (!this.view) {
-            this.view = this.viewFactory.create(this.executionContext);
+            this.view = this.viewFactory.create(this.$parent);
           }
 
           if (!this.showing) {
@@ -57,7 +64,7 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection'], function
           }
         };
 
-        If = inject(BoundViewFactory, ViewSlot)(If) || If;
+        If = inject(BoundViewFactory, ViewSlot, TaskQueue)(If) || If;
         If = templateController(If) || If;
         If = customAttribute('if')(If) || If;
         return If;

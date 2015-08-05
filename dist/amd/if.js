@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-templating', 'aurelia-dependency-injection'], function (exports, _aureliaTemplating, _aureliaDependencyInjection) {
+define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', 'aurelia-task-queue'], function (exports, _aureliaTemplating, _aureliaDependencyInjection, _aureliaTaskQueue) {
   'use strict';
 
   exports.__esModule = true;
@@ -6,26 +6,31 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection'], functi
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   var If = (function () {
-    function If(viewFactory, viewSlot) {
+    function If(viewFactory, viewSlot, taskQueue) {
       _classCallCheck(this, _If);
 
       this.viewFactory = viewFactory;
       this.viewSlot = viewSlot;
       this.showing = false;
+      this.taskQueue = taskQueue;
     }
 
     var _If = If;
 
     _If.prototype.bind = function bind(executionContext) {
-      this.executionContext = executionContext;
+      this.$parent = executionContext;
       this.valueChanged(this.value);
     };
 
     _If.prototype.valueChanged = function valueChanged(newValue) {
+      var _this = this;
+
       if (!newValue) {
         if (this.view && this.showing) {
-          this.viewSlot.remove(this.view);
-          this.view.unbind();
+          this.taskQueue.queueMicroTask(function () {
+            _this.viewSlot.remove(_this.view);
+            _this.view.unbind();
+          });
         }
 
         this.showing = false;
@@ -33,7 +38,7 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection'], functi
       }
 
       if (!this.view) {
-        this.view = this.viewFactory.create(this.executionContext);
+        this.view = this.viewFactory.create(this.$parent);
       }
 
       if (!this.showing) {
@@ -47,7 +52,7 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection'], functi
       }
     };
 
-    If = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(If) || If;
+    If = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot, _aureliaTaskQueue.TaskQueue)(If) || If;
     If = _aureliaTemplating.templateController(If) || If;
     If = _aureliaTemplating.customAttribute('if')(If) || If;
     return If;

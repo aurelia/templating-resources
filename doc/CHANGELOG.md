@@ -1,3 +1,13 @@
+### 0.13.4 (2015-08-05)
+
+
+#### Bug Fixes
+
+* **if:**
+  * standardize on using the $parent property to store parent execution context ([82e6d135](http://github.com/aurelia/templating-resources/commit/82e6d135f3de35cf48aceff9d4d70a979288cc4e))
+  * delay call to unbind via micro task ([9b62109c](http://github.com/aurelia/templating-resources/commit/9b62109c4f69dab3c2c2b2a58a908a8196409dde), closes [#84](http://github.com/aurelia/templating-resources/issues/84))
+
+
 ### 0.13.3 (2015-07-30)
 
 
