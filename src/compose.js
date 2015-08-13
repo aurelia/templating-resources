@@ -56,7 +56,7 @@ export class Compose {
   * @param {ExecutionContext} executionContext The context in which the view model is executed in
   */
 	bind(executionContext){
-		this.executionContext = executionContext;
+		this.$parent = executionContext;
 		processInstruction(this, createInstruction(this, {
       view:this.view,
       viewModel:this.viewModel,
@@ -119,7 +119,7 @@ export class Compose {
 
 function createInstruction(composer, instruction){
   return Object.assign(instruction, {
-    executionContext:composer.executionContext,
+    executionContext:composer.$parent,
     container:composer.container,
     viewSlot:composer.viewSlot,
     viewResources:composer.viewResources,
