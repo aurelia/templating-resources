@@ -7,6 +7,8 @@ import {GlobalBehavior} from './global-behavior';
 import {SanitizeHtmlValueConverter} from './sanitize-html';
 import {Replaceable} from './replaceable';
 import {Focus} from './focus';
+import {CompileSpy} from './compile-spy';
+import {ViewSpy} from './view-spy';
 
 function configure(config){
   config.globalResources(
@@ -18,7 +20,9 @@ function configure(config){
     './replaceable',
     './global-behavior',
     './sanitize-html',
-    './focus'
+    './focus',
+    './compile-spy',
+    './view-spy'
   );
 }
 
@@ -32,5 +36,7 @@ export {
   GlobalBehavior,
   Replaceable,
   Focus,
+  CompileSpy,
+  ViewSpy,
   configure
 };
