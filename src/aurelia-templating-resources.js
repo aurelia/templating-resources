@@ -8,8 +8,8 @@ import {SanitizeHtmlValueConverter} from './sanitize-html';
 import {Replaceable} from './replaceable';
 import {Focus} from './focus';
 
-function configure(aurelia){
-  aurelia.globalizeResources(
+function configure(config){
+  config.globalResources(
     './compose',
     './if',
     './with',
