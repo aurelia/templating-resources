@@ -23,9 +23,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
           this.element = element;
         }
 
-        var _GlobalBehavior = GlobalBehavior;
-
-        _GlobalBehavior.prototype.bind = function bind() {
+        GlobalBehavior.prototype.bind = function bind() {
           var handler = GlobalBehavior.handlers[this.aureliaAttrName];
 
           if (!handler) {
@@ -39,19 +37,19 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
           }
         };
 
-        _GlobalBehavior.prototype.attached = function attached() {
+        GlobalBehavior.prototype.attached = function attached() {
           if (this.handler && 'attached' in this.handler) {
             this.handler.attached(this, this.element);
           }
         };
 
-        _GlobalBehavior.prototype.detached = function detached() {
+        GlobalBehavior.prototype.detached = function detached() {
           if (this.handler && 'detached' in this.handler) {
             this.handler.detached(this, this.element);
           }
         };
 
-        _GlobalBehavior.prototype.unbind = function unbind() {
+        GlobalBehavior.prototype.unbind = function unbind() {
           if (this.handler && 'unbind' in this.handler) {
             this.handler.unbind(this, this.element);
           }
@@ -59,6 +57,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
           this.handler = null;
         };
 
+        var _GlobalBehavior = GlobalBehavior;
         GlobalBehavior = inject(Element)(GlobalBehavior) || GlobalBehavior;
         GlobalBehavior = dynamicOptions(GlobalBehavior) || GlobalBehavior;
         GlobalBehavior = customAttribute('global-behavior')(GlobalBehavior) || GlobalBehavior;

@@ -32,9 +32,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
           this.element = element;
         }
 
-        var _Show = Show;
-
-        _Show.prototype.valueChanged = function valueChanged(newValue) {
+        Show.prototype.valueChanged = function valueChanged(newValue) {
           if (newValue) {
             this.element.classList.remove('aurelia-hide');
           } else {
@@ -42,10 +40,11 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
           }
         };
 
-        _Show.prototype.bind = function bind(executionContext) {
+        Show.prototype.bind = function bind(executionContext) {
           this.valueChanged(this.value);
         };
 
+        var _Show = Show;
         Show = inject(Element)(Show) || Show;
         Show = customAttribute('show')(Show) || Show;
         return Show;

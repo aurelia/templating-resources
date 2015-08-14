@@ -21,9 +21,7 @@ var GlobalBehavior = (function () {
     this.element = element;
   }
 
-  var _GlobalBehavior = GlobalBehavior;
-
-  _GlobalBehavior.prototype.bind = function bind() {
+  GlobalBehavior.prototype.bind = function bind() {
     var handler = GlobalBehavior.handlers[this.aureliaAttrName];
 
     if (!handler) {
@@ -37,19 +35,19 @@ var GlobalBehavior = (function () {
     }
   };
 
-  _GlobalBehavior.prototype.attached = function attached() {
+  GlobalBehavior.prototype.attached = function attached() {
     if (this.handler && 'attached' in this.handler) {
       this.handler.attached(this, this.element);
     }
   };
 
-  _GlobalBehavior.prototype.detached = function detached() {
+  GlobalBehavior.prototype.detached = function detached() {
     if (this.handler && 'detached' in this.handler) {
       this.handler.detached(this, this.element);
     }
   };
 
-  _GlobalBehavior.prototype.unbind = function unbind() {
+  GlobalBehavior.prototype.unbind = function unbind() {
     if (this.handler && 'unbind' in this.handler) {
       this.handler.unbind(this, this.element);
     }
@@ -57,6 +55,7 @@ var GlobalBehavior = (function () {
     this.handler = null;
   };
 
+  var _GlobalBehavior = GlobalBehavior;
   GlobalBehavior = _aureliaDependencyInjection.inject(Element)(GlobalBehavior) || GlobalBehavior;
   GlobalBehavior = _aureliaTemplating.dynamicOptions(GlobalBehavior) || GlobalBehavior;
   GlobalBehavior = _aureliaTemplating.customAttribute('global-behavior')(GlobalBehavior) || GlobalBehavior;

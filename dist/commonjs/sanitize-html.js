@@ -9,19 +9,17 @@ var _aureliaBinding = require('aurelia-binding');
 var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 
 var SanitizeHtmlValueConverter = (function () {
+  SanitizeHtmlValueConverter.defaultSanitizer = function defaultSanitizer(untrustedMarkup) {
+    return untrustedMarkup.replace(SCRIPT_REGEX, '');
+  };
+
   function SanitizeHtmlValueConverter() {
     _classCallCheck(this, _SanitizeHtmlValueConverter);
 
     this.sanitizer = SanitizeHtmlValueConverter.defaultSanitizer;
   }
 
-  var _SanitizeHtmlValueConverter = SanitizeHtmlValueConverter;
-
-  _SanitizeHtmlValueConverter.defaultSanitizer = function defaultSanitizer(untrustedMarkup) {
-    return untrustedMarkup.replace(SCRIPT_REGEX, '');
-  };
-
-  _SanitizeHtmlValueConverter.prototype.toView = function toView(untrustedMarkup) {
+  SanitizeHtmlValueConverter.prototype.toView = function toView(untrustedMarkup) {
     if (untrustedMarkup === null) {
       return null;
     }
@@ -29,6 +27,7 @@ var SanitizeHtmlValueConverter = (function () {
     return this.sanitizer(untrustedMarkup);
   };
 
+  var _SanitizeHtmlValueConverter = SanitizeHtmlValueConverter;
   SanitizeHtmlValueConverter = _aureliaBinding.valueConverter('sanitizeHtml')(SanitizeHtmlValueConverter) || SanitizeHtmlValueConverter;
   return SanitizeHtmlValueConverter;
 })();

@@ -35,9 +35,7 @@ System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-in
           };
         }
 
-        var _Focus = Focus;
-
-        _Focus.prototype.valueChanged = function valueChanged(newValue) {
+        Focus.prototype.valueChanged = function valueChanged(newValue) {
           if (newValue) {
             this.giveFocus();
           } else {
@@ -45,7 +43,7 @@ System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-in
           }
         };
 
-        _Focus.prototype.giveFocus = function giveFocus() {
+        Focus.prototype.giveFocus = function giveFocus() {
           var _this2 = this;
 
           this.taskQueue.queueMicroTask(function () {
@@ -55,16 +53,17 @@ System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-in
           });
         };
 
-        _Focus.prototype.attached = function attached() {
+        Focus.prototype.attached = function attached() {
           this.element.addEventListener('focus', this.focusListener);
           this.element.addEventListener('blur', this.blurListener);
         };
 
-        _Focus.prototype.detached = function detached() {
+        Focus.prototype.detached = function detached() {
           this.element.removeEventListener('focus', this.focusListener);
           this.element.removeEventListener('blur', this.blurListener);
         };
 
+        var _Focus = Focus;
         Focus = inject(Element, TaskQueue)(Focus) || Focus;
         Focus = customAttribute('focus', bindingMode.twoWay)(Focus) || Focus;
         return Focus;

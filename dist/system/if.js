@@ -27,14 +27,12 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
           this.taskQueue = taskQueue;
         }
 
-        var _If = If;
-
-        _If.prototype.bind = function bind(executionContext) {
+        If.prototype.bind = function bind(executionContext) {
           this.$parent = executionContext;
           this.valueChanged(this.value);
         };
 
-        _If.prototype.valueChanged = function valueChanged(newValue) {
+        If.prototype.valueChanged = function valueChanged(newValue) {
           var _this = this;
 
           if (!newValue) {
@@ -64,6 +62,7 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
           }
         };
 
+        var _If = If;
         If = inject(BoundViewFactory, ViewSlot, TaskQueue)(If) || If;
         If = templateController(If) || If;
         If = customAttribute('if')(If) || If;

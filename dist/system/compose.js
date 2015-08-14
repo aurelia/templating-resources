@@ -7,11 +7,11 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _defineDecoratedPropertyDescriptor(target, key, descriptors) { var _descriptor = descriptors[key]; if (!_descriptor) return; var descriptor = {}; for (var _key in _descriptor) descriptor[_key] = _descriptor[_key]; descriptor.value = descriptor.initializer.call(target); Object.defineProperty(target, key, descriptor); }
+  function _defineDecoratedPropertyDescriptor(target, key, descriptors) { var _descriptor = descriptors[key]; if (!_descriptor) return; var descriptor = {}; for (var _key in _descriptor) descriptor[_key] = _descriptor[_key]; descriptor.value = descriptor.initializer ? descriptor.initializer.call(target) : undefined; Object.defineProperty(target, key, descriptor); }
 
   function createInstruction(composer, instruction) {
     return Object.assign(instruction, {
-      executionContext: composer.executionContext,
+      executionContext: composer.$parent,
       container: composer.container,
       viewSlot: composer.viewSlot,
       viewResources: composer.viewResources,
@@ -45,6 +45,23 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
       Compose = (function () {
         var _instanceInitializers = {};
 
+        _createDecoratedClass(Compose, [{
+          key: 'model',
+          decorators: [bindable],
+          initializer: null,
+          enumerable: true
+        }, {
+          key: 'view',
+          decorators: [bindable],
+          initializer: null,
+          enumerable: true
+        }, {
+          key: 'viewModel',
+          decorators: [bindable],
+          initializer: null,
+          enumerable: true
+        }], null, _instanceInitializers);
+
         function Compose(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
           _classCallCheck(this, _Compose);
 
@@ -62,10 +79,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
           this.taskQueue = taskQueue;
         }
 
-        var _Compose = Compose;
-
-        _Compose.prototype.bind = function bind(executionContext) {
-          this.executionContext = executionContext;
+        Compose.prototype.bind = function bind(executionContext) {
+          this.$parent = executionContext;
           processInstruction(this, createInstruction(this, {
             view: this.view,
             viewModel: this.viewModel,
@@ -73,7 +88,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
           }));
         };
 
-        _Compose.prototype.modelChanged = function modelChanged(newValue, oldValue) {
+        Compose.prototype.modelChanged = function modelChanged(newValue, oldValue) {
           var _this = this;
 
           if (this.currentInstruction) {
@@ -95,7 +110,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
           });
         };
 
-        _Compose.prototype.viewChanged = function viewChanged(newValue, oldValue) {
+        Compose.prototype.viewChanged = function viewChanged(newValue, oldValue) {
           var _this2 = this;
 
           var instruction = createInstruction(this, {
@@ -115,7 +130,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
           });
         };
 
-        _Compose.prototype.viewModelChanged = function viewModelChanged(newValue, oldValue) {
+        Compose.prototype.viewModelChanged = function viewModelChanged(newValue, oldValue) {
           var _this3 = this;
 
           var instruction = createInstruction(this, {
@@ -135,23 +150,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
           });
         };
 
-        _createDecoratedClass(_Compose, [{
-          key: 'model',
-          decorators: [bindable],
-          initializer: null,
-          enumerable: true
-        }, {
-          key: 'view',
-          decorators: [bindable],
-          initializer: null,
-          enumerable: true
-        }, {
-          key: 'viewModel',
-          decorators: [bindable],
-          initializer: null,
-          enumerable: true
-        }], null, _instanceInitializers);
-
+        var _Compose = Compose;
         Compose = inject(Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue)(Compose) || Compose;
         Compose = noView(Compose) || Compose;
         Compose = customElement('compose')(Compose) || Compose;

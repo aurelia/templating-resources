@@ -6,7 +6,7 @@ var _createDecoratedClass = (function () { function defineProperties(target, des
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _defineDecoratedPropertyDescriptor(target, key, descriptors) { var _descriptor = descriptors[key]; if (!_descriptor) return; var descriptor = {}; for (var _key in _descriptor) descriptor[_key] = _descriptor[_key]; descriptor.value = descriptor.initializer.call(target); Object.defineProperty(target, key, descriptor); }
+function _defineDecoratedPropertyDescriptor(target, key, descriptors) { var _descriptor = descriptors[key]; if (!_descriptor) return; var descriptor = {}; for (var _key in _descriptor) descriptor[_key] = _descriptor[_key]; descriptor.value = descriptor.initializer ? descriptor.initializer.call(target) : undefined; Object.defineProperty(target, key, descriptor); }
 
 var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
@@ -16,6 +16,28 @@ var _aureliaTemplating = require('aurelia-templating');
 
 var Repeat = (function () {
   var _instanceInitializers = {};
+
+  _createDecoratedClass(Repeat, [{
+    key: 'items',
+    decorators: [_aureliaTemplating.bindable],
+    initializer: null,
+    enumerable: true
+  }, {
+    key: 'local',
+    decorators: [_aureliaTemplating.bindable],
+    initializer: null,
+    enumerable: true
+  }, {
+    key: 'key',
+    decorators: [_aureliaTemplating.bindable],
+    initializer: null,
+    enumerable: true
+  }, {
+    key: 'value',
+    decorators: [_aureliaTemplating.bindable],
+    initializer: null,
+    enumerable: true
+  }], null, _instanceInitializers);
 
   function Repeat(viewFactory, viewSlot, observerLocator) {
     _classCallCheck(this, _Repeat);
@@ -36,9 +58,7 @@ var Repeat = (function () {
     this.value = 'value';
   }
 
-  var _Repeat = Repeat;
-
-  _Repeat.prototype.bind = function bind(executionContext) {
+  Repeat.prototype.bind = function bind(executionContext) {
     var _this = this;
 
     var items = this.items,
@@ -84,7 +104,7 @@ var Repeat = (function () {
     this.processItems();
   };
 
-  _Repeat.prototype.unbind = function unbind() {
+  Repeat.prototype.unbind = function unbind() {
     this.oldItems = this.items;
 
     if (this.items instanceof Array) {
@@ -97,11 +117,11 @@ var Repeat = (function () {
     }
   };
 
-  _Repeat.prototype.itemsChanged = function itemsChanged() {
+  Repeat.prototype.itemsChanged = function itemsChanged() {
     this.processItems();
   };
 
-  _Repeat.prototype.processItems = function processItems() {
+  Repeat.prototype.processItems = function processItems() {
     var items = this.items;
 
     if (this.disposeSubscription) {
@@ -124,7 +144,7 @@ var Repeat = (function () {
     }
   };
 
-  _Repeat.prototype.processArrayItems = function processArrayItems(items) {
+  Repeat.prototype.processArrayItems = function processArrayItems(items) {
     var _this2 = this;
 
     var viewFactory = this.viewFactory,
@@ -148,7 +168,7 @@ var Repeat = (function () {
     });
   };
 
-  _Repeat.prototype.processMapEntries = function processMapEntries(items) {
+  Repeat.prototype.processMapEntries = function processMapEntries(items) {
     var _this3 = this;
 
     var viewFactory = this.viewFactory,
@@ -172,7 +192,7 @@ var Repeat = (function () {
     });
   };
 
-  _Repeat.prototype.processNumber = function processNumber(value) {
+  Repeat.prototype.processNumber = function processNumber(value) {
     var viewFactory = this.viewFactory,
         viewSlot = this.viewSlot,
         childrenLength = viewSlot.children.length,
@@ -202,14 +222,14 @@ var Repeat = (function () {
     }
   };
 
-  _Repeat.prototype.createBaseExecutionContext = function createBaseExecutionContext(data) {
+  Repeat.prototype.createBaseExecutionContext = function createBaseExecutionContext(data) {
     var context = {};
     context[this.local] = data;
     context.$parent = this.executionContext;
     return context;
   };
 
-  _Repeat.prototype.createBaseExecutionKvpContext = function createBaseExecutionKvpContext(key, value) {
+  Repeat.prototype.createBaseExecutionKvpContext = function createBaseExecutionKvpContext(key, value) {
     var context = {};
     context[this.key] = key;
     context[this.value] = value;
@@ -217,17 +237,17 @@ var Repeat = (function () {
     return context;
   };
 
-  _Repeat.prototype.createFullExecutionContext = function createFullExecutionContext(data, index, length) {
+  Repeat.prototype.createFullExecutionContext = function createFullExecutionContext(data, index, length) {
     var context = this.createBaseExecutionContext(data);
     return this.updateExecutionContext(context, index, length);
   };
 
-  _Repeat.prototype.createFullExecutionKvpContext = function createFullExecutionKvpContext(key, value, index, length) {
+  Repeat.prototype.createFullExecutionKvpContext = function createFullExecutionKvpContext(key, value, index, length) {
     var context = this.createBaseExecutionKvpContext(key, value);
     return this.updateExecutionContext(context, index, length);
   };
 
-  _Repeat.prototype.updateExecutionContext = function updateExecutionContext(context, index, length) {
+  Repeat.prototype.updateExecutionContext = function updateExecutionContext(context, index, length) {
     var first = index === 0,
         last = index === length - 1,
         even = index % 2 === 0;
@@ -242,7 +262,7 @@ var Repeat = (function () {
     return context;
   };
 
-  _Repeat.prototype.handleSplices = function handleSplices(array, splices) {
+  Repeat.prototype.handleSplices = function handleSplices(array, splices) {
     var viewLookup = new Map(),
         viewSlot = this.viewSlot,
         spliceIndexLow,
@@ -336,7 +356,7 @@ var Repeat = (function () {
     });
   };
 
-  _Repeat.prototype.handleMapChangeRecords = function handleMapChangeRecords(map, records) {
+  Repeat.prototype.handleMapChangeRecords = function handleMapChangeRecords(map, records) {
     var viewSlot = this.viewSlot,
         key,
         i,
@@ -384,7 +404,7 @@ var Repeat = (function () {
     }
   };
 
-  _Repeat.prototype.getViewIndexByKey = function getViewIndexByKey(key) {
+  Repeat.prototype.getViewIndexByKey = function getViewIndexByKey(key) {
     var viewSlot = this.viewSlot,
         i,
         ii,
@@ -398,7 +418,7 @@ var Repeat = (function () {
     }
   };
 
-  _Repeat.prototype.removeAll = function removeAll() {
+  Repeat.prototype.removeAll = function removeAll() {
     var viewSlot = this.viewSlot,
         views,
         i;
@@ -411,28 +431,7 @@ var Repeat = (function () {
     }
   };
 
-  _createDecoratedClass(_Repeat, [{
-    key: 'items',
-    decorators: [_aureliaTemplating.bindable],
-    initializer: null,
-    enumerable: true
-  }, {
-    key: 'local',
-    decorators: [_aureliaTemplating.bindable],
-    initializer: null,
-    enumerable: true
-  }, {
-    key: 'key',
-    decorators: [_aureliaTemplating.bindable],
-    initializer: null,
-    enumerable: true
-  }, {
-    key: 'value',
-    decorators: [_aureliaTemplating.bindable],
-    initializer: null,
-    enumerable: true
-  }], null, _instanceInitializers);
-
+  var _Repeat = Repeat;
   Repeat = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot, _aureliaBinding.ObserverLocator)(Repeat) || Repeat;
   Repeat = _aureliaTemplating.templateController(Repeat) || Repeat;
   Repeat = _aureliaTemplating.customAttribute('repeat')(Repeat) || Repeat;

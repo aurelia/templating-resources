@@ -20,14 +20,12 @@ var If = (function () {
     this.taskQueue = taskQueue;
   }
 
-  var _If = If;
-
-  _If.prototype.bind = function bind(executionContext) {
+  If.prototype.bind = function bind(executionContext) {
     this.$parent = executionContext;
     this.valueChanged(this.value);
   };
 
-  _If.prototype.valueChanged = function valueChanged(newValue) {
+  If.prototype.valueChanged = function valueChanged(newValue) {
     var _this = this;
 
     if (!newValue) {
@@ -57,6 +55,7 @@ var If = (function () {
     }
   };
 
+  var _If = If;
   If = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot, _aureliaTaskQueue.TaskQueue)(If) || If;
   If = _aureliaTemplating.templateController(If) || If;
   If = _aureliaTemplating.customAttribute('if')(If) || If;

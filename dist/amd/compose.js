@@ -7,10 +7,27 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function _defineDecoratedPropertyDescriptor(target, key, descriptors) { var _descriptor = descriptors[key]; if (!_descriptor) return; var descriptor = {}; for (var _key in _descriptor) descriptor[_key] = _descriptor[_key]; descriptor.value = descriptor.initializer.call(target); Object.defineProperty(target, key, descriptor); }
+  function _defineDecoratedPropertyDescriptor(target, key, descriptors) { var _descriptor = descriptors[key]; if (!_descriptor) return; var descriptor = {}; for (var _key in _descriptor) descriptor[_key] = _descriptor[_key]; descriptor.value = descriptor.initializer ? descriptor.initializer.call(target) : undefined; Object.defineProperty(target, key, descriptor); }
 
   var Compose = (function () {
     var _instanceInitializers = {};
+
+    _createDecoratedClass(Compose, [{
+      key: 'model',
+      decorators: [_aureliaTemplating.bindable],
+      initializer: null,
+      enumerable: true
+    }, {
+      key: 'view',
+      decorators: [_aureliaTemplating.bindable],
+      initializer: null,
+      enumerable: true
+    }, {
+      key: 'viewModel',
+      decorators: [_aureliaTemplating.bindable],
+      initializer: null,
+      enumerable: true
+    }], null, _instanceInitializers);
 
     function Compose(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
       _classCallCheck(this, _Compose);
@@ -29,10 +46,8 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
       this.taskQueue = taskQueue;
     }
 
-    var _Compose = Compose;
-
-    _Compose.prototype.bind = function bind(executionContext) {
-      this.executionContext = executionContext;
+    Compose.prototype.bind = function bind(executionContext) {
+      this.$parent = executionContext;
       processInstruction(this, createInstruction(this, {
         view: this.view,
         viewModel: this.viewModel,
@@ -40,7 +55,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
       }));
     };
 
-    _Compose.prototype.modelChanged = function modelChanged(newValue, oldValue) {
+    Compose.prototype.modelChanged = function modelChanged(newValue, oldValue) {
       var _this = this;
 
       if (this.currentInstruction) {
@@ -62,7 +77,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
       });
     };
 
-    _Compose.prototype.viewChanged = function viewChanged(newValue, oldValue) {
+    Compose.prototype.viewChanged = function viewChanged(newValue, oldValue) {
       var _this2 = this;
 
       var instruction = createInstruction(this, {
@@ -82,7 +97,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
       });
     };
 
-    _Compose.prototype.viewModelChanged = function viewModelChanged(newValue, oldValue) {
+    Compose.prototype.viewModelChanged = function viewModelChanged(newValue, oldValue) {
       var _this3 = this;
 
       var instruction = createInstruction(this, {
@@ -102,23 +117,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
       });
     };
 
-    _createDecoratedClass(_Compose, [{
-      key: 'model',
-      decorators: [_aureliaTemplating.bindable],
-      initializer: null,
-      enumerable: true
-    }, {
-      key: 'view',
-      decorators: [_aureliaTemplating.bindable],
-      initializer: null,
-      enumerable: true
-    }, {
-      key: 'viewModel',
-      decorators: [_aureliaTemplating.bindable],
-      initializer: null,
-      enumerable: true
-    }], null, _instanceInitializers);
-
+    var _Compose = Compose;
     Compose = _aureliaDependencyInjection.inject(Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue)(Compose) || Compose;
     Compose = _aureliaTemplating.noView(Compose) || Compose;
     Compose = _aureliaTemplating.customElement('compose')(Compose) || Compose;
@@ -129,7 +128,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
 
   function createInstruction(composer, instruction) {
     return Object.assign(instruction, {
-      executionContext: composer.executionContext,
+      executionContext: composer.$parent,
       container: composer.container,
       viewSlot: composer.viewSlot,
       viewResources: composer.viewResources,

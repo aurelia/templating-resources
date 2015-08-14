@@ -13,9 +13,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], functi
       this.viewSlot = viewSlot;
     }
 
-    var _With = With;
-
-    _With.prototype.valueChanged = function valueChanged(newValue) {
+    With.prototype.valueChanged = function valueChanged(newValue) {
       if (!this.view) {
         this.view = this.viewFactory.create(newValue);
         this.viewSlot.add(this.view);
@@ -24,6 +22,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], functi
       }
     };
 
+    var _With = With;
     With = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(With) || With;
     With = _aureliaTemplating.templateController(With) || With;
     With = _aureliaTemplating.customAttribute('with')(With) || With;

@@ -28,9 +28,7 @@ var Show = (function () {
     this.element = element;
   }
 
-  var _Show = Show;
-
-  _Show.prototype.valueChanged = function valueChanged(newValue) {
+  Show.prototype.valueChanged = function valueChanged(newValue) {
     if (newValue) {
       this.element.classList.remove('aurelia-hide');
     } else {
@@ -38,10 +36,11 @@ var Show = (function () {
     }
   };
 
-  _Show.prototype.bind = function bind(executionContext) {
+  Show.prototype.bind = function bind(executionContext) {
     this.valueChanged(this.value);
   };
 
+  var _Show = Show;
   Show = _aureliaDependencyInjection.inject(Element)(Show) || Show;
   Show = _aureliaTemplating.customAttribute('show')(Show) || Show;
   return Show;

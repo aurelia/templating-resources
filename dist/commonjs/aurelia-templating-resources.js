@@ -20,8 +20,12 @@ var _replaceable = require('./replaceable');
 
 var _focus = require('./focus');
 
-function configure(aurelia) {
-  aurelia.globalizeResources('./compose', './if', './with', './repeat', './show', './replaceable', './global-behavior', './sanitize-html', './focus');
+var _compileSpy = require('./compile-spy');
+
+var _viewSpy = require('./view-spy');
+
+function configure(config) {
+  config.globalResources('./compose', './if', './with', './repeat', './show', './replaceable', './global-behavior', './sanitize-html', './focus', './compile-spy', './view-spy');
 }
 
 exports.Compose = _compose.Compose;
@@ -33,4 +37,6 @@ exports.SanitizeHtmlValueConverter = _sanitizeHtml.SanitizeHtmlValueConverter;
 exports.GlobalBehavior = _globalBehavior.GlobalBehavior;
 exports.Replaceable = _replaceable.Replaceable;
 exports.Focus = _focus.Focus;
+exports.CompileSpy = _compileSpy.CompileSpy;
+exports.ViewSpy = _viewSpy.ViewSpy;
 exports.configure = configure;

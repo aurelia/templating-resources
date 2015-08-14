@@ -1,3 +1,17 @@
+## 0.14.0 (2015-08-14)
+
+
+#### Bug Fixes
+
+* **compose:** internal variable name consistency ([769d03b6](http://github.com/aurelia/templating-resources/commit/769d03b60a0d34172123930acbcc197a355ffc7a))
+* **index:** update to latest configuration api ([5b87410e](http://github.com/aurelia/templating-resources/commit/5b87410eab6815a6e2f0f1aa2516839431161aa6))
+
+
+#### Features
+
+* **debugging:** add compile-spy and view-spy ([dc7e2732](http://github.com/aurelia/templating-resources/commit/dc7e273225f74da38449f400aa767dcfda83f447))
+
+
 ### 0.13.4 (2015-08-05)
 
 
