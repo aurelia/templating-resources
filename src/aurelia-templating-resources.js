@@ -32,10 +32,10 @@ function configure(config){
       loader = config.aurelia.loader;
 
   viewEngine.addResourcePlugin('.html', {
-    'fetch':function(address, cannonicalName, id){
+    'fetch':function(address){
       return loader.loadTemplate(address).then(registryEntry => {
         let bindable = registryEntry.template.getAttribute('bindable'),
-            elementName = id.replace('.html', ''),
+            elementName = address.replace('.html', ''),
             index = elementName.lastIndexOf('/');
 
         if(index !== 0){
@@ -55,8 +55,8 @@ function configure(config){
   });
 
   viewEngine.addResourcePlugin('.css', {
-    'fetch':function(address, cannonicalName, id){
-      return { [id]:_createCSSResource(address) };
+    'fetch':function(address){
+      return { [address]:_createCSSResource(address) };
     }
   });
 }
