@@ -1,17 +1,10 @@
 import {inject} from 'aurelia-dependency-injection';
-import {customAttribute} from 'aurelia-templating';
+import {customAttribute, injectStyles, hasShadowDOM} from 'aurelia-templating';
 
-function addStyleString(str) {
-  var node = document.createElement('style');
-  node.innerHTML = str;
-  node.type = 'text/css';
-  document.head.appendChild(node);
-}
-
-if(!!HTMLElement.prototype.createShadowRoot){
-  addStyleString('body /deep/ .aurelia-hide { display:none !important; }');
+if(hasShadowDOM){
+  injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
 }else{
-  addStyleString('.aurelia-hide { display:none !important; }');
+  injectStyles('.aurelia-hide { display:none !important; }');
 }
 
 /**

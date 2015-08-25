@@ -9,6 +9,9 @@ import {Replaceable} from './replaceable';
 import {Focus} from './focus';
 import {CompileSpy} from './compile-spy';
 import {ViewSpy} from './view-spy';
+import {ViewEngine} from 'aurelia-templating';
+import {_createDynamicElement} from './dynamic-element';
+import {_createCSSResource} from './css-resource';
 
 function configure(config){
   config.globalResources(
@@ -24,6 +27,38 @@ function configure(config){
     './compile-spy',
     './view-spy'
   );
+
+  let viewEngine = config.container.get(ViewEngine),
+      loader = config.aurelia.loader;
+
+  viewEngine.addResourcePlugin('.html', {
+    'fetch':function(address, cannonicalName, id){
+      return loader.loadTemplate(address).then(registryEntry => {
+        let bindable = registryEntry.template.getAttribute('bindable'),
+            elementName = id.replace('.html', ''),
+            index = elementName.lastIndexOf('/');
+
+        if(index !== 0){
+          elementName = elementName.substring(index + 1);
+        }
+
+        if(bindable){
+          bindable = bindable.split(',').map(x => x.trim());
+          registryEntry.template.removeAttribute('bindable');
+        }else{
+          bindable = [];
+        }
+
+        return { [elementName]:_createDynamicElement(elementName, address, bindable) };
+      });
+    }
+  });
+
+  viewEngine.addResourcePlugin('.css', {
+    'fetch':function(address, cannonicalName, id){
+      return { [id]:_createCSSResource(address) };
+    }
+  });
 }
 
 export {
