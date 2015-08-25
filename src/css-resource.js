@@ -1,4 +1,4 @@
-import {ViewResources, injectStyles, resource} from 'aurelia-templating';
+import {ViewResources, injectStyles, resource, ViewCompileInstruction} from 'aurelia-templating';
 import {Loader} from 'aurelia-loader';
 import {Container} from 'aurelia-dependency-injection';
 
@@ -34,10 +34,13 @@ class CSSViewEngineHooks {
     this._alreadyGloballyInjected = false;
   }
 
-  beforeCompile(content: DocumentFragment, resources: ViewResources): void {
+  beforeCompile(content: DocumentFragment, resources: ViewResources, instruction: ViewCompileInstruction): void {
     switch (this.mode) {
       case 'scoped':
-        injectStyles(this.css, content, true);
+        let styleNode = injectStyles(this.css, content, true);
+        if(!instruction.targetShadowDOM){
+          styleNode.setAttribute('scoped', 'scoped');
+        }
         break;
       default:
         if(!this._alreadyGloballyInjected){
