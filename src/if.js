@@ -20,6 +20,8 @@ export class If {
     this.viewSlot = viewSlot;
     this.showing = false;
     this.taskQueue = taskQueue;
+    this.view = null;
+    this.$parent = null;
   }
 
   bind(bindingContext) {
@@ -29,11 +31,15 @@ export class If {
   }
 
   valueChanged(newValue){
-    if (!newValue) {
-      if(this.view && this.showing){
+    if(!newValue) {
+      if(this.view !== null && this.showing){
         this.taskQueue.queueMicroTask(() => {
-          this.viewSlot.remove(this.view);
-          this.view.unbind();
+          let viewOrPromise = this.viewSlot.remove(this.view);
+          if(viewOrPromise instanceof Promise){
+            viewOrPromise.then(() => this.view.unbind());
+          } else{
+            this.view.unbind();
+          }
         });
       }
 
@@ -41,7 +47,7 @@ export class If {
       return;
     }
 
-    if(!this.view){
+    if(this.view === null){
       this.view = this.viewFactory.create(this.$parent);
     }
 
@@ -53,6 +59,19 @@ export class If {
       }
 
       this.viewSlot.add(this.view);
+    }
+  }
+
+  unbind(){
+    if(this.view !== null){
+      if(this.showing){
+        this.showing = false;
+        this.viewSlot.remove(this.view, true, true);
+      }else{
+        this.view.returnToCache();
+      }
+
+      this.view = null;
     }
   }
 }
