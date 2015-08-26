@@ -9,7 +9,9 @@ export class ViewSpy {
   }
 
   log(lifecycleName, context){
-    if(!this.value || this.value.indexOf(lifecycleName) !== -1){
+    if(!this.value && lifecycleName === 'created'){
+      this.logger.info(lifecycleName, this.view);
+    } else if(this.value && this.value.indexOf(lifecycleName) !== -1){
       this.logger.info(lifecycleName, this.view, context);
     }
   }
