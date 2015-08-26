@@ -30,7 +30,7 @@ export class Show {
     }
   }
 
-  bind(executionContext) {
+  bind(bindingContext) {
     this.valueChanged(this.value);
   }
 }

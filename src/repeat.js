@@ -34,11 +34,11 @@ export class Repeat {
     this.value = 'value';
   }
 
-  bind(executionContext){
+  bind(bindingContext){
     var items = this.items,
       observer;
 
-    this.executionContext = executionContext;
+    this.bindingContext = bindingContext;
 
     if(!items){
       if(this.oldItems){
@@ -126,7 +126,7 @@ export class Repeat {
     observer = this.observerLocator.getArrayObserver(items);
 
     for(i = 0, ii = items.length; i < ii; ++i){
-      row = this.createFullExecutionContext(items[i], i, ii);
+      row = this.createFullBindingContext(items[i], i, ii);
       view = viewFactory.create(row);
       viewSlot.add(view);
     }
@@ -176,16 +176,16 @@ export class Repeat {
     }
 
     for(i = childrenLength, ii = value; i < ii; ++i){
-      row = this.createFullExecutionContext(i, i, ii);
+      row = this.createFullBindingContext(i, i, ii);
       view = viewFactory.create(row);
       viewSlot.add(view);
     }
   }
 
-  createBaseExecutionContext(data){
+  createBaseBindingContext(data){
     var context = {};
     context[this.local] = data;
-    context.$parent = this.executionContext;
+    context.$parent = this.bindingContext;
     return context;
   }
 
@@ -193,21 +193,21 @@ export class Repeat {
     var context = {};
     context[this.key] = key;
     context[this.value] = value;
-    context.$parent = this.executionContext;
+    context.$parent = this.bindingContext;
     return context;
   }
 
-  createFullExecutionContext(data, index, length){
-    var context = this.createBaseExecutionContext(data);
-    return this.updateExecutionContext(context, index, length);
+  createFullBindingContext(data, index, length){
+    var context = this.createBaseBindingContext(data);
+    return this.updateBindingContext(context, index, length);
   }
 
   createFullExecutionKvpContext(key, value, index, length){
     var context = this.createBaseExecutionKvpContext(key, value);
-    return this.updateExecutionContext(context, index, length);
+    return this.updateBindingContext(context, index, length);
   }
 
-  updateExecutionContext(context, index, length){
+  updateBindingContext(context, index, length){
     var first = (index === 0),
         last = (index === length - 1),
         even = index % 2 === 0;
@@ -244,7 +244,7 @@ export class Repeat {
         if (itemsLeftToAdd > 0) {
           view = viewSlot.children[spliceIndex + j];
           view.detached();
-          context = this.createFullExecutionContext(array[addIndex + j], spliceIndex + j, array.length);
+          context = this.createFullBindingContext(array[addIndex + j], spliceIndex + j, array.length);
           view.bind(context);
           view.attached();
           --itemsLeftToAdd;
@@ -272,7 +272,7 @@ export class Repeat {
           viewLookup.delete(model);
           viewSlot.insert(addIndex, viewOrPromise);
         }else{
-          row = this.createBaseExecutionContext(model);
+          row = this.createBaseBindingContext(model);
           view = this.viewFactory.create(row);
           viewSlot.insert(addIndex, view);
         }
@@ -288,7 +288,7 @@ export class Repeat {
     }
 
     for(; spliceIndexLow < length; ++spliceIndexLow){
-      this.updateExecutionContext(children[spliceIndexLow].executionContext, spliceIndexLow, length);
+      this.updateBindingContext(children[spliceIndexLow].bindingContext, spliceIndexLow, length);
     }
 
     viewLookup.forEach(x => {
@@ -334,7 +334,7 @@ export class Repeat {
     length = children.length;
 
     for (i = 0; i < length; i++) {
-      this.updateExecutionContext(children[i].executionContext, i, length);
+      this.updateBindingContext(children[i].bindingContext, i, length);
     }
   }
 

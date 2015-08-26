@@ -22,9 +22,9 @@ export class If {
     this.taskQueue = taskQueue;
   }
 
-  bind(executionContext) {
-    // Store parent executionContext, so we can pass it down
-    this.$parent = executionContext;
+  bind(bindingContext) {
+    // Store parent bindingContext, so we can pass it down
+    this.$parent = bindingContext;
     this.valueChanged(this.value);
   }
 

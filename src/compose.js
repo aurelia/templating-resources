@@ -50,13 +50,13 @@ export class Compose {
 	}
 
   /**
-  * Used to set the executionContext
+  * Used to set the bindingContext
   *
   * @method bind
-  * @param {ExecutionContext} executionContext The context in which the view model is executed in
+  * @param {bindingContext} bindingContext The context in which the view model is executed in
   */
-	bind(executionContext){
-		this.$parent = executionContext;
+	bind(bindingContext){
+		this.$parent = bindingContext;
 		processInstruction(this, createInstruction(this, {
       view:this.view,
       viewModel:this.viewModel,
@@ -119,7 +119,7 @@ export class Compose {
 
 function createInstruction(composer, instruction){
   return Object.assign(instruction, {
-    executionContext:composer.$parent,
+    bindingContext:composer.$parent,
     container:composer.container,
     viewSlot:composer.viewSlot,
     viewResources:composer.viewResources,
@@ -132,6 +132,6 @@ function processInstruction(composer, instruction){
   composer.currentInstruction = null;
   composer.compositionEngine.compose(instruction).then(next => {
     composer.currentBehavior = next;
-    composer.currentViewModel = next ? next.executionContext : null;
+    composer.currentViewModel = next ? next.bindingContext : null;
   });
 }
