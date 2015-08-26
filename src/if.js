@@ -63,7 +63,7 @@ export class If {
   }
 
   unbind(){
-    if(this.view !== null){
+    if(this.view !== null && this.viewFactory.isCaching){
       if(this.showing){
         this.showing = false;
         this.viewSlot.remove(this.view, true, true);
