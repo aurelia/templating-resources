@@ -90,9 +90,9 @@ describe('repeat', () => {
       view1 = new ViewMock();
       view2 = new ViewMock();
       view3 = new ViewMock();
-      view1.bindingContext = {};
+      view1.bindingContext = { item: 'foo' };
       view2.bindingContext = { item: 'qux' };
-      view3.bindingContext = {};
+      view3.bindingContext = { item: 'bar' };
       viewSlot.children = [view1, view2, view3];
       spyOn(viewFactory, 'create').and.callFake(() => {});
     });
@@ -135,6 +135,51 @@ describe('repeat', () => {
         $odd: true,
         $even: false };
       expect(view2.bind).toHaveBeenCalledWith(context);
+    });
+
+    it('should update binding context after views are unbinded', () => {
+      splices = [{
+        addedCount: 0,
+        index: 1,
+        removed: ['Foo']
+      }];
+      spyOn(viewSlot, 'removeAt').and.callFake(() => { return new ViewMock();});
+      repeat.handleSplices(items, splices);
+
+      expect(viewSlot.children[0].bindingContext.$index).toBe(0);
+      expect(viewSlot.children[1].bindingContext.$index).toBe(1);
+      expect(viewSlot.children[2].bindingContext.$index).toBe(2);
+    });
+
+    it('should update binding context after views are animated and unbinded', done => {
+      let view = new ViewMock();
+      let removeAction = () => {
+        viewSlot.children.splice(1, 1);
+        return view;
+      };
+      let animationPromise = new Promise(resolve => { resolve() }).then(() => removeAction());
+      splices = [{
+        addedCount: 0,
+        index: 1,
+        removed: ['qux']
+      }];
+
+      spyOn(viewSlot, 'removeAt').and.callFake(() => { return animationPromise });
+      spyOn(view, 'unbind');
+
+      repeat.handleSplices(items, splices);
+
+      animationPromise.then(() => {
+        expect(view.unbind).toHaveBeenCalled();
+        expect(viewSlot.children.length).toBe(2);
+
+        expect(viewSlot.children[0].bindingContext.$index).toBe(0);
+        expect(viewSlot.children[0].bindingContext.item).toBe('foo');
+
+        expect(viewSlot.children[1].bindingContext.$index).toBe(1);
+        expect(viewSlot.children[1].bindingContext.item).toBe('bar');
+        done();
+      });
     });
   });
   describe('processNumber', () => {

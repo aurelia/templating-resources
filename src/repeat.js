@@ -228,7 +228,7 @@ export class Repeat {
       spliceIndexLow, viewOrPromise, view,
       i, ii, j, jj, row, splice,
       addIndex, end, itemsLeftToAdd,
-      removed, model, children, length, context, spliceIndex;
+      removed, model, context, spliceIndex, viewsToUnbind;
 
     for (i = 0, ii = splices.length; i < ii; ++i) {
       splice = splices[i];
@@ -280,24 +280,43 @@ export class Repeat {
       }
     }
 
-    children = this.viewSlot.children;
-    length = children.length;
+    viewsToUnbind = viewLookup.size;
 
-    if(spliceIndexLow > 0){
-      spliceIndexLow = spliceIndexLow - 1;
-    }
-
-    for(; spliceIndexLow < length; ++spliceIndexLow){
-      this.updateBindingContext(children[spliceIndexLow].bindingContext, spliceIndexLow, length);
+    if(viewsToUnbind === 0) {
+      this.updateBindingContexts(spliceIndexLow);
     }
 
     viewLookup.forEach(x => {
       if(x instanceof Promise){
-        x.then(y => y.unbind());
+        x.then(y => {
+          y.unbind();
+          viewsToUnbind--;
+          if(viewsToUnbind === 0){
+            this.updateBindingContexts(spliceIndexLow);
+          }
+        });
       }else{
         x.unbind();
+        viewsToUnbind--;
+        if(viewsToUnbind === 0){
+          this.updateBindingContexts(spliceIndexLow);
+        }
       }
     });
+  }
+
+  updateBindingContexts(startIndex){
+    var children, length;
+    children = this.viewSlot.children;
+    length = children.length;
+
+    if(startIndex > 0){
+      startIndex = startIndex - 1;
+    }
+
+    for(; startIndex < length; ++startIndex){
+      this.updateBindingContext(children[startIndex].bindingContext, startIndex, length);
+    }
   }
 
   handleMapChangeRecords(map, records) {
