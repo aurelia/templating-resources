@@ -90,9 +90,9 @@ describe('repeat', () => {
       view1 = new ViewMock();
       view2 = new ViewMock();
       view3 = new ViewMock();
-      view1.executionContext = {};
-      view2.executionContext = { item: 'qux' };
-      view3.executionContext = {};
+      view1.bindingContext = {};
+      view2.bindingContext = { item: 'qux' };
+      view3.bindingContext = {};
       viewSlot.children = [view1, view2, view3];
       spyOn(viewFactory, 'create').and.callFake(() => {});
     });
@@ -115,7 +115,7 @@ describe('repeat', () => {
       expect(view2.attached).toHaveBeenCalled();
     });
 
-    it('should update execution context when re-using views', () => {
+    it('should update binding context when re-using views', () => {
       items = ['Bar', 'Foo', 'Baz'];
       splices = [{
         addedCount: 2,
@@ -148,14 +148,14 @@ describe('repeat', () => {
 
       expect(viewSlot.children.length).toBe(3);
 
-      expect(viewSlot.children[0].executionContext.item).toBe(0);
-      expect(viewSlot.children[0].executionContext.$index).toBe(0);
+      expect(viewSlot.children[0].bindingContext.item).toBe(0);
+      expect(viewSlot.children[0].bindingContext.$index).toBe(0);
 
-      expect(viewSlot.children[1].executionContext.item).toBe(1);
-      expect(viewSlot.children[1].executionContext.$index).toBe(1);
+      expect(viewSlot.children[1].bindingContext.item).toBe(1);
+      expect(viewSlot.children[1].bindingContext.$index).toBe(1);
 
-      expect(viewSlot.children[2].executionContext.item).toBe(2);
-      expect(viewSlot.children[2].executionContext.$index).toBe(2);
+      expect(viewSlot.children[2].bindingContext.item).toBe(2);
+      expect(viewSlot.children[2].bindingContext.$index).toBe(2);
     });
 
     it('should add views when number is increased', () => {
@@ -164,17 +164,17 @@ describe('repeat', () => {
 
       expect(viewSlot.children.length).toBe(4);
 
-      expect(viewSlot.children[0].executionContext.item).toBe(0);
-      expect(viewSlot.children[0].executionContext.$index).toBe(0);
+      expect(viewSlot.children[0].bindingContext.item).toBe(0);
+      expect(viewSlot.children[0].bindingContext.$index).toBe(0);
 
-      expect(viewSlot.children[1].executionContext.item).toBe(1);
-      expect(viewSlot.children[1].executionContext.$index).toBe(1);
+      expect(viewSlot.children[1].bindingContext.item).toBe(1);
+      expect(viewSlot.children[1].bindingContext.$index).toBe(1);
 
-      expect(viewSlot.children[2].executionContext.item).toBe(2);
-      expect(viewSlot.children[2].executionContext.$index).toBe(2);
+      expect(viewSlot.children[2].bindingContext.item).toBe(2);
+      expect(viewSlot.children[2].bindingContext.$index).toBe(2);
 
-      expect(viewSlot.children[3].executionContext.item).toBe(3);
-      expect(viewSlot.children[3].executionContext.$index).toBe(3);
+      expect(viewSlot.children[3].bindingContext.item).toBe(3);
+      expect(viewSlot.children[3].bindingContext.$index).toBe(3);
     });
 
     it('should remove views when number is decreased', () => {
@@ -183,11 +183,11 @@ describe('repeat', () => {
 
       expect(viewSlot.children.length).toBe(2);
 
-      expect(viewSlot.children[0].executionContext.item).toBe(0);
-      expect(viewSlot.children[0].executionContext.$index).toBe(0);
+      expect(viewSlot.children[0].bindingContext.item).toBe(0);
+      expect(viewSlot.children[0].bindingContext.$index).toBe(0);
 
-      expect(viewSlot.children[1].executionContext.item).toBe(1);
-      expect(viewSlot.children[1].executionContext.$index).toBe(1);
+      expect(viewSlot.children[1].bindingContext.item).toBe(1);
+      expect(viewSlot.children[1].bindingContext.$index).toBe(1);
     });
 
     it('should remove all view when updated value is 0', () => {
@@ -238,7 +238,7 @@ class BoundViewFactoryMock {
 class ViewFactoryMock {
   create(context){
     let view = new ViewMock();
-    view.executionContext = context;
+    view.bindingContext = context;
     return view;
   }
 }

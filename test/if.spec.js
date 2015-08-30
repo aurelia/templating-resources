@@ -42,7 +42,7 @@ describe('if', () => {
     expect(sut.showing).toBe(false);
   });
 
-  it('should do nothing when showing, províded value is falsy and has no view', () => {
+  it('should do nothing when showing, provided value is falsy and has no view', () => {
     let view = new ViewMock();
     sut.view = undefined;
     sut.showing = true;
@@ -65,7 +65,7 @@ describe('if', () => {
     expect(sut.view).toEqual(jasmine.any(ViewMock));
   });
 
-  it('should create the view with provided execution context', () => {
+  it('should create the view with provided binding context', () => {
     sut.value = true;
     sut.view = undefined;
     spyOn(viewFactory, 'create').and.callFake(() => {
