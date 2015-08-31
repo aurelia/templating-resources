@@ -30,6 +30,7 @@
       "aurelia-logging": "github:aurelia/logging@^0.6.4",
       "aurelia-task-queue": "github:aurelia/task-queue@^0.6.2",
       "aurelia-templating": "github:aurelia/templating@^0.14.0",
+      "aurelia-loader": "github:aurelia/loader@^0.8.7",
       "core-js": "npm:core-js@^0.9.5"
     },
     "devDependencies": {
