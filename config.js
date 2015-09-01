@@ -1,23 +1,22 @@
 System.config({
-  "transpiler": "babel",
-  "babelOptions": {
+  defaultJSExtensions: true,
+  transpiler: "babel",
+  babelOptions: {
     "optional": [
       "runtime",
       "es7.decorators"
     ]
   },
-  "paths": {
-    "*": "*.js",
-    "github:*": "jspm_packages/github/*.js",
-    "aurelia-templating-resources/*": "dist/*.js",
-    "npm:*": "jspm_packages/npm/*.js"
-  }
-});
+  paths: {
+    "github:*": "jspm_packages/github/*",
+    "aurelia-templating-resources/*": "dist/*",
+    "npm:*": "jspm_packages/npm/*"
+  },
 
-System.config({
-  "map": {
+  map: {
     "aurelia-binding": "github:aurelia/binding@0.8.6",
     "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
+    "aurelia-loader": "github:aurelia/loader@0.8.7",
     "aurelia-logging": "github:aurelia/logging@0.6.4",
     "aurelia-task-queue": "github:aurelia/task-queue@0.6.2",
     "aurelia-templating": "github:aurelia/templating@0.14.0",
@@ -35,7 +34,7 @@ System.config({
       "aurelia-metadata": "github:aurelia/metadata@0.7.3",
       "core-js": "npm:core-js@0.9.18"
     },
-    "github:aurelia/loader@0.8.5": {
+    "github:aurelia/loader@0.8.7": {
       "aurelia-html-template-element": "github:aurelia/html-template-element@0.2.0",
       "aurelia-metadata": "github:aurelia/metadata@0.7.3",
       "aurelia-path": "github:aurelia/path@0.8.1",
@@ -49,7 +48,7 @@ System.config({
       "aurelia-binding": "github:aurelia/binding@0.8.6",
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
       "aurelia-html-template-element": "github:aurelia/html-template-element@0.2.0",
-      "aurelia-loader": "github:aurelia/loader@0.8.5",
+      "aurelia-loader": "github:aurelia/loader@0.8.7",
       "aurelia-logging": "github:aurelia/logging@0.6.4",
       "aurelia-metadata": "github:aurelia/metadata@0.7.3",
       "aurelia-path": "github:aurelia/path@0.8.1",
@@ -66,4 +65,3 @@ System.config({
     }
   }
 });
-
