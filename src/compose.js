@@ -1,5 +1,5 @@
-import {Container,inject} from 'aurelia-dependency-injection';
-import {TaskQueue} from "aurelia-task-queue";
+import {Container, inject} from 'aurelia-dependency-injection';
+import {TaskQueue} from 'aurelia-task-queue';
 import {
   CompositionEngine, ViewSlot, ViewResources,
   customElement, bindable, noView
@@ -40,14 +40,15 @@ export class Compose {
   * @type {Class}
   */
   @bindable viewModel
-  constructor(element, container, compositionEngine, viewSlot, viewResources, taskQueue){
+
+  constructor(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
     this.element = element;
-		this.container = container;
-		this.compositionEngine = compositionEngine;
-		this.viewSlot = viewSlot;
+    this.container = container;
+    this.compositionEngine = compositionEngine;
+    this.viewSlot = viewSlot;
     this.viewResources = viewResources;
     this.taskQueue = taskQueue;
-	}
+  }
 
   /**
   * Used to set the bindingContext
@@ -55,43 +56,43 @@ export class Compose {
   * @method bind
   * @param {bindingContext} bindingContext The context in which the view model is executed in
   */
-	bind(bindingContext){
-		this.$parent = bindingContext;
-		processInstruction(this, createInstruction(this, {
-      view:this.view,
-      viewModel:this.viewModel,
-      model:this.model
+  bind(bindingContext) {
+    this.$parent = bindingContext;
+    processInstruction(this, createInstruction(this, {
+      view: this.view,
+      viewModel: this.viewModel,
+      model: this.model
     }));
-	}
+  }
 
-	modelChanged(newValue, oldValue){
-    if(this.currentInstruction){
+	modelChanged(newValue, oldValue) {
+    if (this.currentInstruction) {
       this.currentInstruction.model = newValue;
       return;
     }
 
     this.taskQueue.queueMicroTask(() => {
-      if(this.currentInstruction){
+      if (this.currentInstruction) {
         this.currentInstruction.model = newValue;
         return;
       }
 
-      var vm = this.currentViewModel;
+      let vm = this.currentViewModel;
 
-  		if(vm && typeof vm.activate === 'function'){
+      if (vm && typeof vm.activate === 'function') {
         vm.activate(newValue);
-  		}
+      }
     });
   }
 
-  viewChanged(newValue, oldValue){
-    var instruction = createInstruction(this, {
-      view:newValue,
-      viewModel:this.currentViewModel || this.viewModel,
-      model:this.model
+  viewChanged(newValue, oldValue) {
+    let instruction = createInstruction(this, {
+      view: newValue,
+      viewModel: this.currentViewModel || this.viewModel,
+      model: this.model
     });
 
-    if(this.currentInstruction){
+    if (this.currentInstruction) {
       this.currentInstruction = instruction;
       return;
     }
@@ -100,14 +101,14 @@ export class Compose {
     this.taskQueue.queueMicroTask(() => processInstruction(this, this.currentInstruction));
   }
 
-  viewModelChanged(newValue, oldValue){
-    var instruction = createInstruction(this, {
-      viewModel:newValue,
-      view:this.view,
-      model:this.model
+  viewModelChanged(newValue, oldValue) {
+    let instruction = createInstruction(this, {
+      viewModel: newValue,
+      view: this.view,
+      model: this.model
     });
 
-    if(this.currentInstruction){
+    if (this.currentInstruction) {
       this.currentInstruction = instruction;
       return;
     }
@@ -117,18 +118,18 @@ export class Compose {
   }
 }
 
-function createInstruction(composer, instruction){
+function createInstruction(composer, instruction) {
   return Object.assign(instruction, {
-    bindingContext:composer.$parent,
-    container:composer.container,
-    viewSlot:composer.viewSlot,
-    viewResources:composer.viewResources,
-    currentBehavior:composer.currentBehavior,
-    host:composer.element
+    bindingContext: composer.$parent,
+    container: composer.container,
+    viewSlot: composer.viewSlot,
+    viewResources: composer.viewResources,
+    currentBehavior: composer.currentBehavior,
+    host: composer.element
   });
 }
 
-function processInstruction(composer, instruction){
+function processInstruction(composer, instruction) {
   composer.currentInstruction = null;
   composer.compositionEngine.compose(instruction).then(next => {
     composer.currentBehavior = next;

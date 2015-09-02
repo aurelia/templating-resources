@@ -15,7 +15,7 @@ import {TaskQueue} from 'aurelia-task-queue';
 @templateController
 @inject(BoundViewFactory, ViewSlot, TaskQueue)
 export class If {
-  constructor(viewFactory, viewSlot, taskQueue){
+  constructor(viewFactory, viewSlot, taskQueue) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
     this.showing = false;
@@ -30,14 +30,14 @@ export class If {
     this.valueChanged(this.value);
   }
 
-  valueChanged(newValue){
-    if(!newValue) {
-      if(this.view !== null && this.showing){
+  valueChanged(newValue) {
+    if (!newValue) {
+      if (this.view !== null && this.showing) {
         this.taskQueue.queueMicroTask(() => {
           let viewOrPromise = this.viewSlot.remove(this.view);
-          if(viewOrPromise instanceof Promise){
+          if (viewOrPromise instanceof Promise) {
             viewOrPromise.then(() => this.view.unbind());
-          } else{
+          } else {
             this.view.unbind();
           }
         });
@@ -47,14 +47,14 @@ export class If {
       return;
     }
 
-    if(this.view === null){
+    if (this.view === null) {
       this.view = this.viewFactory.create(this.$parent);
     }
 
     if (!this.showing) {
       this.showing = true;
 
-      if(!this.view.isBound){
+      if (!this.view.isBound) {
         this.view.bind();
       }
 
@@ -62,12 +62,12 @@ export class If {
     }
   }
 
-  unbind(){
-    if(this.view !== null && this.viewFactory.isCaching){
-      if(this.showing){
+  unbind() {
+    if (this.view !== null && this.viewFactory.isCaching) {
+      if (this.showing) {
         this.showing = false;
         this.viewSlot.remove(this.view, true, true);
-      }else{
+      } else {
         this.view.returnToCache();
       }
 

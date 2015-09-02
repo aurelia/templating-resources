@@ -1,9 +1,10 @@
+/*eslint new-cap:0, padded-blocks:0*/
 import {ViewResources, injectStyles, resource, ViewCompileInstruction} from 'aurelia-templating';
 import {Loader} from 'aurelia-loader';
 import {Container} from 'aurelia-dependency-injection';
 
 class CSSResource {
-  constructor(address: string){
+  constructor(address: string) {
     this.address = address;
     this._global = null;
     this._scoped = null;
@@ -28,26 +29,21 @@ class CSSResource {
 }
 
 class CSSViewEngineHooks {
-  constructor(mode: string){
+  constructor(mode: string) {
     this.mode = mode;
     this.css = null;
     this._alreadyGloballyInjected = false;
   }
 
   beforeCompile(content: DocumentFragment, resources: ViewResources, instruction: ViewCompileInstruction): void {
-    switch (this.mode) {
-      case 'scoped':
-        let styleNode = injectStyles(this.css, content, true);
-        if(!instruction.targetShadowDOM){
-          styleNode.setAttribute('scoped', 'scoped');
-        }
-        break;
-      default:
-        if(!this._alreadyGloballyInjected){
-          injectStyles(this.css);
-          this._alreadyGloballyInjected = true;
-        }
-        break;
+    if (this.mode === 'scoped') {
+      let styleNode = injectStyles(this.css, content, true);
+      if (!instruction.targetShadowDOM) {
+        styleNode.setAttribute('scoped', 'scoped');
+      }
+    } else if (!this._alreadyGloballyInjected) {
+      injectStyles(this.css);
+      this._alreadyGloballyInjected = true;
     }
   }
 }

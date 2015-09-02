@@ -1,9 +1,9 @@
 import {inject} from 'aurelia-dependency-injection';
 import {customAttribute, injectStyles, hasShadowDOM} from 'aurelia-templating';
 
-if(hasShadowDOM){
+if (hasShadowDOM) {
   injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
-}else{
+} else {
   injectStyles('.aurelia-hide { display:none !important; }');
 }
 
@@ -22,7 +22,7 @@ export class Show {
     this.element = element;
   }
 
-  valueChanged(newValue){
+  valueChanged(newValue) {
     if (newValue) {
       this.element.classList.remove('aurelia-hide');
     } else {

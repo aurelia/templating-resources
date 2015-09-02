@@ -42,7 +42,7 @@ export class Focus {
   }
 
   detached() {
-    this.element.removeEventListener('focus', this.focusListener)
+    this.element.removeEventListener('focus', this.focusListener);
     this.element.removeEventListener('blur', this.blurListener);
   }
 }

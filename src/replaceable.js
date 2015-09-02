@@ -5,7 +5,7 @@ import {BoundViewFactory, ViewSlot, customAttribute, templateController} from 'a
 @templateController
 @inject(BoundViewFactory, ViewSlot)
 export class Replaceable {
-  constructor(viewFactory, viewSlot){
+  constructor(viewFactory, viewSlot) {
     viewSlot.add(viewFactory.create());
   }
 }

@@ -13,7 +13,7 @@ import {ViewEngine} from 'aurelia-templating';
 import {_createDynamicElement} from './dynamic-element';
 import {_createCSSResource} from './css-resource';
 
-function configure(config){
+function configure(config) {
   config.globalResources(
     './compose',
     './if',
@@ -28,35 +28,35 @@ function configure(config){
     './view-spy'
   );
 
-  let viewEngine = config.container.get(ViewEngine),
-      loader = config.aurelia.loader;
+  let viewEngine = config.container.get(ViewEngine);
+  let loader = config.aurelia.loader;
 
   viewEngine.addResourcePlugin('.html', {
-    'fetch':function(address){
+    'fetch': function(address) {
       return loader.loadTemplate(address).then(registryEntry => {
-        let bindable = registryEntry.template.getAttribute('bindable'),
-            elementName = address.replace('.html', ''),
-            index = elementName.lastIndexOf('/');
+        let bindable = registryEntry.template.getAttribute('bindable');
+        let elementName = address.replace('.html', '');
+        let index = elementName.lastIndexOf('/');
 
-        if(index !== 0){
+        if (index !== 0) {
           elementName = elementName.substring(index + 1);
         }
 
-        if(bindable){
+        if (bindable) {
           bindable = bindable.split(',').map(x => x.trim());
           registryEntry.template.removeAttribute('bindable');
-        }else{
+        } else {
           bindable = [];
         }
 
-        return { [elementName]:_createDynamicElement(elementName, address, bindable) };
+        return { [elementName]: _createDynamicElement(elementName, address, bindable) };
       });
     }
   });
 
   viewEngine.addResourcePlugin('.css', {
-    'fetch':function(address){
-      return { [address]:_createCSSResource(address) };
+    'fetch': function(address) {
+      return { [address]: _createCSSResource(address) };
     }
   });
 }

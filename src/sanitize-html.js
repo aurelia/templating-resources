@@ -1,6 +1,6 @@
 import {valueConverter} from 'aurelia-binding';
 
-var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+const SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 
 /**
 * Default Html Sanitizer to prevent script injection
@@ -10,7 +10,7 @@ var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 */
 @valueConverter('sanitizeHtml')
 export class SanitizeHtmlValueConverter {
-  static defaultSanitizer(untrustedMarkup){
+  static defaultSanitizer(untrustedMarkup) {
     return untrustedMarkup.replace(SCRIPT_REGEX, '');
   }
 
@@ -18,8 +18,8 @@ export class SanitizeHtmlValueConverter {
     this.sanitizer = SanitizeHtmlValueConverter.defaultSanitizer;
   }
 
-  toView(untrustedMarkup){
-    if(untrustedMarkup === null){
+  toView(untrustedMarkup) {
+    if (untrustedMarkup === null) {
       return null;
     }
 

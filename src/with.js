@@ -5,16 +5,16 @@ import {BoundViewFactory, ViewSlot, customAttribute, templateController} from 'a
 @templateController
 @inject(BoundViewFactory, ViewSlot)
 export class With {
-  constructor(viewFactory, viewSlot){
+  constructor(viewFactory, viewSlot) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
   }
 
-  valueChanged(newValue){
-    if(!this.view){
+  valueChanged(newValue) {
+    if (!this.view) {
       this.view = this.viewFactory.create(newValue);
       this.viewSlot.add(this.view);
-    }else{
+    } else {
       this.view.bind(newValue);
     }
   }
