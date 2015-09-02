@@ -44,7 +44,7 @@ describe('if', () => {
 
   it('should do nothing when showing, provided value is falsy and has no view', () => {
     let view = new ViewMock();
-    sut.view = undefined;
+    sut.view = null;
     sut.showing = true;
     spyOn(viewSlot, 'remove');
     spyOn(view, 'unbind');
@@ -58,7 +58,7 @@ describe('if', () => {
   });
 
   it('should create the view when provided value is truthy and has no view', () => {
-    sut.view = undefined;
+    sut.view = null;
 
     sut.valueChanged(true);
 
@@ -67,7 +67,7 @@ describe('if', () => {
 
   it('should create the view with provided binding context', () => {
     sut.value = true;
-    sut.view = undefined;
+    sut.view = null;
     spyOn(viewFactory, 'create').and.callFake(() => {
       return new ViewMock();
     });
