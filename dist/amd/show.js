@@ -5,17 +5,10 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], functi
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  function addStyleString(str) {
-    var node = document.createElement('style');
-    node.innerHTML = str;
-    node.type = 'text/css';
-    document.head.appendChild(node);
-  }
-
-  if (!!HTMLElement.prototype.createShadowRoot) {
-    addStyleString('body /deep/ .aurelia-hide { display:none !important; }');
+  if (_aureliaTemplating.hasShadowDOM) {
+    _aureliaTemplating.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
   } else {
-    addStyleString('.aurelia-hide { display:none !important; }');
+    _aureliaTemplating.injectStyles('.aurelia-hide { display:none !important; }');
   }
 
   var Show = (function () {
@@ -33,7 +26,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], functi
       }
     };
 
-    Show.prototype.bind = function bind(executionContext) {
+    Show.prototype.bind = function bind(bindingContext) {
       this.valueChanged(this.value);
     };
 

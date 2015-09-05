@@ -15,25 +15,31 @@ import {TaskQueue} from 'aurelia-task-queue';
 @templateController
 @inject(BoundViewFactory, ViewSlot, TaskQueue)
 export class If {
-  constructor(viewFactory, viewSlot, taskQueue){
+  constructor(viewFactory, viewSlot, taskQueue) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
     this.showing = false;
     this.taskQueue = taskQueue;
+    this.view = null;
+    this.$parent = null;
   }
 
-  bind(executionContext) {
-    // Store parent executionContext, so we can pass it down
-    this.$parent = executionContext;
+  bind(bindingContext) {
+    // Store parent bindingContext, so we can pass it down
+    this.$parent = bindingContext;
     this.valueChanged(this.value);
   }
 
-  valueChanged(newValue){
+  valueChanged(newValue) {
     if (!newValue) {
-      if(this.view && this.showing){
+      if (this.view !== null && this.showing) {
         this.taskQueue.queueMicroTask(() => {
-          this.viewSlot.remove(this.view);
-          this.view.unbind();
+          let viewOrPromise = this.viewSlot.remove(this.view);
+          if (viewOrPromise instanceof Promise) {
+            viewOrPromise.then(() => this.view.unbind());
+          } else {
+            this.view.unbind();
+          }
         });
       }
 
@@ -41,18 +47,31 @@ export class If {
       return;
     }
 
-    if(!this.view){
+    if (this.view === null) {
       this.view = this.viewFactory.create(this.$parent);
     }
 
     if (!this.showing) {
       this.showing = true;
 
-      if(!this.view.isBound){
+      if (!this.view.isBound) {
         this.view.bind();
       }
 
       this.viewSlot.add(this.view);
+    }
+  }
+
+  unbind() {
+    if (this.view !== null && this.viewFactory.isCaching) {
+      if (this.showing) {
+        this.showing = false;
+        this.viewSlot.remove(this.view, true, true);
+      } else {
+        this.view.returnToCache();
+      }
+
+      this.view = null;
     }
   }
 }

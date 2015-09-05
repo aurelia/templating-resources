@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', 'aurelia-logging'], function (exports, _aureliaTemplating, _aureliaDependencyInjection, _aureliaLogging) {
+define(['exports', 'aurelia-templating', 'aurelia-logging'], function (exports, _aureliaTemplating, _aureliaLogging) {
   'use strict';
 
   exports.__esModule = true;
@@ -13,7 +13,9 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', 'aureli
     }
 
     ViewSpy.prototype.log = function log(lifecycleName, context) {
-      if (!this.value || this.value.indexOf(lifecycleName) !== -1) {
+      if (!this.value && lifecycleName === 'created') {
+        this.logger.info(lifecycleName, this.view);
+      } else if (this.value && this.value.indexOf(lifecycleName) !== -1) {
         this.logger.info(lifecycleName, this.view, context);
       }
     };

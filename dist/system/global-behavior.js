@@ -33,7 +33,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
           try {
             this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
           } catch (error) {
-            throw AggregateError('Conventional binding handler failed.', error);
+            throw new AggregateError('Conventional binding handler failed.', error);
           }
         };
 

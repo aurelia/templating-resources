@@ -1,28 +1,24 @@
 System.register(['aurelia-dependency-injection', 'aurelia-templating'], function (_export) {
   'use strict';
 
-  var inject, customAttribute, Show;
+  var inject, customAttribute, injectStyles, hasShadowDOM, Show;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-  function addStyleString(str) {
-    var node = document.createElement('style');
-    node.innerHTML = str;
-    node.type = 'text/css';
-    document.head.appendChild(node);
-  }
 
   return {
     setters: [function (_aureliaDependencyInjection) {
       inject = _aureliaDependencyInjection.inject;
     }, function (_aureliaTemplating) {
       customAttribute = _aureliaTemplating.customAttribute;
+      injectStyles = _aureliaTemplating.injectStyles;
+      hasShadowDOM = _aureliaTemplating.hasShadowDOM;
     }],
     execute: function () {
-      if (!!HTMLElement.prototype.createShadowRoot) {
-        addStyleString('body /deep/ .aurelia-hide { display:none !important; }');
+
+      if (hasShadowDOM) {
+        injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
       } else {
-        addStyleString('.aurelia-hide { display:none !important; }');
+        injectStyles('.aurelia-hide { display:none !important; }');
       }
 
       Show = (function () {
@@ -40,7 +36,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
           }
         };
 
-        Show.prototype.bind = function bind(executionContext) {
+        Show.prototype.bind = function bind(bindingContext) {
           this.valueChanged(this.value);
         };
 

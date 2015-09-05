@@ -58,13 +58,13 @@ var Repeat = (function () {
     this.value = 'value';
   }
 
-  Repeat.prototype.bind = function bind(executionContext) {
+  Repeat.prototype.bind = function bind(bindingContext) {
     var _this = this;
 
-    var items = this.items,
-        observer;
+    var items = this.items;
+    var observer = undefined;
 
-    this.executionContext = executionContext;
+    this.bindingContext = bindingContext;
 
     if (!items) {
       if (this.oldItems) {
@@ -81,8 +81,8 @@ var Repeat = (function () {
 
         this.handleMapChangeRecords(items, records);
 
-        this.disposeSubscription = observer.subscribe(function (records) {
-          _this.handleMapChangeRecords(items, records);
+        this.disposeSubscription = observer.subscribe(function (r) {
+          _this.handleMapChangeRecords(items, r);
         });
       } else {
         var splices = _aureliaBinding.calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
@@ -91,8 +91,8 @@ var Repeat = (function () {
         this.handleSplices(items, splices);
         this.lastBoundItems = this.oldItems = null;
 
-        this.disposeSubscription = observer.subscribe(function (splices) {
-          _this.handleSplices(items, splices);
+        this.disposeSubscription = observer.subscribe(function (s) {
+          _this.handleSplices(items, s);
         });
 
         return;
@@ -147,18 +147,18 @@ var Repeat = (function () {
   Repeat.prototype.processArrayItems = function processArrayItems(items) {
     var _this2 = this;
 
-    var viewFactory = this.viewFactory,
-        viewSlot = this.viewSlot,
-        i,
-        ii,
-        row,
-        view,
-        observer;
+    var viewFactory = this.viewFactory;
+    var viewSlot = this.viewSlot;
+    var i = undefined;
+    var ii = undefined;
+    var row = undefined;
+    var view = undefined;
+    var observer = undefined;
 
     observer = this.observerLocator.getArrayObserver(items);
 
     for (i = 0, ii = items.length; i < ii; ++i) {
-      row = this.createFullExecutionContext(items[i], i, ii);
+      row = this.createFullBindingContext(items[i], i, ii);
       view = viewFactory.create(row);
       viewSlot.add(view);
     }
@@ -171,12 +171,12 @@ var Repeat = (function () {
   Repeat.prototype.processMapEntries = function processMapEntries(items) {
     var _this3 = this;
 
-    var viewFactory = this.viewFactory,
-        viewSlot = this.viewSlot,
-        index = 0,
-        row,
-        view,
-        observer;
+    var viewFactory = this.viewFactory;
+    var viewSlot = this.viewSlot;
+    var index = 0;
+    var row = undefined;
+    var view = undefined;
+    var observer = undefined;
 
     observer = this.observerLocator.getMapObserver(items);
 
@@ -193,14 +193,14 @@ var Repeat = (function () {
   };
 
   Repeat.prototype.processNumber = function processNumber(value) {
-    var viewFactory = this.viewFactory,
-        viewSlot = this.viewSlot,
-        childrenLength = viewSlot.children.length,
-        i,
-        ii,
-        row,
-        view,
-        viewsToRemove;
+    var viewFactory = this.viewFactory;
+    var viewSlot = this.viewSlot;
+    var childrenLength = viewSlot.children.length;
+    var i = undefined;
+    var ii = undefined;
+    var row = undefined;
+    var view = undefined;
+    var viewsToRemove = undefined;
 
     value = Math.floor(value);
     viewsToRemove = childrenLength - value;
@@ -209,23 +209,25 @@ var Repeat = (function () {
       if (viewsToRemove > childrenLength) {
         viewsToRemove = childrenLength;
       }
+
       for (i = 0, ii = viewsToRemove; i < ii; ++i) {
         viewSlot.removeAt(childrenLength - (i + 1));
       }
+
       return;
     }
 
     for (i = childrenLength, ii = value; i < ii; ++i) {
-      row = this.createFullExecutionContext(i, i, ii);
+      row = this.createFullBindingContext(i, i, ii);
       view = viewFactory.create(row);
       viewSlot.add(view);
     }
   };
 
-  Repeat.prototype.createBaseExecutionContext = function createBaseExecutionContext(data) {
+  Repeat.prototype.createBaseBindingContext = function createBaseBindingContext(data) {
     var context = {};
     context[this.local] = data;
-    context.$parent = this.executionContext;
+    context.$parent = this.bindingContext;
     return context;
   };
 
@@ -233,24 +235,24 @@ var Repeat = (function () {
     var context = {};
     context[this.key] = key;
     context[this.value] = value;
-    context.$parent = this.executionContext;
+    context.$parent = this.bindingContext;
     return context;
   };
 
-  Repeat.prototype.createFullExecutionContext = function createFullExecutionContext(data, index, length) {
-    var context = this.createBaseExecutionContext(data);
-    return this.updateExecutionContext(context, index, length);
+  Repeat.prototype.createFullBindingContext = function createFullBindingContext(data, index, length) {
+    var context = this.createBaseBindingContext(data);
+    return this.updateBindingContext(context, index, length);
   };
 
   Repeat.prototype.createFullExecutionKvpContext = function createFullExecutionKvpContext(key, value, index, length) {
     var context = this.createBaseExecutionKvpContext(key, value);
-    return this.updateExecutionContext(context, index, length);
+    return this.updateBindingContext(context, index, length);
   };
 
-  Repeat.prototype.updateExecutionContext = function updateExecutionContext(context, index, length) {
-    var first = index === 0,
-        last = index === length - 1,
-        even = index % 2 === 0;
+  Repeat.prototype.updateBindingContext = function updateBindingContext(context, index, length) {
+    var first = index === 0;
+    var last = index === length - 1;
+    var even = index % 2 === 0;
 
     context.$index = index;
     context.$first = first;
@@ -263,26 +265,27 @@ var Repeat = (function () {
   };
 
   Repeat.prototype.handleSplices = function handleSplices(array, splices) {
-    var viewLookup = new Map(),
-        viewSlot = this.viewSlot,
-        spliceIndexLow,
-        viewOrPromise,
-        view,
-        i,
-        ii,
-        j,
-        jj,
-        row,
-        splice,
-        addIndex,
-        end,
-        itemsLeftToAdd,
-        removed,
-        model,
-        children,
-        length,
-        context,
-        spliceIndex;
+    var _this4 = this;
+
+    var viewLookup = new Map();
+    var viewSlot = this.viewSlot;
+    var spliceIndexLow = undefined;
+    var viewOrPromise = undefined;
+    var view = undefined;
+    var i = undefined;
+    var ii = undefined;
+    var j = undefined;
+    var jj = undefined;
+    var row = undefined;
+    var splice = undefined;
+    var addIndex = undefined;
+    var itemsLeftToAdd = undefined;
+    var removed = undefined;
+    var model = undefined;
+    var context = undefined;
+    var spliceIndex = undefined;
+    var viewsToUnbind = undefined;
+    var end = undefined;
 
     for (i = 0, ii = splices.length; i < ii; ++i) {
       splice = splices[i];
@@ -298,7 +301,7 @@ var Repeat = (function () {
         if (itemsLeftToAdd > 0) {
           view = viewSlot.children[spliceIndex + j];
           view.detached();
-          context = this.createFullExecutionContext(array[addIndex + j], spliceIndex + j, array.length);
+          context = this.createFullBindingContext(array[addIndex + j], spliceIndex + j, array.length);
           view.bind(context);
           view.attached();
           --itemsLeftToAdd;
@@ -312,21 +315,21 @@ var Repeat = (function () {
 
       addIndex += removed.length;
 
-      for (; 0 < itemsLeftToAdd; ++addIndex) {
+      for (; itemsLeftToAdd > 0; ++addIndex) {
         model = array[addIndex];
         viewOrPromise = viewLookup.get(model);
         if (viewOrPromise instanceof Promise) {
           (function (localAddIndex, localModel) {
-            viewOrPromise.then(function (view) {
+            viewOrPromise.then(function (v) {
               viewLookup['delete'](localModel);
-              viewSlot.insert(localAddIndex, view);
+              viewSlot.insert(localAddIndex, v);
             });
           })(addIndex, model);
         } else if (viewOrPromise) {
           viewLookup['delete'](model);
           viewSlot.insert(addIndex, viewOrPromise);
         } else {
-          row = this.createBaseExecutionContext(model);
+          row = this.createBaseBindingContext(model);
           view = this.viewFactory.create(row);
           viewSlot.insert(addIndex, view);
         }
@@ -334,39 +337,55 @@ var Repeat = (function () {
       }
     }
 
-    children = this.viewSlot.children;
-    length = children.length;
+    viewsToUnbind = viewLookup.size;
 
-    if (spliceIndexLow > 0) {
-      spliceIndexLow = spliceIndexLow - 1;
-    }
-
-    for (; spliceIndexLow < length; ++spliceIndexLow) {
-      this.updateExecutionContext(children[spliceIndexLow].executionContext, spliceIndexLow, length);
+    if (viewsToUnbind === 0) {
+      this.updateBindingContexts(spliceIndexLow);
     }
 
     viewLookup.forEach(function (x) {
       if (x instanceof Promise) {
         x.then(function (y) {
-          return y.unbind();
+          y.unbind();
+          viewsToUnbind--;
+          if (viewsToUnbind === 0) {
+            _this4.updateBindingContexts(spliceIndexLow);
+          }
         });
       } else {
         x.unbind();
+        viewsToUnbind--;
+        if (viewsToUnbind === 0) {
+          _this4.updateBindingContexts(spliceIndexLow);
+        }
       }
     });
   };
 
+  Repeat.prototype.updateBindingContexts = function updateBindingContexts(startIndex) {
+    var children = this.viewSlot.children;
+    var length = children.length;
+
+    if (startIndex > 0) {
+      startIndex = startIndex - 1;
+    }
+
+    for (; startIndex < length; ++startIndex) {
+      this.updateBindingContext(children[startIndex].bindingContext, startIndex, length);
+    }
+  };
+
   Repeat.prototype.handleMapChangeRecords = function handleMapChangeRecords(map, records) {
-    var viewSlot = this.viewSlot,
-        key,
-        i,
-        ii,
-        view,
-        children,
-        length,
-        row,
-        removeIndex,
-        record;
+    var viewSlot = this.viewSlot;
+    var key = undefined;
+    var i = undefined;
+    var ii = undefined;
+    var view = undefined;
+    var children = undefined;
+    var length = undefined;
+    var row = undefined;
+    var removeIndex = undefined;
+    var record = undefined;
 
     for (i = 0, ii = records.length; i < ii; ++i) {
       record = records[i];
@@ -393,6 +412,9 @@ var Repeat = (function () {
           break;
         case 'clear':
           viewSlot.removeAll();
+          break;
+        default:
+          continue;
       }
     }
 
@@ -400,15 +422,15 @@ var Repeat = (function () {
     length = children.length;
 
     for (i = 0; i < length; i++) {
-      this.updateExecutionContext(children[i].executionContext, i, length);
+      this.updateBindingContext(children[i].bindingContext, i, length);
     }
   };
 
   Repeat.prototype.getViewIndexByKey = function getViewIndexByKey(key) {
-    var viewSlot = this.viewSlot,
-        i,
-        ii,
-        child;
+    var viewSlot = this.viewSlot;
+    var i = undefined;
+    var ii = undefined;
+    var child = undefined;
 
     for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
       child = viewSlot.children[i];
@@ -419,13 +441,13 @@ var Repeat = (function () {
   };
 
   Repeat.prototype.removeAll = function removeAll() {
-    var viewSlot = this.viewSlot,
-        views,
-        i;
+    var viewSlot = this.viewSlot;
+    var views = viewSlot.children;
+    var i = undefined;
 
-    views = viewSlot.children;
     viewSlot.removeAll();
     i = views.length;
+
     while (i--) {
       views[i].unbind();
     }

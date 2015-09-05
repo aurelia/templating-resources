@@ -1,3 +1,25 @@
+## 0.15.0 (2015-09-05)
+
+
+#### Bug Fixes
+
+* **all:** update exectionContext to bindingContext naming ([4bbcf4c2](http://github.com/aurelia/templating-resources/commit/4bbcf4c27fa2432060f418f7cabe9c66cf831862))
+* **build:** update linting, testing and tools ([79590133](http://github.com/aurelia/templating-resources/commit/795901338065bb976aea30161d2a252578f615c8))
+* **css-resource:** enable proper style scoping based on shadow dom support ([b31dc4dd](http://github.com/aurelia/templating-resources/commit/b31dc4dd683ef33258eaa5b60324cf31f6314022))
+* **if:** fix animation interaction; enable view cache integration ([64fde698](http://github.com/aurelia/templating-resources/commit/64fde6981603255ed14a95a1a124d7fff28bfe4d))
+* **plugins:** fixup view engine resource plugins to match the new api ([5f422cc1](http://github.com/aurelia/templating-resources/commit/5f422cc1112c6add4d2205b671e3749e20829d07))
+* **repeat:** update binding context after animations have finished ([1904ea5e](http://github.com/aurelia/templating-resources/commit/1904ea5ee60f3a3fb19aa090643d425a18a7905e), closes [#94](http://github.com/aurelia/templating-resources/issues/94))
+* **spec:** update executionContext to bindingContext ([d207dd22](http://github.com/aurelia/templating-resources/commit/d207dd221fa887c57c248a084cebc6f9c6d98d23))
+* **view-spy:** change behavior of value-less attr to only log created ([be5b9f61](http://github.com/aurelia/templating-resources/commit/be5b9f619513201a26e6f0a086da7195c5e0381f))
+
+
+#### Features
+
+* **all:** auto create elements from an html file; inject css into head or shadow dom ([44693a28](http://github.com/aurelia/templating-resources/commit/44693a2816722d29dcf7da24dbc6d6e86d54a5fe))
+* **docs:** generate api.json from .d.ts file ([1ad220b9](http://github.com/aurelia/templating-resources/commit/1ad220b9778998d2e91902642c59523777623022))
+* **if:** use the view factory caching info ([71ec71fc](http://github.com/aurelia/templating-resources/commit/71ec71fc811348435cb552ed3fb3671f115d8b61))
+
+
 ## 0.14.0 (2015-08-14)
 
 

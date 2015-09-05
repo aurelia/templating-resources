@@ -8,8 +8,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var _aureliaTemplating = require('aurelia-templating');
 
-var _aureliaDependencyInjection = require('aurelia-dependency-injection');
-
 var _aureliaLogging = require('aurelia-logging');
 
 var LogManager = _interopRequireWildcard(_aureliaLogging);
@@ -22,7 +20,9 @@ var ViewSpy = (function () {
   }
 
   ViewSpy.prototype.log = function log(lifecycleName, context) {
-    if (!this.value || this.value.indexOf(lifecycleName) !== -1) {
+    if (!this.value && lifecycleName === 'created') {
+      this.logger.info(lifecycleName, this.view);
+    } else if (this.value && this.value.indexOf(lifecycleName) !== -1) {
       this.logger.info(lifecycleName, this.view, context);
     }
   };

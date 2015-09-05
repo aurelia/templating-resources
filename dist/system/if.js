@@ -25,10 +25,12 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
           this.viewSlot = viewSlot;
           this.showing = false;
           this.taskQueue = taskQueue;
+          this.view = null;
+          this.$parent = null;
         }
 
-        If.prototype.bind = function bind(executionContext) {
-          this.$parent = executionContext;
+        If.prototype.bind = function bind(bindingContext) {
+          this.$parent = bindingContext;
           this.valueChanged(this.value);
         };
 
@@ -36,10 +38,16 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
           var _this = this;
 
           if (!newValue) {
-            if (this.view && this.showing) {
+            if (this.view !== null && this.showing) {
               this.taskQueue.queueMicroTask(function () {
-                _this.viewSlot.remove(_this.view);
-                _this.view.unbind();
+                var viewOrPromise = _this.viewSlot.remove(_this.view);
+                if (viewOrPromise instanceof Promise) {
+                  viewOrPromise.then(function () {
+                    return _this.view.unbind();
+                  });
+                } else {
+                  _this.view.unbind();
+                }
               });
             }
 
@@ -47,7 +55,7 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
             return;
           }
 
-          if (!this.view) {
+          if (this.view === null) {
             this.view = this.viewFactory.create(this.$parent);
           }
 
@@ -59,6 +67,19 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
             }
 
             this.viewSlot.add(this.view);
+          }
+        };
+
+        If.prototype.unbind = function unbind() {
+          if (this.view !== null && this.viewFactory.isCaching) {
+            if (this.showing) {
+              this.showing = false;
+              this.viewSlot.remove(this.view, true, true);
+            } else {
+              this.view.returnToCache();
+            }
+
+            this.view = null;
           }
         };
 

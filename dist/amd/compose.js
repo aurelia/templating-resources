@@ -46,8 +46,8 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
       this.taskQueue = taskQueue;
     }
 
-    Compose.prototype.bind = function bind(executionContext) {
-      this.$parent = executionContext;
+    Compose.prototype.bind = function bind(bindingContext) {
+      this.$parent = bindingContext;
       processInstruction(this, createInstruction(this, {
         view: this.view,
         viewModel: this.viewModel,
@@ -128,7 +128,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
 
   function createInstruction(composer, instruction) {
     return Object.assign(instruction, {
-      executionContext: composer.$parent,
+      bindingContext: composer.$parent,
       container: composer.container,
       viewSlot: composer.viewSlot,
       viewResources: composer.viewResources,
@@ -141,7 +141,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
     composer.currentInstruction = null;
     composer.compositionEngine.compose(instruction).then(function (next) {
       composer.currentBehavior = next;
-      composer.currentViewModel = next ? next.executionContext : null;
+      composer.currentViewModel = next ? next.bindingContext : null;
     });
   }
 });

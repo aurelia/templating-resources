@@ -22,7 +22,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
       try {
         this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
       } catch (error) {
-        throw _aureliaLogging.AggregateError('Conventional binding handler failed.', error);
+        throw new _aureliaLogging.AggregateError('Conventional binding handler failed.', error);
       }
     };
 

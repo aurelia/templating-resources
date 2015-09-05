@@ -1,3 +1,4 @@
+/*eslint no-loop-func:0, no-unused-vars:0*/
 import {inject} from 'aurelia-dependency-injection';
 import {ObserverLocator, calcSplices, getChangeRecords} from 'aurelia-binding';
 import {BoundViewFactory, ViewSlot, customAttribute, bindable, templateController} from 'aurelia-templating';
@@ -25,7 +26,7 @@ export class Repeat {
   @bindable local
   @bindable key
   @bindable value
-  constructor(viewFactory, viewSlot, observerLocator){
+  constructor(viewFactory, viewSlot, observerLocator) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
     this.observerLocator = observerLocator;
@@ -34,14 +35,14 @@ export class Repeat {
     this.value = 'value';
   }
 
-  bind(executionContext){
-    var items = this.items,
-      observer;
+  bind(bindingContext) {
+    let items = this.items;
+    let observer;
 
-    this.executionContext = executionContext;
+    this.bindingContext = bindingContext;
 
-    if(!items){
-      if(this.oldItems){
+    if (!items) {
+      if (this.oldItems) {
         this.removeAll();
       }
 
@@ -50,23 +51,23 @@ export class Repeat {
 
     if (this.oldItems === items) {
       if (items instanceof Map) {
-        var records = getChangeRecords(items);
+        let records = getChangeRecords(items);
         observer = this.observerLocator.getMapObserver(items);
 
         this.handleMapChangeRecords(items, records);
 
-        this.disposeSubscription = observer.subscribe(records => {
-          this.handleMapChangeRecords(items, records);
+        this.disposeSubscription = observer.subscribe(r => {
+          this.handleMapChangeRecords(items, r);
         });
       } else {
-        var splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
+        let splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
         observer = this.observerLocator.getArrayObserver(items);
 
         this.handleSplices(items, splices);
         this.lastBoundItems = this.oldItems = null;
 
-        this.disposeSubscription = observer.subscribe(splices => {
-          this.handleSplices(items, splices);
+        this.disposeSubscription = observer.subscribe(s => {
+          this.handleSplices(items, s);
         });
 
         return;
@@ -78,14 +79,14 @@ export class Repeat {
     this.processItems();
   }
 
-  unbind(){
+  unbind() {
     this.oldItems = this.items;
 
-    if(this.items instanceof Array){
+    if (this.items instanceof Array) {
       this.lastBoundItems = this.items.slice(0);
     }
 
-    if(this.disposeSubscription){
+    if (this.disposeSubscription) {
       this.disposeSubscription();
       this.disposeSubscription = null;
     }
@@ -96,37 +97,41 @@ export class Repeat {
   }
 
   processItems() {
-    var items = this.items;
+    let items = this.items;
 
     if (this.disposeSubscription) {
       this.disposeSubscription();
       this.removeAll();
     }
 
-    if(!items && items !== 0){
+    if (!items && items !== 0) {
       return;
     }
 
     if (items instanceof Array) {
       this.processArrayItems(items);
-    } else if(items instanceof Map) {
+    } else if (items instanceof Map) {
       this.processMapEntries(items);
-    } else if((typeof items === 'number')){
+    } else if ((typeof items === 'number')) {
       this.processNumber(items);
-    }else{
+    } else {
       throw new Error('Object in "repeat" must be of type Array, Map or Number');
     }
   }
 
-  processArrayItems(items){
-    var viewFactory = this.viewFactory,
-      viewSlot = this.viewSlot,
-      i, ii, row, view, observer;
+  processArrayItems(items) {
+    let viewFactory = this.viewFactory;
+    let viewSlot = this.viewSlot;
+    let i;
+    let ii;
+    let row;
+    let view;
+    let observer;
 
     observer = this.observerLocator.getArrayObserver(items);
 
-    for(i = 0, ii = items.length; i < ii; ++i){
-      row = this.createFullExecutionContext(items[i], i, ii);
+    for (i = 0, ii = items.length; i < ii; ++i) {
+      row = this.createFullBindingContext(items[i], i, ii);
       view = viewFactory.create(row);
       viewSlot.add(view);
     }
@@ -137,10 +142,12 @@ export class Repeat {
   }
 
   processMapEntries(items) {
-    var viewFactory = this.viewFactory,
-      viewSlot = this.viewSlot,
-      index = 0,
-      row, view, observer;
+    let viewFactory = this.viewFactory;
+    let viewSlot = this.viewSlot;
+    let index = 0;
+    let row;
+    let view;
+    let observer;
 
     observer = this.observerLocator.getMapObserver(items);
 
@@ -156,61 +163,67 @@ export class Repeat {
     });
   }
 
-  processNumber(value){
-    var viewFactory = this.viewFactory,
-      viewSlot = this.viewSlot,
-      childrenLength = viewSlot.children.length,
-      i, ii, row, view, viewsToRemove;
+  processNumber(value) {
+    let viewFactory = this.viewFactory;
+    let viewSlot = this.viewSlot;
+    let childrenLength = viewSlot.children.length;
+    let i;
+    let ii;
+    let row;
+    let view;
+    let viewsToRemove;
 
     value = Math.floor(value);
     viewsToRemove = childrenLength - value;
 
-    if(viewsToRemove > 0) {
-      if(viewsToRemove > childrenLength) {
+    if (viewsToRemove > 0) {
+      if (viewsToRemove > childrenLength) {
         viewsToRemove = childrenLength;
       }
-      for(i = 0, ii = viewsToRemove; i < ii; ++i){
+
+      for (i = 0, ii = viewsToRemove; i < ii; ++i) {
         viewSlot.removeAt(childrenLength - (i + 1));
       }
+
       return;
     }
 
-    for(i = childrenLength, ii = value; i < ii; ++i){
-      row = this.createFullExecutionContext(i, i, ii);
+    for (i = childrenLength, ii = value; i < ii; ++i) {
+      row = this.createFullBindingContext(i, i, ii);
       view = viewFactory.create(row);
       viewSlot.add(view);
     }
   }
 
-  createBaseExecutionContext(data){
-    var context = {};
+  createBaseBindingContext(data) {
+    let context = {};
     context[this.local] = data;
-    context.$parent = this.executionContext;
+    context.$parent = this.bindingContext;
     return context;
   }
 
-  createBaseExecutionKvpContext(key, value){
-    var context = {};
+  createBaseExecutionKvpContext(key, value) {
+    let context = {};
     context[this.key] = key;
     context[this.value] = value;
-    context.$parent = this.executionContext;
+    context.$parent = this.bindingContext;
     return context;
   }
 
-  createFullExecutionContext(data, index, length){
-    var context = this.createBaseExecutionContext(data);
-    return this.updateExecutionContext(context, index, length);
+  createFullBindingContext(data, index, length) {
+    let context = this.createBaseBindingContext(data);
+    return this.updateBindingContext(context, index, length);
   }
 
-  createFullExecutionKvpContext(key, value, index, length){
-    var context = this.createBaseExecutionKvpContext(key, value);
-    return this.updateExecutionContext(context, index, length);
+  createFullExecutionKvpContext(key, value, index, length) {
+    let context = this.createBaseExecutionKvpContext(key, value);
+    return this.updateBindingContext(context, index, length);
   }
 
-  updateExecutionContext(context, index, length){
-    var first = (index === 0),
-        last = (index === length - 1),
-        even = index % 2 === 0;
+  updateBindingContext(context, index, length) {
+    let first = (index === 0);
+    let last = (index === length - 1);
+    let even = index % 2 === 0;
 
     context.$index = index;
     context.$first = first;
@@ -223,12 +236,25 @@ export class Repeat {
   }
 
   handleSplices(array, splices) {
-    var viewLookup = new Map(),
-      viewSlot = this.viewSlot,
-      spliceIndexLow, viewOrPromise, view,
-      i, ii, j, jj, row, splice,
-      addIndex, end, itemsLeftToAdd,
-      removed, model, children, length, context, spliceIndex;
+    let viewLookup = new Map();
+    let viewSlot = this.viewSlot;
+    let spliceIndexLow;
+    let viewOrPromise;
+    let view;
+    let i;
+    let ii;
+    let j;
+    let jj;
+    let row;
+    let splice;
+    let addIndex;
+    let itemsLeftToAdd;
+    let removed;
+    let model;
+    let context;
+    let spliceIndex;
+    let viewsToUnbind;
+    let end;
 
     for (i = 0, ii = splices.length; i < ii; ++i) {
       splice = splices[i];
@@ -236,7 +262,7 @@ export class Repeat {
       itemsLeftToAdd = splice.addedCount;
       end = splice.index + splice.addedCount;
       removed = splice.removed;
-      if(typeof spliceIndexLow === 'undefined' || spliceIndexLow === null || spliceIndexLow > splice.index){
+      if (typeof spliceIndexLow === 'undefined' || spliceIndexLow === null || spliceIndexLow > splice.index) {
         spliceIndexLow = spliceIndex;
       }
 
@@ -244,13 +270,13 @@ export class Repeat {
         if (itemsLeftToAdd > 0) {
           view = viewSlot.children[spliceIndex + j];
           view.detached();
-          context = this.createFullExecutionContext(array[addIndex + j], spliceIndex + j, array.length);
+          context = this.createFullBindingContext(array[addIndex + j], spliceIndex + j, array.length);
           view.bind(context);
           view.attached();
           --itemsLeftToAdd;
         } else {
           viewOrPromise = viewSlot.removeAt(addIndex + splice.addedCount);
-          if(viewOrPromise){
+          if (viewOrPromise) {
             viewLookup.set(removed[j], viewOrPromise);
           }
         }
@@ -258,21 +284,21 @@ export class Repeat {
 
       addIndex += removed.length;
 
-      for (; 0 < itemsLeftToAdd; ++addIndex) {
+      for (; itemsLeftToAdd > 0; ++addIndex) {
         model = array[addIndex];
         viewOrPromise = viewLookup.get(model);
-        if(viewOrPromise instanceof Promise){
+        if (viewOrPromise instanceof Promise) {
           ((localAddIndex, localModel) => {
-            viewOrPromise.then(view => {
+            viewOrPromise.then(v => {
               viewLookup.delete(localModel);
-              viewSlot.insert(localAddIndex, view);
+              viewSlot.insert(localAddIndex, v);
             });
           })(addIndex, model);
-        }else if(viewOrPromise){
+        } else if (viewOrPromise) {
           viewLookup.delete(model);
           viewSlot.insert(addIndex, viewOrPromise);
-        }else{
-          row = this.createBaseExecutionContext(model);
+        } else {
+          row = this.createBaseBindingContext(model);
           view = this.viewFactory.create(row);
           viewSlot.insert(addIndex, view);
         }
@@ -280,53 +306,82 @@ export class Repeat {
       }
     }
 
-    children = this.viewSlot.children;
-    length = children.length;
+    viewsToUnbind = viewLookup.size;
 
-    if(spliceIndexLow > 0){
-      spliceIndexLow = spliceIndexLow - 1;
-    }
-
-    for(; spliceIndexLow < length; ++spliceIndexLow){
-      this.updateExecutionContext(children[spliceIndexLow].executionContext, spliceIndexLow, length);
+    if (viewsToUnbind === 0) {
+      this.updateBindingContexts(spliceIndexLow);
     }
 
     viewLookup.forEach(x => {
-      if(x instanceof Promise){
-        x.then(y => y.unbind());
-      }else{
+      if (x instanceof Promise) {
+        x.then(y => {
+          y.unbind();
+          viewsToUnbind--;
+          if (viewsToUnbind === 0) {
+            this.updateBindingContexts(spliceIndexLow);
+          }
+        });
+      } else {
         x.unbind();
+        viewsToUnbind--;
+        if (viewsToUnbind === 0) {
+          this.updateBindingContexts(spliceIndexLow);
+        }
       }
     });
   }
 
+  updateBindingContexts(startIndex) {
+    let children = this.viewSlot.children;
+    let length = children.length;
+
+    if (startIndex > 0) {
+      startIndex = startIndex - 1;
+    }
+
+    for (; startIndex < length; ++startIndex) {
+      this.updateBindingContext(children[startIndex].bindingContext, startIndex, length);
+    }
+  }
+
   handleMapChangeRecords(map, records) {
-    var viewSlot = this.viewSlot,
-      key, i, ii, view, children, length, row, removeIndex, record;
+    let viewSlot = this.viewSlot;
+    let key;
+    let i;
+    let ii;
+    let view;
+    let children;
+    let length;
+    let row;
+    let removeIndex;
+    let record;
 
     for (i = 0, ii = records.length; i < ii; ++i) {
       record = records[i];
       key = record.key;
       switch (record.type) {
-        case 'update':
-          removeIndex = this.getViewIndexByKey(key);
-          viewSlot.removeAt(removeIndex);
-          row = this.createBaseExecutionKvpContext(key, map.get(key));
-          view = this.viewFactory.create(row);
-          viewSlot.insert(removeIndex, view);
-          break;
-        case 'add':
-          row = this.createBaseExecutionKvpContext(key, map.get(key));
-          view = this.viewFactory.create(row);
-          viewSlot.insert(map.size, view);
-          break;
-        case 'delete':
-          if (!record.oldValue) { return; }
-          removeIndex = this.getViewIndexByKey(key);
-          viewSlot.removeAt(removeIndex);
-          break;
-        case 'clear':
-          viewSlot.removeAll();
+      case 'update':
+        removeIndex = this.getViewIndexByKey(key);
+        viewSlot.removeAt(removeIndex);
+        row = this.createBaseExecutionKvpContext(key, map.get(key));
+        view = this.viewFactory.create(row);
+        viewSlot.insert(removeIndex, view);
+        break;
+      case 'add':
+        row = this.createBaseExecutionKvpContext(key, map.get(key));
+        view = this.viewFactory.create(row);
+        viewSlot.insert(map.size, view);
+        break;
+      case 'delete':
+        if (!record.oldValue) { return; }
+        removeIndex = this.getViewIndexByKey(key);
+        viewSlot.removeAt(removeIndex);
+        break;
+      case 'clear':
+        viewSlot.removeAll();
+        break;
+      default:
+        continue;
       }
     }
 
@@ -334,13 +389,15 @@ export class Repeat {
     length = children.length;
 
     for (i = 0; i < length; i++) {
-      this.updateExecutionContext(children[i].executionContext, i, length);
+      this.updateBindingContext(children[i].bindingContext, i, length);
     }
   }
 
   getViewIndexByKey(key) {
-    var viewSlot = this.viewSlot,
-      i, ii, child;
+    let viewSlot = this.viewSlot;
+    let i;
+    let ii;
+    let child;
 
     for (i = 0, ii = viewSlot.children.length; i < ii; ++i) { // TODO (martingust) better way to get index?
       child = viewSlot.children[i];
@@ -350,14 +407,15 @@ export class Repeat {
     }
   }
 
-  removeAll(){
-    var viewSlot = this.viewSlot,
-      views, i;
+  removeAll() {
+    let viewSlot = this.viewSlot;
+    let views = viewSlot.children;
+    let i;
 
-    views = viewSlot.children;
     viewSlot.removeAll();
     i = views.length;
-    while(i--) {
+
+    while (i--) {
       views[i].unbind();
     }
   }

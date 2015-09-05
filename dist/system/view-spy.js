@@ -1,15 +1,13 @@
-System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-logging'], function (_export) {
+System.register(['aurelia-templating', 'aurelia-logging'], function (_export) {
   'use strict';
 
-  var customAttribute, inject, LogManager, ViewSpy;
+  var customAttribute, LogManager, ViewSpy;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   return {
     setters: [function (_aureliaTemplating) {
       customAttribute = _aureliaTemplating.customAttribute;
-    }, function (_aureliaDependencyInjection) {
-      inject = _aureliaDependencyInjection.inject;
     }, function (_aureliaLogging) {
       LogManager = _aureliaLogging;
     }],
@@ -22,7 +20,9 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
         }
 
         ViewSpy.prototype.log = function log(lifecycleName, context) {
-          if (!this.value || this.value.indexOf(lifecycleName) !== -1) {
+          if (!this.value && lifecycleName === 'created') {
+            this.logger.info(lifecycleName, this.view);
+          } else if (this.value && this.value.indexOf(lifecycleName) !== -1) {
             this.logger.info(lifecycleName, this.view, context);
           }
         };
