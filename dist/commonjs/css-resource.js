@@ -15,10 +15,14 @@ var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
 var _aureliaPath = require('aurelia-path');
 
-var cssUrlMatcher = /url\(\s*[\'"]?(([^\\\\\'", \(\)]*(\\\\.)?)+)[\'"]?\s*\)/gi;
+var cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
 function fixupCSSUrls(address, css) {
   return css.replace(cssUrlMatcher, function (match, p1) {
+    var quote = p1.charAt(0);
+    if (quote === '\'' || quote === '"') {
+      p1 = p1.substr(1, p1.length - 2);
+    }
     return 'url(\'' + _aureliaPath.relativeToFile(p1, address) + '\')';
   });
 }

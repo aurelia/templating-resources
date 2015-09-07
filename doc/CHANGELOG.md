@@ -1,3 +1,7 @@
+### 0.15.2 (2015-09-07)
+
+* Greatly improved performance of the css url fixup code.
+
 ### 0.15.1 (2015-09-06)
 
 

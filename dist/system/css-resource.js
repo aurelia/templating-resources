@@ -11,6 +11,10 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
 
   function fixupCSSUrls(address, css) {
     return css.replace(cssUrlMatcher, function (match, p1) {
+      var quote = p1.charAt(0);
+      if (quote === '\'' || quote === '"') {
+        p1 = p1.substr(1, p1.length - 2);
+      }
       return 'url(\'' + relativeToFile(p1, address) + '\')';
     });
   }
@@ -47,7 +51,7 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
       relativeToFile = _aureliaPath.relativeToFile;
     }],
     execute: function () {
-      cssUrlMatcher = /url\(\s*[\'"]?(([^\\\\\'", \(\)]*(\\\\.)?)+)[\'"]?\s*\)/gi;
+      cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
       CSSResource = (function () {
         function CSSResource(address) {
