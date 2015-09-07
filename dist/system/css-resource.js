@@ -1,13 +1,19 @@
-System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-injection'], function (_export) {
+System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-injection', 'aurelia-path'], function (_export) {
   'use strict';
 
-  var ViewResources, injectStyles, resource, ViewCompileInstruction, Loader, Container, CSSResource, CSSViewEngineHooks;
+  var ViewResources, injectStyles, resource, ViewCompileInstruction, Loader, Container, relativeToFile, cssUrlMatcher, CSSResource, CSSViewEngineHooks;
 
   _export('_createCSSResource', _createCSSResource);
 
   function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+  function fixupCSSUrls(address, css) {
+    return css.replace(cssUrlMatcher, function (match, p1) {
+      return 'url(\'' + relativeToFile(p1, address) + '\')';
+    });
+  }
 
   function _createCSSResource(address) {
     var ViewCSS = (function (_CSSViewEngineHooks) {
@@ -37,8 +43,12 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
       Loader = _aureliaLoader.Loader;
     }, function (_aureliaDependencyInjection) {
       Container = _aureliaDependencyInjection.Container;
+    }, function (_aureliaPath) {
+      relativeToFile = _aureliaPath.relativeToFile;
     }],
     execute: function () {
+      cssUrlMatcher = /url\(\s*[\'"]?(([^\\\\\'", \(\)]*(\\\\.)?)+)[\'"]?\s*\)/gi;
+
       CSSResource = (function () {
         function CSSResource(address) {
           _classCallCheck(this, CSSResource);
@@ -61,6 +71,7 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
           var _this = this;
 
           return container.get(Loader).loadText(this.address).then(function (text) {
+            text = fixupCSSUrls(_this.address, text);
             _this._global.css = text;
             _this._scoped.css = text;
             return _this;

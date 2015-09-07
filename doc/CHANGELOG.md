@@ -1,3 +1,11 @@
+### 0.15.1 (2015-09-06)
+
+
+#### Bug Fixes
+
+* **css-resource:** ensure that urls in css files are relative to the css file ([f73849a9](http://github.com/aurelia/templating-resources/commit/f73849a91f8921eb8911f45bddb2d955f8423652), closes [#105](http://github.com/aurelia/templating-resources/issues/105))
+
+
 ## 0.15.0 (2015-09-05)
 
 

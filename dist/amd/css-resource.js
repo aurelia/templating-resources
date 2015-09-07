@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-injection'], function (exports, _aureliaTemplating, _aureliaLoader, _aureliaDependencyInjection) {
+define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-injection', 'aurelia-path'], function (exports, _aureliaTemplating, _aureliaLoader, _aureliaDependencyInjection, _aureliaPath) {
   'use strict';
 
   exports.__esModule = true;
@@ -7,6 +7,14 @@ define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-i
   function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+  var cssUrlMatcher = /url\(\s*[\'"]?(([^\\\\\'", \(\)]*(\\\\.)?)+)[\'"]?\s*\)/gi;
+
+  function fixupCSSUrls(address, css) {
+    return css.replace(cssUrlMatcher, function (match, p1) {
+      return 'url(\'' + _aureliaPath.relativeToFile(p1, address) + '\')';
+    });
+  }
 
   var CSSResource = (function () {
     function CSSResource(address) {
@@ -30,6 +38,7 @@ define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-i
       var _this = this;
 
       return container.get(_aureliaLoader.Loader).loadText(this.address).then(function (text) {
+        text = fixupCSSUrls(_this.address, text);
         _this._global.css = text;
         _this._scoped.css = text;
         return _this;

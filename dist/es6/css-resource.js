@@ -2,6 +2,15 @@
 import {ViewResources, injectStyles, resource, ViewCompileInstruction} from 'aurelia-templating';
 import {Loader} from 'aurelia-loader';
 import {Container} from 'aurelia-dependency-injection';
+import {relativeToFile} from 'aurelia-path';
+
+let cssUrlMatcher = /url\(\s*[\'"]?(([^\\\\\'", \(\)]*(\\\\.)?)+)[\'"]?\s*\)/gi;
+
+function fixupCSSUrls(address, css) {
+  return css.replace(cssUrlMatcher, (match, p1) => {
+    return 'url(\'' + relativeToFile(p1, address) + '\')';
+  });
+}
 
 class CSSResource {
   constructor(address: string) {
@@ -21,6 +30,7 @@ class CSSResource {
 
   load(container: Container): Promise<CSSResource> {
     return container.get(Loader).loadText(this.address).then(text => {
+      text = fixupCSSUrls(this.address, text);
       this._global.css = text;
       this._scoped.css = text;
       return this;

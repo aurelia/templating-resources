@@ -13,6 +13,16 @@ var _aureliaLoader = require('aurelia-loader');
 
 var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
+var _aureliaPath = require('aurelia-path');
+
+var cssUrlMatcher = /url\(\s*[\'"]?(([^\\\\\'", \(\)]*(\\\\.)?)+)[\'"]?\s*\)/gi;
+
+function fixupCSSUrls(address, css) {
+  return css.replace(cssUrlMatcher, function (match, p1) {
+    return 'url(\'' + _aureliaPath.relativeToFile(p1, address) + '\')';
+  });
+}
+
 var CSSResource = (function () {
   function CSSResource(address) {
     _classCallCheck(this, CSSResource);
@@ -35,6 +45,7 @@ var CSSResource = (function () {
     var _this = this;
 
     return container.get(_aureliaLoader.Loader).loadText(this.address).then(function (text) {
+      text = fixupCSSUrls(_this.address, text);
       _this._global.css = text;
       _this._scoped.css = text;
       return _this;
