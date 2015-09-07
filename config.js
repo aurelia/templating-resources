@@ -18,6 +18,7 @@ System.config({
     "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.10.0",
     "aurelia-loader": "github:aurelia/loader@0.9.0",
     "aurelia-logging": "github:aurelia/logging@0.7.0",
+    "aurelia-path": "github:aurelia/path@0.9.0",
     "aurelia-task-queue": "github:aurelia/task-queue@0.7.0",
     "aurelia-templating": "github:aurelia/templating@0.15.0",
     "babel": "npm:babel-core@5.2.2",
