@@ -9,8 +9,9 @@ let cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 function fixupCSSUrls(address, css) {
   return css.replace(cssUrlMatcher, (match, p1) => {
     let quote = p1.charAt(0);
-    if(quote == '\'' || quote == '"')
-        p1 = p1.substr(1, p1.length - 2);
+    if (quote === '\'' || quote === '"') {
+      p1 = p1.substr(1, p1.length - 2);
+    }
     return 'url(\'' + relativeToFile(p1, address) + '\')';
   });
 }
