@@ -4,10 +4,13 @@ import {Loader} from 'aurelia-loader';
 import {Container} from 'aurelia-dependency-injection';
 import {relativeToFile} from 'aurelia-path';
 
-let cssUrlMatcher = /url\(\s*[\'"]?(([^\\\\\'", \(\)]*(\\\\.)?)+)[\'"]?\s*\)/gi;
+let cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
 function fixupCSSUrls(address, css) {
   return css.replace(cssUrlMatcher, (match, p1) => {
+    let quote = p1.charAt(0);
+    if(quote == '\'' || quote == '"')
+        p1 = p1.substr(1, p1.length - 2);
     return 'url(\'' + relativeToFile(p1, address) + '\')';
   });
 }
