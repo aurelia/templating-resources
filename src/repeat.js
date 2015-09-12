@@ -52,24 +52,21 @@ export class Repeat {
     if (this.oldItems === items) {
       if (items instanceof Map) {
         let records = getChangeRecords(items);
-        observer = this.observerLocator.getMapObserver(items);
+        this.collectionObserver = this.observerLocator.getMapObserver(items);
 
         this.handleMapChangeRecords(items, records);
 
-        this.disposeSubscription = observer.subscribe(r => {
-          this.handleMapChangeRecords(items, r);
-        });
+        this.collectionChanged = r => this.handleMapChangeRecords(items, r);
+        this.collectionObserver.subscribe(this.collectionChanged);
       } else {
         let splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
-        observer = this.observerLocator.getArrayObserver(items);
+        this.collectionObserver = this.observerLocator.getArrayObserver(items);
 
         this.handleSplices(items, splices);
         this.lastBoundItems = this.oldItems = null;
 
-        this.disposeSubscription = observer.subscribe(s => {
-          this.handleSplices(items, s);
-        });
-
+        this.collectionChanged = s => this.handleSplices(items, s);
+        this.collectionObserver.subscribe(this.collectionChanged);
         return;
       }
     } else if (this.oldItems) {
@@ -86,9 +83,14 @@ export class Repeat {
       this.lastBoundItems = this.items.slice(0);
     }
 
-    if (this.disposeSubscription) {
-      this.disposeSubscription();
-      this.disposeSubscription = null;
+    this.unsubscribeCollection();
+  }
+
+  unsubscribeCollection() {
+    if (this.collectionObserver) {
+      this.collectionObserver.unsubscribe(this.collectionChanged);
+      this.collectionObserver = null;
+      this.collectionChanged = null;
     }
   }
 
@@ -99,8 +101,8 @@ export class Repeat {
   processItems() {
     let items = this.items;
 
-    if (this.disposeSubscription) {
-      this.disposeSubscription();
+    if (this.collectionObserver) {
+      this.unsubscribeCollection();
       this.removeAll();
     }
 
@@ -128,7 +130,7 @@ export class Repeat {
     let view;
     let observer;
 
-    observer = this.observerLocator.getArrayObserver(items);
+    this.collectionObserver = this.observerLocator.getArrayObserver(items);
 
     for (i = 0, ii = items.length; i < ii; ++i) {
       row = this.createFullBindingContext(items[i], i, ii);
@@ -136,9 +138,8 @@ export class Repeat {
       viewSlot.add(view);
     }
 
-    this.disposeSubscription = observer.subscribe(splices => {
-      this.handleSplices(items, splices);
-    });
+    this.collectionChanged = splices => this.handleSplices(items, splices);
+    this.collectionObserver.subscribe(this.collectionChanged);
   }
 
   processMapEntries(items) {
@@ -149,7 +150,7 @@ export class Repeat {
     let view;
     let observer;
 
-    observer = this.observerLocator.getMapObserver(items);
+    this.collectionObserver = this.observerLocator.getMapObserver(items);
 
     items.forEach((value, key) => {
       row = this.createFullExecutionKvpContext(key, value, index, items.size);
@@ -158,9 +159,8 @@ export class Repeat {
       ++index;
     });
 
-    this.disposeSubscription = observer.subscribe(record => {
-      this.handleMapChangeRecords(items, record);
-    });
+    this.collectionChanged = record => this.handleMapChangeRecords(items, record);
+    this.collectionObserver.subscribe(this.collectionChanged);
   }
 
   processNumber(value) {

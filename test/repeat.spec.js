@@ -53,18 +53,17 @@ describe('repeat', () => {
   });
 
   describe('itemsChanged', () => {
-    it('should call disposeSubscription when has disposeSubscription', () => {
-      let disposeSubscription = () => {};
-      repeat.disposeSubscription = disposeSubscription;
-      spyOn(repeat, 'disposeSubscription');
+    it('should call unsubscribeCollection when has collectionObserver', () => {
+      repeat.collectionObserver = {};
+      spyOn(repeat, 'unsubscribeCollection');
 
       repeat.itemsChanged();
 
-      expect(repeat.disposeSubscription).toHaveBeenCalled();
+      expect(repeat.unsubscribeCollection).toHaveBeenCalled();
     });
 
-    it('should remove all and unbind all view when has disposeSubscription', () => {
-      repeat.disposeSubscription = () => {};
+    it('should remove all and unbind all view when has collectionObserver', () => {
+      repeat.collectionObserver = { unsubscribe: callback => {} };
       let view1 = new ViewMock();
       let view2 = new ViewMock();
       viewSlot.children = [view1, view2];
