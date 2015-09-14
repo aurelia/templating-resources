@@ -35,6 +35,10 @@ export class Repeat {
     this.value = 'value';
   }
 
+  call(context, changes) {
+    this[context](this.items, changes);
+  }
+
   bind(bindingContext) {
     let items = this.items;
     let observer;
@@ -56,8 +60,8 @@ export class Repeat {
 
         this.handleMapChangeRecords(items, records);
 
-        this.collectionChanged = r => this.handleMapChangeRecords(items, r);
-        this.collectionObserver.subscribe(this.collectionChanged);
+        this.callContext = 'handleMapChangeRecords';
+        this.collectionObserver.subscribe(this.callContext, this);
       } else {
         let splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
         this.collectionObserver = this.observerLocator.getArrayObserver(items);
@@ -65,8 +69,8 @@ export class Repeat {
         this.handleSplices(items, splices);
         this.lastBoundItems = this.oldItems = null;
 
-        this.collectionChanged = s => this.handleSplices(items, s);
-        this.collectionObserver.subscribe(this.collectionChanged);
+        this.callContext = 'handleSplices';
+        this.collectionObserver.subscribe(this.callContext, this);
         return;
       }
     } else if (this.oldItems) {
@@ -88,9 +92,9 @@ export class Repeat {
 
   unsubscribeCollection() {
     if (this.collectionObserver) {
-      this.collectionObserver.unsubscribe(this.collectionChanged);
+      this.collectionObserver.unsubscribe(this.callContext, this);
       this.collectionObserver = null;
-      this.collectionChanged = null;
+      this.callContext = null;
     }
   }
 
@@ -138,8 +142,8 @@ export class Repeat {
       viewSlot.add(view);
     }
 
-    this.collectionChanged = splices => this.handleSplices(items, splices);
-    this.collectionObserver.subscribe(this.collectionChanged);
+    this.callContext = 'handleSplices';
+    this.collectionObserver.subscribe(this.callContext, this);
   }
 
   processMapEntries(items) {
@@ -159,8 +163,8 @@ export class Repeat {
       ++index;
     });
 
-    this.collectionChanged = record => this.handleMapChangeRecords(items, record);
-    this.collectionObserver.subscribe(this.collectionChanged);
+    this.callContext = 'handleMapChangeRecords';
+    this.collectionObserver.subscribe(this.callContext, this);
   }
 
   processNumber(value) {
