@@ -62,7 +62,7 @@ export class Repeat {
 
         this.callContext = 'handleMapChangeRecords';
         this.collectionObserver.subscribe(this.callContext, this);
-      } else {
+      } else if (items instanceof Array) {
         let splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
         this.collectionObserver = this.observerLocator.getArrayObserver(items);
 
@@ -71,8 +71,8 @@ export class Repeat {
 
         this.callContext = 'handleSplices';
         this.collectionObserver.subscribe(this.callContext, this);
-        return;
       }
+      return;
     } else if (this.oldItems) {
       this.removeAll();
     }

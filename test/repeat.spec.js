@@ -50,6 +50,13 @@ describe('repeat', () => {
       expect(view1.unbind).toHaveBeenCalled();
       expect(view2.unbind).toHaveBeenCalled();
     });
+
+    it('should do nothing when bound with items is of type Number and items equal old items', () => {
+      repeat.items = 5;
+      repeat.oldItems = 5;
+
+      repeat.bind();
+    });
   });
 
   describe('itemsChanged', () => {
