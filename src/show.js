@@ -1,5 +1,5 @@
 import {inject} from 'aurelia-dependency-injection';
-import {customAttribute, injectStyles, hasShadowDOM} from 'aurelia-templating';
+import {customAttribute, injectStyles, hasShadowDOM, Animator} from 'aurelia-templating';
 
 if (hasShadowDOM) {
   injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
@@ -16,17 +16,18 @@ if (hasShadowDOM) {
 * @param {Element} element The element that the to bind to
 */
 @customAttribute('show')
-@inject(Element)
+@inject(Element, Animator)
 export class Show {
-  constructor(element) {
+  constructor(element, animator) {
     this.element = element;
+    this.animator = animator;
   }
 
   valueChanged(newValue) {
     if (newValue) {
-      this.element.classList.remove('aurelia-hide');
+      this.animator.removeClass(this.element, 'aurelia-hide');
     } else {
-      this.element.classList.add('aurelia-hide');
+      this.animator.addClass(this.element, 'aurelia-hide');
     }
   }
 
