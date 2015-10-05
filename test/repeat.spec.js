@@ -28,7 +28,7 @@ describe('repeat', () => {
       spyOn(view2, 'unbind');
     });
 
-    it('should remove and unbind all old views if it has old items and provided with new items', () => {
+    it('should remove all old views if it has old items and provided with new items', () => {
       repeat.itemsChanged = () => {};
       repeat.items = ['1', '2'];
       repeat.oldItems = ['a', 'b'];
@@ -36,19 +36,15 @@ describe('repeat', () => {
       repeat.bind();
 
       expect(viewSlot.removeAll).toHaveBeenCalled();
-      expect(view1.unbind).toHaveBeenCalled();
-      expect(view2.unbind).toHaveBeenCalled();
     });
 
-    it('should remove and unbind all old views if it has old items and no new items', () => {
+    it('should remove all old views if it has old items and no new items', () => {
       repeat.items = undefined;
       repeat.oldItems = ['a', 'b'];
 
       repeat.bind();
 
       expect(viewSlot.removeAll).toHaveBeenCalled();
-      expect(view1.unbind).toHaveBeenCalled();
-      expect(view2.unbind).toHaveBeenCalled();
     });
 
     it('should do nothing when bound with items is of type Number and items equal old items', () => {
@@ -69,20 +65,16 @@ describe('repeat', () => {
       expect(repeat.unsubscribeCollection).toHaveBeenCalled();
     });
 
-    it('should remove all and unbind all view when has collectionObserver', () => {
+    it('should remove all views when has collectionObserver', () => {
       repeat.collectionObserver = { unsubscribe: callback => {} };
       let view1 = new ViewMock();
       let view2 = new ViewMock();
       viewSlot.children = [view1, view2];
       spyOn(viewSlot, 'removeAll');
-      spyOn(view1, 'unbind');
-      spyOn(view2, 'unbind');
 
       repeat.itemsChanged();
 
       expect(viewSlot.removeAll).toHaveBeenCalled();
-      expect(view1.unbind).toHaveBeenCalled();
-      expect(view2.unbind).toHaveBeenCalled();
     });
   });
 
@@ -103,46 +95,6 @@ describe('repeat', () => {
       spyOn(viewFactory, 'create').and.callFake(() => {});
     });
 
-    it('should preserve full view lifecycle when re-using views', () => {
-      items = ['Bar', 'Foo', 'Baz'];
-      splices = [{
-        addedCount: 2,
-        index: 1,
-        removed: ['qux']
-      }];
-      spyOn(view2, 'detached');
-      spyOn(view2, 'bind');
-      spyOn(view2, 'attached');
-
-      repeat.handleSplices(items, splices);
-
-      expect(view2.detached).toHaveBeenCalled();
-      expect(view2.bind).toHaveBeenCalled();
-      expect(view2.attached).toHaveBeenCalled();
-    });
-
-    it('should update binding context when re-using views', () => {
-      items = ['Bar', 'Foo', 'Baz'];
-      splices = [{
-        addedCount: 2,
-        index: 1,
-        removed: ['qux']
-      }];
-      spyOn(view2, 'bind');
-
-      repeat.handleSplices(items, splices);
-
-      let context = { item: 'Foo',
-        $parent: undefined,
-        $index: 1,
-        $first: false,
-        $last: false,
-        $middle: true,
-        $odd: true,
-        $even: false };
-      expect(view2.bind).toHaveBeenCalledWith(context);
-    });
-
     it('should update binding context after views are unbinded', () => {
       splices = [{
         addedCount: 0,
@@ -158,12 +110,14 @@ describe('repeat', () => {
     });
 
     it('should update binding context after views are animated and unbinded', done => {
+      let rmPromises = [];
       let view = new ViewMock();
       let removeAction = () => {
         viewSlot.children.splice(1, 1);
         return view;
       };
       let animationPromise = new Promise(resolve => { resolve() }).then(() => removeAction());
+      rmPromises.push(animationPromise);
       splices = [{
         addedCount: 0,
         index: 1,
@@ -171,12 +125,10 @@ describe('repeat', () => {
       }];
 
       spyOn(viewSlot, 'removeAt').and.callFake(() => { return animationPromise });
-      spyOn(view, 'unbind');
 
       repeat.handleSplices(items, splices);
 
-      animationPromise.then(() => {
-        expect(view.unbind).toHaveBeenCalled();
+      Promise.all(rmPromises).then(() => {
         expect(viewSlot.children.length).toBe(2);
 
         expect(viewSlot.children[0].bindingContext.$index).toBe(0);
@@ -187,6 +139,114 @@ describe('repeat', () => {
         done();
       });
     });
+
+    it('should correctly handle adding item (i.e Array.prototype.push())', () => {
+      repeat = new Repeat(new ViewFactoryMock(), viewSlot, new ObserverLocator());
+      splices = [{
+        addedCount: 1,
+        index: 3,
+        removed: []
+      }];
+      items = ['foo', 'qux', 'bar', 'norf'];
+      spyOn(viewSlot, 'removeAt').and.callFake(() => { return new ViewMock();});
+      repeat.handleSplices(items, splices);
+
+      expect(viewSlot.children.length).toBe(4);
+      expect(viewSlot.children[3].bindingContext.item).toBe('norf');
+      expect(viewSlot.children[3].bindingContext.$index).toBe(3);
+      expect(viewSlot.children[3].bindingContext.$first).toBe(false);
+      expect(viewSlot.children[3].bindingContext.$last).toBe(true);
+    });
+
+    it('should correctly handle adding and removing (i.e Array.prototype.splice())', () => {
+      let view4 = new ViewMock();
+      view4.bindingContext = { item: 'norf' };
+      let viewSlotMock = new ViewSlotMock();
+      viewSlotMock.children = [view1, view2, view3, view4];
+      repeat = new Repeat(new ViewFactoryMock(), viewSlotMock, new ObserverLocator());
+
+      splices = [{
+        addedCount: 1,
+        index: 0,
+        removed: ['foo', 'qux', 'bar']
+      }];
+      items = ['bar_updated', 'norf'];
+      repeat.handleSplices(items, splices);
+
+      expect(viewSlotMock.children.length).toBe(2);
+      expect(viewSlotMock.children[0].bindingContext.item).toBe('bar_updated');
+      expect(viewSlotMock.children[1].bindingContext.item).toBe('norf');
+    });
+
+    it('should correctly handle multiple splices adding and removing (i.e Array.prototype.reverse())', () => {
+      let view4 = new ViewMock();
+      view4.bindingContext = { item: 'norf' };
+      let viewSlotMock = new ViewSlotMock();
+      viewSlotMock.children = [view1, view2, view3, view4];
+      repeat = new Repeat(new ViewFactoryMock(), viewSlotMock, new ObserverLocator());
+
+      splices = [{
+        addedCount: 2,
+        index: 0,
+        removed: ['foo']
+      },{
+        addedCount: 1,
+        index: 3,
+        removed: ['bar', 'norf']
+      }];
+      items = ['norf', 'bar', 'qux', 'foo'];
+      repeat.handleSplices(items, splices);
+
+      expect(viewSlotMock.children.length).toBe(4);
+      expect(viewSlotMock.children[0].bindingContext.item).toBe('norf');
+      expect(viewSlotMock.children[1].bindingContext.item).toBe('bar');
+      expect(viewSlotMock.children[2].bindingContext.item).toBe('qux');
+      expect(viewSlotMock.children[3].bindingContext.item).toBe('foo');
+
+      expect(viewSlotMock.children[0].bindingContext.$index).toBe(0);
+      expect(viewSlotMock.children[1].bindingContext.$index).toBe(1);
+      expect(viewSlotMock.children[2].bindingContext.$index).toBe(2);
+      expect(viewSlotMock.children[3].bindingContext.$index).toBe(3);
+    });
+
+    it('moving animated item', done => {
+      let viewSlotMock = new ViewSlotMock();
+      viewSlotMock.children = [view1, view2, view3];
+      repeat = new Repeat(new ViewFactoryMock(), viewSlotMock, new ObserverLocator());
+      let removeAction = () => {
+        viewSlot.children.splice(2, 1);
+        return view2;
+      };
+      let animationPromise = new Promise(resolve => { resolve() }).then(() => removeAction());
+      splices = [{
+        addedCount: 1,
+        index: 0,
+        removed: []
+      },{
+        addedCount: 0,
+        index: 2,
+        removed: ['qux']
+      }];
+
+      spyOn(viewSlot, 'removeAt').and.callFake(() => { return animationPromise });
+      items = ['qux', 'foo', 'bar'];
+
+      repeat.handleSplices(items, splices);
+
+      animationPromise.then(() => {
+        expect(viewSlotMock.children.length).toBe(3);
+        expect(viewSlotMock.children[0].bindingContext.item).toBe('qux');
+        expect(viewSlotMock.children[1].bindingContext.item).toBe('foo');
+        expect(viewSlotMock.children[2].bindingContext.item).toBe('bar');
+
+        expect(viewSlotMock.children[0].bindingContext.$index).toBe(0);
+        expect(viewSlotMock.children[1].bindingContext.$index).toBe(1);
+        expect(viewSlotMock.children[2].bindingContext.$index).toBe(2);
+
+        done();
+      });
+    });
+
   });
   describe('processNumber', () => {
     beforeEach(() => {
@@ -265,7 +325,9 @@ class ViewSlotMock {
   add(view){
     this.children.push(view);
   }
-  insert(){}
+  insert(index, view){
+    this.children.splice(index, 0, view);
+  }
   removeAt(index){
     if(index < 0) {
       throw "negative index";
@@ -279,6 +341,7 @@ class ViewMock {
   attached(){}
   detached(){}
   unbind(){}
+  returnToCache(){}
 }
 
 class BoundViewFactoryMock {

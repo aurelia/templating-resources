@@ -41,13 +41,14 @@ export class Repeat {
 
   bind(bindingContext) {
     let items = this.items;
+    let viewSlot = this.viewSlot;
     let observer;
 
     this.bindingContext = bindingContext;
 
     if (!items) {
       if (this.oldItems) {
-        this.removeAll();
+        viewSlot.removeAll(true);
       }
 
       return;
@@ -74,7 +75,7 @@ export class Repeat {
       }
       return;
     } else if (this.oldItems) {
-      this.removeAll();
+      viewSlot.removeAll(true);
     }
 
     this.processItems();
@@ -104,16 +105,28 @@ export class Repeat {
 
   processItems() {
     let items = this.items;
+    let rmPromise;
 
     if (this.collectionObserver) {
       this.unsubscribeCollection();
-      this.removeAll();
+      rmPromise = this.viewSlot.removeAll(true);
     }
 
     if (!items && items !== 0) {
       return;
     }
 
+    if(rmPromise instanceof Promise){
+      rmPromise.then(() => {
+        this.processItemsByType();
+      });
+    } else {
+      this.processItemsByType();
+    }
+  }
+
+  processItemsByType() {
+    let items = this.items;
     if (items instanceof Array) {
       this.processArrayItems(items);
     } else if (items instanceof Map) {
@@ -186,7 +199,7 @@ export class Repeat {
       }
 
       for (i = 0, ii = viewsToRemove; i < ii; ++i) {
-        viewSlot.removeAt(childrenLength - (i + 1));
+        viewSlot.removeAt(childrenLength - (i + 1), true);
       }
 
       return;
@@ -239,102 +252,6 @@ export class Repeat {
     return context;
   }
 
-  handleSplices(array, splices) {
-    let viewLookup = new Map();
-    let viewSlot = this.viewSlot;
-    let spliceIndexLow;
-    let viewOrPromise;
-    let view;
-    let i;
-    let ii;
-    let j;
-    let jj;
-    let row;
-    let splice;
-    let addIndex;
-    let itemsLeftToAdd;
-    let removed;
-    let model;
-    let context;
-    let spliceIndex;
-    let viewsToUnbind;
-    let end;
-
-    for (i = 0, ii = splices.length; i < ii; ++i) {
-      splice = splices[i];
-      addIndex = spliceIndex = splice.index;
-      itemsLeftToAdd = splice.addedCount;
-      end = splice.index + splice.addedCount;
-      removed = splice.removed;
-      if (typeof spliceIndexLow === 'undefined' || spliceIndexLow === null || spliceIndexLow > splice.index) {
-        spliceIndexLow = spliceIndex;
-      }
-
-      for (j = 0, jj = removed.length; j < jj; ++j) {
-        if (itemsLeftToAdd > 0) {
-          view = viewSlot.children[spliceIndex + j];
-          view.detached();
-          context = this.createFullBindingContext(array[addIndex + j], spliceIndex + j, array.length);
-          view.bind(context);
-          view.attached();
-          --itemsLeftToAdd;
-        } else {
-          viewOrPromise = viewSlot.removeAt(addIndex + splice.addedCount);
-          if (viewOrPromise) {
-            viewLookup.set(removed[j], viewOrPromise);
-          }
-        }
-      }
-
-      addIndex += removed.length;
-
-      for (; itemsLeftToAdd > 0; ++addIndex) {
-        model = array[addIndex];
-        viewOrPromise = viewLookup.get(model);
-        if (viewOrPromise instanceof Promise) {
-          ((localAddIndex, localModel) => {
-            viewOrPromise.then(v => {
-              viewLookup.delete(localModel);
-              viewSlot.insert(localAddIndex, v);
-            });
-          })(addIndex, model);
-        } else if (viewOrPromise) {
-          viewLookup.delete(model);
-          viewSlot.insert(addIndex, viewOrPromise);
-        } else {
-          row = this.createBaseBindingContext(model);
-          view = this.viewFactory.create(row);
-          viewSlot.insert(addIndex, view);
-        }
-        --itemsLeftToAdd;
-      }
-    }
-
-    viewsToUnbind = viewLookup.size;
-
-    if (viewsToUnbind === 0) {
-      this.updateBindingContexts(spliceIndexLow);
-    }
-
-    viewLookup.forEach(x => {
-      if (x instanceof Promise) {
-        x.then(y => {
-          y.unbind();
-          viewsToUnbind--;
-          if (viewsToUnbind === 0) {
-            this.updateBindingContexts(spliceIndexLow);
-          }
-        });
-      } else {
-        x.unbind();
-        viewsToUnbind--;
-        if (viewsToUnbind === 0) {
-          this.updateBindingContexts(spliceIndexLow);
-        }
-      }
-    });
-  }
-
   updateBindingContexts(startIndex) {
     let children = this.viewSlot.children;
     let length = children.length;
@@ -346,6 +263,57 @@ export class Repeat {
     for (; startIndex < length; ++startIndex) {
       this.updateBindingContext(children[startIndex].bindingContext, startIndex, length);
     }
+  }
+
+  handleSplices(array, splices){
+    let removeDelta = 0;
+    let viewSlot = this.viewSlot;
+    let rmPromises = [];
+
+    for (let i = 0, ii = splices.length; i < ii; ++i) {
+      let splice = splices[i];
+      let removed = splice.removed;
+
+      for (let j = 0, jj = removed.length; j < jj; ++j) {
+        let viewOrPromise = viewSlot.removeAt(splice.index + removeDelta + rmPromises.length, true);
+        if(viewOrPromise instanceof Promise) {
+          rmPromises.push(viewOrPromise);
+        }
+      }
+      removeDelta -= splice.addedCount;
+    }
+
+    if(rmPromises.length > 0){
+      Promise.all(rmPromises).then(() => {
+        let spliceIndexLow = this.handleAddedSplices(array, splices);
+        this.updateBindingContexts(spliceIndexLow);
+      });
+    }else{
+      let spliceIndexLow = this.handleAddedSplices(array, splices);
+      this.updateBindingContexts(spliceIndexLow);
+    }
+  }
+
+  handleAddedSplices(array, splices){
+    let spliceIndex;
+    let spliceIndexLow;
+    for (let i = 0, ii = splices.length; i < ii; ++i) {
+      let splice = splices[i];
+      let addIndex = spliceIndex = splice.index;
+      let end = splice.index + splice.addedCount;
+
+      if (typeof spliceIndexLow === 'undefined' || spliceIndexLow === null || spliceIndexLow > splice.index) {
+        spliceIndexLow = spliceIndex;
+      }
+
+      for (; addIndex < end; ++addIndex) {
+        let row = this.createBaseBindingContext(array[addIndex]);
+        let view = this.viewFactory.create(row);
+        this.viewSlot.insert(addIndex, view);
+      }
+    }
+
+    return spliceIndexLow;
   }
 
   handleMapChangeRecords(map, records) {
@@ -366,7 +334,7 @@ export class Repeat {
       switch (record.type) {
       case 'update':
         removeIndex = this.getViewIndexByKey(key);
-        viewSlot.removeAt(removeIndex);
+        viewSlot.removeAt(removeIndex, true);
         row = this.createBaseExecutionKvpContext(key, map.get(key));
         view = this.viewFactory.create(row);
         viewSlot.insert(removeIndex, view);
@@ -379,10 +347,10 @@ export class Repeat {
       case 'delete':
         if (!record.oldValue) { return; }
         removeIndex = this.getViewIndexByKey(key);
-        viewSlot.removeAt(removeIndex);
+        viewSlot.removeAt(removeIndex, true);
         break;
       case 'clear':
-        viewSlot.removeAll();
+        viewSlot.removeAll(true);
         break;
       default:
         continue;
@@ -408,19 +376,6 @@ export class Repeat {
       if (child.bindings[0].source[this.key] === key) {
         return i;
       }
-    }
-  }
-
-  removeAll() {
-    let viewSlot = this.viewSlot;
-    let views = viewSlot.children;
-    let i;
-
-    viewSlot.removeAll();
-    i = views.length;
-
-    while (i--) {
-      views[i].unbind();
     }
   }
 }
