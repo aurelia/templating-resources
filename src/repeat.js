@@ -116,7 +116,7 @@ export class Repeat {
       return;
     }
 
-    if(rmPromise instanceof Promise){
+    if (rmPromise instanceof Promise) {
       rmPromise.then(() => {
         this.processItemsByType();
       });
@@ -265,7 +265,7 @@ export class Repeat {
     }
   }
 
-  handleSplices(array, splices){
+  handleSplices(array, splices) {
     let removeDelta = 0;
     let viewSlot = this.viewSlot;
     let rmPromises = [];
@@ -276,25 +276,25 @@ export class Repeat {
 
       for (let j = 0, jj = removed.length; j < jj; ++j) {
         let viewOrPromise = viewSlot.removeAt(splice.index + removeDelta + rmPromises.length, true);
-        if(viewOrPromise instanceof Promise) {
+        if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
       }
       removeDelta -= splice.addedCount;
     }
 
-    if(rmPromises.length > 0){
+    if (rmPromises.length > 0) {
       Promise.all(rmPromises).then(() => {
         let spliceIndexLow = this.handleAddedSplices(array, splices);
         this.updateBindingContexts(spliceIndexLow);
       });
-    }else{
+    } else {
       let spliceIndexLow = this.handleAddedSplices(array, splices);
       this.updateBindingContexts(spliceIndexLow);
     }
   }
 
-  handleAddedSplices(array, splices){
+  handleAddedSplices(array, splices) {
     let spliceIndex;
     let spliceIndexLow;
     for (let i = 0, ii = splices.length; i < ii; ++i) {
