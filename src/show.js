@@ -1,10 +1,11 @@
 import {inject} from 'aurelia-dependency-injection';
-import {customAttribute, injectStyles, hasShadowDOM, Animator} from 'aurelia-templating';
+import {customAttribute, Animator} from 'aurelia-templating';
+import {FEATURE, DOM} from 'aurelia-pal';
 
-if (hasShadowDOM) {
-  injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
+if (FEATURE.shadowDOM) {
+  DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
 } else {
-  injectStyles('.aurelia-hide { display:none !important; }');
+  DOM.injectStyles('.aurelia-hide { display:none !important; }');
 }
 
 /**
