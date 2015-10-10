@@ -4,6 +4,7 @@ import {
   CompositionEngine, ViewSlot, ViewResources,
   customElement, bindable, noView
 } from 'aurelia-templating';
+import {DOM} from 'aurelia-pal';
 
 /**
 * Used to compose a new view / view-model template or bind to an existing instance
@@ -17,7 +18,7 @@ import {
 */
 @customElement('compose')
 @noView
-@inject(Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue)
+@inject(DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue)
 export class Compose {
   /**
   * Model to bind the custom element to

@@ -2,9 +2,10 @@
 import {bindingMode} from 'aurelia-binding';
 import {inject} from 'aurelia-dependency-injection';
 import {TaskQueue} from 'aurelia-task-queue';
+import {DOM} from 'aurelia-pal';
 
 @customAttribute('focus', bindingMode.twoWay)
-@inject(Element, TaskQueue)
+@inject(DOM.Element, TaskQueue)
 export class Focus {
   constructor(element, taskQueue) {
     this.element = element;
@@ -14,7 +15,7 @@ export class Focus {
       this.value = true;
     };
     this.blurListener = e => {
-      if (document.activeElement !== this.element) {
+      if (DOM.activeElement !== this.element) {
         this.value = false;
       }
     };

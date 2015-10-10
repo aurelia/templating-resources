@@ -1,22 +1,13 @@
 import {inject} from 'aurelia-dependency-injection';
-import {customAttribute, injectStyles, hasShadowDOM, Animator} from 'aurelia-templating';
-
-if (hasShadowDOM) {
-  injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
-} else {
-  injectStyles('.aurelia-hide { display:none !important; }');
-}
+import {customAttribute, Animator} from 'aurelia-templating';
+import {DOM} from 'aurelia-pal';
 
 /**
 * Binding to conditionally show markup in the DOM based on the value.
-* - different from if in that the markup is still added to the DOM, simply not shown
-*
-* @class Show
-* @constructor
-* @param {Element} element The element that the to bind to
+* - different from "if" in that the markup is still added to the DOM, simply not shown.
 */
 @customAttribute('show')
-@inject(Element, Animator)
+@inject(DOM.Element, Animator)
 export class Show {
   constructor(element, animator) {
     this.element = element;

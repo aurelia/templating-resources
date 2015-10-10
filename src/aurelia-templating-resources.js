@@ -12,8 +12,15 @@ import {ViewSpy} from './view-spy';
 import {ViewEngine} from 'aurelia-templating';
 import {_createDynamicElement} from './dynamic-element';
 import {_createCSSResource} from './css-resource';
+import {FEATURE, DOM} from 'aurelia-pal';
 
 function configure(config) {
+  if (FEATURE.shadowDOM) {
+    DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
+  } else {
+    DOM.injectStyles('.aurelia-hide { display:none !important; }');
+  }
+
   config.globalResources(
     './compose',
     './if',

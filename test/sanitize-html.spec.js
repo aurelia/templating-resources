@@ -1,10 +1,10 @@
-import {SanitizeHtmlValueConverter} from '../src/sanitize-html';
+import {SanitizeHtmlValueConverter, HTMLSanitizer} from '../src/sanitize-html';
 
 describe('SanitizeHtmlValueConverter', () => {
   var converter;
 
   beforeEach(() => {
-    converter = new SanitizeHtmlValueConverter();
+    converter = new SanitizeHtmlValueConverter(new HTMLSanitizer());
   });
 
   it('defaultSanitizer should remove script tags', () => {
@@ -23,14 +23,9 @@ describe('SanitizeHtmlValueConverter', () => {
     expect(converter.toView(e)).toBe('foo bar');
   });
 
-  it('sanitizer should be the defaultSanitizer', () => {
-    expect(converter.sanitizer).toBe(SanitizeHtmlValueConverter.defaultSanitizer);
-  });
-
   it('custom sanitizers can be used', () => {
-    var mockSanitizer = jasmine.createSpy('sanitizer spy');
-    converter.sanitizer = mockSanitizer;
+    spyOn(converter.sanitizer, 'sanitize');
     converter.toView('test');
-    expect(mockSanitizer).toHaveBeenCalledWith('test');
+    expect(converter.sanitizer.sanitize).toHaveBeenCalledWith('test');
   });
 });

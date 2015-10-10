@@ -1,14 +1,15 @@
 import {inject} from 'aurelia-dependency-injection';
 import {customAttribute, dynamicOptions} from 'aurelia-templating';
-import {AggregateError} from 'aurelia-logging';
 import * as LogManager from 'aurelia-logging';
+import {PLATFORM, DOM, AggregateError} from 'aurelia-pal';
 
 @customAttribute('global-behavior')
 @dynamicOptions
-@inject(Element)
+@inject(DOM.Element)
 export class GlobalBehavior {
   constructor(element) {
     this.element = element;
+    LogManager.getLogger('templating-resources').warn('The "GlobalBehavior" behavior will be removed in the next release.');
   }
 
   bind() {
@@ -67,7 +68,7 @@ GlobalBehavior.handlers = {
     bind(behavior, element, command) {
       let settings = GlobalBehavior.createSettingsFromBehavior(behavior);
       let pluginName = GlobalBehavior.jQueryPlugins[command] || command;
-      let jqueryElement = window.jQuery(element);
+      let jqueryElement = PLATFORM.global.jQuery(element);
 
       if (!jqueryElement[pluginName]) {
         LogManager.getLogger('templating-resources')
