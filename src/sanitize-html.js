@@ -1,20 +1,10 @@
 import {valueConverter} from 'aurelia-binding';
 import {inject} from 'aurelia-dependency-injection';
+import {HTMLSanitizer} from './html-sanitizer';
 
-const SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
-
-export class HTMLSanitizer {
-  sanitize(input) {
-    return input.replace(SCRIPT_REGEX, '');
-  }
-}
-
-/**
-* Default Html Sanitizer to prevent script injection
-*/
-@valueConverter('sanitizeHtml')
+@valueConverter('sanitizeHTML')
 @inject(HTMLSanitizer)
-export class SanitizeHtmlValueConverter {
+export class SanitizeHTMLValueConverter {
   constructor(sanitizer) {
     this.sanitizer = sanitizer;
   }

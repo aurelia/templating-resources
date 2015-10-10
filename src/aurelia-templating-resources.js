@@ -13,6 +13,7 @@ import {ViewEngine} from 'aurelia-templating';
 import {_createDynamicElement} from './dynamic-element';
 import {_createCSSResource} from './css-resource';
 import {FEATURE, DOM} from 'aurelia-pal';
+import {HTMLSanitizer} from './html-sanitizer';
 
 function configure(config) {
   if (FEATURE.shadowDOM) {
@@ -74,7 +75,8 @@ export {
   With,
   Repeat,
   Show,
-  SanitizeHtmlValueConverter,
+  HTMLSanitizer,
+  SanitizeHTMLValueConverter,
   GlobalBehavior,
   Replaceable,
   Focus,
