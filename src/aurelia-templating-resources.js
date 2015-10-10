@@ -4,7 +4,7 @@ import {With} from './with';
 import {Repeat} from './repeat';
 import {Show} from './show';
 import {GlobalBehavior} from './global-behavior';
-import {SanitizeHtmlValueConverter} from './sanitize-html';
+import {SanitizeHTMLValueConverter} from './sanitize-html';
 import {Replaceable} from './replaceable';
 import {Focus} from './focus';
 import {CompileSpy} from './compile-spy';
