@@ -6,6 +6,15 @@ import {BoundViewFactory, ViewSlot, customAttribute, templateController} from 'a
 @inject(BoundViewFactory, ViewSlot)
 export class Replaceable {
   constructor(viewFactory, viewSlot) {
-    viewSlot.add(viewFactory.create());
+    this.viewFactory = viewFactory;
+    this.viewSlot = viewSlot;
+    this.needsReplacement = true;
+  }
+
+  bind() {
+    if(this.needsReplacement) {
+      this.needsReplacement = false;
+      this.viewSlot.add(this.viewFactory.create());
+    }
   }
 }
