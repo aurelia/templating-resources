@@ -1,3 +1,144 @@
+## 0.16.0 (2015-10-13)
+
+
+#### Bug Fixes
+
+* **GlobalBehavior:**
+  * improve handler-not-found message Fixes aurelia/binding#85 ([8decd4d6](http://github.com/aurelia/templating-resources/commit/8decd4d628fe722e027d832a653ff16499fbc40b))
+  * throw AggregateError ([e31875a4](http://github.com/aurelia/templating-resources/commit/e31875a454afd8ef5863f0b8cfc3f3b024f789eb))
+* **all:**
+  * update exectionContext to bindingContext naming ([4bbcf4c2](http://github.com/aurelia/templating-resources/commit/4bbcf4c27fa2432060f418f7cabe9c66cf831862))
+  * update to latest plugin api ([c3adb5e2](http://github.com/aurelia/templating-resources/commit/c3adb5e2299e8fa51568f4a31cbec47ed2dc6788))
+  * update plugin to use new global resource api ([09d41036](http://github.com/aurelia/templating-resources/commit/09d41036e2b26b487a51873fad90cc80334c50d5))
+  * add logging dependency ([3ca23734](http://github.com/aurelia/templating-resources/commit/3ca23734cbb652c2e4ed3e459bcd059f0cd6818e))
+  * update to latest metadata api ([62d40dbe](http://github.com/aurelia/templating-resources/commit/62d40dbe8cfda472ffa87bbe08b57b503711a113))
+* **build:**
+  * update linting, testing and tools ([79590133](http://github.com/aurelia/templating-resources/commit/795901338065bb976aea30161d2a252578f615c8))
+  * add missing bower bump ([d7b588de](http://github.com/aurelia/templating-resources/commit/d7b588de7280799b89cbe93f56da9388567d934f))
+* **compose:**
+  * internal variable name consistency ([769d03b6](http://github.com/aurelia/templating-resources/commit/769d03b60a0d34172123930acbcc197a355ffc7a))
+  * address multi-prop update with compose ([160b4a00](http://github.com/aurelia/templating-resources/commit/160b4a00f25af71fc9c1be6c04e69988db132bc9))
+  * null/undefined components should not cause error ([14d26539](http://github.com/aurelia/templating-resources/commit/14d2653986a119ac6e27c792b11c2d75bf811a0f), closes [#31](http://github.com/aurelia/templating-resources/issues/31))
+  * activate not called on string vm's after initial compose ([62c19215](http://github.com/aurelia/templating-resources/commit/62c19215c78c1adbc787c522cc31be5b3cf07217), closes [#15](http://github.com/aurelia/templating-resources/issues/15))
+  * all properties not responding to changes ([8c7cf24c](http://github.com/aurelia/templating-resources/commit/8c7cf24c94d8b35f8e6c2847ed427f840adff225), closes [#10](http://github.com/aurelia/templating-resources/issues/10))
+  * incorrect property name ([57c40a00](http://github.com/aurelia/templating-resources/commit/57c40a001b2da551cae1e22777655606a0772d01))
+  * use templating's new built-in composition engine ([9f50076d](http://github.com/aurelia/templating-resources/commit/9f50076dad42e399b4e19b74fdd4e3d3d49ec0e4))
+  * align with new view model load api ([a7c65fd6](http://github.com/aurelia/templating-resources/commit/a7c65fd6dab7b80a55e9c9e2e2c5e560b265868d))
+* **css-resource:**
+  * ensure that urls in css files are relative to the css file ([f73849a9](http://github.com/aurelia/templating-resources/commit/f73849a91f8921eb8911f45bddb2d955f8423652), closes [#105](http://github.com/aurelia/templating-resources/issues/105))
+  * enable proper style scoping based on shadow dom support ([b31dc4dd](http://github.com/aurelia/templating-resources/commit/b31dc4dd683ef33258eaa5b60324cf31f6314022))
+* **global-behavior:**
+  * unsafe method invocation ([6e05bb98](http://github.com/aurelia/templating-resources/commit/6e05bb9882e4372a96d58e3e384c0bc0c56040ab))
+  * enforce whitelist and support standard widget destroy pattern ([c1e0ddb3](http://github.com/aurelia/templating-resources/commit/c1e0ddb3c15ee42d03388b245e330ecf5e09b987))
+* **html-santizer:** extract class ([59fe7a80](http://github.com/aurelia/templating-resources/commit/59fe7a80d8ddfe9cf50ee9170296803556bc4812))
+* **if:**
+  * fix animation interaction; enable view cache integration ([64fde698](http://github.com/aurelia/templating-resources/commit/64fde6981603255ed14a95a1a124d7fff28bfe4d))
+  * standardize on using the $parent property to store parent execution context ([82e6d135](http://github.com/aurelia/templating-resources/commit/82e6d135f3de35cf48aceff9d4d70a979288cc4e))
+  * delay call to unbind via micro task ([9b62109c](http://github.com/aurelia/templating-resources/commit/9b62109c4f69dab3c2c2b2a58a908a8196409dde), closes [#84](http://github.com/aurelia/templating-resources/issues/84))
+  * only remove when previously shown ([99125493](http://github.com/aurelia/templating-resources/commit/99125493304089e85509a2fd510e0a8380a293e2))
+  * fix passing context binding to the view factory ([ecfa3ce4](http://github.com/aurelia/templating-resources/commit/ecfa3ce4b18ed9cd9bb32178e3fa3360e58bafbe), closes [#56](http://github.com/aurelia/templating-resources/issues/56))
+  * fix multiple view.bind() call ([172bdfae](http://github.com/aurelia/templating-resources/commit/172bdfaee29f224bb14d5ee8dd981ed7c4ba9b9c))
+* **index:**
+  * export name incorrect ([9893d7e9](http://github.com/aurelia/templating-resources/commit/9893d7e9b80e86d9da7e8c1d3a058d6945fbde1b))
+  * update to latest configuration api ([5b87410e](http://github.com/aurelia/templating-resources/commit/5b87410eab6815a6e2f0f1aa2516839431161aa6))
+  * plugin now uses new id-base api for resources ([f2cf8bf7](http://github.com/aurelia/templating-resources/commit/f2cf8bf7fdb794f40d309cb3e1f4d532a30b1d14))
+* **package:**
+  * change jspm directories ([b6d0e5c8](http://github.com/aurelia/templating-resources/commit/b6d0e5c8ce5a4de84e1779c18df3ae9fc6f4f99e))
+  * update dependencies ([3775b621](http://github.com/aurelia/templating-resources/commit/3775b6218f3d37fffbb032c3490f5a41c78b8891))
+  * update deps and fix bower semver ranges ([5839f551](http://github.com/aurelia/templating-resources/commit/5839f551b7e95dad8e5f087208e87674ac3bfd1c))
+  * update dependencies ([3f77813b](http://github.com/aurelia/templating-resources/commit/3f77813b7cafcc8ae81c43456dbf43bd64f943fc))
+  * update Aurelia dependencies ([f121fbb1](http://github.com/aurelia/templating-resources/commit/f121fbb1b4149bb84878396d3eb6ea804eec1e47))
+  * update dependencies to latest ([dac311ac](http://github.com/aurelia/templating-resources/commit/dac311acf54154a7f1022dabce3908008515b06f))
+  * update templating dependency to latest version ([156def6a](http://github.com/aurelia/templating-resources/commit/156def6adb4384a10a3972bd6f46e0cedb49ed40))
+  * update templating to latest version ([c754589a](http://github.com/aurelia/templating-resources/commit/c754589a1972dc7346b41e3a2558b7d574d8ad28))
+  * update templating to latest version ([f0d148cb](http://github.com/aurelia/templating-resources/commit/f0d148cb3d4202bd63715b9146799c52f2ce23ec))
+  * updating dependencies to latest versions ([033a97fd](http://github.com/aurelia/templating-resources/commit/033a97fd5f9237804f39a37670672f9b5f8c1daa))
+  * update dependencies to latest versions ([c900f714](http://github.com/aurelia/templating-resources/commit/c900f7148cda37c87909e491f245fa12987d90bb))
+  * updating dependencies to their latest versions ([173392f5](http://github.com/aurelia/templating-resources/commit/173392f599a0cc8623da69ff23b041be4c03315f))
+  * add missing polyfill ([c3fe9aa4](http://github.com/aurelia/templating-resources/commit/c3fe9aa4ea00e517ceb8107dbe8ff3c3f577c44f))
+* **plugins:** fixup view engine resource plugins to match the new api ([5f422cc1](http://github.com/aurelia/templating-resources/commit/5f422cc1112c6add4d2205b671e3749e20829d07))
+* **repeat:**
+  * check if items are instanceof Array on re-bound ([e5c000ef](http://github.com/aurelia/templating-resources/commit/e5c000ef968864cb6d7072697e61783d26b2aa4c), closes [#108](http://github.com/aurelia/templating-resources/issues/108))
+  * update binding context after animations have finished ([1904ea5e](http://github.com/aurelia/templating-resources/commit/1904ea5ee60f3a3fb19aa090643d425a18a7905e), closes [#94](http://github.com/aurelia/templating-resources/issues/94))
+  * handle changes for numbers ([e3084523](http://github.com/aurelia/templating-resources/commit/e30845237531756793dcda0e5c42aa7f2f9cbfed), closes [#81](http://github.com/aurelia/templating-resources/issues/81))
+  * preserve lifecycle when re-using views ([7806a81b](http://github.com/aurelia/templating-resources/commit/7806a81b326d4e50e98321d6a3fe32b766aab2f5), closes [#45](http://github.com/aurelia/templating-resources/issues/45))
+  * remove views when bindning new items ([fb9314cf](http://github.com/aurelia/templating-resources/commit/fb9314cfa5909c42f20b8a78f4f9226145d10c86), closes [#69](http://github.com/aurelia/templating-resources/issues/69))
+  * unbind children on property change ([96a2065c](http://github.com/aurelia/templating-resources/commit/96a2065c6a82743c86827bcb56850afb9b33d4f9))
+  * handle promises returned by view-slot ([28338958](http://github.com/aurelia/templating-resources/commit/28338958ccff3d4764687ae4605068aec760410b), closes [#54](http://github.com/aurelia/templating-resources/issues/54))
+  * add value as bindable ([8752ecab](http://github.com/aurelia/templating-resources/commit/8752ecab51a77941c5fcd8b442582f7ade1c4da3))
+  * regression with recreating view" ([1b40be47](http://github.com/aurelia/templating-resources/commit/1b40be47c646749b21bbfea9a2fafcab34302e00), closes [#37](http://github.com/aurelia/templating-resources/issues/37))
+  * null/undefined should not cause error ([86f4a310](http://github.com/aurelia/templating-resources/commit/86f4a3107a4a924e6620c5c7b5386e5262543b05), closes [#35](http://github.com/aurelia/templating-resources/issues/35))
+  * correctly update execution context ([e0d11cd6](http://github.com/aurelia/templating-resources/commit/e0d11cd689ce524b0f7e05f94deac191c5f4bb7c))
+  * regression with missing items changed handler ([1b17a858](http://github.com/aurelia/templating-resources/commit/1b17a858c7ff1084aa76120e1c43cdb91518b603))
+  * provide index not key to updateExecutionContext ([3f026d70](http://github.com/aurelia/templating-resources/commit/3f026d70350dc872ac74a1c206313738b1d6e927))
+  * error when items are undefined ([11809714](http://github.com/aurelia/templating-resources/commit/118097145e3d7a936280f9110c44b6724ed51ba2))
+* **replaceable:** template replacement timing ([d45b4085](http://github.com/aurelia/templating-resources/commit/d45b4085fd5531dc737bc431273f4929a6bbed0c))
+* **sanitize-html:**
+  * incorrect value converter name ([aec6395b](http://github.com/aurelia/templating-resources/commit/aec6395b9e7dbb01dcb2e682b4b4cb641e2ede21))
+  *  use explicit metadata ([8aa3a130](http://github.com/aurelia/templating-resources/commit/8aa3a1306d8dea0d11e99a611a51029442d1a791))
+* **selected-item:** remove selected-item behavior ([ef130a76](http://github.com/aurelia/templating-resources/commit/ef130a76fade7bcb2244bbb94a95d60326d1eee1))
+* **show:**
+  * use animator for class manipulation ([019a2062](http://github.com/aurelia/templating-resources/commit/019a2062449ecba8b8091889c358dfc425ae5424))
+  * enable the show attribute to work inside shadow DOM ([81918c13](http://github.com/aurelia/templating-resources/commit/81918c135379f793db0a2788910c0634c09e00d2))
+  * use bind hook to handle undefined values ([09f5d59f](http://github.com/aurelia/templating-resources/commit/09f5d59f622fd80b94a6c8f4fe809913222be49c))
+  * css not inside ([d98e9a40](http://github.com/aurelia/templating-resources/commit/d98e9a40c51f75e229fa5e3caa5388301333feb7))
+  * Make sure this hide overrides everything ([e7a06176](http://github.com/aurelia/templating-resources/commit/e7a06176ed24795621414a1782b33da2174bef31))
+  * Add type to the node as well ([f29153b0](http://github.com/aurelia/templating-resources/commit/f29153b0657ecb0fa74fa71958d24209f020112a))
+  * append aurelia-hide style to head ([0258d0df](http://github.com/aurelia/templating-resources/commit/0258d0df2cc99bfbc2b395c0146a350eec4c9ad4))
+  * switch over to using a class instead of style manipulation ([f63e023d](http://github.com/aurelia/templating-resources/commit/f63e023d022fbf32a57c2fbce388f72149e3662c))
+* **spec:** update executionContext to bindingContext ([d207dd22](http://github.com/aurelia/templating-resources/commit/d207dd221fa887c57c248a084cebc6f9c6d98d23))
+* **view-spy:** change behavior of value-less attr to only log created ([be5b9f61](http://github.com/aurelia/templating-resources/commit/be5b9f619513201a26e6f0a086da7195c5e0381f))
+
+
+#### Features
+
+* **all:**
+  * update to latest view resource pipeline; fix linting errors ([fa6b9fde](http://github.com/aurelia/templating-resources/commit/fa6b9fde5b8ac0880073becfa1107bf101da7947))
+  * integrate pal ([8a3098da](http://github.com/aurelia/templating-resources/commit/8a3098dac0d2b11cb6ff1ae8acef4cccdad9bea0))
+  * auto create elements from an html file; inject css into head or shadow dom ([44693a28](http://github.com/aurelia/templating-resources/commit/44693a2816722d29dcf7da24dbc6d6e86d54a5fe))
+  * add focus attached behavior ([ecd300ae](http://github.com/aurelia/templating-resources/commit/ecd300ae9f0922cc393cbe9e368ec9be35e1f955))
+  * update to work with latest decorators ([1c35b506](http://github.com/aurelia/templating-resources/commit/1c35b506d625474efda1c7595028c63e670dfb8b))
+  * update to decorators ([3e4a3fa8](http://github.com/aurelia/templating-resources/commit/3e4a3fa8fe898151114e8de79739cbf4c170e398))
+  * update to use new fluent metadata ([90af3e51](http://github.com/aurelia/templating-resources/commit/90af3e51ffb49e5adf74240c282a8f44f77603e5))
+* **build:** update compile, switch to register modules, switch to core-js ([a7fe36c9](http://github.com/aurelia/templating-resources/commit/a7fe36c9a63055a3a7fbaa674b162307c3604a9b))
+* **compose:**
+  * suppost syncChildren ([0240d5ca](http://github.com/aurelia/templating-resources/commit/0240d5cad778555312e931813b4131c112e7950f))
+  * getViewStrategy hook added ([db7e0322](http://github.com/aurelia/templating-resources/commit/db7e0322018c4b8d2115822b214e7e64af26db78))
+  * view and view-model are now relative ([0b54a750](http://github.com/aurelia/templating-resources/commit/0b54a750c21211f2071723d08e767bc035dfb745))
+* **debugging:** add compile-spy and view-spy ([dc7e2732](http://github.com/aurelia/templating-resources/commit/dc7e273225f74da38449f400aa767dcfda83f447))
+* **docs:**
+  * generate api.json from .d.ts file ([1ad220b9](http://github.com/aurelia/templating-resources/commit/1ad220b9778998d2e91902642c59523777623022))
+  * Initial YUIDocs ([745131b0](http://github.com/aurelia/templating-resources/commit/745131b0201cf3a9d9aa14d66a7a68c72b784504))
+* **focus:** set two-way as default binding mode ([96ef5d43](http://github.com/aurelia/templating-resources/commit/96ef5d4333a2dbbb288576cf41ce5a0ad4df99e7))
+* **global-behavior:**
+  * improve handler flexibility ([500633f8](http://github.com/aurelia/templating-resources/commit/500633f805e9bd02e6b5897851f64b69f25855c0))
+  * flexible handlers with jQuery built-in ([298c1aeb](http://github.com/aurelia/templating-resources/commit/298c1aeb2eedf2d28e21d350435eadc5acb32d68))
+  * enable automatic jQuery plugin support ([4633b7d0](http://github.com/aurelia/templating-resources/commit/4633b7d07bbc9b2814d2d50339a5f7a69b02c363))
+* **if:** use the view factory caching info ([71ec71fc](http://github.com/aurelia/templating-resources/commit/71ec71fc811348435cb552ed3fb3671f115d8b61))
+* **repeat:**
+  * implement view caching ([d49bcaa9](http://github.com/aurelia/templating-resources/commit/d49bcaa936ca544b75fe482aeaaacdc2852b0f88), closes [#112](http://github.com/aurelia/templating-resources/issues/112), [#110](http://github.com/aurelia/templating-resources/issues/110))
+  * add support for iterating numbers ([9eba93dc](http://github.com/aurelia/templating-resources/commit/9eba93dc2965d28e87315c2d9038da867bd658c4), closes [#50](http://github.com/aurelia/templating-resources/issues/50))
+  * implement support for map ([15f8b0aa](http://github.com/aurelia/templating-resources/commit/15f8b0aa9554171dba01bae323f8cbde84784aaa))
+* **replaceable:** add the replaceable attribute for use with replaceable parts ([a5a17bc6](http://github.com/aurelia/templating-resources/commit/a5a17bc67d08ff192b98459cdb217a0908d06b5e))
+* **resources:** enable plugin model ([c78cae82](http://github.com/aurelia/templating-resources/commit/c78cae82ba38cb2f2a464394613f780b314925e5))
+* **selected-item:** use default two-way binding now ([f0316e3f](http://github.com/aurelia/templating-resources/commit/f0316e3fb269d3c8bf340afce53697f7a94b1922))
+* **templating-resources:**
+  * add defaultSanitizer method to inner-html ([9353b477](http://github.com/aurelia/templating-resources/commit/9353b477769cae4cd2a342f5bdb9c455a7d4bbca))
+  * add innerHTML attached behavior ([f6e28fe1](http://github.com/aurelia/templating-resources/commit/f6e28fe1e7e37b4f4b60ec066dddaff18dc6912b))
+* **with:** Add WIP with binding ([b8de3ec4](http://github.com/aurelia/templating-resources/commit/b8de3ec44c3b29bd9b4c8cf5d42178bbd560fdc9))
+
+
+#### Breaking Changes
+
+* To change html sanitization, you now register a custom
+HTMLSanitizer in the DI container to override the default
+implementation. Also, the value converter name for the sanitizer
+converter has changed to sanitizeHTML. This creates a case consistency
+among classes.
+
+ ([59fe7a80](http://github.com/aurelia/templating-resources/commit/59fe7a80d8ddfe9cf50ee9170296803556bc4812))
+
+
 ### 0.15.2 (2015-09-07)
 
 * Greatly improved performance of the css url fixup code.

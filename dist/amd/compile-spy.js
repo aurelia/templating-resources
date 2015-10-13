@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', 'aurelia-logging'], function (exports, _aureliaTemplating, _aureliaDependencyInjection, _aureliaLogging) {
+define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', 'aurelia-logging', 'aurelia-pal'], function (exports, _aureliaTemplating, _aureliaDependencyInjection, _aureliaLogging, _aureliaPal) {
   'use strict';
 
   exports.__esModule = true;
@@ -13,7 +13,7 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', 'aureli
     }
 
     var _CompileSpy = CompileSpy;
-    CompileSpy = _aureliaDependencyInjection.inject(Element, _aureliaTemplating.TargetInstruction)(CompileSpy) || CompileSpy;
+    CompileSpy = _aureliaDependencyInjection.inject(_aureliaPal.DOM.Element, _aureliaTemplating.TargetInstruction)(CompileSpy) || CompileSpy;
     CompileSpy = _aureliaTemplating.customAttribute('compile-spy')(CompileSpy) || CompileSpy;
     return CompileSpy;
   })();

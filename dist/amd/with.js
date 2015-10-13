@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], function (exports, _aureliaDependencyInjection, _aureliaTemplating) {
+define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aurelia-logging'], function (exports, _aureliaDependencyInjection, _aureliaTemplating, _aureliaLogging) {
   'use strict';
 
   exports.__esModule = true;
@@ -11,6 +11,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], functi
 
       this.viewFactory = viewFactory;
       this.viewSlot = viewSlot;
+      _aureliaLogging.getLogger('templating-resources').warn('The "with" behavior will be removed in the next release.');
     }
 
     With.prototype.valueChanged = function valueChanged(newValue) {

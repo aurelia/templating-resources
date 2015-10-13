@@ -30,7 +30,17 @@ var _dynamicElement = require('./dynamic-element');
 
 var _cssResource = require('./css-resource');
 
+var _aureliaPal = require('aurelia-pal');
+
+var _htmlSanitizer = require('./html-sanitizer');
+
 function configure(config) {
+  if (_aureliaPal.FEATURE.shadowDOM) {
+    _aureliaPal.DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
+  } else {
+    _aureliaPal.DOM.injectStyles('.aurelia-hide { display:none !important; }');
+  }
+
   config.globalResources('./compose', './if', './with', './repeat', './show', './replaceable', './global-behavior', './sanitize-html', './focus', './compile-spy', './view-spy');
 
   var viewEngine = config.container.get(_aureliaTemplating.ViewEngine);
@@ -77,7 +87,8 @@ exports.If = _if.If;
 exports.With = _with.With;
 exports.Repeat = _repeat.Repeat;
 exports.Show = _show.Show;
-exports.SanitizeHtmlValueConverter = _sanitizeHtml.SanitizeHtmlValueConverter;
+exports.HTMLSanitizer = _htmlSanitizer.HTMLSanitizer;
+exports.SanitizeHTMLValueConverter = _sanitizeHtml.SanitizeHTMLValueConverter;
 exports.GlobalBehavior = _globalBehavior.GlobalBehavior;
 exports.Replaceable = _replaceable.Replaceable;
 exports.Focus = _focus.Focus;

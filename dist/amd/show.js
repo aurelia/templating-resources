@@ -1,28 +1,23 @@
-define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], function (exports, _aureliaDependencyInjection, _aureliaTemplating) {
+define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aurelia-pal'], function (exports, _aureliaDependencyInjection, _aureliaTemplating, _aureliaPal) {
   'use strict';
 
   exports.__esModule = true;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  if (_aureliaTemplating.hasShadowDOM) {
-    _aureliaTemplating.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
-  } else {
-    _aureliaTemplating.injectStyles('.aurelia-hide { display:none !important; }');
-  }
-
   var Show = (function () {
-    function Show(element) {
+    function Show(element, animator) {
       _classCallCheck(this, _Show);
 
       this.element = element;
+      this.animator = animator;
     }
 
     Show.prototype.valueChanged = function valueChanged(newValue) {
       if (newValue) {
-        this.element.classList.remove('aurelia-hide');
+        this.animator.removeClass(this.element, 'aurelia-hide');
       } else {
-        this.element.classList.add('aurelia-hide');
+        this.animator.addClass(this.element, 'aurelia-hide');
       }
     };
 
@@ -31,7 +26,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], functi
     };
 
     var _Show = Show;
-    Show = _aureliaDependencyInjection.inject(Element)(Show) || Show;
+    Show = _aureliaDependencyInjection.inject(_aureliaPal.DOM.Element, _aureliaTemplating.Animator)(Show) || Show;
     Show = _aureliaTemplating.customAttribute('show')(Show) || Show;
     return Show;
   })();

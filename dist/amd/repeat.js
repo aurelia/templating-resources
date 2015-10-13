@@ -53,17 +53,20 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       this.value = 'value';
     }
 
-    Repeat.prototype.bind = function bind(bindingContext) {
-      var _this = this;
+    Repeat.prototype.call = function call(context, changes) {
+      this[context](this.items, changes);
+    };
 
+    Repeat.prototype.bind = function bind(bindingContext) {
       var items = this.items;
+      var viewSlot = this.viewSlot;
       var observer = undefined;
 
       this.bindingContext = bindingContext;
 
       if (!items) {
         if (this.oldItems) {
-          this.removeAll();
+          viewSlot.removeAll(true);
         }
 
         return;
@@ -72,28 +75,25 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       if (this.oldItems === items) {
         if (items instanceof Map) {
           var records = _aureliaBinding.getChangeRecords(items);
-          observer = this.observerLocator.getMapObserver(items);
+          this.collectionObserver = this.observerLocator.getMapObserver(items);
 
           this.handleMapChangeRecords(items, records);
 
-          this.disposeSubscription = observer.subscribe(function (r) {
-            _this.handleMapChangeRecords(items, r);
-          });
-        } else {
+          this.callContext = 'handleMapChangeRecords';
+          this.collectionObserver.subscribe(this.callContext, this);
+        } else if (items instanceof Array) {
           var splices = _aureliaBinding.calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
-          observer = this.observerLocator.getArrayObserver(items);
+          this.collectionObserver = this.observerLocator.getArrayObserver(items);
 
           this.handleSplices(items, splices);
           this.lastBoundItems = this.oldItems = null;
 
-          this.disposeSubscription = observer.subscribe(function (s) {
-            _this.handleSplices(items, s);
-          });
-
-          return;
+          this.callContext = 'handleSplices';
+          this.collectionObserver.subscribe(this.callContext, this);
         }
+        return;
       } else if (this.oldItems) {
-        this.removeAll();
+        viewSlot.removeAll(true);
       }
 
       this.processItems();
@@ -106,9 +106,14 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
         this.lastBoundItems = this.items.slice(0);
       }
 
-      if (this.disposeSubscription) {
-        this.disposeSubscription();
-        this.disposeSubscription = null;
+      this.unsubscribeCollection();
+    };
+
+    Repeat.prototype.unsubscribeCollection = function unsubscribeCollection() {
+      if (this.collectionObserver) {
+        this.collectionObserver.unsubscribe(this.callContext, this);
+        this.collectionObserver = null;
+        this.callContext = null;
       }
     };
 
@@ -117,17 +122,31 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
     };
 
     Repeat.prototype.processItems = function processItems() {
-      var items = this.items;
+      var _this = this;
 
-      if (this.disposeSubscription) {
-        this.disposeSubscription();
-        this.removeAll();
+      var items = this.items;
+      var rmPromise = undefined;
+
+      if (this.collectionObserver) {
+        this.unsubscribeCollection();
+        rmPromise = this.viewSlot.removeAll(true);
       }
 
       if (!items && items !== 0) {
         return;
       }
 
+      if (rmPromise instanceof Promise) {
+        rmPromise.then(function () {
+          _this.processItemsByType();
+        });
+      } else {
+        this.processItemsByType();
+      }
+    };
+
+    Repeat.prototype.processItemsByType = function processItemsByType() {
+      var items = this.items;
       if (items instanceof Array) {
         this.processArrayItems(items);
       } else if (items instanceof Map) {
@@ -140,8 +159,6 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
     };
 
     Repeat.prototype.processArrayItems = function processArrayItems(items) {
-      var _this2 = this;
-
       var viewFactory = this.viewFactory;
       var viewSlot = this.viewSlot;
       var i = undefined;
@@ -150,7 +167,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       var view = undefined;
       var observer = undefined;
 
-      observer = this.observerLocator.getArrayObserver(items);
+      this.collectionObserver = this.observerLocator.getArrayObserver(items);
 
       for (i = 0, ii = items.length; i < ii; ++i) {
         row = this.createFullBindingContext(items[i], i, ii);
@@ -158,13 +175,12 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
         viewSlot.add(view);
       }
 
-      this.disposeSubscription = observer.subscribe(function (splices) {
-        _this2.handleSplices(items, splices);
-      });
+      this.callContext = 'handleSplices';
+      this.collectionObserver.subscribe(this.callContext, this);
     };
 
     Repeat.prototype.processMapEntries = function processMapEntries(items) {
-      var _this3 = this;
+      var _this2 = this;
 
       var viewFactory = this.viewFactory;
       var viewSlot = this.viewSlot;
@@ -173,18 +189,17 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       var view = undefined;
       var observer = undefined;
 
-      observer = this.observerLocator.getMapObserver(items);
+      this.collectionObserver = this.observerLocator.getMapObserver(items);
 
       items.forEach(function (value, key) {
-        row = _this3.createFullExecutionKvpContext(key, value, index, items.size);
+        row = _this2.createFullExecutionKvpContext(key, value, index, items.size);
         view = viewFactory.create(row);
         viewSlot.add(view);
         ++index;
       });
 
-      this.disposeSubscription = observer.subscribe(function (record) {
-        _this3.handleMapChangeRecords(items, record);
-      });
+      this.callContext = 'handleMapChangeRecords';
+      this.collectionObserver.subscribe(this.callContext, this);
     };
 
     Repeat.prototype.processNumber = function processNumber(value) {
@@ -206,7 +221,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
         }
 
         for (i = 0, ii = viewsToRemove; i < ii; ++i) {
-          viewSlot.removeAt(childrenLength - (i + 1));
+          viewSlot.removeAt(childrenLength - (i + 1), true);
         }
 
         return;
@@ -259,104 +274,6 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       return context;
     };
 
-    Repeat.prototype.handleSplices = function handleSplices(array, splices) {
-      var _this4 = this;
-
-      var viewLookup = new Map();
-      var viewSlot = this.viewSlot;
-      var spliceIndexLow = undefined;
-      var viewOrPromise = undefined;
-      var view = undefined;
-      var i = undefined;
-      var ii = undefined;
-      var j = undefined;
-      var jj = undefined;
-      var row = undefined;
-      var splice = undefined;
-      var addIndex = undefined;
-      var itemsLeftToAdd = undefined;
-      var removed = undefined;
-      var model = undefined;
-      var context = undefined;
-      var spliceIndex = undefined;
-      var viewsToUnbind = undefined;
-      var end = undefined;
-
-      for (i = 0, ii = splices.length; i < ii; ++i) {
-        splice = splices[i];
-        addIndex = spliceIndex = splice.index;
-        itemsLeftToAdd = splice.addedCount;
-        end = splice.index + splice.addedCount;
-        removed = splice.removed;
-        if (typeof spliceIndexLow === 'undefined' || spliceIndexLow === null || spliceIndexLow > splice.index) {
-          spliceIndexLow = spliceIndex;
-        }
-
-        for (j = 0, jj = removed.length; j < jj; ++j) {
-          if (itemsLeftToAdd > 0) {
-            view = viewSlot.children[spliceIndex + j];
-            view.detached();
-            context = this.createFullBindingContext(array[addIndex + j], spliceIndex + j, array.length);
-            view.bind(context);
-            view.attached();
-            --itemsLeftToAdd;
-          } else {
-            viewOrPromise = viewSlot.removeAt(addIndex + splice.addedCount);
-            if (viewOrPromise) {
-              viewLookup.set(removed[j], viewOrPromise);
-            }
-          }
-        }
-
-        addIndex += removed.length;
-
-        for (; itemsLeftToAdd > 0; ++addIndex) {
-          model = array[addIndex];
-          viewOrPromise = viewLookup.get(model);
-          if (viewOrPromise instanceof Promise) {
-            (function (localAddIndex, localModel) {
-              viewOrPromise.then(function (v) {
-                viewLookup['delete'](localModel);
-                viewSlot.insert(localAddIndex, v);
-              });
-            })(addIndex, model);
-          } else if (viewOrPromise) {
-            viewLookup['delete'](model);
-            viewSlot.insert(addIndex, viewOrPromise);
-          } else {
-            row = this.createBaseBindingContext(model);
-            view = this.viewFactory.create(row);
-            viewSlot.insert(addIndex, view);
-          }
-          --itemsLeftToAdd;
-        }
-      }
-
-      viewsToUnbind = viewLookup.size;
-
-      if (viewsToUnbind === 0) {
-        this.updateBindingContexts(spliceIndexLow);
-      }
-
-      viewLookup.forEach(function (x) {
-        if (x instanceof Promise) {
-          x.then(function (y) {
-            y.unbind();
-            viewsToUnbind--;
-            if (viewsToUnbind === 0) {
-              _this4.updateBindingContexts(spliceIndexLow);
-            }
-          });
-        } else {
-          x.unbind();
-          viewsToUnbind--;
-          if (viewsToUnbind === 0) {
-            _this4.updateBindingContexts(spliceIndexLow);
-          }
-        }
-      });
-    };
-
     Repeat.prototype.updateBindingContexts = function updateBindingContexts(startIndex) {
       var children = this.viewSlot.children;
       var length = children.length;
@@ -368,6 +285,59 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       for (; startIndex < length; ++startIndex) {
         this.updateBindingContext(children[startIndex].bindingContext, startIndex, length);
       }
+    };
+
+    Repeat.prototype.handleSplices = function handleSplices(array, splices) {
+      var _this3 = this;
+
+      var removeDelta = 0;
+      var viewSlot = this.viewSlot;
+      var rmPromises = [];
+
+      for (var i = 0, ii = splices.length; i < ii; ++i) {
+        var splice = splices[i];
+        var removed = splice.removed;
+
+        for (var j = 0, jj = removed.length; j < jj; ++j) {
+          var viewOrPromise = viewSlot.removeAt(splice.index + removeDelta + rmPromises.length, true);
+          if (viewOrPromise instanceof Promise) {
+            rmPromises.push(viewOrPromise);
+          }
+        }
+        removeDelta -= splice.addedCount;
+      }
+
+      if (rmPromises.length > 0) {
+        Promise.all(rmPromises).then(function () {
+          var spliceIndexLow = _this3.handleAddedSplices(array, splices);
+          _this3.updateBindingContexts(spliceIndexLow);
+        });
+      } else {
+        var spliceIndexLow = this.handleAddedSplices(array, splices);
+        this.updateBindingContexts(spliceIndexLow);
+      }
+    };
+
+    Repeat.prototype.handleAddedSplices = function handleAddedSplices(array, splices) {
+      var spliceIndex = undefined;
+      var spliceIndexLow = undefined;
+      for (var i = 0, ii = splices.length; i < ii; ++i) {
+        var splice = splices[i];
+        var addIndex = spliceIndex = splice.index;
+        var end = splice.index + splice.addedCount;
+
+        if (typeof spliceIndexLow === 'undefined' || spliceIndexLow === null || spliceIndexLow > splice.index) {
+          spliceIndexLow = spliceIndex;
+        }
+
+        for (; addIndex < end; ++addIndex) {
+          var row = this.createBaseBindingContext(array[addIndex]);
+          var view = this.viewFactory.create(row);
+          this.viewSlot.insert(addIndex, view);
+        }
+      }
+
+      return spliceIndexLow;
     };
 
     Repeat.prototype.handleMapChangeRecords = function handleMapChangeRecords(map, records) {
@@ -388,7 +358,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
         switch (record.type) {
           case 'update':
             removeIndex = this.getViewIndexByKey(key);
-            viewSlot.removeAt(removeIndex);
+            viewSlot.removeAt(removeIndex, true);
             row = this.createBaseExecutionKvpContext(key, map.get(key));
             view = this.viewFactory.create(row);
             viewSlot.insert(removeIndex, view);
@@ -403,10 +373,10 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
               return;
             }
             removeIndex = this.getViewIndexByKey(key);
-            viewSlot.removeAt(removeIndex);
+            viewSlot.removeAt(removeIndex, true);
             break;
           case 'clear':
-            viewSlot.removeAll();
+            viewSlot.removeAll(true);
             break;
           default:
             continue;
@@ -432,19 +402,6 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
         if (child.bindings[0].source[this.key] === key) {
           return i;
         }
-      }
-    };
-
-    Repeat.prototype.removeAll = function removeAll() {
-      var viewSlot = this.viewSlot;
-      var views = viewSlot.children;
-      var i = undefined;
-
-      viewSlot.removeAll();
-      i = views.length;
-
-      while (i--) {
-        views[i].unbind();
       }
     };
 

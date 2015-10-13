@@ -1,7 +1,7 @@
-System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-logging'], function (_export) {
+System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-logging', 'aurelia-pal'], function (_export) {
   'use strict';
 
-  var inject, customAttribute, dynamicOptions, AggregateError, LogManager, GlobalBehavior;
+  var inject, customAttribute, dynamicOptions, LogManager, PLATFORM, DOM, AggregateError, GlobalBehavior;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -12,8 +12,11 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
       customAttribute = _aureliaTemplating.customAttribute;
       dynamicOptions = _aureliaTemplating.dynamicOptions;
     }, function (_aureliaLogging) {
-      AggregateError = _aureliaLogging.AggregateError;
       LogManager = _aureliaLogging;
+    }, function (_aureliaPal) {
+      PLATFORM = _aureliaPal.PLATFORM;
+      DOM = _aureliaPal.DOM;
+      AggregateError = _aureliaPal.AggregateError;
     }],
     execute: function () {
       GlobalBehavior = (function () {
@@ -21,6 +24,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
           _classCallCheck(this, _GlobalBehavior);
 
           this.element = element;
+          LogManager.getLogger('templating-resources').warn('The "GlobalBehavior" behavior will be removed in the next release.');
         }
 
         GlobalBehavior.prototype.bind = function bind() {
@@ -58,7 +62,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
         };
 
         var _GlobalBehavior = GlobalBehavior;
-        GlobalBehavior = inject(Element)(GlobalBehavior) || GlobalBehavior;
+        GlobalBehavior = inject(DOM.Element)(GlobalBehavior) || GlobalBehavior;
         GlobalBehavior = dynamicOptions(GlobalBehavior) || GlobalBehavior;
         GlobalBehavior = customAttribute('global-behavior')(GlobalBehavior) || GlobalBehavior;
         return GlobalBehavior;
@@ -87,7 +91,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
           bind: function bind(behavior, element, command) {
             var settings = GlobalBehavior.createSettingsFromBehavior(behavior);
             var pluginName = GlobalBehavior.jQueryPlugins[command] || command;
-            var jqueryElement = window.jQuery(element);
+            var jqueryElement = PLATFORM.global.jQuery(element);
 
             if (!jqueryElement[pluginName]) {
               LogManager.getLogger('templating-resources').warn('Could not find the jQuery plugin ' + pluginName + ', possibly due to case mismatch. Trying to enumerate jQuery methods in lowercase. Add the correctly cased plugin name to the GlobalBehavior to avoid this performance hit.');

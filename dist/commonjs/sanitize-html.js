@@ -6,30 +6,29 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var _aureliaBinding = require('aurelia-binding');
 
-var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
-var SanitizeHtmlValueConverter = (function () {
-  SanitizeHtmlValueConverter.defaultSanitizer = function defaultSanitizer(untrustedMarkup) {
-    return untrustedMarkup.replace(SCRIPT_REGEX, '');
-  };
+var _htmlSanitizer = require('./html-sanitizer');
 
-  function SanitizeHtmlValueConverter() {
-    _classCallCheck(this, _SanitizeHtmlValueConverter);
+var SanitizeHTMLValueConverter = (function () {
+  function SanitizeHTMLValueConverter(sanitizer) {
+    _classCallCheck(this, _SanitizeHTMLValueConverter);
 
-    this.sanitizer = SanitizeHtmlValueConverter.defaultSanitizer;
+    this.sanitizer = sanitizer;
   }
 
-  SanitizeHtmlValueConverter.prototype.toView = function toView(untrustedMarkup) {
+  SanitizeHTMLValueConverter.prototype.toView = function toView(untrustedMarkup) {
     if (untrustedMarkup === null) {
       return null;
     }
 
-    return this.sanitizer(untrustedMarkup);
+    return this.sanitizer.sanitize(untrustedMarkup);
   };
 
-  var _SanitizeHtmlValueConverter = SanitizeHtmlValueConverter;
-  SanitizeHtmlValueConverter = _aureliaBinding.valueConverter('sanitizeHtml')(SanitizeHtmlValueConverter) || SanitizeHtmlValueConverter;
-  return SanitizeHtmlValueConverter;
+  var _SanitizeHTMLValueConverter = SanitizeHTMLValueConverter;
+  SanitizeHTMLValueConverter = _aureliaDependencyInjection.inject(_htmlSanitizer.HTMLSanitizer)(SanitizeHTMLValueConverter) || SanitizeHTMLValueConverter;
+  SanitizeHTMLValueConverter = _aureliaBinding.valueConverter('sanitizeHTML')(SanitizeHTMLValueConverter) || SanitizeHTMLValueConverter;
+  return SanitizeHTMLValueConverter;
 })();
 
-exports.SanitizeHtmlValueConverter = SanitizeHtmlValueConverter;
+exports.SanitizeHTMLValueConverter = SanitizeHTMLValueConverter;

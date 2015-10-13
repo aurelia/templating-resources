@@ -14,11 +14,14 @@ var _aureliaLogging = require('aurelia-logging');
 
 var LogManager = _interopRequireWildcard(_aureliaLogging);
 
+var _aureliaPal = require('aurelia-pal');
+
 var GlobalBehavior = (function () {
   function GlobalBehavior(element) {
     _classCallCheck(this, _GlobalBehavior);
 
     this.element = element;
+    LogManager.getLogger('templating-resources').warn('The "GlobalBehavior" behavior will be removed in the next release.');
   }
 
   GlobalBehavior.prototype.bind = function bind() {
@@ -31,7 +34,7 @@ var GlobalBehavior = (function () {
     try {
       this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
     } catch (error) {
-      throw new _aureliaLogging.AggregateError('Conventional binding handler failed.', error);
+      throw new _aureliaPal.AggregateError('Conventional binding handler failed.', error);
     }
   };
 
@@ -56,7 +59,7 @@ var GlobalBehavior = (function () {
   };
 
   var _GlobalBehavior = GlobalBehavior;
-  GlobalBehavior = _aureliaDependencyInjection.inject(Element)(GlobalBehavior) || GlobalBehavior;
+  GlobalBehavior = _aureliaDependencyInjection.inject(_aureliaPal.DOM.Element)(GlobalBehavior) || GlobalBehavior;
   GlobalBehavior = _aureliaTemplating.dynamicOptions(GlobalBehavior) || GlobalBehavior;
   GlobalBehavior = _aureliaTemplating.customAttribute('global-behavior')(GlobalBehavior) || GlobalBehavior;
   return GlobalBehavior;
@@ -85,7 +88,7 @@ GlobalBehavior.handlers = {
     bind: function bind(behavior, element, command) {
       var settings = GlobalBehavior.createSettingsFromBehavior(behavior);
       var pluginName = GlobalBehavior.jQueryPlugins[command] || command;
-      var jqueryElement = window.jQuery(element);
+      var jqueryElement = _aureliaPal.PLATFORM.global.jQuery(element);
 
       if (!jqueryElement[pluginName]) {
         LogManager.getLogger('templating-resources').warn('Could not find the jQuery plugin ' + pluginName + ', possibly due to case mismatch. Trying to enumerate jQuery methods in lowercase. Add the correctly cased plugin name to the GlobalBehavior to avoid this performance hit.');

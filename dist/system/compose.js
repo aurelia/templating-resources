@@ -1,7 +1,7 @@
-System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-templating'], function (_export) {
+System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-templating', 'aurelia-pal'], function (_export) {
   'use strict';
 
-  var Container, inject, TaskQueue, CompositionEngine, ViewSlot, ViewResources, customElement, bindable, noView, Compose;
+  var Container, inject, TaskQueue, CompositionEngine, ViewSlot, ViewResources, customElement, bindable, noView, DOM, Compose;
 
   var _createDecoratedClass = (function () { function defineProperties(target, descriptors, initializers) { for (var i = 0; i < descriptors.length; i++) { var descriptor = descriptors[i]; var decorators = descriptor.decorators; var key = descriptor.key; delete descriptor.key; delete descriptor.decorators; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor || descriptor.initializer) descriptor.writable = true; if (decorators) { for (var f = 0; f < decorators.length; f++) { var decorator = decorators[f]; if (typeof decorator === 'function') { descriptor = decorator(target, key, descriptor) || descriptor; } else { throw new TypeError('The decorator for method ' + descriptor.key + ' is of the invalid type ' + typeof decorator); } } if (descriptor.initializer !== undefined) { initializers[key] = descriptor; continue; } } Object.defineProperty(target, key, descriptor); } } return function (Constructor, protoProps, staticProps, protoInitializers, staticInitializers) { if (protoProps) defineProperties(Constructor.prototype, protoProps, protoInitializers); if (staticProps) defineProperties(Constructor, staticProps, staticInitializers); return Constructor; }; })();
 
@@ -40,6 +40,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
       customElement = _aureliaTemplating.customElement;
       bindable = _aureliaTemplating.bindable;
       noView = _aureliaTemplating.noView;
+    }, function (_aureliaPal) {
+      DOM = _aureliaPal.DOM;
     }],
     execute: function () {
       Compose = (function () {
@@ -151,7 +153,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
         };
 
         var _Compose = Compose;
-        Compose = inject(Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue)(Compose) || Compose;
+        Compose = inject(DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue)(Compose) || Compose;
         Compose = noView(Compose) || Compose;
         Compose = customElement('compose')(Compose) || Compose;
         return Compose;

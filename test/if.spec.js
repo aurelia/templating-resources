@@ -1,9 +1,12 @@
 import {If} from '../src/if';
 import {BoundViewFactory, ViewSlot, View} from 'aurelia-templating';
 import {TaskQueue} from 'aurelia-task-queue';
+import {initialize} from 'aurelia-pal-browser';
 
 describe('if', () => {
   let viewSlot, taskQueue, sut, viewFactory;
+
+  beforeAll(() => initialize());
 
   beforeEach(() => {
     viewSlot = new ViewSlotMock();

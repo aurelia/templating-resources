@@ -1,7 +1,7 @@
-System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-logging'], function (_export) {
+System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-logging', 'aurelia-pal'], function (_export) {
   'use strict';
 
-  var customAttribute, TargetInstruction, inject, LogManager, CompileSpy;
+  var customAttribute, TargetInstruction, inject, LogManager, DOM, CompileSpy;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -13,6 +13,8 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
       inject = _aureliaDependencyInjection.inject;
     }, function (_aureliaLogging) {
       LogManager = _aureliaLogging;
+    }, function (_aureliaPal) {
+      DOM = _aureliaPal.DOM;
     }],
     execute: function () {
       CompileSpy = (function () {
@@ -23,7 +25,7 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
         }
 
         var _CompileSpy = CompileSpy;
-        CompileSpy = inject(Element, TargetInstruction)(CompileSpy) || CompileSpy;
+        CompileSpy = inject(DOM.Element, TargetInstruction)(CompileSpy) || CompileSpy;
         CompileSpy = customAttribute('compile-spy')(CompileSpy) || CompileSpy;
         return CompileSpy;
       })();

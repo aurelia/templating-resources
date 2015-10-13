@@ -1,7 +1,7 @@
-System.register(['aurelia-dependency-injection', 'aurelia-templating'], function (_export) {
+System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-pal'], function (_export) {
   'use strict';
 
-  var inject, customAttribute, injectStyles, hasShadowDOM, Show;
+  var inject, customAttribute, Animator, DOM, Show;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -10,29 +10,24 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
       inject = _aureliaDependencyInjection.inject;
     }, function (_aureliaTemplating) {
       customAttribute = _aureliaTemplating.customAttribute;
-      injectStyles = _aureliaTemplating.injectStyles;
-      hasShadowDOM = _aureliaTemplating.hasShadowDOM;
+      Animator = _aureliaTemplating.Animator;
+    }, function (_aureliaPal) {
+      DOM = _aureliaPal.DOM;
     }],
     execute: function () {
-
-      if (hasShadowDOM) {
-        injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
-      } else {
-        injectStyles('.aurelia-hide { display:none !important; }');
-      }
-
       Show = (function () {
-        function Show(element) {
+        function Show(element, animator) {
           _classCallCheck(this, _Show);
 
           this.element = element;
+          this.animator = animator;
         }
 
         Show.prototype.valueChanged = function valueChanged(newValue) {
           if (newValue) {
-            this.element.classList.remove('aurelia-hide');
+            this.animator.removeClass(this.element, 'aurelia-hide');
           } else {
-            this.element.classList.add('aurelia-hide');
+            this.animator.addClass(this.element, 'aurelia-hide');
           }
         };
 
@@ -41,7 +36,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
         };
 
         var _Show = Show;
-        Show = inject(Element)(Show) || Show;
+        Show = inject(DOM.Element, Animator)(Show) || Show;
         Show = customAttribute('show')(Show) || Show;
         return Show;
       })();

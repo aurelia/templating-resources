@@ -1,7 +1,7 @@
-System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-injection', 'aurelia-task-queue'], function (_export) {
+System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-pal'], function (_export) {
   'use strict';
 
-  var customAttribute, bindingMode, inject, TaskQueue, Focus;
+  var customAttribute, bindingMode, inject, TaskQueue, DOM, Focus;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -14,6 +14,8 @@ System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-in
       inject = _aureliaDependencyInjection.inject;
     }, function (_aureliaTaskQueue) {
       TaskQueue = _aureliaTaskQueue.TaskQueue;
+    }, function (_aureliaPal) {
+      DOM = _aureliaPal.DOM;
     }],
     execute: function () {
       Focus = (function () {
@@ -29,7 +31,7 @@ System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-in
             _this.value = true;
           };
           this.blurListener = function (e) {
-            if (document.activeElement !== _this.element) {
+            if (DOM.activeElement !== _this.element) {
               _this.value = false;
             }
           };
@@ -64,7 +66,7 @@ System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-in
         };
 
         var _Focus = Focus;
-        Focus = inject(Element, TaskQueue)(Focus) || Focus;
+        Focus = inject(DOM.Element, TaskQueue)(Focus) || Focus;
         Focus = customAttribute('focus', bindingMode.twoWay)(Focus) || Focus;
         return Focus;
       })();

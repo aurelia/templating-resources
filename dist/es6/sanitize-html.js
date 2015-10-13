@@ -1,21 +1,12 @@
 import {valueConverter} from 'aurelia-binding';
+import {inject} from 'aurelia-dependency-injection';
+import {HTMLSanitizer} from './html-sanitizer';
 
-const SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
-
-/**
-* Default Html Sanitizer to prevent script injection
-*
-* @class SanitizeHtml
-* @constructor
-*/
-@valueConverter('sanitizeHtml')
-export class SanitizeHtmlValueConverter {
-  static defaultSanitizer(untrustedMarkup) {
-    return untrustedMarkup.replace(SCRIPT_REGEX, '');
-  }
-
-  constructor() {
-    this.sanitizer = SanitizeHtmlValueConverter.defaultSanitizer;
+@valueConverter('sanitizeHTML')
+@inject(HTMLSanitizer)
+export class SanitizeHTMLValueConverter {
+  constructor(sanitizer) {
+    this.sanitizer = sanitizer;
   }
 
   toView(untrustedMarkup) {
@@ -23,6 +14,6 @@ export class SanitizeHtmlValueConverter {
       return null;
     }
 
-    return this.sanitizer(untrustedMarkup);
+    return this.sanitizer.sanitize(untrustedMarkup);
   }
 }

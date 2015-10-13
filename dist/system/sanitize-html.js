@@ -1,42 +1,41 @@
-System.register(['aurelia-binding'], function (_export) {
+System.register(['aurelia-binding', 'aurelia-dependency-injection', './html-sanitizer'], function (_export) {
   'use strict';
 
-  var valueConverter, SCRIPT_REGEX, SanitizeHtmlValueConverter;
+  var valueConverter, inject, HTMLSanitizer, SanitizeHTMLValueConverter;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   return {
     setters: [function (_aureliaBinding) {
       valueConverter = _aureliaBinding.valueConverter;
+    }, function (_aureliaDependencyInjection) {
+      inject = _aureliaDependencyInjection.inject;
+    }, function (_htmlSanitizer) {
+      HTMLSanitizer = _htmlSanitizer.HTMLSanitizer;
     }],
     execute: function () {
-      SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+      SanitizeHTMLValueConverter = (function () {
+        function SanitizeHTMLValueConverter(sanitizer) {
+          _classCallCheck(this, _SanitizeHTMLValueConverter);
 
-      SanitizeHtmlValueConverter = (function () {
-        SanitizeHtmlValueConverter.defaultSanitizer = function defaultSanitizer(untrustedMarkup) {
-          return untrustedMarkup.replace(SCRIPT_REGEX, '');
-        };
-
-        function SanitizeHtmlValueConverter() {
-          _classCallCheck(this, _SanitizeHtmlValueConverter);
-
-          this.sanitizer = SanitizeHtmlValueConverter.defaultSanitizer;
+          this.sanitizer = sanitizer;
         }
 
-        SanitizeHtmlValueConverter.prototype.toView = function toView(untrustedMarkup) {
+        SanitizeHTMLValueConverter.prototype.toView = function toView(untrustedMarkup) {
           if (untrustedMarkup === null) {
             return null;
           }
 
-          return this.sanitizer(untrustedMarkup);
+          return this.sanitizer.sanitize(untrustedMarkup);
         };
 
-        var _SanitizeHtmlValueConverter = SanitizeHtmlValueConverter;
-        SanitizeHtmlValueConverter = valueConverter('sanitizeHtml')(SanitizeHtmlValueConverter) || SanitizeHtmlValueConverter;
-        return SanitizeHtmlValueConverter;
+        var _SanitizeHTMLValueConverter = SanitizeHTMLValueConverter;
+        SanitizeHTMLValueConverter = inject(HTMLSanitizer)(SanitizeHTMLValueConverter) || SanitizeHTMLValueConverter;
+        SanitizeHTMLValueConverter = valueConverter('sanitizeHTML')(SanitizeHTMLValueConverter) || SanitizeHTMLValueConverter;
+        return SanitizeHTMLValueConverter;
       })();
 
-      _export('SanitizeHtmlValueConverter', SanitizeHtmlValueConverter);
+      _export('SanitizeHTMLValueConverter', SanitizeHTMLValueConverter);
     }
   };
 });

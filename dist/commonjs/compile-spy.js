@@ -14,6 +14,8 @@ var _aureliaLogging = require('aurelia-logging');
 
 var LogManager = _interopRequireWildcard(_aureliaLogging);
 
+var _aureliaPal = require('aurelia-pal');
+
 var CompileSpy = (function () {
   function CompileSpy(element, instruction) {
     _classCallCheck(this, _CompileSpy);
@@ -22,7 +24,7 @@ var CompileSpy = (function () {
   }
 
   var _CompileSpy = CompileSpy;
-  CompileSpy = _aureliaDependencyInjection.inject(Element, _aureliaTemplating.TargetInstruction)(CompileSpy) || CompileSpy;
+  CompileSpy = _aureliaDependencyInjection.inject(_aureliaPal.DOM.Element, _aureliaTemplating.TargetInstruction)(CompileSpy) || CompileSpy;
   CompileSpy = _aureliaTemplating.customAttribute('compile-spy')(CompileSpy) || CompileSpy;
   return CompileSpy;
 })();

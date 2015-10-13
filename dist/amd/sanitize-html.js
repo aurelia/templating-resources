@@ -1,35 +1,30 @@
-define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
+define(['exports', 'aurelia-binding', 'aurelia-dependency-injection', './html-sanitizer'], function (exports, _aureliaBinding, _aureliaDependencyInjection, _htmlSanitizer) {
   'use strict';
 
   exports.__esModule = true;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-  var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+  var SanitizeHTMLValueConverter = (function () {
+    function SanitizeHTMLValueConverter(sanitizer) {
+      _classCallCheck(this, _SanitizeHTMLValueConverter);
 
-  var SanitizeHtmlValueConverter = (function () {
-    SanitizeHtmlValueConverter.defaultSanitizer = function defaultSanitizer(untrustedMarkup) {
-      return untrustedMarkup.replace(SCRIPT_REGEX, '');
-    };
-
-    function SanitizeHtmlValueConverter() {
-      _classCallCheck(this, _SanitizeHtmlValueConverter);
-
-      this.sanitizer = SanitizeHtmlValueConverter.defaultSanitizer;
+      this.sanitizer = sanitizer;
     }
 
-    SanitizeHtmlValueConverter.prototype.toView = function toView(untrustedMarkup) {
+    SanitizeHTMLValueConverter.prototype.toView = function toView(untrustedMarkup) {
       if (untrustedMarkup === null) {
         return null;
       }
 
-      return this.sanitizer(untrustedMarkup);
+      return this.sanitizer.sanitize(untrustedMarkup);
     };
 
-    var _SanitizeHtmlValueConverter = SanitizeHtmlValueConverter;
-    SanitizeHtmlValueConverter = _aureliaBinding.valueConverter('sanitizeHtml')(SanitizeHtmlValueConverter) || SanitizeHtmlValueConverter;
-    return SanitizeHtmlValueConverter;
+    var _SanitizeHTMLValueConverter = SanitizeHTMLValueConverter;
+    SanitizeHTMLValueConverter = _aureliaDependencyInjection.inject(_htmlSanitizer.HTMLSanitizer)(SanitizeHTMLValueConverter) || SanitizeHTMLValueConverter;
+    SanitizeHTMLValueConverter = _aureliaBinding.valueConverter('sanitizeHTML')(SanitizeHTMLValueConverter) || SanitizeHTMLValueConverter;
+    return SanitizeHTMLValueConverter;
   })();
 
-  exports.SanitizeHtmlValueConverter = SanitizeHtmlValueConverter;
+  exports.SanitizeHTMLValueConverter = SanitizeHTMLValueConverter;
 });

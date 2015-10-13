@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-dependency-injection', 'aurelia-task-queue'], function (exports, _aureliaTemplating, _aureliaBinding, _aureliaDependencyInjection, _aureliaTaskQueue) {
+define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-pal'], function (exports, _aureliaTemplating, _aureliaBinding, _aureliaDependencyInjection, _aureliaTaskQueue, _aureliaPal) {
   'use strict';
 
   exports.__esModule = true;
@@ -18,7 +18,7 @@ define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-dependency-
         _this.value = true;
       };
       this.blurListener = function (e) {
-        if (document.activeElement !== _this.element) {
+        if (_aureliaPal.DOM.activeElement !== _this.element) {
           _this.value = false;
         }
       };
@@ -53,7 +53,7 @@ define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-dependency-
     };
 
     var _Focus = Focus;
-    Focus = _aureliaDependencyInjection.inject(Element, _aureliaTaskQueue.TaskQueue)(Focus) || Focus;
+    Focus = _aureliaDependencyInjection.inject(_aureliaPal.DOM.Element, _aureliaTaskQueue.TaskQueue)(Focus) || Focus;
     Focus = _aureliaTemplating.customAttribute('focus', _aureliaBinding.bindingMode.twoWay)(Focus) || Focus;
     return Focus;
   })();

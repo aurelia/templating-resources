@@ -9,8 +9,17 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], functi
     function Replaceable(viewFactory, viewSlot) {
       _classCallCheck(this, _Replaceable);
 
-      viewSlot.add(viewFactory.create());
+      this.viewFactory = viewFactory;
+      this.viewSlot = viewSlot;
+      this.needsReplacement = true;
     }
+
+    Replaceable.prototype.bind = function bind() {
+      if (this.needsReplacement) {
+        this.needsReplacement = false;
+        this.viewSlot.add(this.viewFactory.create());
+      }
+    };
 
     var _Replaceable = Replaceable;
     Replaceable = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(Replaceable) || Replaceable;

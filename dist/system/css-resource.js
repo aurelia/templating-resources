@@ -1,7 +1,7 @@
-System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-injection', 'aurelia-path'], function (_export) {
+System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-injection', 'aurelia-path', 'aurelia-pal'], function (_export) {
   'use strict';
 
-  var ViewResources, injectStyles, resource, ViewCompileInstruction, Loader, Container, relativeToFile, cssUrlMatcher, CSSResource, CSSViewEngineHooks;
+  var ViewResources, resource, ViewCompileInstruction, Loader, Container, relativeToFile, DOM, FEATURE, cssUrlMatcher, CSSResource, CSSViewEngineHooks;
 
   _export('_createCSSResource', _createCSSResource);
 
@@ -40,7 +40,6 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
   return {
     setters: [function (_aureliaTemplating) {
       ViewResources = _aureliaTemplating.ViewResources;
-      injectStyles = _aureliaTemplating.injectStyles;
       resource = _aureliaTemplating.resource;
       ViewCompileInstruction = _aureliaTemplating.ViewCompileInstruction;
     }, function (_aureliaLoader) {
@@ -49,6 +48,9 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
       Container = _aureliaDependencyInjection.Container;
     }, function (_aureliaPath) {
       relativeToFile = _aureliaPath.relativeToFile;
+    }, function (_aureliaPal) {
+      DOM = _aureliaPal.DOM;
+      FEATURE = _aureliaPal.FEATURE;
     }],
     execute: function () {
       cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
@@ -62,7 +64,7 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
           this._scoped = null;
         }
 
-        CSSResource.prototype.analyze = function analyze(container, target) {
+        CSSResource.prototype.initialize = function initialize(container, target) {
           this._global = new target('global');
           this._scoped = new target('scoped');
         };
@@ -78,7 +80,6 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
             text = fixupCSSUrls(_this.address, text);
             _this._global.css = text;
             _this._scoped.css = text;
-            return _this;
           });
         };
 
@@ -96,12 +97,17 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
 
         CSSViewEngineHooks.prototype.beforeCompile = function beforeCompile(content, resources, instruction) {
           if (this.mode === 'scoped') {
-            var styleNode = injectStyles(this.css, content, true);
-            if (!instruction.targetShadowDOM) {
+            if (instruction.targetShadowDOM) {
+              DOM.injectStyles(this.css, content, true);
+            } else if (FEATURE.scopedCSS) {
+              var styleNode = DOM.injectStyles(this.css, content, true);
               styleNode.setAttribute('scoped', 'scoped');
+            } else if (!this._alreadyGloballyInjected) {
+              DOM.injectStyles(this.css);
+              this._alreadyGloballyInjected = true;
             }
           } else if (!this._alreadyGloballyInjected) {
-            injectStyles(this.css);
+            DOM.injectStyles(this.css);
             this._alreadyGloballyInjected = true;
           }
         };

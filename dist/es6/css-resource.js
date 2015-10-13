@@ -1,8 +1,9 @@
 /*eslint new-cap:0, padded-blocks:0*/
-import {ViewResources, injectStyles, resource, ViewCompileInstruction} from 'aurelia-templating';
+import {ViewResources, resource, ViewCompileInstruction} from 'aurelia-templating';
 import {Loader} from 'aurelia-loader';
 import {Container} from 'aurelia-dependency-injection';
 import {relativeToFile} from 'aurelia-path';
+import {DOM, FEATURE} from 'aurelia-pal';
 
 let cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
@@ -23,7 +24,7 @@ class CSSResource {
     this._scoped = null;
   }
 
-  analyze(container: Container, target: Function): void {
+  initialize(container: Container, target: Function): void {
     this._global = new target('global');
     this._scoped = new target('scoped');
   }
@@ -37,7 +38,6 @@ class CSSResource {
       text = fixupCSSUrls(this.address, text);
       this._global.css = text;
       this._scoped.css = text;
-      return this;
     });
   }
 }
@@ -51,12 +51,17 @@ class CSSViewEngineHooks {
 
   beforeCompile(content: DocumentFragment, resources: ViewResources, instruction: ViewCompileInstruction): void {
     if (this.mode === 'scoped') {
-      let styleNode = injectStyles(this.css, content, true);
-      if (!instruction.targetShadowDOM) {
+      if (instruction.targetShadowDOM) {
+        DOM.injectStyles(this.css, content, true);
+      } else if (FEATURE.scopedCSS) {
+        let styleNode = DOM.injectStyles(this.css, content, true);
         styleNode.setAttribute('scoped', 'scoped');
+      } else if (!this._alreadyGloballyInjected) {
+        DOM.injectStyles(this.css);
+        this._alreadyGloballyInjected = true;
       }
     } else if (!this._alreadyGloballyInjected) {
-      injectStyles(this.css);
+      DOM.injectStyles(this.css);
       this._alreadyGloballyInjected = true;
     }
   }

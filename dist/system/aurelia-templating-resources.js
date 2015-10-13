@@ -1,9 +1,15 @@
-System.register(['./compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './dynamic-element', './css-resource'], function (_export) {
+System.register(['./compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './dynamic-element', './css-resource', 'aurelia-pal', './html-sanitizer'], function (_export) {
   'use strict';
 
-  var Compose, If, With, Repeat, Show, GlobalBehavior, SanitizeHtmlValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createDynamicElement, _createCSSResource;
+  var Compose, If, With, Repeat, Show, GlobalBehavior, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createDynamicElement, _createCSSResource, FEATURE, DOM, HTMLSanitizer;
 
   function configure(config) {
+    if (FEATURE.shadowDOM) {
+      DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
+    } else {
+      DOM.injectStyles('.aurelia-hide { display:none !important; }');
+    }
+
     config.globalResources('./compose', './if', './with', './repeat', './show', './replaceable', './global-behavior', './sanitize-html', './focus', './compile-spy', './view-spy');
 
     var viewEngine = config.container.get(ViewEngine);
@@ -59,7 +65,7 @@ System.register(['./compose', './if', './with', './repeat', './show', './global-
     }, function (_globalBehavior) {
       GlobalBehavior = _globalBehavior.GlobalBehavior;
     }, function (_sanitizeHtml) {
-      SanitizeHtmlValueConverter = _sanitizeHtml.SanitizeHtmlValueConverter;
+      SanitizeHTMLValueConverter = _sanitizeHtml.SanitizeHTMLValueConverter;
     }, function (_replaceable) {
       Replaceable = _replaceable.Replaceable;
     }, function (_focus) {
@@ -74,6 +80,11 @@ System.register(['./compose', './if', './with', './repeat', './show', './global-
       _createDynamicElement = _dynamicElement._createDynamicElement;
     }, function (_cssResource) {
       _createCSSResource = _cssResource._createCSSResource;
+    }, function (_aureliaPal) {
+      FEATURE = _aureliaPal.FEATURE;
+      DOM = _aureliaPal.DOM;
+    }, function (_htmlSanitizer) {
+      HTMLSanitizer = _htmlSanitizer.HTMLSanitizer;
     }],
     execute: function () {
       _export('Compose', Compose);
@@ -86,7 +97,9 @@ System.register(['./compose', './if', './with', './repeat', './show', './global-
 
       _export('Show', Show);
 
-      _export('SanitizeHtmlValueConverter', SanitizeHtmlValueConverter);
+      _export('HTMLSanitizer', HTMLSanitizer);
+
+      _export('SanitizeHTMLValueConverter', SanitizeHTMLValueConverter);
 
       _export('GlobalBehavior', GlobalBehavior);
 

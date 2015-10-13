@@ -1,9 +1,15 @@
-define(['exports', './compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './dynamic-element', './css-resource'], function (exports, _compose, _if, _with, _repeat, _show, _globalBehavior, _sanitizeHtml, _replaceable, _focus, _compileSpy, _viewSpy, _aureliaTemplating, _dynamicElement, _cssResource) {
+define(['exports', './compose', './if', './with', './repeat', './show', './global-behavior', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './dynamic-element', './css-resource', 'aurelia-pal', './html-sanitizer'], function (exports, _compose, _if, _with, _repeat, _show, _globalBehavior, _sanitizeHtml, _replaceable, _focus, _compileSpy, _viewSpy, _aureliaTemplating, _dynamicElement, _cssResource, _aureliaPal, _htmlSanitizer) {
   'use strict';
 
   exports.__esModule = true;
 
   function configure(config) {
+    if (_aureliaPal.FEATURE.shadowDOM) {
+      _aureliaPal.DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
+    } else {
+      _aureliaPal.DOM.injectStyles('.aurelia-hide { display:none !important; }');
+    }
+
     config.globalResources('./compose', './if', './with', './repeat', './show', './replaceable', './global-behavior', './sanitize-html', './focus', './compile-spy', './view-spy');
 
     var viewEngine = config.container.get(_aureliaTemplating.ViewEngine);
@@ -50,7 +56,8 @@ define(['exports', './compose', './if', './with', './repeat', './show', './globa
   exports.With = _with.With;
   exports.Repeat = _repeat.Repeat;
   exports.Show = _show.Show;
-  exports.SanitizeHtmlValueConverter = _sanitizeHtml.SanitizeHtmlValueConverter;
+  exports.HTMLSanitizer = _htmlSanitizer.HTMLSanitizer;
+  exports.SanitizeHTMLValueConverter = _sanitizeHtml.SanitizeHTMLValueConverter;
   exports.GlobalBehavior = _globalBehavior.GlobalBehavior;
   exports.Replaceable = _replaceable.Replaceable;
   exports.Focus = _focus.Focus;

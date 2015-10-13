@@ -4,7 +4,7 @@ import {With} from './with';
 import {Repeat} from './repeat';
 import {Show} from './show';
 import {GlobalBehavior} from './global-behavior';
-import {SanitizeHtmlValueConverter} from './sanitize-html';
+import {SanitizeHTMLValueConverter} from './sanitize-html';
 import {Replaceable} from './replaceable';
 import {Focus} from './focus';
 import {CompileSpy} from './compile-spy';
@@ -12,8 +12,16 @@ import {ViewSpy} from './view-spy';
 import {ViewEngine} from 'aurelia-templating';
 import {_createDynamicElement} from './dynamic-element';
 import {_createCSSResource} from './css-resource';
+import {FEATURE, DOM} from 'aurelia-pal';
+import {HTMLSanitizer} from './html-sanitizer';
 
 function configure(config) {
+  if (FEATURE.shadowDOM) {
+    DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
+  } else {
+    DOM.injectStyles('.aurelia-hide { display:none !important; }');
+  }
+
   config.globalResources(
     './compose',
     './if',
@@ -67,7 +75,8 @@ export {
   With,
   Repeat,
   Show,
-  SanitizeHtmlValueConverter,
+  HTMLSanitizer,
+  SanitizeHTMLValueConverter,
   GlobalBehavior,
   Replaceable,
   Focus,

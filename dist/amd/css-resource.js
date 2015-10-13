@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-injection', 'aurelia-path'], function (exports, _aureliaTemplating, _aureliaLoader, _aureliaDependencyInjection, _aureliaPath) {
+define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-injection', 'aurelia-path', 'aurelia-pal'], function (exports, _aureliaTemplating, _aureliaLoader, _aureliaDependencyInjection, _aureliaPath, _aureliaPal) {
   'use strict';
 
   exports.__esModule = true;
@@ -29,7 +29,7 @@ define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-i
       this._scoped = null;
     }
 
-    CSSResource.prototype.analyze = function analyze(container, target) {
+    CSSResource.prototype.initialize = function initialize(container, target) {
       this._global = new target('global');
       this._scoped = new target('scoped');
     };
@@ -45,7 +45,6 @@ define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-i
         text = fixupCSSUrls(_this.address, text);
         _this._global.css = text;
         _this._scoped.css = text;
-        return _this;
       });
     };
 
@@ -63,12 +62,17 @@ define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-i
 
     CSSViewEngineHooks.prototype.beforeCompile = function beforeCompile(content, resources, instruction) {
       if (this.mode === 'scoped') {
-        var styleNode = _aureliaTemplating.injectStyles(this.css, content, true);
-        if (!instruction.targetShadowDOM) {
+        if (instruction.targetShadowDOM) {
+          _aureliaPal.DOM.injectStyles(this.css, content, true);
+        } else if (_aureliaPal.FEATURE.scopedCSS) {
+          var styleNode = _aureliaPal.DOM.injectStyles(this.css, content, true);
           styleNode.setAttribute('scoped', 'scoped');
+        } else if (!this._alreadyGloballyInjected) {
+          _aureliaPal.DOM.injectStyles(this.css);
+          this._alreadyGloballyInjected = true;
         }
       } else if (!this._alreadyGloballyInjected) {
-        _aureliaTemplating.injectStyles(this.css);
+        _aureliaPal.DOM.injectStyles(this.css);
         this._alreadyGloballyInjected = true;
       }
     };

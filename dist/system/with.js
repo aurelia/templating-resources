@@ -1,7 +1,7 @@
-System.register(['aurelia-dependency-injection', 'aurelia-templating'], function (_export) {
+System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-logging'], function (_export) {
   'use strict';
 
-  var inject, BoundViewFactory, ViewSlot, customAttribute, templateController, With;
+  var inject, BoundViewFactory, ViewSlot, customAttribute, templateController, LogManager, With;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -13,6 +13,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
       ViewSlot = _aureliaTemplating.ViewSlot;
       customAttribute = _aureliaTemplating.customAttribute;
       templateController = _aureliaTemplating.templateController;
+    }, function (_aureliaLogging) {
+      LogManager = _aureliaLogging;
     }],
     execute: function () {
       With = (function () {
@@ -21,6 +23,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
 
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
+          LogManager.getLogger('templating-resources').warn('The "with" behavior will be removed in the next release.');
         }
 
         With.prototype.valueChanged = function valueChanged(newValue) {

@@ -1,8 +1,11 @@
 import {SanitizeHTMLValueConverter} from '../src/sanitize-html';
 import {HTMLSanitizer} from '../src/html-sanitizer';
+import {initialize} from 'aurelia-pal-browser';
 
 describe('SanitizeHtmlValueConverter', () => {
   var converter;
+
+  beforeAll(() => initialize());
 
   beforeEach(() => {
     converter = new SanitizeHTMLValueConverter(new HTMLSanitizer());

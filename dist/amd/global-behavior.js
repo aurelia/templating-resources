@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aurelia-logging'], function (exports, _aureliaDependencyInjection, _aureliaTemplating, _aureliaLogging) {
+define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aurelia-logging', 'aurelia-pal'], function (exports, _aureliaDependencyInjection, _aureliaTemplating, _aureliaLogging, _aureliaPal) {
   'use strict';
 
   exports.__esModule = true;
@@ -10,6 +10,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
       _classCallCheck(this, _GlobalBehavior);
 
       this.element = element;
+      _aureliaLogging.getLogger('templating-resources').warn('The "GlobalBehavior" behavior will be removed in the next release.');
     }
 
     GlobalBehavior.prototype.bind = function bind() {
@@ -22,7 +23,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
       try {
         this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
       } catch (error) {
-        throw new _aureliaLogging.AggregateError('Conventional binding handler failed.', error);
+        throw new _aureliaPal.AggregateError('Conventional binding handler failed.', error);
       }
     };
 
@@ -47,7 +48,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
     };
 
     var _GlobalBehavior = GlobalBehavior;
-    GlobalBehavior = _aureliaDependencyInjection.inject(Element)(GlobalBehavior) || GlobalBehavior;
+    GlobalBehavior = _aureliaDependencyInjection.inject(_aureliaPal.DOM.Element)(GlobalBehavior) || GlobalBehavior;
     GlobalBehavior = _aureliaTemplating.dynamicOptions(GlobalBehavior) || GlobalBehavior;
     GlobalBehavior = _aureliaTemplating.customAttribute('global-behavior')(GlobalBehavior) || GlobalBehavior;
     return GlobalBehavior;
@@ -76,7 +77,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
       bind: function bind(behavior, element, command) {
         var settings = GlobalBehavior.createSettingsFromBehavior(behavior);
         var pluginName = GlobalBehavior.jQueryPlugins[command] || command;
-        var jqueryElement = window.jQuery(element);
+        var jqueryElement = _aureliaPal.PLATFORM.global.jQuery(element);
 
         if (!jqueryElement[pluginName]) {
           _aureliaLogging.getLogger('templating-resources').warn('Could not find the jQuery plugin ' + pluginName + ', possibly due to case mismatch. Trying to enumerate jQuery methods in lowercase. Add the correctly cased plugin name to the GlobalBehavior to avoid this performance hit.');

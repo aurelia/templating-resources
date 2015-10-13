@@ -14,6 +14,8 @@ var _aureliaTaskQueue = require('aurelia-task-queue');
 
 var _aureliaTemplating = require('aurelia-templating');
 
+var _aureliaPal = require('aurelia-pal');
+
 var Compose = (function () {
   var _instanceInitializers = {};
 
@@ -123,7 +125,7 @@ var Compose = (function () {
   };
 
   var _Compose = Compose;
-  Compose = _aureliaDependencyInjection.inject(Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue)(Compose) || Compose;
+  Compose = _aureliaDependencyInjection.inject(_aureliaPal.DOM.Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue)(Compose) || Compose;
   Compose = _aureliaTemplating.noView(Compose) || Compose;
   Compose = _aureliaTemplating.customElement('compose')(Compose) || Compose;
   return Compose;

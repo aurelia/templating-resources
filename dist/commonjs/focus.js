@@ -12,6 +12,8 @@ var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
 var _aureliaTaskQueue = require('aurelia-task-queue');
 
+var _aureliaPal = require('aurelia-pal');
+
 var Focus = (function () {
   function Focus(element, taskQueue) {
     var _this = this;
@@ -25,7 +27,7 @@ var Focus = (function () {
       _this.value = true;
     };
     this.blurListener = function (e) {
-      if (document.activeElement !== _this.element) {
+      if (_aureliaPal.DOM.activeElement !== _this.element) {
         _this.value = false;
       }
     };
@@ -60,7 +62,7 @@ var Focus = (function () {
   };
 
   var _Focus = Focus;
-  Focus = _aureliaDependencyInjection.inject(Element, _aureliaTaskQueue.TaskQueue)(Focus) || Focus;
+  Focus = _aureliaDependencyInjection.inject(_aureliaPal.DOM.Element, _aureliaTaskQueue.TaskQueue)(Focus) || Focus;
   Focus = _aureliaTemplating.customAttribute('focus', _aureliaBinding.bindingMode.twoWay)(Focus) || Focus;
   return Focus;
 })();

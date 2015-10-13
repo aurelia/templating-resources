@@ -8,24 +8,21 @@ var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
 var _aureliaTemplating = require('aurelia-templating');
 
-if (_aureliaTemplating.hasShadowDOM) {
-  _aureliaTemplating.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
-} else {
-  _aureliaTemplating.injectStyles('.aurelia-hide { display:none !important; }');
-}
+var _aureliaPal = require('aurelia-pal');
 
 var Show = (function () {
-  function Show(element) {
+  function Show(element, animator) {
     _classCallCheck(this, _Show);
 
     this.element = element;
+    this.animator = animator;
   }
 
   Show.prototype.valueChanged = function valueChanged(newValue) {
     if (newValue) {
-      this.element.classList.remove('aurelia-hide');
+      this.animator.removeClass(this.element, 'aurelia-hide');
     } else {
-      this.element.classList.add('aurelia-hide');
+      this.animator.addClass(this.element, 'aurelia-hide');
     }
   };
 
@@ -34,7 +31,7 @@ var Show = (function () {
   };
 
   var _Show = Show;
-  Show = _aureliaDependencyInjection.inject(Element)(Show) || Show;
+  Show = _aureliaDependencyInjection.inject(_aureliaPal.DOM.Element, _aureliaTemplating.Animator)(Show) || Show;
   Show = _aureliaTemplating.customAttribute('show')(Show) || Show;
   return Show;
 })();

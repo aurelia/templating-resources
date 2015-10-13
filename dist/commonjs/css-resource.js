@@ -15,6 +15,8 @@ var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
 var _aureliaPath = require('aurelia-path');
 
+var _aureliaPal = require('aurelia-pal');
+
 var cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
 function fixupCSSUrls(address, css) {
@@ -36,7 +38,7 @@ var CSSResource = (function () {
     this._scoped = null;
   }
 
-  CSSResource.prototype.analyze = function analyze(container, target) {
+  CSSResource.prototype.initialize = function initialize(container, target) {
     this._global = new target('global');
     this._scoped = new target('scoped');
   };
@@ -52,7 +54,6 @@ var CSSResource = (function () {
       text = fixupCSSUrls(_this.address, text);
       _this._global.css = text;
       _this._scoped.css = text;
-      return _this;
     });
   };
 
@@ -70,12 +71,17 @@ var CSSViewEngineHooks = (function () {
 
   CSSViewEngineHooks.prototype.beforeCompile = function beforeCompile(content, resources, instruction) {
     if (this.mode === 'scoped') {
-      var styleNode = _aureliaTemplating.injectStyles(this.css, content, true);
-      if (!instruction.targetShadowDOM) {
+      if (instruction.targetShadowDOM) {
+        _aureliaPal.DOM.injectStyles(this.css, content, true);
+      } else if (_aureliaPal.FEATURE.scopedCSS) {
+        var styleNode = _aureliaPal.DOM.injectStyles(this.css, content, true);
         styleNode.setAttribute('scoped', 'scoped');
+      } else if (!this._alreadyGloballyInjected) {
+        _aureliaPal.DOM.injectStyles(this.css);
+        this._alreadyGloballyInjected = true;
       }
     } else if (!this._alreadyGloballyInjected) {
-      _aureliaTemplating.injectStyles(this.css);
+      _aureliaPal.DOM.injectStyles(this.css);
       this._alreadyGloballyInjected = true;
     }
   };

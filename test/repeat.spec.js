@@ -1,10 +1,15 @@
 import {Repeat} from '../src/repeat';
 import {ObserverLocator} from 'aurelia-binding';
-import {BoundViewFactory, BehaviorInstance, ViewSlot, ViewFactory} from 'aurelia-templating';
+import {BoundViewFactory, templatingEngine, ViewSlot, ViewFactory} from 'aurelia-templating';
 import {Container} from 'aurelia-dependency-injection';
+import {initialize} from 'aurelia-pal-browser';
 
 describe('repeat', () => {
   let repeat, viewSlot, viewFactory;
+
+  beforeAll(() => {
+    initialize();
+  });
 
   beforeEach(() => {
     let container = new Container();
@@ -13,8 +18,8 @@ describe('repeat', () => {
     container.registerInstance(ViewSlot, viewSlot);
     container.registerInstance(BoundViewFactory, viewFactory);
     container.registerInstance(ObserverLocator, new ObserverLocator());
-    container.makeGlobal();
-    repeat = BehaviorInstance.createForUnitTest(Repeat);
+    templatingEngine.initialize(container)
+    repeat = templatingEngine.createModelForUnitTest(Repeat);
   });
 
   describe('bind', () => {
