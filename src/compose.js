@@ -66,7 +66,7 @@ export class Compose {
     }));
   }
 
-	modelChanged(newValue, oldValue) {
+  modelChanged(newValue, oldValue) {
     if (this.currentInstruction) {
       this.currentInstruction.model = newValue;
       return;

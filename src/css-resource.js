@@ -24,7 +24,7 @@ class CSSResource {
     this._scoped = null;
   }
 
-  analyze(container: Container, target: Function): void {
+  initialize(container: Container, target: Function): void {
     this._global = new target('global');
     this._scoped = new target('scoped');
   }
@@ -38,7 +38,6 @@ class CSSResource {
       text = fixupCSSUrls(this.address, text);
       this._global.css = text;
       this._scoped.css = text;
-      return this;
     });
   }
 }

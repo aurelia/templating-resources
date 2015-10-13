@@ -12,7 +12,7 @@ export class Replaceable {
   }
 
   bind() {
-    if(this.needsReplacement) {
+    if (this.needsReplacement) {
       this.needsReplacement = false;
       this.viewSlot.add(this.viewFactory.create());
     }

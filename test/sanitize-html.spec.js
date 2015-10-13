@@ -1,10 +1,11 @@
-import {SanitizeHtmlValueConverter, HTMLSanitizer} from '../src/sanitize-html';
+import {SanitizeHTMLValueConverter} from '../src/sanitize-html';
+import {HTMLSanitizer} from '../src/html-sanitizer';
 
 describe('SanitizeHtmlValueConverter', () => {
   var converter;
 
   beforeEach(() => {
-    converter = new SanitizeHtmlValueConverter(new HTMLSanitizer());
+    converter = new SanitizeHTMLValueConverter(new HTMLSanitizer());
   });
 
   it('defaultSanitizer should remove script tags', () => {

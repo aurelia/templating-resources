@@ -21,7 +21,7 @@ export class GlobalBehavior {
 
     try {
       this.handler = handler.bind(this, this.element, this.aureliaCommand) || handler;
-    } catch(error) {
+    } catch (error) {
       throw new AggregateError('Conventional binding handler failed.', error);
     }
   }
