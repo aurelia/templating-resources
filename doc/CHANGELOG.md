@@ -1,3 +1,12 @@
+### 0.16.1 (2015-10-15)
+
+
+#### Bug Fixes
+
+* **if:** connect missing binding context during re-bind ([bd075dfd](http://github.com/aurelia/templating-resources/commit/bd075dfdae905c854b5342f55059b9a6e3a63f2e), closes [#117](http://github.com/aurelia/templating-resources/issues/117))
+* **repeat:** create full bindingContext before inserting view ([ba580622](http://github.com/aurelia/templating-resources/commit/ba580622fd7e7825b2d452886e0b74abdce9cbcc), closes [#109](http://github.com/aurelia/templating-resources/issues/109))
+
+
 ## 0.16.0 (2015-10-13)
 
 
