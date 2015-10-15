@@ -56,7 +56,7 @@ var If = (function () {
       this.showing = true;
 
       if (!this.view.isBound) {
-        this.view.bind();
+        this.view.bind(this.$parent);
       }
 
       this.viewSlot.add(this.view);

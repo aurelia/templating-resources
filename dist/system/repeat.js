@@ -336,6 +336,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
         Repeat.prototype.handleAddedSplices = function handleAddedSplices(array, splices) {
           var spliceIndex = undefined;
           var spliceIndexLow = undefined;
+          var arrayLength = array.length;
           for (var i = 0, ii = splices.length; i < ii; ++i) {
             var splice = splices[i];
             var addIndex = spliceIndex = splice.index;
@@ -346,7 +347,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
             }
 
             for (; addIndex < end; ++addIndex) {
-              var row = this.createBaseBindingContext(array[addIndex]);
+              var row = this.createFullBindingContext(array[addIndex], addIndex, arrayLength);
               var view = this.viewFactory.create(row);
               this.viewSlot.insert(addIndex, view);
             }

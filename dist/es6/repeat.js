@@ -297,6 +297,7 @@ export class Repeat {
   handleAddedSplices(array, splices) {
     let spliceIndex;
     let spliceIndexLow;
+    let arrayLength = array.length;
     for (let i = 0, ii = splices.length; i < ii; ++i) {
       let splice = splices[i];
       let addIndex = spliceIndex = splice.index;
@@ -307,7 +308,7 @@ export class Repeat {
       }
 
       for (; addIndex < end; ++addIndex) {
-        let row = this.createBaseBindingContext(array[addIndex]);
+        let row = this.createFullBindingContext(array[addIndex], addIndex, arrayLength);
         let view = this.viewFactory.create(row);
         this.viewSlot.insert(addIndex, view);
       }
