@@ -101,10 +101,11 @@ describe('repeat', () => {
     });
 
     it('should update binding context after views are unbinded', () => {
+      items = ['foo', 'qux', 'bar'];
       splices = [{
         addedCount: 0,
         index: 1,
-        removed: ['Foo']
+        removed: ['qux']
       }];
       spyOn(viewSlot, 'removeAt').and.callFake(() => { return new ViewMock();});
       repeat.handleSplices(items, splices);
@@ -115,6 +116,7 @@ describe('repeat', () => {
     });
 
     it('should update binding context after views are animated and unbinded', done => {
+      items = ['foo', 'bar'];
       let rmPromises = [];
       let view = new ViewMock();
       let removeAction = () => {
