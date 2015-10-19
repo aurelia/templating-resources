@@ -1,5 +1,5 @@
 import {Repeat} from '../src/repeat';
-import {ObserverLocator} from 'aurelia-binding';
+import {ObserverLocator, calcSplices} from 'aurelia-binding';
 import {BoundViewFactory, templatingEngine, ViewSlot, ViewFactory} from 'aurelia-templating';
 import {Container} from 'aurelia-dependency-injection';
 import {initialize} from 'aurelia-pal-browser';
@@ -53,10 +53,98 @@ describe('repeat', () => {
     });
 
     it('should do nothing when bound with items is of type Number and items equal old items', () => {
+      let didThrow = false;
       repeat.items = 5;
       repeat.oldItems = 5;
 
+      try {
+        repeat.bind();
+      }catch(e){
+        didThrow = true;
+      }
+
+      expect(didThrow).toBe(false);
+    });
+
+    it('should re-bind children on repeat re-bind (Array)', ()=> {
+      view1.bindingContext = null;
+      view2.bindingContext = null;
+      repeat.items = ['foo', 'bar'];
+      repeat.lastBoundItems = ['foo', 'bar'];
+      repeat.oldItems = repeat.items;
+
       repeat.bind();
+
+      expect(view1.bindingContext.$index).toEqual(0);
+      expect(view1.bindingContext.item).toEqual('foo');
+      expect(view2.bindingContext.$index).toEqual(1);
+      expect(view2.bindingContext.item).toEqual('bar');
+    });
+
+    it('should re-bind children on repeat re-bind when items added after last bound (Array)', ()=> {
+      view1.bindingContext = null;
+      view2.bindingContext = null;
+      let view3 = new ViewMock();
+      view3.bindingContext = {};
+      repeat.items = ['foo', 'bar', 'qux'];
+      repeat.lastBoundItems = ['foo', 'bar'];
+      repeat.oldItems = repeat.items;
+      spyOn(viewFactory, 'create').and.callFake(() => {
+        return view3;
+      })
+
+      repeat.bind();
+
+      expect(view1.bindingContext.$index).toEqual(0);
+      expect(view1.bindingContext.item).toEqual('foo');
+      expect(view2.bindingContext.$index).toEqual(1);
+      expect(view2.bindingContext.item).toEqual('bar');
+      expect(view3.bindingContext.$index).toEqual(2);
+    });
+
+    it('should re-bind children on repeat re-bind when items removed after last bound (Array)', ()=> {
+      view1.bindingContext = null;
+      view2.bindingContext = null;
+      let view3 = new ViewMock();
+      view3.bindingContext = {};
+      repeat.items = ['foo'];
+      repeat.lastBoundItems = ['foo', 'bar'];
+      repeat.oldItems = repeat.items;
+
+      repeat.bind();
+
+      expect(viewSlot.children.length).toBe(1);
+      expect(view1.bindingContext.$index).toEqual(0);
+      expect(view1.bindingContext.item).toEqual('foo');
+    });
+  });
+
+  describe('unbind', () => {
+    it('should release all model references', ()=> {
+      let view1 = new ViewMock();
+      let view2 = new ViewMock();
+      viewSlot.children = [view1, view2];
+      view1.bindingContext = {};
+      view2.bindingContext = {};
+
+      repeat.unbind();
+
+      expect(view1.bindingContext).toBeNull();
+      expect(view2.bindingContext).toBeNull();
+    });
+
+    it('should unsubscribe collection', () => {
+      let collectionObserver = new ArrayObserverMock();
+      let callContext = 'handleSplices';
+      repeat.collectionObserver = collectionObserver;
+      repeat.callContext = callContext;
+      spyOn(collectionObserver, 'unsubscribe');
+
+      repeat.unbind();
+
+      expect(collectionObserver.unsubscribe).toHaveBeenCalledWith(callContext, repeat);
+      expect(repeat.callContext).toBeNull();
+      expect(repeat.collectionObserver).toBeNull();
     });
   });
 
@@ -362,4 +450,9 @@ class ViewFactoryMock {
     view.bindingContext = context;
     return view;
   }
+}
+
+class ArrayObserverMock {
+  subscribe(){};
+  unsubscribe(){};
 }
