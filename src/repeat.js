@@ -64,8 +64,14 @@ export class Repeat {
         this.callContext = 'handleMapChangeRecords';
         this.collectionObserver.subscribe(this.callContext, this);
       } else if (items instanceof Array) {
-        let splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
+        let lastBoundItems = this.lastBoundItems;
+        let splices = calcSplices(items, 0, items.length, lastBoundItems, 0, lastBoundItems.length);
         this.collectionObserver = this.observerLocator.getArrayObserver(items);
+
+        let children = viewSlot.children;
+        for (let i = 0, ii = children.length; i < ii; ++i) {
+          children[i].bindingContext = this.createFullBindingContext(lastBoundItems[i], i, lastBoundItems.length);
+        }
 
         this.handleSplices(items, splices);
         this.lastBoundItems = this.oldItems = null;
@@ -86,6 +92,11 @@ export class Repeat {
 
     if (this.items instanceof Array) {
       this.lastBoundItems = this.items.slice(0);
+    }
+
+    let children = this.viewSlot.children;
+    for(let i = 0, ii = children.length; i < ii; ++i) {
+      children[i].bindingContext = null;
     }
 
     this.unsubscribeCollection();
@@ -296,7 +307,7 @@ export class Repeat {
 
   handleAddedSplices(array, splices) {
     let spliceIndex;
-    let spliceIndexLow;
+    let spliceIndexLow = 0;
     let arrayLength = array.length;
     for (let i = 0, ii = splices.length; i < ii; ++i) {
       let splice = splices[i];
