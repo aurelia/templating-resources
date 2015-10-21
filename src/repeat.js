@@ -40,54 +40,19 @@ export class Repeat {
   }
 
   bind(bindingContext) {
-    let items = this.items;
-    let viewSlot = this.viewSlot;
-    let observer;
-
     this.bindingContext = bindingContext;
 
-    if (!items) {
-      if (this.oldItems) {
-        viewSlot.removeAll(true);
-      }
-
+    if (!this.items) {
       return;
-    }
-
-    if (this.oldItems === items) {
-      if (items instanceof Map) {
-        let records = getChangeRecords(items);
-        this.collectionObserver = this.observerLocator.getMapObserver(items);
-
-        this.handleMapChangeRecords(items, records);
-
-        this.callContext = 'handleMapChangeRecords';
-        this.collectionObserver.subscribe(this.callContext, this);
-      } else if (items instanceof Array) {
-        let splices = calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
-        this.collectionObserver = this.observerLocator.getArrayObserver(items);
-
-        this.handleSplices(items, splices);
-        this.lastBoundItems = this.oldItems = null;
-
-        this.callContext = 'handleSplices';
-        this.collectionObserver.subscribe(this.callContext, this);
-      }
-      return;
-    } else if (this.oldItems) {
-      viewSlot.removeAll(true);
     }
 
     this.processItems();
   }
 
   unbind() {
-    this.oldItems = this.items;
-
-    if (this.items instanceof Array) {
-      this.lastBoundItems = this.items.slice(0);
-    }
-
+    this.items = null;
+    this.bindingContext = null;
+    this.viewSlot.removeAll(true);
     this.unsubscribeCollection();
   }
 

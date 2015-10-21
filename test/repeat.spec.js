@@ -5,7 +5,7 @@ import {Container} from 'aurelia-dependency-injection';
 import {initialize} from 'aurelia-pal-browser';
 
 describe('repeat', () => {
-  let repeat, viewSlot, viewFactory;
+  let repeat, viewSlot, viewFactory, observerLocator;
 
   beforeAll(() => {
     initialize();
@@ -15,9 +15,10 @@ describe('repeat', () => {
     let container = new Container();
     viewSlot = new ViewSlotMock();
     viewFactory = new BoundViewFactoryMock();
+    observerLocator = new ObserverLocator();
     container.registerInstance(ViewSlot, viewSlot);
     container.registerInstance(BoundViewFactory, viewFactory);
-    container.registerInstance(ObserverLocator, new ObserverLocator());
+    container.registerInstance(ObserverLocator, observerLocator);
     templatingEngine.initialize(container)
     repeat = templatingEngine.createModelForUnitTest(Repeat);
   });
@@ -33,30 +34,70 @@ describe('repeat', () => {
       spyOn(view2, 'unbind');
     });
 
-    it('should remove all old views if it has old items and provided with new items', () => {
-      repeat.itemsChanged = () => {};
-      repeat.items = ['1', '2'];
-      repeat.oldItems = ['a', 'b'];
-
+    it('should subscribe to changes when binding to an Array', () => {
+      repeat.items = ['foo', 'bar'];
+      let collectionObserver = new ArrayObserverMock();
+      spyOn(observerLocator, 'getArrayObserver').and.callFake(() => { return collectionObserver });
+      spyOn(collectionObserver, 'subscribe');
       repeat.bind();
 
-      expect(viewSlot.removeAll).toHaveBeenCalled();
+      expect(collectionObserver.subscribe).toHaveBeenCalledWith('handleSplices', repeat);
     });
 
-    it('should remove all old views if it has old items and no new items', () => {
-      repeat.items = undefined;
-      repeat.oldItems = ['a', 'b'];
+    it('should create views from provided items', () => {
+      repeat.items = ['foo', 'bar'];
 
+      let collectionObserver = new ArrayObserverMock();
+      spyOn(observerLocator, 'getArrayObserver').and.callFake(() => { return collectionObserver });
+      spyOn(viewFactory, 'create');
       repeat.bind();
 
-      expect(viewSlot.removeAll).toHaveBeenCalled();
+      expect(viewFactory.create.calls.count()).toEqual(repeat.items.length);
+
+      let fooContext = repeat.createFullBindingContext('foo', 0, repeat.items.length);
+      expect(viewFactory.create.calls.argsFor(0)).toEqual([fooContext]);
+
+      let barContext = repeat.createFullBindingContext('bar', 1, repeat.items.length);
+      expect(viewFactory.create.calls.argsFor(1)).toEqual([barContext]);
     });
 
-    it('should do nothing when bound with items is of type Number and items equal old items', () => {
-      repeat.items = 5;
-      repeat.oldItems = 5;
+    it('should add views to view slot', () => {
+      repeat.items = ['foo', 'bar'];
 
+      let collectionObserver = new ArrayObserverMock();
+      spyOn(observerLocator, 'getArrayObserver').and.callFake(() => { return collectionObserver });
+      spyOn(viewSlot, 'add');
       repeat.bind();
+
+      expect(viewSlot.add.calls.count()).toEqual(repeat.items.length);
+    });
+  });
+
+  describe('unbind', () => {
+    it('should remove all views', () => {
+      let view1, view2;
+      view1 = new ViewMock();
+      view2 = new ViewMock();
+      viewSlot.children = [view1, view2];
+      spyOn(viewSlot, 'removeAll');
+
+      repeat.unbind();
+
+      expect(viewSlot.removeAll).toHaveBeenCalledWith(true);
+    });
+
+    it('should unsubscribe collection', () => {
+      let collectionObserver = new ArrayObserverMock();
+      let callContext = 'handleSplices';
+      repeat.collectionObserver = collectionObserver;
+      repeat.callContext = callContext;
+      spyOn(collectionObserver, 'unsubscribe');
+
+      repeat.unbind();
+
+      expect(collectionObserver.unsubscribe).toHaveBeenCalledWith(callContext, repeat);
+      expect(repeat.callContext).toBeNull();
+      expect(repeat.collectionObserver).toBeNull();
     });
   });
 
@@ -255,6 +296,7 @@ describe('repeat', () => {
     });
 
   });
+
   describe('processNumber', () => {
     beforeEach(() => {
       repeat = new Repeat(new ViewFactoryMock(), viewSlot, new ObserverLocator());
@@ -362,4 +404,9 @@ class ViewFactoryMock {
     view.bindingContext = context;
     return view;
   }
+}
+
+class ArrayObserverMock {
+  subscribe(){};
+  unsubscribe(){};
 }
