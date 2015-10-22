@@ -14,6 +14,11 @@ import {_createDynamicElement} from './dynamic-element';
 import {_createCSSResource} from './css-resource';
 import {FEATURE, DOM} from 'aurelia-pal';
 import {HTMLSanitizer} from './html-sanitizer';
+import {OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior} from './binding-mode-behaviors';
+import {ThrottleBindingBehavior} from './throttle-binding-behavior';
+import {DebounceBindingBehavior} from './debounce-binding-behavior';
+import {SignalBindingBehavior} from './signal-binding-behavior';
+import {BindingSignaler} from './binding-signaler';
 
 function configure(config) {
   if (FEATURE.shadowDOM) {
@@ -33,7 +38,11 @@ function configure(config) {
     './sanitize-html',
     './focus',
     './compile-spy',
-    './view-spy'
+    './view-spy',
+    './binding-mode-behaviors',
+    './throttle-binding-behavior',
+    './debounce-binding-behavior',
+    './signal-binding-behavior'
   );
 
   let viewEngine = config.container.get(ViewEngine);
@@ -82,5 +91,12 @@ export {
   Focus,
   CompileSpy,
   ViewSpy,
-  configure
+  configure,
+  OneTimeBindingBehavior,
+  OneWayBindingBehavior,
+  TwoWayBindingBehavior,
+  ThrottleBindingBehavior,
+  DebounceBindingBehavior,
+  SignalBindingBehavior,
+  BindingSignaler
 };

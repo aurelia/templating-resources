@@ -37,6 +37,7 @@
     },
     "devDependencies": {
       "aurelia-pal-browser": "github:aurelia/pal-browser@^0.2.0",
+      "aurelia-templating-binding": "github:aurelia/templating-binding@^0.16.1",
       "babel": "npm:babel-core@^5.1.13",
       "babel-runtime": "npm:babel-runtime@^5.1.13",
       "core-js": "npm:core-js@^0.9.5"
