@@ -1,6 +1,7 @@
 ﻿import {TaskQueue} from 'aurelia-task-queue';
 import {Focus} from '../src/focus';
 import {initialize} from 'aurelia-pal-browser';
+import {DOM} from 'aurelia-pal';
 
 describe('focus', () => {
 
@@ -67,7 +68,7 @@ describe('focus', () => {
         focus.attached();
         setBindedFocusValue(false);
 
-        element.dispatchEvent(new FocusEvent('focus', {}));
+        element.dispatchEvent(DOM.createCustomEvent('focus'));
 
         expect(focus.value).toBe(true);
     });
@@ -77,7 +78,7 @@ describe('focus', () => {
         setBindedFocusValue(true);
 
         otherElement.focus();
-        element.dispatchEvent(new FocusEvent('blur', {}));
+        element.dispatchEvent(DOM.createCustomEvent('blur'));
 
         expect(focus.value).toBe(false);
     });
@@ -87,7 +88,7 @@ describe('focus', () => {
         focus.detached();
         setBindedFocusValue(false);
 
-        element.dispatchEvent(new FocusEvent('focus', {}));
+        element.dispatchEvent(DOM.createCustomEvent('focus'));
 
         expect(focus.value).toBe(false);
     });
@@ -97,7 +98,7 @@ describe('focus', () => {
         focus.detached();
         setBindedFocusValue(true);
 
-        element.dispatchEvent(new FocusEvent('blur', {}));
+        element.dispatchEvent(DOM.createCustomEvent('blur'));
 
         expect(focus.value).toBe(true);
     });
