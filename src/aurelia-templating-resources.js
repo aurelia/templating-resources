@@ -1,6 +1,5 @@
 import {Compose} from './compose';
 import {If} from './if';
-import {With} from './with';
 import {Repeat} from './repeat';
 import {Show} from './show';
 import {GlobalBehavior} from './global-behavior';
@@ -30,7 +29,6 @@ function configure(config) {
   config.globalResources(
     './compose',
     './if',
-    './with',
     './repeat',
     './show',
     './replaceable',
@@ -81,7 +79,6 @@ function configure(config) {
 export {
   Compose,
   If,
-  With,
   Repeat,
   Show,
   HTMLSanitizer,
