@@ -213,14 +213,14 @@ export class Repeat {
   }
 
   createBaseBindingContext(data) {
-    let context = {};
+    let context = Object.create(this.bindingContext);
     context[this.local] = data;
     context.$parent = this.bindingContext;
     return context;
   }
 
   createBaseExecutionKvpContext(key, value) {
-    let context = {};
+    let context = Object.create(this.bindingContext);
     context[this.key] = key;
     context[this.value] = value;
     context.$parent = this.bindingContext;
