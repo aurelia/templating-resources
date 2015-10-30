@@ -2,7 +2,7 @@
 import {inject} from 'aurelia-dependency-injection';
 import {ObserverLocator, calcSplices, getChangeRecords} from 'aurelia-binding';
 import {BoundViewFactory, ViewSlot, customAttribute, bindable, templateController} from 'aurelia-templating';
-import {CollectionStrategyLocator} from './collection-strategy';
+import {CollectionStrategyLocator} from './collection-strategy-locator';
 
 /**
 * Binding to iterate over an array and repeat a template

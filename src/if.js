@@ -43,7 +43,7 @@ export class If {
     }
 
     if (this.view === null) {
-      this.view = this.viewFactory.create(this.$parent);
+      this.view = this.viewFactory.create();
     }
 
     if (!this.showing) {

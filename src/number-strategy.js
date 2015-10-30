@@ -32,7 +32,8 @@ export class NumberStrategy extends CollectionStrategy {
 
     for (i = childrenLength, ii = value; i < ii; ++i) {
       row = this.createFullBindingContext(i, i, ii);
-      view = viewFactory.create(row);
+      view = viewFactory.create();
+      view.bind(row);
       viewSlot.add(view);
     }
   }

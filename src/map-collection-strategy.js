@@ -14,7 +14,8 @@ export class MapCollectionStrategy extends CollectionStrategy {
 
     items.forEach((value, key) => {
       row = this.createFullBindingContext(value, index, items.size, key);
-      view = viewFactory.create(row);
+      view = viewFactory.create();
+      view.bind(row);
       viewSlot.add(view);
       ++index;
     });
@@ -40,12 +41,14 @@ export class MapCollectionStrategy extends CollectionStrategy {
         removeIndex = this._getViewIndexByKey(key);
         viewSlot.removeAt(removeIndex, true);
         row = this.createBaseBindingContext(map.get(key), key);
-        view = this.viewFactory.create(row);
+        view = this.viewFactory.create();
+        view.bind(row);
         viewSlot.insert(removeIndex, view);
         break;
       case 'add':
         row = this.createBaseBindingContext(map.get(key), key);
-        view = this.viewFactory.create(row);
+        view = this.viewFactory.create();
+        view.bind(row);
         viewSlot.insert(map.size, view);
         break;
       case 'delete':

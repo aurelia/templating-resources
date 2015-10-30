@@ -14,7 +14,8 @@ export class With {
 
   valueChanged(newValue) {
     if (!this.view) {
-      this.view = this.viewFactory.create(newValue);
+      this.view = this.viewFactory.create();
+      this.view.bind(newValue);
       this.viewSlot.add(this.view);
     } else {
       this.view.bind(newValue);

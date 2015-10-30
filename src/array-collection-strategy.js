@@ -10,7 +10,8 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
     this.items = items;
     for (i = 0, ii = items.length; i < ii; ++i) {
       row = super.createFullBindingContext(items[i], i, ii);
-      view = this.viewFactory.create(row);
+      view = this.viewFactory.create();
+      view.bind(row);
       this.viewSlot.add(view);
     }
   }
@@ -63,7 +64,8 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
 
       for (; addIndex < end; ++addIndex) {
         let row = this.createFullBindingContext(array[addIndex], addIndex, arrayLength);
-        let view = this.viewFactory.create(row);
+        let view = this.viewFactory.create();
+        view.bind(row);
         this.viewSlot.insert(addIndex, view);
       }
     }
