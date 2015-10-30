@@ -32,6 +32,8 @@ export class MapCollectionStrategy extends CollectionStrategy {
     let row;
     let removeIndex;
     let record;
+    let rmPromises = [];
+    let viewOrPromise;
 
     for (i = 0, ii = records.length; i < ii; ++i) {
       record = records[i];
@@ -39,7 +41,10 @@ export class MapCollectionStrategy extends CollectionStrategy {
       switch (record.type) {
       case 'update':
         removeIndex = this._getViewIndexByKey(key);
-        viewSlot.removeAt(removeIndex, true);
+        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        if (viewOrPromise instanceof Promise) {
+          rmPromises.push(viewOrPromise);
+        }
         row = this.createBaseBindingContext(map.get(key), key);
         view = this.viewFactory.create();
         view.bind(row);
@@ -54,7 +59,10 @@ export class MapCollectionStrategy extends CollectionStrategy {
       case 'delete':
         if (record.oldValue === undefined) { return; }
         removeIndex = this._getViewIndexByKey(key);
-        viewSlot.removeAt(removeIndex, true);
+        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        if (viewOrPromise instanceof Promise) {
+          rmPromises.push(viewOrPromise);
+        }
         break;
       case 'clear':
         viewSlot.removeAll(true);
@@ -64,11 +72,12 @@ export class MapCollectionStrategy extends CollectionStrategy {
       }
     }
 
-    children = viewSlot.children;
-    length = children.length;
-
-    for (i = 0; i < length; i++) {
-      this.updateBindingContext(children[i].bindingContext, i, length);
+    if (rmPromises.length > 0) {
+      Promise.all(rmPromises).then(() => {
+        this.updateBindingContexts(0);
+      });
+    } else {
+      this.updateBindingContexts(0);
     }
   }
 
