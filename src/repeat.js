@@ -43,7 +43,7 @@ export class Repeat {
 
   bind(bindingContext) {
     let items = this.items;
-    if (!items) {
+    if (items === undefined) {
       return;
     }
 
@@ -92,7 +92,7 @@ export class Repeat {
     } else {
       this.collectionObserver = this.collectionStrategy.getCollectionObserver(items);
       this.collectionStrategy.processItems(items);
-      if(this.collectionObserver) {
+      if (this.collectionObserver) {
         this.callContext = 'handleChanges';
         this.collectionObserver.subscribe(this.callContext, this);
       }

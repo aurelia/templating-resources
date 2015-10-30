@@ -1,7 +1,7 @@
 import {CollectionStrategy} from './collection-strategy';
 
 export class MapCollectionStrategy extends CollectionStrategy {
-  getCollectionObserver(items){
+  getCollectionObserver(items) {
     return this.observerLocator.getMapObserver(items);
   }
 
@@ -27,11 +27,11 @@ export class MapCollectionStrategy extends CollectionStrategy {
     let i;
     let ii;
     let view;
-    let children;
-    let length;
     let row;
     let removeIndex;
     let record;
+    let rmPromises = [];
+    let viewOrPromise;
 
     for (i = 0, ii = records.length; i < ii; ++i) {
       record = records[i];
@@ -39,7 +39,10 @@ export class MapCollectionStrategy extends CollectionStrategy {
       switch (record.type) {
       case 'update':
         removeIndex = this._getViewIndexByKey(key);
-        viewSlot.removeAt(removeIndex, true);
+        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        if (viewOrPromise instanceof Promise) {
+          rmPromises.push(viewOrPromise);
+        }
         row = this.createBaseBindingContext(map.get(key), key);
         view = this.viewFactory.create();
         view.bind(row);
@@ -52,9 +55,12 @@ export class MapCollectionStrategy extends CollectionStrategy {
         viewSlot.insert(map.size, view);
         break;
       case 'delete':
-        if (!record.oldValue) { return; }
+        if (record.oldValue === undefined) { return; }
         removeIndex = this._getViewIndexByKey(key);
-        viewSlot.removeAt(removeIndex, true);
+        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        if (viewOrPromise instanceof Promise) {
+          rmPromises.push(viewOrPromise);
+        }
         break;
       case 'clear':
         viewSlot.removeAll(true);
@@ -64,11 +70,12 @@ export class MapCollectionStrategy extends CollectionStrategy {
       }
     }
 
-    children = viewSlot.children;
-    length = children.length;
-
-    for (i = 0; i < length; i++) {
-      this.updateBindingContext(children[i].bindingContext, i, length);
+    if (rmPromises.length > 0) {
+      Promise.all(rmPromises).then(() => {
+        this.updateBindingContexts(0);
+      });
+    } else {
+      this.updateBindingContexts(0);
     }
   }
 
@@ -78,9 +85,9 @@ export class MapCollectionStrategy extends CollectionStrategy {
     let ii;
     let child;
 
-    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) { // TODO (martingust) better way to get index?
+    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
       child = viewSlot.children[i];
-      if (child.bindings[0].source[this.key] === key) {
+      if (child.bindingContext[this.key] === key) {
         return i;
       }
     }

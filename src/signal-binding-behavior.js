@@ -2,7 +2,7 @@ import {bindingMode} from 'aurelia-binding';
 import {BindingSignaler} from './binding-signaler';
 
 export class SignalBindingBehavior {
-  static inject() { return [BindingSignaler]; };
+  static inject() { return [BindingSignaler]; }
   signals;
 
   constructor(bindingSignaler) {

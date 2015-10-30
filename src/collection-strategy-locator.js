@@ -9,13 +9,13 @@ export class CollectionStrategyLocator {
     this.container = container;
   }
 
-  getStrategy(items){
+  getStrategy(items) {
     let strategy;
     if (items instanceof Array) {
       strategy = this.container.get(ArrayCollectionStrategy);
     } else if (items instanceof Map) {
       strategy = this.container.get(MapCollectionStrategy);
-    } else if (items instanceof Number) {
+    } else if ((typeof items === 'number')) {
       strategy = this.container.get(NumberStrategy);
     } else {
       throw new Error('Object in "repeat" must be of type Array, Map or Number');

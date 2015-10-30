@@ -1,7 +1,7 @@
 import {CollectionStrategy} from './collection-strategy';
 
 export class NumberStrategy extends CollectionStrategy {
-  getCollectionObserver(){
+  getCollectionObserver() {
     return;
   }
 
@@ -36,5 +36,7 @@ export class NumberStrategy extends CollectionStrategy {
       view.bind(row);
       viewSlot.add(view);
     }
+
+    this.updateBindingContexts(0);
   }
 }
