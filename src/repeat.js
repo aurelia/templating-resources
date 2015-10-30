@@ -41,14 +41,14 @@ export class Repeat {
     this[context](this.items, changes);
   }
 
-  bind(bindingContext) {
+  bind(bindingContext, overrideContext) {
     let items = this.items;
     if (items === undefined) {
       return;
     }
 
     this.collectionStrategy = this.collectionStrategyLocator.getStrategy(this.items);
-    this.collectionStrategy.initialize(this, bindingContext);
+    this.collectionStrategy.initialize(this, bindingContext, overrideContext);
     this.processItems();
   }
 

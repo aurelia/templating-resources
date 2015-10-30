@@ -8,9 +8,9 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
     let view;
     this.items = items;
     for (i = 0, ii = items.length; i < ii; ++i) {
-      row = super.createFullBindingContext(items[i], i, ii);
+      row = super.createFullOverrideContext(items[i], i, ii);
       view = this.viewFactory.create();
-      view.bind(row);
+      view.bind(row, row);
       this.viewSlot.add(view);
     }
   }
@@ -40,11 +40,11 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
     if (rmPromises.length > 0) {
       Promise.all(rmPromises).then(() => {
         let spliceIndexLow = this._handleAddedSplices(array, splices);
-        this.updateBindingContexts(spliceIndexLow);
+        this.updateOverrideContexts(spliceIndexLow);
       });
     } else {
       let spliceIndexLow = this._handleAddedSplices(array, splices);
-      super.updateBindingContexts(spliceIndexLow);
+      super.updateOverrideContexts(spliceIndexLow);
     }
   }
 
@@ -62,9 +62,9 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
       }
 
       for (; addIndex < end; ++addIndex) {
-        let row = this.createFullBindingContext(array[addIndex], addIndex, arrayLength);
+        let row = this.createFullOverrideContext(array[addIndex], addIndex, arrayLength);
         let view = this.viewFactory.create();
-        view.bind(row);
+        view.bind(row, row);
         this.viewSlot.insert(addIndex, view);
       }
     }

@@ -1,5 +1,5 @@
 import {inject, transient} from 'aurelia-dependency-injection';
-import {ObserverLocator} from 'aurelia-binding';
+import {ObserverLocator, createOverrideContext} from 'aurelia-binding';
 
 @inject(ObserverLocator)
 @transient()
@@ -8,7 +8,7 @@ export class CollectionStrategy {
     this.observerLocator = observerLocator;
   }
 
-  initialize(repeat, bindingContext) {
+  initialize(repeat, bindingContext, overrideContext) {
     this.viewFactory = repeat.viewFactory;
     this.viewSlot = repeat.viewSlot;
     this.items = repeat.items;
@@ -16,6 +16,7 @@ export class CollectionStrategy {
     this.key = repeat.key;
     this.value = repeat.value;
     this.bindingContext = bindingContext;
+    this.overrideContext = overrideContext;
   }
 
   dispose() {
@@ -26,9 +27,10 @@ export class CollectionStrategy {
     this.key = null;
     this.value = null;
     this.bindingContext = null;
+    this.overrideContext = null;
   }
 
-  updateBindingContexts(startIndex) {
+  updateOverrideContexts(startIndex) {
     let children = this.viewSlot.children;
     let length = children.length;
 
@@ -37,17 +39,17 @@ export class CollectionStrategy {
     }
 
     for (; startIndex < length; ++startIndex) {
-      this.updateBindingContext(children[startIndex].bindingContext, startIndex, length);
+      this.updateOverrideContext(children[startIndex].overrideContext, startIndex, length);
     }
   }
 
-  createFullBindingContext(data, index, length, key) {
-    let context = this.createBaseBindingContext(data, key);
-    return this.updateBindingContext(context, index, length);
+  createFullOverrideContext(data, index, length, key) {
+    let context = this.createBaseOverrideContext(data, key);
+    return this.updateOverrideContext(context, index, length);
   }
 
-  createBaseBindingContext(data, key) {
-    let context = {};
+  createBaseOverrideContext(data, key) {
+    let context = createOverrideContext(this.bindingContext, this.overrideContext);
     // is key/value pair (Map)
     if (key) {
       context[this.key] = key;
@@ -55,19 +57,18 @@ export class CollectionStrategy {
     } else {
       context[this.local] = data;
     }
-    context.$parent = this.bindingContext;
+
     return context;
   }
 
-  createBaseExecutionKvpContext(key, value) {
-    let context = {};
+  createBaseOverrideKvpContext(key, value) {
+    let context = createOverrideContext(this.bindingContext, this.overrideContext);
     context[this.key] = key;
     context[this.value] = value;
-    context.$parent = this.bindingContext;
     return context;
   }
 
-  updateBindingContext(context, index, length) {
+  updateOverrideContext(context, index, length) {
     let first = (index === 0);
     let last = (index === length - 1);
     let even = index % 2 === 0;

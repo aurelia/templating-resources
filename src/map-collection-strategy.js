@@ -13,9 +13,9 @@ export class MapCollectionStrategy extends CollectionStrategy {
     let view;
 
     items.forEach((value, key) => {
-      row = this.createFullBindingContext(value, index, items.size, key);
+      row = this.createFullOverrideContext(value, index, items.size, key);
       view = viewFactory.create();
-      view.bind(row);
+      view.bind(row, row);
       viewSlot.add(view);
       ++index;
     });
@@ -43,15 +43,15 @@ export class MapCollectionStrategy extends CollectionStrategy {
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
-        row = this.createBaseBindingContext(map.get(key), key);
+        row = this.createBaseOverrideContext(map.get(key), key);
         view = this.viewFactory.create();
-        view.bind(row);
+        view.bind(row, row);
         viewSlot.insert(removeIndex, view);
         break;
       case 'add':
-        row = this.createBaseBindingContext(map.get(key), key);
+        row = this.createBaseOverrideContext(map.get(key), key);
         view = this.viewFactory.create();
-        view.bind(row);
+        view.bind(row, row);
         viewSlot.insert(map.size, view);
         break;
       case 'delete':
@@ -72,10 +72,10 @@ export class MapCollectionStrategy extends CollectionStrategy {
 
     if (rmPromises.length > 0) {
       Promise.all(rmPromises).then(() => {
-        this.updateBindingContexts(0);
+        this.updateOverrideContexts(0);
       });
     } else {
-      this.updateBindingContexts(0);
+      this.updateOverrideContexts(0);
     }
   }
 
@@ -87,7 +87,7 @@ export class MapCollectionStrategy extends CollectionStrategy {
 
     for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
       child = viewSlot.children[i];
-      if (child.bindingContext[this.key] === key) {
+      if (child.overrideContext[this.key] === key) {
         return i;
       }
     }

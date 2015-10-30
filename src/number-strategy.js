@@ -31,12 +31,12 @@ export class NumberStrategy extends CollectionStrategy {
     }
 
     for (i = childrenLength, ii = value; i < ii; ++i) {
-      row = this.createFullBindingContext(i, i, ii);
+      row = this.createFullOverrideContext(i, i, ii);
       view = viewFactory.create();
-      view.bind(row);
+      view.bind(row, row);
       viewSlot.add(view);
     }
 
-    this.updateBindingContexts(0);
+    this.updateOverrideContexts(0);
   }
 }

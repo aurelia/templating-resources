@@ -11,12 +11,16 @@ export class Replaceable {
     this.view = null;
   }
 
-  bind(bindingContext) {
+  bind(bindingContext, overrideContext) {
     if (this.view === null) {
       this.view = this.viewFactory.create();
       this.viewSlot.add(this.view);
     }
 
-    this.view.bind(bindingContext);
+    this.view.bind(bindingContext, overrideContext);
+  }
+
+  unbind() {
+    this.view.unbind();
   }
 }
