@@ -18,7 +18,9 @@ export class ViewSlotMock {
 }
 
 export  class ViewMock {
-  bind(){}
+  bind(bindingContext){
+    this.bindingContext = bindingContext;
+  }
   attached(){}
   detached(){}
   unbind(){}
@@ -31,10 +33,8 @@ export class BoundViewFactoryMock {
 }
 
 export class ViewFactoryMock {
-  create(context){
-    let view = new ViewMock();
-    view.bindingContext = context;
-    return view;
+  create(){
+    return new ViewMock();
   }
 }
 
