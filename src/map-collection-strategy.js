@@ -1,7 +1,7 @@
 import {CollectionStrategy} from './collection-strategy';
 
 export class MapCollectionStrategy extends CollectionStrategy {
-  getCollectionObserver(items){
+  getCollectionObserver(items) {
     return this.observerLocator.getMapObserver(items);
   }
 
@@ -27,8 +27,6 @@ export class MapCollectionStrategy extends CollectionStrategy {
     let i;
     let ii;
     let view;
-    let children;
-    let length;
     let row;
     let removeIndex;
     let record;

@@ -6,7 +6,6 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
     let ii;
     let row;
     let view;
-    let observer;
     this.items = items;
     for (i = 0, ii = items.length; i < ii; ++i) {
       row = super.createFullBindingContext(items[i], i, ii);
@@ -16,7 +15,7 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
     }
   }
 
-  getCollectionObserver(items){
+  getCollectionObserver(items) {
     return this.observerLocator.getArrayObserver(items);
   }
 

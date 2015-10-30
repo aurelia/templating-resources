@@ -1,7 +1,7 @@
 import {CollectionStrategy} from './collection-strategy';
 
 export class NumberStrategy extends CollectionStrategy {
-  getCollectionObserver(){
+  getCollectionObserver() {
     return;
   }
 

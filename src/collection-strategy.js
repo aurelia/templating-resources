@@ -1,4 +1,4 @@
-import {Container, inject, transient} from 'aurelia-dependency-injection';
+import {inject, transient} from 'aurelia-dependency-injection';
 import {ObserverLocator} from 'aurelia-binding';
 
 @inject(ObserverLocator)

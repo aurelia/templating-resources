@@ -9,7 +9,7 @@ export class CollectionStrategyLocator {
     this.container = container;
   }
 
-  getStrategy(items){
+  getStrategy(items) {
     let strategy;
     if (items instanceof Array) {
       strategy = this.container.get(ArrayCollectionStrategy);
