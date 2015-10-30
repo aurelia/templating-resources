@@ -52,7 +52,7 @@ export class MapCollectionStrategy extends CollectionStrategy {
         viewSlot.insert(map.size, view);
         break;
       case 'delete':
-        if (!record.oldValue) { return; }
+        if (record.oldValue === undefined) { return; }
         removeIndex = this._getViewIndexByKey(key);
         viewSlot.removeAt(removeIndex, true);
         break;
@@ -78,9 +78,9 @@ export class MapCollectionStrategy extends CollectionStrategy {
     let ii;
     let child;
 
-    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) { // TODO (martingust) better way to get index?
+    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
       child = viewSlot.children[i];
-      if (child.bindings[0].source[this.key] === key) {
+      if (child.bindingContext[this.key] === key) {
         return i;
       }
     }
