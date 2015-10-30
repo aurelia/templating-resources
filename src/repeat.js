@@ -43,7 +43,7 @@ export class Repeat {
 
   bind(bindingContext) {
     let items = this.items;
-    if (!items) {
+    if (items === undefined) {
       return;
     }
 
