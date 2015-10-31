@@ -3,7 +3,6 @@ import {If} from './if';
 import {With} from './with';
 import {Repeat} from './repeat';
 import {Show} from './show';
-import {GlobalBehavior} from './global-behavior';
 import {SanitizeHTMLValueConverter} from './sanitize-html';
 import {Replaceable} from './replaceable';
 import {Focus} from './focus';
@@ -34,7 +33,6 @@ function configure(config) {
     './repeat',
     './show',
     './replaceable',
-    './global-behavior',
     './sanitize-html',
     './focus',
     './compile-spy',
@@ -86,7 +84,6 @@ export {
   Show,
   HTMLSanitizer,
   SanitizeHTMLValueConverter,
-  GlobalBehavior,
   Replaceable,
   Focus,
   CompileSpy,
