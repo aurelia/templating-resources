@@ -1,5 +1,5 @@
 import {ObserverLocator} from 'aurelia-binding';
-import {BoundViewFactory, templatingEngine, ViewSlot, ViewFactory} from 'aurelia-templating';
+import {BoundViewFactory, TemplatingEngine, ViewSlot, ViewFactory, ModuleAnalyzer} from 'aurelia-templating';
 import {Container} from 'aurelia-dependency-injection';
 import {initialize} from 'aurelia-pal-browser';
 import {Repeat} from '../src/repeat';
@@ -24,7 +24,7 @@ describe('repeat', () => {
     container.registerInstance(BoundViewFactory, viewFactory);
     container.registerInstance(ObserverLocator, observerLocator);
     container.registerInstance(CollectionStrategyLocator, collectionStrategyLocator);
-    templatingEngine.initialize(container)
+    let templatingEngine = new TemplatingEngine(container, new ModuleAnalyzer());
     repeat = templatingEngine.createModelForUnitTest(Repeat);
   });
 
@@ -60,13 +60,14 @@ describe('repeat', () => {
 
     it('should initialize the collection strategy', () => {
       let items = ['foo', 'bar'];
-      let bindingContext = { foo: 'bar' };
+      let bindingContext = { foo: 'bar' }
+      let overrideContext = { bar: 'foo' }
       repeat.items = items;
       spyOn(collectionStrategyMock, 'initialize');
 
-      repeat.bind(bindingContext);
+      repeat.bind(bindingContext, overrideContext);
 
-      expect(collectionStrategyMock.initialize).toHaveBeenCalledWith(repeat, bindingContext);
+      expect(collectionStrategyMock.initialize).toHaveBeenCalledWith(repeat, bindingContext, overrideContext);
     });
 
     it('should subscribe to changes', () => {

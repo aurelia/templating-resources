@@ -1,5 +1,5 @@
 import {ObserverLocator} from 'aurelia-binding';
-import {BoundViewFactory, templatingEngine, ViewSlot, ViewFactory} from 'aurelia-templating';
+import {BoundViewFactory, TemplatingEngine, ViewSlot, ViewFactory, ModuleAnalyzer} from 'aurelia-templating';
 import {Container} from 'aurelia-dependency-injection';
 import {initialize} from 'aurelia-pal-browser';
 import {Repeat} from '../src/repeat';
@@ -26,7 +26,7 @@ describe('NumberStrategy', () => {
     container.registerInstance(BoundViewFactory, viewFactory);
     container.registerInstance(ObserverLocator, observerLocator);
     container.registerInstance(CollectionStrategyLocator, collectionStrategyLocator);
-    templatingEngine.initialize(container)
+    let templatingEngine = new TemplatingEngine(container, new ModuleAnalyzer());
     repeat = templatingEngine.createModelForUnitTest(Repeat);
   });
 
@@ -42,14 +42,14 @@ describe('NumberStrategy', () => {
 
       expect(viewSlot.children.length).toBe(3);
 
-      expect(viewSlot.children[0].bindingContext.item).toBe(0);
-      expect(viewSlot.children[0].bindingContext.$index).toBe(0);
+      expect(viewSlot.children[0].overrideContext.item).toBe(0);
+      expect(viewSlot.children[0].overrideContext.$index).toBe(0);
 
-      expect(viewSlot.children[1].bindingContext.item).toBe(1);
-      expect(viewSlot.children[1].bindingContext.$index).toBe(1);
+      expect(viewSlot.children[1].overrideContext.item).toBe(1);
+      expect(viewSlot.children[1].overrideContext.$index).toBe(1);
 
-      expect(viewSlot.children[2].bindingContext.item).toBe(2);
-      expect(viewSlot.children[2].bindingContext.$index).toBe(2);
+      expect(viewSlot.children[2].overrideContext.item).toBe(2);
+      expect(viewSlot.children[2].overrideContext.$index).toBe(2);
     });
 
     it('should add views when number is increased', () => {
@@ -58,17 +58,17 @@ describe('NumberStrategy', () => {
 
       expect(viewSlot.children.length).toBe(4);
 
-      expect(viewSlot.children[0].bindingContext.item).toBe(0);
-      expect(viewSlot.children[0].bindingContext.$index).toBe(0);
+      expect(viewSlot.children[0].overrideContext.item).toBe(0);
+      expect(viewSlot.children[0].overrideContext.$index).toBe(0);
 
-      expect(viewSlot.children[1].bindingContext.item).toBe(1);
-      expect(viewSlot.children[1].bindingContext.$index).toBe(1);
+      expect(viewSlot.children[1].overrideContext.item).toBe(1);
+      expect(viewSlot.children[1].overrideContext.$index).toBe(1);
 
-      expect(viewSlot.children[2].bindingContext.item).toBe(2);
-      expect(viewSlot.children[2].bindingContext.$index).toBe(2);
+      expect(viewSlot.children[2].overrideContext.item).toBe(2);
+      expect(viewSlot.children[2].overrideContext.$index).toBe(2);
 
-      expect(viewSlot.children[3].bindingContext.item).toBe(3);
-      expect(viewSlot.children[3].bindingContext.$index).toBe(3);
+      expect(viewSlot.children[3].overrideContext.item).toBe(3);
+      expect(viewSlot.children[3].overrideContext.$index).toBe(3);
     });
 
     it('should remove views when number is decreased', () => {
@@ -77,11 +77,11 @@ describe('NumberStrategy', () => {
 
       expect(viewSlot.children.length).toBe(2);
 
-      expect(viewSlot.children[0].bindingContext.item).toBe(0);
-      expect(viewSlot.children[0].bindingContext.$index).toBe(0);
+      expect(viewSlot.children[0].overrideContext.item).toBe(0);
+      expect(viewSlot.children[0].overrideContext.$index).toBe(0);
 
-      expect(viewSlot.children[1].bindingContext.item).toBe(1);
-      expect(viewSlot.children[1].bindingContext.$index).toBe(1);
+      expect(viewSlot.children[1].overrideContext.item).toBe(1);
+      expect(viewSlot.children[1].overrideContext.$index).toBe(1);
     });
 
     it('should remove all view when updated value is 0', () => {

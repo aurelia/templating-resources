@@ -68,17 +68,21 @@ describe('if', () => {
     expect(sut.view).toEqual(jasmine.any(ViewMock));
   });
 
-  it('should create the view with provided binding context', () => {
+  it('should create the view', () => {
     sut.value = true;
     sut.view = null;
+    let newView = new ViewMock();
     spyOn(viewFactory, 'create').and.callFake(() => {
-      return new ViewMock();
+      return newView;
     });
-    let context = 42;
+    spyOn(newView, 'bind');
+    let bindingContext = 42;
+    let overrideContext = 24;
 
-    sut.bind(context);
+    sut.bind(bindingContext, overrideContext);
 
-    expect(viewFactory.create).toHaveBeenCalledWith(context);
+    expect(viewFactory.create).toHaveBeenCalled();
+    expect(newView.bind).toHaveBeenCalledWith(42, 24);
   });
 
   it('should show the view when provided value is truthy and currently not showing', () => {

@@ -31,7 +31,7 @@ export class With {
   unbind() {
     this.overrideContext = null;
 
-    if(this.view) {
+    if (this.view) {
       this.view.unbind();
     }
   }
