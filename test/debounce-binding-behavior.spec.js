@@ -1,5 +1,11 @@
 import {Container} from 'aurelia-dependency-injection';
-import {bindingMode, BindingEngine, ListenerExpression, ValueAttributeObserver} from 'aurelia-binding';
+import {
+  bindingMode,
+  BindingEngine,
+  ListenerExpression,
+  ValueAttributeObserver,
+  createScopeForTest
+} from 'aurelia-binding';
 import {initialize as initializePAL} from 'aurelia-pal-browser';
 import {DebounceBindingBehavior} from '../src/debounce-binding-behavior';
 import {DOM} from 'aurelia-pal';
@@ -18,6 +24,7 @@ describe('DebounceBindingBehavior', () => {
 
   it('should debounce target updates', done => {
     let source = { foo: 0 };
+    let scope = createScopeForTest(source);
     let target = document.createElement('input');
     let delay = 150;
     let bindingExpression = bindingEngine.createBindingExpression('value', `foo & debounce:${delay}`, bindingMode.oneWay, lookupFunctions);
@@ -26,7 +33,7 @@ describe('DebounceBindingBehavior', () => {
 
     function exerciseBehavior(callback) {
       // overrides updateTarget
-      binding.bind(source);
+      binding.bind(scope);
       expect(binding.updateTarget === originalMethod).not.toBe(true);
 
       // subscribes
@@ -90,6 +97,7 @@ describe('DebounceBindingBehavior', () => {
     function exerciseBehavior(callback) {
       //console.info(`=======================================================`);
       let source = {};
+      let scope = createScopeForTest(source);
       let _foo = '0';
       let lastUpdateTime = null;
       let sourceUpdates = 0;
@@ -109,7 +117,7 @@ describe('DebounceBindingBehavior', () => {
       });
 
       // overrides updateSource
-      binding.bind(source);
+      binding.bind(scope);
       expect(binding.updateSource === originalMethod).not.toBe(true);
 
       // subscribes
@@ -184,9 +192,10 @@ describe('DebounceBindingBehavior', () => {
           }
         }
       };
+      let scope = createScopeForTest(source);
 
       // overrides updateSource
-      binding.bind(source);
+      binding.bind(scope);
       expect(binding.callSource === originalMethod).not.toBe(true);
 
       // updates

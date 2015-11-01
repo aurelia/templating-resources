@@ -1,5 +1,11 @@
 import {Container} from 'aurelia-dependency-injection';
-import {bindingMode, BindingEngine, ListenerExpression, ValueAttributeObserver} from 'aurelia-binding';
+import {
+  bindingMode,
+  BindingEngine,
+  ListenerExpression,
+  ValueAttributeObserver,
+  createScopeForTest
+} from 'aurelia-binding';
 import {initialize as initializePAL} from 'aurelia-pal-browser';
 import {ThrottleBindingBehavior} from '../src/throttle-binding-behavior';
 import {DOM} from 'aurelia-pal';
@@ -18,6 +24,7 @@ describe('ThrottleBindingBehavior', () => {
 
   it('should throttle target updates', done => {
     let source = { foo: 0 };
+    let scope = createScopeForTest(source);
     let target = document.createElement('input');
     let delay = 150;
     let bindingExpression = bindingEngine.createBindingExpression('value', `foo & throttle:${delay}`, bindingMode.oneWay, lookupFunctions);
@@ -26,7 +33,7 @@ describe('ThrottleBindingBehavior', () => {
 
     function exerciseBehavior(callback) {
       // overrides updateTarget
-      binding.bind(source);
+      binding.bind(scope);
       expect(binding.updateTarget === originalMethod).not.toBe(true);
 
       // subscribes
@@ -75,6 +82,7 @@ describe('ThrottleBindingBehavior', () => {
 
     function exerciseBehavior(callback) {
       let source = {};
+      let scope = createScopeForTest(source);
       let _foo = '0';
       let last = null;
       let sourceUpdates = 0;
@@ -95,7 +103,7 @@ describe('ThrottleBindingBehavior', () => {
       });
 
       // overrides updateSource
-      binding.bind(source);
+      binding.bind(scope);
       expect(binding.updateSource === originalMethod).not.toBe(true);
 
       // subscribes
@@ -159,9 +167,10 @@ describe('ThrottleBindingBehavior', () => {
           last = new Date();
         }
       };
+      let scope = createScopeForTest(source);
 
       // overrides updateSource
-      binding.bind(source);
+      binding.bind(scope);
       expect(binding.callSource === originalMethod).not.toBe(true);
 
       // throttles

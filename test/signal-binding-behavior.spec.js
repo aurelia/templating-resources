@@ -1,5 +1,5 @@
 import {Container} from 'aurelia-dependency-injection';
-import {bindingMode, BindingEngine} from 'aurelia-binding';
+import {bindingMode, BindingEngine, createScopeForTest} from 'aurelia-binding';
 import {InterpolationBindingExpression} from 'aurelia-templating-binding';
 import {initialize as initializePAL} from 'aurelia-pal-browser';
 import {SignalBindingBehavior} from '../src/signal-binding-behavior';
@@ -31,19 +31,21 @@ describe('SignalBindingBehavior', () => {
 
   it('should throw in one-time binding', () => {
     let source = {};
+    let scope = createScopeForTest(source);
     let target = document.createElement('input');
     let bindingExpression = bindingEngine.createBindingExpression('value', `'foo' & signal:'test'`, bindingMode.oneTime, lookupFunctions);
     let binding = bindingExpression.createBinding(target);
-    expect(() => binding.bind(source)).toThrow();
+    expect(() => binding.bind(scope)).toThrow();
   });
 
   it('should signal binding', () => {
     let source = { updateDateTime: new Date() };
+    let scope = createScopeForTest(source);
     let target = document.createElement('input');
     let bindingExpression = bindingEngine.createBindingExpression('value', `updateDateTime | testConverter & signal:'test'`, bindingMode.oneWay, lookupFunctions);
     let binding = bindingExpression.createBinding(target);
     converterResult = 'hello';
-    binding.bind(source);
+    binding.bind(scope);
     expect(target.value).toBe(converterResult);
     converterResult = 'world';
     bindingSignaler.signal('test');
@@ -52,6 +54,7 @@ describe('SignalBindingBehavior', () => {
 
   it('should signal interpolation binding', () => {
     let source = { updateDateTime: new Date() };
+    let scope = createScopeForTest(source);
     let target = document.createElement('div');
     let bindingExpression = new InterpolationBindingExpression(
       bindingEngine.observerLocator,
@@ -63,7 +66,7 @@ describe('SignalBindingBehavior', () => {
 
     let binding = bindingExpression.createBinding(target);
     converterResult = 'hello';
-    binding.bind(source);
+    binding.bind(scope);
     expect(target.textContent).toBe(converterResult);
     converterResult = 'world';
     bindingSignaler.signal('test');
