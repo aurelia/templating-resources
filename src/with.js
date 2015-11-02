@@ -9,27 +9,28 @@ export class With {
   constructor(viewFactory, viewSlot) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
-    this.overrideContext = null;
+    this.parentOverrideContext = null;
     this.view = null;
   }
 
   bind(bindingContext, overrideContext) {
-    this.overrideContext = createOverrideContext(bindingContext, overrideContext);
+    this.parentOverrideContext = overrideContext;
     this.valueChanged(this.value);
   }
 
   valueChanged(newValue) {
+    let overrideContext = createOverrideContext(newValue, this.parentOverrideContext);
     if (!this.view) {
       this.view = this.viewFactory.create();
-      this.view.bind(newValue, this.overrideContext);
+      this.view.bind(newValue, overrideContext);
       this.viewSlot.add(this.view);
     } else {
-      this.view.bind(newValue, this.overrideContext);
+      this.view.bind(newValue, overrideContext);
     }
   }
 
   unbind() {
-    this.overrideContext = null;
+    this.parentOverrideContext = null;
 
     if (this.view) {
       this.view.unbind();
