@@ -17,8 +17,9 @@ export class ViewSlotMock {
   }
 }
 
-export  class ViewMock {
-  bind(overrideContext){
+export class ViewMock {
+  bind(bindingContext, overrideContext) {
+    this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;
   }
   attached(){}
