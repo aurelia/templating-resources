@@ -9,13 +9,13 @@ export class MapCollectionStrategy extends CollectionStrategy {
     let viewFactory = this.viewFactory;
     let viewSlot = this.viewSlot;
     let index = 0;
-    let row;
+    let overrideContext;
     let view;
 
     items.forEach((value, key) => {
-      row = this.createFullOverrideContext(value, index, items.size, key);
+      overrideContext = this.createFullOverrideContext(value, index, items.size, key);
       view = viewFactory.create();
-      view.bind(row, row);
+      view.bind(undefined, overrideContext);
       viewSlot.add(view);
       ++index;
     });
@@ -27,7 +27,7 @@ export class MapCollectionStrategy extends CollectionStrategy {
     let i;
     let ii;
     let view;
-    let row;
+    let overrideContext;
     let removeIndex;
     let record;
     let rmPromises = [];
@@ -43,15 +43,15 @@ export class MapCollectionStrategy extends CollectionStrategy {
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
-        row = this.createBaseOverrideContext(map.get(key), key);
+        overrideContext = this.createBaseOverrideContext(map.get(key), key);
         view = this.viewFactory.create();
-        view.bind(row, row);
+        view.bind(undefined, overrideContext);
         viewSlot.insert(removeIndex, view);
         break;
       case 'add':
-        row = this.createBaseOverrideContext(map.get(key), key);
+        overrideContext = this.createBaseOverrideContext(map.get(key), key);
         view = this.viewFactory.create();
-        view.bind(row, row);
+        view.bind(undefined, overrideContext);
         viewSlot.insert(map.size, view);
         break;
       case 'delete':

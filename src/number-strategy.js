@@ -11,7 +11,7 @@ export class NumberStrategy extends CollectionStrategy {
     let childrenLength = viewSlot.children.length;
     let i;
     let ii;
-    let row;
+    let overrideContext;
     let view;
     let viewsToRemove;
 
@@ -31,9 +31,9 @@ export class NumberStrategy extends CollectionStrategy {
     }
 
     for (i = childrenLength, ii = value; i < ii; ++i) {
-      row = this.createFullOverrideContext(i, i, ii);
+      overrideContext = this.createFullOverrideContext(i, i, ii);
       view = viewFactory.create();
-      view.bind(row, row);
+      view.bind(undefined, overrideContext);
       viewSlot.add(view);
     }
 

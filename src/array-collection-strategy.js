@@ -4,13 +4,13 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
   processItems(items) {
     let i;
     let ii;
-    let row;
+    let overrideContext;
     let view;
     this.items = items;
     for (i = 0, ii = items.length; i < ii; ++i) {
-      row = super.createFullOverrideContext(items[i], i, ii);
+      overrideContext = super.createFullOverrideContext(items[i], i, ii);
       view = this.viewFactory.create();
-      view.bind(row, row);
+      view.bind(undefined, overrideContext);
       this.viewSlot.add(view);
     }
   }
@@ -62,9 +62,9 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
       }
 
       for (; addIndex < end; ++addIndex) {
-        let row = this.createFullOverrideContext(array[addIndex], addIndex, arrayLength);
+        let overrideContext = this.createFullOverrideContext(array[addIndex], addIndex, arrayLength);
         let view = this.viewFactory.create();
-        view.bind(row, row);
+        view.bind(undefined, overrideContext);
         this.viewSlot.insert(addIndex, view);
       }
     }
