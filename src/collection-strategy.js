@@ -51,20 +51,13 @@ export class CollectionStrategy {
   createBaseOverrideContext(data, key) {
     let context = createOverrideContext(undefined, this.overrideContext);
     // is key/value pair (Map)
-    if (key) {
+    if (typeof key !== 'undefined') {
       context[this.key] = key;
       context[this.value] = data;
     } else {
       context[this.local] = data;
     }
 
-    return context;
-  }
-
-  createBaseOverrideKvpContext(key, value) {
-    let context = createOverrideContext(undefined, this.overrideContext);
-    context[this.key] = key;
-    context[this.value] = value;
     return context;
   }
 

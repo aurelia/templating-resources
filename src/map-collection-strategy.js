@@ -43,16 +43,16 @@ export class MapCollectionStrategy extends CollectionStrategy {
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
-        overrideContext = this.createBaseOverrideContext(map.get(key), key);
+        overrideContext = this.createFullOverrideContext(map.get(key), removeIndex, map.size, key);
         view = this.viewFactory.create();
         view.bind(undefined, overrideContext);
         viewSlot.insert(removeIndex, view);
         break;
       case 'add':
-        overrideContext = this.createBaseOverrideContext(map.get(key), key);
+        overrideContext = this.createFullOverrideContext(map.get(key), map.size - 1, map.size, key);
         view = this.viewFactory.create();
         view.bind(undefined, overrideContext);
-        viewSlot.insert(map.size, view);
+        viewSlot.insert(map.size - 1, view);
         break;
       case 'delete':
         if (record.oldValue === undefined) { return; }
