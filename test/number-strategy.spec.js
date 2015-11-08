@@ -1,11 +1,11 @@
 import {ObserverLocator} from 'aurelia-binding';
-import {BoundViewFactory, TemplatingEngine, ViewSlot, ViewFactory, ModuleAnalyzer} from 'aurelia-templating';
+import {BoundViewFactory, TemplatingEngine, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
 import {Container} from 'aurelia-dependency-injection';
 import {initialize} from 'aurelia-pal-browser';
 import {Repeat} from '../src/repeat';
 import {CollectionStrategyLocator} from '../src/collection-strategy-locator';
 import {NumberStrategy} from '../src/number-strategy';
-import {ViewSlotMock, BoundViewFactoryMock, CollectionStrategyMock, ViewMock, ArrayObserverMock, ViewFactoryMock} from './mocks';
+import {ViewSlotMock, BoundViewFactoryMock, CollectionStrategyMock, ViewMock, ArrayObserverMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
 
 describe('NumberStrategy', () => {
   let repeat, strategy, viewSlot, viewFactory, observerLocator, collectionStrategyLocator, collectionStrategyMock;
@@ -22,6 +22,8 @@ describe('NumberStrategy', () => {
     collectionStrategyLocator = new CollectionStrategyLocator();
     collectionStrategyMock = new CollectionStrategyMock();
     strategy = new NumberStrategy();
+    container.registerInstance(TargetInstruction, instructionMock);
+    container.registerInstance(ViewResources, viewResourcesMock);
     container.registerInstance(ViewSlot, viewSlot);
     container.registerInstance(BoundViewFactory, viewFactory);
     container.registerInstance(ObserverLocator, observerLocator);
@@ -32,7 +34,7 @@ describe('NumberStrategy', () => {
 
   describe('processItems', () => {
     beforeEach(() => {
-      repeat = new Repeat(new ViewFactoryMock(), viewSlot, new ObserverLocator());
+      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlot, viewResourcesMock, new ObserverLocator());
       strategy.initialize(repeat, {});
       viewSlot.children = [];
     });

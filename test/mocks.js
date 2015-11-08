@@ -50,3 +50,25 @@ export class CollectionStrategyMock {
   getCollectionObserver() {}
   dispose() {}
 }
+
+export const instructionMock = {
+  behaviorInstructions: [
+    {
+      originalAttrName: 'repeat.for',
+      attributes: {
+        items: {
+          sourceExpression: {
+            evaluate: (scope, lookupFunctions) => null
+          }
+        }
+      }
+    }
+  ]
+};
+
+export const viewResourcesMock = {
+  lookupFunctions: {
+    valueConverters: name => null,
+    bindingBehaviors: name => null
+  }
+};
