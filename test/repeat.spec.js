@@ -25,7 +25,7 @@ describe('repeat', () => {
     container.registerInstance(ObserverLocator, observerLocator);
     container.registerInstance(CollectionStrategyLocator, collectionStrategyLocator);
     let templatingEngine = new TemplatingEngine(container, new ModuleAnalyzer());
-    repeat = templatingEngine.createModelForUnitTest(Repeat);
+    repeat = templatingEngine.createViewModelForUnitTest(Repeat);
   });
 
   describe('bind', () => {
