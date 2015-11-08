@@ -18,6 +18,7 @@ import {ThrottleBindingBehavior} from './throttle-binding-behavior';
 import {DebounceBindingBehavior} from './debounce-binding-behavior';
 import {SignalBindingBehavior} from './signal-binding-behavior';
 import {BindingSignaler} from './binding-signaler';
+import {UpdateTriggerBindingBehavior} from './update-trigger-binding-behavior';
 
 function configure(config) {
   if (FEATURE.shadowDOM) {
@@ -40,7 +41,8 @@ function configure(config) {
     './binding-mode-behaviors',
     './throttle-binding-behavior',
     './debounce-binding-behavior',
-    './signal-binding-behavior'
+    './signal-binding-behavior',
+    './update-trigger-binding-behavior'
   );
 
   let viewEngine = config.container.get(ViewEngine);
@@ -95,5 +97,6 @@ export {
   ThrottleBindingBehavior,
   DebounceBindingBehavior,
   SignalBindingBehavior,
-  BindingSignaler
+  BindingSignaler,
+  UpdateTriggerBindingBehavior
 };
