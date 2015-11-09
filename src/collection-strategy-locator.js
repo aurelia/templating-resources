@@ -7,20 +7,28 @@ import {NumberStrategy} from './number-strategy';
 export class CollectionStrategyLocator {
   constructor(container) {
     this.container = container;
+    this.strategies = [];
+    this.matchers = [];
+
+    this.addStrategy(ArrayCollectionStrategy, items => items instanceof Array);
+    this.addStrategy(MapCollectionStrategy, items => items instanceof Map);
+    this.addStrategy(NumberStrategy, items => typeof items === 'number');
   }
 
-  getStrategy(items) {
-    let strategy;
-    if (items instanceof Array) {
-      strategy = this.container.get(ArrayCollectionStrategy);
-    } else if (items instanceof Map) {
-      strategy = this.container.get(MapCollectionStrategy);
-    } else if ((typeof items === 'number')) {
-      strategy = this.container.get(NumberStrategy);
-    } else {
-      throw new Error('Object in "repeat" must be of type Array, Map or Number');
+  addStrategy(collectionStrategy: Function, matcher: (items: any) => boolean) {
+    this.strategies.push(collectionStrategy);
+    this.matchers.push(matcher);
+  }
+
+  getStrategy(items: any): CollectionStrategy {
+    let matchers = this.matchers;
+
+    for (let i = 0, ii = matchers.length; i < ii; ++i) {
+      if (matchers[i](items)) {
+        return this.container.get(this.strategies[i]);
+      }
     }
 
-    return strategy;
+    throw new Error('Object in "repeat" must have a valid collection strategy.');
   }
 }
