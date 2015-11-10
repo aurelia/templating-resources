@@ -1,10 +1,10 @@
 import {ObserverLocator} from 'aurelia-binding';
-import {BoundViewFactory, TemplatingEngine, ViewSlot, ViewFactory, ModuleAnalyzer} from 'aurelia-templating';
+import {BoundViewFactory, TemplatingEngine, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
 import {Container} from 'aurelia-dependency-injection';
 import {initialize} from 'aurelia-pal-browser';
 import {Repeat} from '../src/repeat';
 import {CollectionStrategyLocator} from '../src/collection-strategy-locator';
-import {ViewSlotMock, BoundViewFactoryMock, CollectionStrategyMock, ViewMock, ArrayObserverMock} from './mocks';
+import {ViewSlotMock, BoundViewFactoryMock, CollectionStrategyMock, ViewMock, ArrayObserverMock, instructionMock, viewResourcesMock} from './mocks';
 
 describe('repeat', () => {
   let repeat, viewSlot, viewFactory, observerLocator, collectionStrategyLocator, collectionStrategyMock;
@@ -20,6 +20,8 @@ describe('repeat', () => {
     observerLocator = new ObserverLocator();
     collectionStrategyLocator = new CollectionStrategyLocator();
     collectionStrategyMock = new CollectionStrategyMock();
+    container.registerInstance(TargetInstruction, instructionMock);
+    container.registerInstance(ViewResources, viewResourcesMock);
     container.registerInstance(ViewSlot, viewSlot);
     container.registerInstance(BoundViewFactory, viewFactory);
     container.registerInstance(ObserverLocator, observerLocator);

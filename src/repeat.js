@@ -1,7 +1,20 @@
 /*eslint no-loop-func:0, no-unused-vars:0*/
 import {inject} from 'aurelia-dependency-injection';
-import {ObserverLocator, calcSplices, getChangeRecords} from 'aurelia-binding';
-import {BoundViewFactory, ViewSlot, customAttribute, bindable, templateController} from 'aurelia-templating';
+import {
+  ObserverLocator,
+  getChangeRecords,
+  BindingBehavior,
+  ValueConverter
+} from 'aurelia-binding';
+import {
+  BoundViewFactory,
+  TargetInstruction,
+  ViewSlot,
+  ViewResources,
+  customAttribute,
+  bindable,
+  templateController
+} from 'aurelia-templating';
 import {CollectionStrategyLocator} from './collection-strategy-locator';
 
 /**
@@ -10,12 +23,14 @@ import {CollectionStrategyLocator} from './collection-strategy-locator';
 * @class Repeat
 * @constructor
 * @param {BoundViewFactory} viewFactory The factory generating the view
+* @param {TargetInstruction} instruction The view instruction
 * @param {ViewSlot} viewSlot The slot the view is injected in to
+* @param {ViewResources} viewResources The view resources
 * @param {ObserverLocator} observerLocator The observer locator instance
 */
 @customAttribute('repeat')
 @templateController
-@inject(BoundViewFactory, ViewSlot, ObserverLocator, CollectionStrategyLocator)
+@inject(BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, ObserverLocator, CollectionStrategyLocator)
 export class Repeat {
   /**
   * List of items to bind the repeater to
@@ -27,9 +42,11 @@ export class Repeat {
   @bindable local
   @bindable key
   @bindable value
-  constructor(viewFactory, viewSlot, observerLocator, collectionStrategyLocator) {
+  constructor(viewFactory, instruction, viewSlot, viewResources, observerLocator, collectionStrategyLocator) {
     this.viewFactory = viewFactory;
+    this.instruction = instruction;
     this.viewSlot = viewSlot;
+    this.lookupFunctions = viewResources.lookupFunctions;
     this.observerLocator = observerLocator;
     this.local = 'item';
     this.key = 'key';
@@ -47,12 +64,16 @@ export class Repeat {
       return;
     }
 
+    this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
+    this.scope = { bindingContext, overrideContext };
     this.collectionStrategy = this.collectionStrategyLocator.getStrategy(this.items);
     this.collectionStrategy.initialize(this, bindingContext, overrideContext);
     this.processItems();
   }
 
   unbind() {
+    this.sourceExpression = null;
+    this.scope = null;
     this.collectionStrategy.dispose();
     this.items = null;
     this.collectionStrategy = null;
@@ -94,17 +115,74 @@ export class Repeat {
     }
   }
 
-  processItemsByStrategy() {
+  getInnerCollection() {
+    let expression = unwrapExpression(this.sourceExpression);
+    if (!expression) {
+      return null;
+    }
+    return expression.evaluate(this.scope, null);
+  }
+
+  observeInnerCollection() {
+    let items = this.getInnerCollection();
+    if (items instanceof Array) {
+      this.collectionObserver = this.observerLocator.getArrayObserver(items);
+    } else if (items instanceof Map) {
+      this.collectionObserver = this.observerLocator.getMapObserver(items);
+    } else {
+      return false;
+    }
+    this.callContext = 'handleInnerCollectionChanges';
+    this.collectionObserver.subscribe(this.callContext, this);
+    return true;
+  }
+
+  observeCollection() {
     let items = this.items;
     this.collectionObserver = this.collectionStrategy.getCollectionObserver(items);
-    this.collectionStrategy.processItems(items);
     if (this.collectionObserver) {
-      this.callContext = 'handleChanges';
+      this.callContext = 'handleCollectionChanges';
       this.collectionObserver.subscribe(this.callContext, this);
     }
   }
 
-  handleChanges(collection, changes) {
+  processItemsByStrategy() {
+    if (!this.observeInnerCollection()) {
+      this.observeCollection();
+    }
+    this.collectionStrategy.processItems(this.items);
+  }
+
+  handleCollectionChanges(collection, changes) {
     this.collectionStrategy.handleChanges(collection, changes);
   }
+
+  handleInnerCollectionChanges(collection, changes) {
+    let newItems = this.sourceExpression.evaluate(this.scope, this.lookupFunctions);
+    if (newItems === this.items) {
+      return;
+    }
+    this.items = newItems;
+    this.itemsChanged();
+  }
+}
+
+function getSourceExpression(instruction, attrName) {
+  return instruction.behaviorInstructions
+    .filter(bi => bi.originalAttrName === attrName)[0]
+    .attributes
+    .items
+    .sourceExpression;
+}
+
+function unwrapExpression(expression) {
+  let unwrapped = false;
+  while (expression instanceof BindingBehavior) {
+    expression = expression.expression;
+  }
+  while (expression instanceof ValueConverter) {
+    expression = expression.expression;
+    unwrapped = true;
+  }
+  return unwrapped ? expression : null;
 }
