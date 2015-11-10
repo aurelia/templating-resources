@@ -1,3 +1,34 @@
+## 0.17.0 (2015-11-10)
+
+
+#### Bug Fixes
+
+* **all:** remove the global behavior ([00e63909](http://github.com/aurelia/templating-resources/commit/00e6390978217e0bd304bb423498607675c7a767))
+* **collection-strategy-locator:** correctly check for number ([265509ec](http://github.com/aurelia/templating-resources/commit/265509ec3cf593e67ea00075ef6dc7753b053050))
+* **compose:** update to latest composition engine ([90ce0d4c](http://github.com/aurelia/templating-resources/commit/90ce0d4cfd22212e5c37f689c1d0f93e655cee8f))
+* **map-collection-strategy:**
+  * fix animation interaction ([d97d5771](http://github.com/aurelia/templating-resources/commit/d97d5771509b9929a7b3178e32150abdd80fed34))
+  * correctly locate view by index ([2a16daca](http://github.com/aurelia/templating-resources/commit/2a16daca9ec7f5a2498c6232fa886d8ea83217f7))
+* **number-strategy:** update binding context after processing items ([dc50b100](http://github.com/aurelia/templating-resources/commit/dc50b1002360326bcd18fd8f028aa0fae452874a))
+* **repeat:**
+  * various fixes ([c5c75329](http://github.com/aurelia/templating-resources/commit/c5c75329bc6d03863034b24c99e2eff9c03f21a5))
+  * overrideContext should not be assigned to bindingContext ([164c361a](http://github.com/aurelia/templating-resources/commit/164c361ade46dbb6fff4939696b70ec3066e0c98))
+  * return from bind if items is undefined ([4d89c0b4](http://github.com/aurelia/templating-resources/commit/4d89c0b4af529f3c2ad96680636cabc17011d6c3))
+  * remove children from the view slot on unbind ([7a2bc54f](http://github.com/aurelia/templating-resources/commit/7a2bc54f37b97bd67e59a5bb5f74a48c085071ac))
+* **with:** use value as bindingContext ([1436ad45](http://github.com/aurelia/templating-resources/commit/1436ad451be73bb8bb19bac56bbe3cfb03784397))
+
+
+#### Features
+
+* **UpdateTriggerBindingBehavior:** add behavior ([3784c4f2](http://github.com/aurelia/templating-resources/commit/3784c4f2cf0e9e2f9185c9b1d6e92a74c8bf14ce), closes [#137](http://github.com/aurelia/templating-resources/issues/137))
+* **all:**
+  * update to use override context ([494f1f59](http://github.com/aurelia/templating-resources/commit/494f1f596df1c6c7e1f1671ee7f324589407e501))
+  * update to separated create/bind view pattern ([42f3ff99](http://github.com/aurelia/templating-resources/commit/42f3ff99e0418eb4dde0f146e411d321340d7040))
+* **binding-behaviors:** add throttle, debounce, signal, oneTime, oneWay and twoWay behaviors ([dac5679c](http://github.com/aurelia/templating-resources/commit/dac5679cedc72fac8bdf81dbba2122606042c378))
+* **collection-strategy-locator:** add strategies ([60b8067c](http://github.com/aurelia/templating-resources/commit/60b8067cbf814d416344859225945786e0014de1), closes [#95](http://github.com/aurelia/templating-resources/issues/95))
+* **repeat:** handle value converters ([7c689a03](http://github.com/aurelia/templating-resources/commit/7c689a03f5e70fd1170d12103b1d4a0cfb3b4d34))
+
+
 ### 0.16.1 (2015-10-15)
 
 

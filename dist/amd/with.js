@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aurelia-logging'], function (exports, _aureliaDependencyInjection, _aureliaTemplating, _aureliaLogging) {
+define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aurelia-binding'], function (exports, _aureliaDependencyInjection, _aureliaTemplating, _aureliaBinding) {
   'use strict';
 
   exports.__esModule = true;
@@ -11,15 +11,31 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
 
       this.viewFactory = viewFactory;
       this.viewSlot = viewSlot;
-      _aureliaLogging.getLogger('templating-resources').warn('The "with" behavior will be removed in the next release.');
+      this.parentOverrideContext = null;
+      this.view = null;
     }
 
+    With.prototype.bind = function bind(bindingContext, overrideContext) {
+      this.parentOverrideContext = overrideContext;
+      this.valueChanged(this.value);
+    };
+
     With.prototype.valueChanged = function valueChanged(newValue) {
+      var overrideContext = _aureliaBinding.createOverrideContext(newValue, this.parentOverrideContext);
       if (!this.view) {
-        this.view = this.viewFactory.create(newValue);
+        this.view = this.viewFactory.create();
+        this.view.bind(newValue, overrideContext);
         this.viewSlot.add(this.view);
       } else {
-        this.view.bind(newValue);
+        this.view.bind(newValue, overrideContext);
+      }
+    };
+
+    With.prototype.unbind = function unbind() {
+      this.parentOverrideContext = null;
+
+      if (this.view) {
+        this.view.unbind();
       }
     };
 

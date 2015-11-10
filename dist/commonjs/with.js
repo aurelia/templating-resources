@@ -2,17 +2,13 @@
 
 exports.__esModule = true;
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
 var _aureliaTemplating = require('aurelia-templating');
 
-var _aureliaLogging = require('aurelia-logging');
-
-var LogManager = _interopRequireWildcard(_aureliaLogging);
+var _aureliaBinding = require('aurelia-binding');
 
 var With = (function () {
   function With(viewFactory, viewSlot) {
@@ -20,15 +16,31 @@ var With = (function () {
 
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
-    LogManager.getLogger('templating-resources').warn('The "with" behavior will be removed in the next release.');
+    this.parentOverrideContext = null;
+    this.view = null;
   }
 
+  With.prototype.bind = function bind(bindingContext, overrideContext) {
+    this.parentOverrideContext = overrideContext;
+    this.valueChanged(this.value);
+  };
+
   With.prototype.valueChanged = function valueChanged(newValue) {
+    var overrideContext = _aureliaBinding.createOverrideContext(newValue, this.parentOverrideContext);
     if (!this.view) {
-      this.view = this.viewFactory.create(newValue);
+      this.view = this.viewFactory.create();
+      this.view.bind(newValue, overrideContext);
       this.viewSlot.add(this.view);
     } else {
-      this.view.bind(newValue);
+      this.view.bind(newValue, overrideContext);
+    }
+  };
+
+  With.prototype.unbind = function unbind() {
+    this.parentOverrideContext = null;
+
+    if (this.view) {
+      this.view.unbind();
     }
   };
 

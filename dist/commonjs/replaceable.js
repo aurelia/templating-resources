@@ -14,14 +14,20 @@ var Replaceable = (function () {
 
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
-    this.needsReplacement = true;
+    this.view = null;
   }
 
-  Replaceable.prototype.bind = function bind() {
-    if (this.needsReplacement) {
-      this.needsReplacement = false;
-      this.viewSlot.add(this.viewFactory.create());
+  Replaceable.prototype.bind = function bind(bindingContext, overrideContext) {
+    if (this.view === null) {
+      this.view = this.viewFactory.create();
+      this.viewSlot.add(this.view);
     }
+
+    this.view.bind(bindingContext, overrideContext);
+  };
+
+  Replaceable.prototype.unbind = function unbind() {
+    this.view.unbind();
   };
 
   var _Replaceable = Replaceable;

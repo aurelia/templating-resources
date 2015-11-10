@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-templating'], function (exports, _aureliaDependencyInjection, _aureliaBinding, _aureliaTemplating) {
+define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-templating', './collection-strategy-locator'], function (exports, _aureliaDependencyInjection, _aureliaBinding, _aureliaTemplating, _collectionStrategyLocator) {
   'use strict';
 
   exports.__esModule = true;
@@ -34,7 +34,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       enumerable: true
     }], null, _instanceInitializers);
 
-    function Repeat(viewFactory, viewSlot, observerLocator) {
+    function Repeat(viewFactory, instruction, viewSlot, viewResources, observerLocator, collectionStrategyLocator) {
       _classCallCheck(this, _Repeat);
 
       _defineDecoratedPropertyDescriptor(this, 'items', _instanceInitializers);
@@ -46,66 +46,40 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       _defineDecoratedPropertyDescriptor(this, 'value', _instanceInitializers);
 
       this.viewFactory = viewFactory;
+      this.instruction = instruction;
       this.viewSlot = viewSlot;
+      this.lookupFunctions = viewResources.lookupFunctions;
       this.observerLocator = observerLocator;
       this.local = 'item';
       this.key = 'key';
       this.value = 'value';
+      this.collectionStrategyLocator = collectionStrategyLocator;
     }
 
     Repeat.prototype.call = function call(context, changes) {
       this[context](this.items, changes);
     };
 
-    Repeat.prototype.bind = function bind(bindingContext) {
+    Repeat.prototype.bind = function bind(bindingContext, overrideContext) {
       var items = this.items;
-      var viewSlot = this.viewSlot;
-      var observer = undefined;
-
-      this.bindingContext = bindingContext;
-
-      if (!items) {
-        if (this.oldItems) {
-          viewSlot.removeAll(true);
-        }
-
+      if (items === undefined || items === null) {
         return;
       }
 
-      if (this.oldItems === items) {
-        if (items instanceof Map) {
-          var records = _aureliaBinding.getChangeRecords(items);
-          this.collectionObserver = this.observerLocator.getMapObserver(items);
-
-          this.handleMapChangeRecords(items, records);
-
-          this.callContext = 'handleMapChangeRecords';
-          this.collectionObserver.subscribe(this.callContext, this);
-        } else if (items instanceof Array) {
-          var splices = _aureliaBinding.calcSplices(items, 0, items.length, this.lastBoundItems, 0, this.lastBoundItems.length);
-          this.collectionObserver = this.observerLocator.getArrayObserver(items);
-
-          this.handleSplices(items, splices);
-          this.lastBoundItems = this.oldItems = null;
-
-          this.callContext = 'handleSplices';
-          this.collectionObserver.subscribe(this.callContext, this);
-        }
-        return;
-      } else if (this.oldItems) {
-        viewSlot.removeAll(true);
-      }
-
+      this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
+      this.scope = { bindingContext: bindingContext, overrideContext: overrideContext };
+      this.collectionStrategy = this.collectionStrategyLocator.getStrategy(this.items);
+      this.collectionStrategy.initialize(this, bindingContext, overrideContext);
       this.processItems();
     };
 
     Repeat.prototype.unbind = function unbind() {
-      this.oldItems = this.items;
-
-      if (this.items instanceof Array) {
-        this.lastBoundItems = this.items.slice(0);
-      }
-
+      this.sourceExpression = null;
+      this.scope = null;
+      this.collectionStrategy.dispose();
+      this.items = null;
+      this.collectionStrategy = null;
+      this.viewSlot.removeAll(true);
       this.unsubscribeCollection();
     };
 
@@ -138,280 +112,88 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
 
       if (rmPromise instanceof Promise) {
         rmPromise.then(function () {
-          _this.processItemsByType();
+          _this.processItemsByStrategy();
         });
       } else {
-        this.processItemsByType();
+        this.processItemsByStrategy();
       }
     };
 
-    Repeat.prototype.processItemsByType = function processItemsByType() {
-      var items = this.items;
+    Repeat.prototype.getInnerCollection = function getInnerCollection() {
+      var expression = unwrapExpression(this.sourceExpression);
+      if (!expression) {
+        return null;
+      }
+      return expression.evaluate(this.scope, null);
+    };
+
+    Repeat.prototype.observeInnerCollection = function observeInnerCollection() {
+      var items = this.getInnerCollection();
       if (items instanceof Array) {
-        this.processArrayItems(items);
+        this.collectionObserver = this.observerLocator.getArrayObserver(items);
       } else if (items instanceof Map) {
-        this.processMapEntries(items);
-      } else if (typeof items === 'number') {
-        this.processNumber(items);
+        this.collectionObserver = this.observerLocator.getMapObserver(items);
       } else {
-        throw new Error('Object in "repeat" must be of type Array, Map or Number');
+        return false;
+      }
+      this.callContext = 'handleInnerCollectionChanges';
+      this.collectionObserver.subscribe(this.callContext, this);
+      return true;
+    };
+
+    Repeat.prototype.observeCollection = function observeCollection() {
+      var items = this.items;
+      this.collectionObserver = this.collectionStrategy.getCollectionObserver(items);
+      if (this.collectionObserver) {
+        this.callContext = 'handleCollectionChanges';
+        this.collectionObserver.subscribe(this.callContext, this);
       }
     };
 
-    Repeat.prototype.processArrayItems = function processArrayItems(items) {
-      var viewFactory = this.viewFactory;
-      var viewSlot = this.viewSlot;
-      var i = undefined;
-      var ii = undefined;
-      var row = undefined;
-      var view = undefined;
-      var observer = undefined;
-
-      this.collectionObserver = this.observerLocator.getArrayObserver(items);
-
-      for (i = 0, ii = items.length; i < ii; ++i) {
-        row = this.createFullBindingContext(items[i], i, ii);
-        view = viewFactory.create(row);
-        viewSlot.add(view);
+    Repeat.prototype.processItemsByStrategy = function processItemsByStrategy() {
+      if (!this.observeInnerCollection()) {
+        this.observeCollection();
       }
-
-      this.callContext = 'handleSplices';
-      this.collectionObserver.subscribe(this.callContext, this);
+      this.collectionStrategy.processItems(this.items);
     };
 
-    Repeat.prototype.processMapEntries = function processMapEntries(items) {
-      var _this2 = this;
-
-      var viewFactory = this.viewFactory;
-      var viewSlot = this.viewSlot;
-      var index = 0;
-      var row = undefined;
-      var view = undefined;
-      var observer = undefined;
-
-      this.collectionObserver = this.observerLocator.getMapObserver(items);
-
-      items.forEach(function (value, key) {
-        row = _this2.createFullExecutionKvpContext(key, value, index, items.size);
-        view = viewFactory.create(row);
-        viewSlot.add(view);
-        ++index;
-      });
-
-      this.callContext = 'handleMapChangeRecords';
-      this.collectionObserver.subscribe(this.callContext, this);
+    Repeat.prototype.handleCollectionChanges = function handleCollectionChanges(collection, changes) {
+      this.collectionStrategy.handleChanges(collection, changes);
     };
 
-    Repeat.prototype.processNumber = function processNumber(value) {
-      var viewFactory = this.viewFactory;
-      var viewSlot = this.viewSlot;
-      var childrenLength = viewSlot.children.length;
-      var i = undefined;
-      var ii = undefined;
-      var row = undefined;
-      var view = undefined;
-      var viewsToRemove = undefined;
-
-      value = Math.floor(value);
-      viewsToRemove = childrenLength - value;
-
-      if (viewsToRemove > 0) {
-        if (viewsToRemove > childrenLength) {
-          viewsToRemove = childrenLength;
-        }
-
-        for (i = 0, ii = viewsToRemove; i < ii; ++i) {
-          viewSlot.removeAt(childrenLength - (i + 1), true);
-        }
-
+    Repeat.prototype.handleInnerCollectionChanges = function handleInnerCollectionChanges(collection, changes) {
+      var newItems = this.sourceExpression.evaluate(this.scope, this.lookupFunctions);
+      if (newItems === this.items) {
         return;
       }
-
-      for (i = childrenLength, ii = value; i < ii; ++i) {
-        row = this.createFullBindingContext(i, i, ii);
-        view = viewFactory.create(row);
-        viewSlot.add(view);
-      }
-    };
-
-    Repeat.prototype.createBaseBindingContext = function createBaseBindingContext(data) {
-      var context = {};
-      context[this.local] = data;
-      context.$parent = this.bindingContext;
-      return context;
-    };
-
-    Repeat.prototype.createBaseExecutionKvpContext = function createBaseExecutionKvpContext(key, value) {
-      var context = {};
-      context[this.key] = key;
-      context[this.value] = value;
-      context.$parent = this.bindingContext;
-      return context;
-    };
-
-    Repeat.prototype.createFullBindingContext = function createFullBindingContext(data, index, length) {
-      var context = this.createBaseBindingContext(data);
-      return this.updateBindingContext(context, index, length);
-    };
-
-    Repeat.prototype.createFullExecutionKvpContext = function createFullExecutionKvpContext(key, value, index, length) {
-      var context = this.createBaseExecutionKvpContext(key, value);
-      return this.updateBindingContext(context, index, length);
-    };
-
-    Repeat.prototype.updateBindingContext = function updateBindingContext(context, index, length) {
-      var first = index === 0;
-      var last = index === length - 1;
-      var even = index % 2 === 0;
-
-      context.$index = index;
-      context.$first = first;
-      context.$last = last;
-      context.$middle = !(first || last);
-      context.$odd = !even;
-      context.$even = even;
-
-      return context;
-    };
-
-    Repeat.prototype.updateBindingContexts = function updateBindingContexts(startIndex) {
-      var children = this.viewSlot.children;
-      var length = children.length;
-
-      if (startIndex > 0) {
-        startIndex = startIndex - 1;
-      }
-
-      for (; startIndex < length; ++startIndex) {
-        this.updateBindingContext(children[startIndex].bindingContext, startIndex, length);
-      }
-    };
-
-    Repeat.prototype.handleSplices = function handleSplices(array, splices) {
-      var _this3 = this;
-
-      var removeDelta = 0;
-      var viewSlot = this.viewSlot;
-      var rmPromises = [];
-
-      for (var i = 0, ii = splices.length; i < ii; ++i) {
-        var splice = splices[i];
-        var removed = splice.removed;
-
-        for (var j = 0, jj = removed.length; j < jj; ++j) {
-          var viewOrPromise = viewSlot.removeAt(splice.index + removeDelta + rmPromises.length, true);
-          if (viewOrPromise instanceof Promise) {
-            rmPromises.push(viewOrPromise);
-          }
-        }
-        removeDelta -= splice.addedCount;
-      }
-
-      if (rmPromises.length > 0) {
-        Promise.all(rmPromises).then(function () {
-          var spliceIndexLow = _this3.handleAddedSplices(array, splices);
-          _this3.updateBindingContexts(spliceIndexLow);
-        });
-      } else {
-        var spliceIndexLow = this.handleAddedSplices(array, splices);
-        this.updateBindingContexts(spliceIndexLow);
-      }
-    };
-
-    Repeat.prototype.handleAddedSplices = function handleAddedSplices(array, splices) {
-      var spliceIndex = undefined;
-      var spliceIndexLow = undefined;
-      var arrayLength = array.length;
-      for (var i = 0, ii = splices.length; i < ii; ++i) {
-        var splice = splices[i];
-        var addIndex = spliceIndex = splice.index;
-        var end = splice.index + splice.addedCount;
-
-        if (typeof spliceIndexLow === 'undefined' || spliceIndexLow === null || spliceIndexLow > splice.index) {
-          spliceIndexLow = spliceIndex;
-        }
-
-        for (; addIndex < end; ++addIndex) {
-          var row = this.createFullBindingContext(array[addIndex], addIndex, arrayLength);
-          var view = this.viewFactory.create(row);
-          this.viewSlot.insert(addIndex, view);
-        }
-      }
-
-      return spliceIndexLow;
-    };
-
-    Repeat.prototype.handleMapChangeRecords = function handleMapChangeRecords(map, records) {
-      var viewSlot = this.viewSlot;
-      var key = undefined;
-      var i = undefined;
-      var ii = undefined;
-      var view = undefined;
-      var children = undefined;
-      var length = undefined;
-      var row = undefined;
-      var removeIndex = undefined;
-      var record = undefined;
-
-      for (i = 0, ii = records.length; i < ii; ++i) {
-        record = records[i];
-        key = record.key;
-        switch (record.type) {
-          case 'update':
-            removeIndex = this.getViewIndexByKey(key);
-            viewSlot.removeAt(removeIndex, true);
-            row = this.createBaseExecutionKvpContext(key, map.get(key));
-            view = this.viewFactory.create(row);
-            viewSlot.insert(removeIndex, view);
-            break;
-          case 'add':
-            row = this.createBaseExecutionKvpContext(key, map.get(key));
-            view = this.viewFactory.create(row);
-            viewSlot.insert(map.size, view);
-            break;
-          case 'delete':
-            if (!record.oldValue) {
-              return;
-            }
-            removeIndex = this.getViewIndexByKey(key);
-            viewSlot.removeAt(removeIndex, true);
-            break;
-          case 'clear':
-            viewSlot.removeAll(true);
-            break;
-          default:
-            continue;
-        }
-      }
-
-      children = viewSlot.children;
-      length = children.length;
-
-      for (i = 0; i < length; i++) {
-        this.updateBindingContext(children[i].bindingContext, i, length);
-      }
-    };
-
-    Repeat.prototype.getViewIndexByKey = function getViewIndexByKey(key) {
-      var viewSlot = this.viewSlot;
-      var i = undefined;
-      var ii = undefined;
-      var child = undefined;
-
-      for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
-        child = viewSlot.children[i];
-        if (child.bindings[0].source[this.key] === key) {
-          return i;
-        }
-      }
+      this.items = newItems;
+      this.itemsChanged();
     };
 
     var _Repeat = Repeat;
-    Repeat = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot, _aureliaBinding.ObserverLocator)(Repeat) || Repeat;
+    Repeat = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.TargetInstruction, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaBinding.ObserverLocator, _collectionStrategyLocator.CollectionStrategyLocator)(Repeat) || Repeat;
     Repeat = _aureliaTemplating.templateController(Repeat) || Repeat;
     Repeat = _aureliaTemplating.customAttribute('repeat')(Repeat) || Repeat;
     return Repeat;
   })();
 
   exports.Repeat = Repeat;
+
+  function getSourceExpression(instruction, attrName) {
+    return instruction.behaviorInstructions.filter(function (bi) {
+      return bi.originalAttrName === attrName;
+    })[0].attributes.items.sourceExpression;
+  }
+
+  function unwrapExpression(expression) {
+    var unwrapped = false;
+    while (expression instanceof _aureliaBinding.BindingBehavior) {
+      expression = expression.expression;
+    }
+    while (expression instanceof _aureliaBinding.ValueConverter) {
+      expression = expression.expression;
+      unwrapped = true;
+    }
+    return unwrapped ? expression : null;
+  }
 });

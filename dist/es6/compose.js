@@ -49,6 +49,8 @@ export class Compose {
     this.viewSlot = viewSlot;
     this.viewResources = viewResources;
     this.taskQueue = taskQueue;
+    this.currentController = null;
+    this.currentViewModel = null;
   }
 
   /**
@@ -125,15 +127,15 @@ function createInstruction(composer, instruction) {
     container: composer.container,
     viewSlot: composer.viewSlot,
     viewResources: composer.viewResources,
-    currentBehavior: composer.currentBehavior,
+    currentController: composer.currentController,
     host: composer.element
   });
 }
 
 function processInstruction(composer, instruction) {
   composer.currentInstruction = null;
-  composer.compositionEngine.compose(instruction).then(next => {
-    composer.currentBehavior = next;
-    composer.currentViewModel = next ? next.bindingContext : null;
+  composer.compositionEngine.compose(instruction).then(controller => {
+    composer.currentController = controller;
+    composer.currentViewModel = controller ? controller.viewModel : null;
   });
 }

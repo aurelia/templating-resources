@@ -16,12 +16,14 @@ export class If {
     this.showing = false;
     this.taskQueue = taskQueue;
     this.view = null;
-    this.$parent = null;
+    this.bindingContext = null;
+    this.overrideContext = null;
   }
 
-  bind(bindingContext) {
+  bind(bindingContext, overrideContext) {
     // Store parent bindingContext, so we can pass it down
-    this.$parent = bindingContext;
+    this.bindingContext = bindingContext;
+    this.overrideContext = overrideContext;
     this.valueChanged(this.value);
   }
 
@@ -43,14 +45,14 @@ export class If {
     }
 
     if (this.view === null) {
-      this.view = this.viewFactory.create(this.$parent);
+      this.view = this.viewFactory.create();
     }
 
     if (!this.showing) {
       this.showing = true;
 
       if (!this.view.isBound) {
-        this.view.bind(this.$parent);
+        this.view.bind(this.bindingContext, this.overrideContext);
       }
 
       this.viewSlot.add(this.view);

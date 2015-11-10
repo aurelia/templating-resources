@@ -3,7 +3,6 @@ import {If} from './if';
 import {With} from './with';
 import {Repeat} from './repeat';
 import {Show} from './show';
-import {GlobalBehavior} from './global-behavior';
 import {SanitizeHTMLValueConverter} from './sanitize-html';
 import {Replaceable} from './replaceable';
 import {Focus} from './focus';
@@ -14,6 +13,12 @@ import {_createDynamicElement} from './dynamic-element';
 import {_createCSSResource} from './css-resource';
 import {FEATURE, DOM} from 'aurelia-pal';
 import {HTMLSanitizer} from './html-sanitizer';
+import {OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior} from './binding-mode-behaviors';
+import {ThrottleBindingBehavior} from './throttle-binding-behavior';
+import {DebounceBindingBehavior} from './debounce-binding-behavior';
+import {SignalBindingBehavior} from './signal-binding-behavior';
+import {BindingSignaler} from './binding-signaler';
+import {UpdateTriggerBindingBehavior} from './update-trigger-binding-behavior';
 
 function configure(config) {
   if (FEATURE.shadowDOM) {
@@ -29,11 +34,15 @@ function configure(config) {
     './repeat',
     './show',
     './replaceable',
-    './global-behavior',
     './sanitize-html',
     './focus',
     './compile-spy',
-    './view-spy'
+    './view-spy',
+    './binding-mode-behaviors',
+    './throttle-binding-behavior',
+    './debounce-binding-behavior',
+    './signal-binding-behavior',
+    './update-trigger-binding-behavior'
   );
 
   let viewEngine = config.container.get(ViewEngine);
@@ -77,10 +86,17 @@ export {
   Show,
   HTMLSanitizer,
   SanitizeHTMLValueConverter,
-  GlobalBehavior,
   Replaceable,
   Focus,
   CompileSpy,
   ViewSpy,
-  configure
+  configure,
+  OneTimeBindingBehavior,
+  OneWayBindingBehavior,
+  TwoWayBindingBehavior,
+  ThrottleBindingBehavior,
+  DebounceBindingBehavior,
+  SignalBindingBehavior,
+  BindingSignaler,
+  UpdateTriggerBindingBehavior
 };

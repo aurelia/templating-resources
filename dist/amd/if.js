@@ -14,11 +14,13 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', 'aureli
       this.showing = false;
       this.taskQueue = taskQueue;
       this.view = null;
-      this.$parent = null;
+      this.bindingContext = null;
+      this.overrideContext = null;
     }
 
-    If.prototype.bind = function bind(bindingContext) {
-      this.$parent = bindingContext;
+    If.prototype.bind = function bind(bindingContext, overrideContext) {
+      this.bindingContext = bindingContext;
+      this.overrideContext = overrideContext;
       this.valueChanged(this.value);
     };
 
@@ -44,14 +46,14 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', 'aureli
       }
 
       if (this.view === null) {
-        this.view = this.viewFactory.create(this.$parent);
+        this.view = this.viewFactory.create();
       }
 
       if (!this.showing) {
         this.showing = true;
 
         if (!this.view.isBound) {
-          this.view.bind(this.$parent);
+          this.view.bind(this.bindingContext, this.overrideContext);
         }
 
         this.viewSlot.add(this.view);
