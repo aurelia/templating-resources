@@ -51,36 +51,6 @@ describe('repeat', () => {
 
       expect(didThrow).toBe(false);
     });
-
-    it('should locate collection strategy', () => {
-      let items = ['foo', 'bar'];
-      repeat.items = items;
-      repeat.bind();
-
-      expect(collectionStrategyLocator.getStrategy).toHaveBeenCalledWith(items);
-    });
-
-    it('should initialize the collection strategy', () => {
-      let items = ['foo', 'bar'];
-      let bindingContext = { foo: 'bar' }
-      let overrideContext = { bar: 'foo' }
-      repeat.items = items;
-      spyOn(collectionStrategyMock, 'initialize');
-
-      repeat.bind(bindingContext, overrideContext);
-
-      expect(collectionStrategyMock.initialize).toHaveBeenCalledWith(repeat, bindingContext, overrideContext);
-    });
-
-    it('should subscribe to changes', () => {
-      repeat.items = ['foo', 'bar'];
-      let collectionObserver = new ArrayObserverMock();
-      spyOn(collectionStrategyMock, 'getCollectionObserver').and.callFake(() => { return collectionObserver });
-      spyOn(collectionObserver, 'subscribe');
-      repeat.bind();
-
-      expect(collectionObserver.subscribe).toHaveBeenCalledWith(repeat.callContext, repeat);
-    });
   });
 
   describe('unbind', () => {
@@ -125,7 +95,11 @@ describe('repeat', () => {
   });
 
   describe('processItems', () => {
-    it('should call unsubscribeCollection when has collectionObserver', () => {
+    beforeEach(() => {
+      spyOn(collectionStrategyLocator, 'getStrategy').and.callFake(() => { return collectionStrategyMock});
+    });
+
+    it('should call unsubscribeCollection', () => {
       repeat.collectionObserver = {};
       spyOn(repeat, 'unsubscribeCollection');
 
@@ -134,7 +108,7 @@ describe('repeat', () => {
       expect(repeat.unsubscribeCollection).toHaveBeenCalled();
     });
 
-    it('should remove all views when has collectionObserver', () => {
+    it('should remove all views', () => {
       repeat.collectionObserver = { unsubscribe: callback => {} };
       let view1 = new ViewMock();
       let view2 = new ViewMock();
@@ -144,6 +118,46 @@ describe('repeat', () => {
       repeat.processItems();
 
       expect(viewSlot.removeAll).toHaveBeenCalled();
+    });
+
+    it('should locate collection strategy', () => {
+      let items = ['foo', 'bar'];
+      repeat.items = items;
+      repeat.processItems();
+
+      expect(collectionStrategyLocator.getStrategy).toHaveBeenCalledWith(items);
+    });
+
+    it('should initialize the collection strategy', () => {
+      let items = ['foo', 'bar'];
+      let bindingContext = { foo: 'bar' }
+      let overrideContext = { bar: 'foo' }
+      repeat.items = items;
+      repeat.bindingContext = bindingContext;
+      repeat.overrideContext = overrideContext;
+      spyOn(collectionStrategyMock, 'initialize');
+
+      repeat.processItems();
+
+      expect(collectionStrategyMock.initialize).toHaveBeenCalledWith(repeat, bindingContext, overrideContext);
+    });
+
+    it('should subscribe to changes', () => {
+      repeat.items = ['foo', 'bar'];
+      let collectionObserver = new ArrayObserverMock();
+      spyOn(collectionStrategyMock, 'getCollectionObserver').and.callFake(() => { return collectionObserver });
+      spyOn(collectionObserver, 'subscribe');
+      repeat.processItems();
+
+      expect(collectionObserver.subscribe).toHaveBeenCalledWith(repeat.callContext, repeat);
+    });
+
+    it('should dispose collection strategy', () => {
+      repeat.collectionStrategy = collectionStrategyMock;
+      spyOn(collectionStrategyMock, 'dispose');
+      repeat.processItems();
+
+      expect(collectionStrategyMock.dispose).toHaveBeenCalled();
     });
   });
 });
