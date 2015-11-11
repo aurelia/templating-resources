@@ -10,7 +10,7 @@ export class SanitizeHTMLValueConverter {
   }
 
   toView(untrustedMarkup) {
-    if (untrustedMarkup === null) {
+    if (untrustedMarkup === null || untrustedMarkup === undefined) {
       return null;
     }
 
