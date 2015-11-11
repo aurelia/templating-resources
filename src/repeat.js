@@ -60,21 +60,20 @@ export class Repeat {
 
   bind(bindingContext, overrideContext) {
     let items = this.items;
+    this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
+    this.scope = { bindingContext, overrideContext };
     if (items === undefined || items === null) {
       return;
     }
-
-    this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
-    this.scope = { bindingContext, overrideContext };
-    this.collectionStrategy = this.collectionStrategyLocator.getStrategy(this.items);
-    this.collectionStrategy.initialize(this, bindingContext, overrideContext);
     this.processItems();
   }
 
   unbind() {
     this.sourceExpression = null;
     this.scope = null;
-    this.collectionStrategy.dispose();
+    if (this.collectionStrategy) {
+      this.collectionStrategy.dispose();
+    }
     this.items = null;
     this.collectionStrategy = null;
     this.viewSlot.removeAll(true);
@@ -95,16 +94,26 @@ export class Repeat {
 
   processItems() {
     let items = this.items;
-    let rmPromise;
 
-    if (this.collectionObserver) {
-      this.unsubscribeCollection();
-      rmPromise = this.viewSlot.removeAll(true);
+    this.unsubscribeCollection();
+    let rmPromise = this.viewSlot.removeAll(true);
+    if (this.collectionStrategy) {
+      this.collectionStrategy.dispose();
     }
 
     if (!items && items !== 0) {
       return;
     }
+
+    let bindingContext;
+    let overrideContext;
+    if (this.scope) {
+      bindingContext = this.scope.bindingContext;
+      overrideContext = this.scope.overrideContext;
+    }
+
+    this.collectionStrategy = this.collectionStrategyLocator.getStrategy(items);
+    this.collectionStrategy.initialize(this, bindingContext, overrideContext);
 
     if (rmPromise instanceof Promise) {
       rmPromise.then(() => {
