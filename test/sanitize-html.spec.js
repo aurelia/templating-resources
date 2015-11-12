@@ -20,6 +20,7 @@ describe('SanitizeHtmlValueConverter', () => {
 
     expect(converter.toView('')).toBe('');
     expect(converter.toView(null)).toBe(null);
+    expect(converter.toView(undefined)).toBe(null);
     expect(converter.toView(a)).toBe('');
     expect(converter.toView(b)).toBe('<div></div>');
     expect(converter.toView(c)).toBe('foo  bar');
