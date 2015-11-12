@@ -11,7 +11,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
 
   function createInstruction(composer, instruction) {
     return Object.assign(instruction, {
-      bindingContext: composer.$parent,
+      bindingContext: composer.bindingContext,
+      overrideContext: composer.overrideContext,
       container: composer.container,
       viewSlot: composer.viewSlot,
       viewResources: composer.viewResources,
@@ -83,13 +84,22 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
           this.currentViewModel = null;
         }
 
-        Compose.prototype.bind = function bind(bindingContext) {
-          this.$parent = bindingContext;
+        Compose.prototype.bind = function bind(bindingContext, overrideContext) {
+          this.bindingContext = bindingContext;
+          this.overrideContext = overrideContext;
           processInstruction(this, createInstruction(this, {
             view: this.view,
             viewModel: this.viewModel,
             model: this.model
           }));
+        };
+
+        Compose.prototype.unbind = function unbind(bindingContext, overrideContext) {
+          this.bindingContext = null;
+          this.overrideContext = null;
+          var returnToCache = true;
+          var skipAnimation = true;
+          this.viewSlot.removeAll(returnToCache, skipAnimation);
         };
 
         Compose.prototype.modelChanged = function modelChanged(newValue, oldValue) {

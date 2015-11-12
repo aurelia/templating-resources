@@ -58,14 +58,24 @@ export class Compose {
   *
   * @method bind
   * @param {bindingContext} bindingContext The context in which the view model is executed in
+  * @param {overrideContext} overrideContext The context in which the view model is executed in
   */
-  bind(bindingContext) {
-    this.$parent = bindingContext;
+  bind(bindingContext, overrideContext) {
+    this.bindingContext = bindingContext;
+    this.overrideContext = overrideContext;
     processInstruction(this, createInstruction(this, {
       view: this.view,
       viewModel: this.viewModel,
       model: this.model
     }));
+  }
+
+  unbind(bindingContext, overrideContext) {
+    this.bindingContext = null;
+    this.overrideContext = null;
+    let returnToCache = true;
+    let skipAnimation = true;
+    this.viewSlot.removeAll(returnToCache, skipAnimation);
   }
 
   modelChanged(newValue, oldValue) {
@@ -123,7 +133,8 @@ export class Compose {
 
 function createInstruction(composer, instruction) {
   return Object.assign(instruction, {
-    bindingContext: composer.$parent,
+    bindingContext: composer.bindingContext,
+    overrideContext: composer.overrideContext,
     container: composer.container,
     viewSlot: composer.viewSlot,
     viewResources: composer.viewResources,

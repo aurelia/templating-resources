@@ -91,6 +91,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           this.key = 'key';
           this.value = 'value';
           this.collectionStrategyLocator = collectionStrategyLocator;
+          this.ignoreMutation = false;
         }
 
         Repeat.prototype.call = function call(context, changes) {
@@ -99,21 +100,20 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
 
         Repeat.prototype.bind = function bind(bindingContext, overrideContext) {
           var items = this.items;
+          this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
+          this.scope = { bindingContext: bindingContext, overrideContext: overrideContext };
           if (items === undefined || items === null) {
             return;
           }
-
-          this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
-          this.scope = { bindingContext: bindingContext, overrideContext: overrideContext };
-          this.collectionStrategy = this.collectionStrategyLocator.getStrategy(this.items);
-          this.collectionStrategy.initialize(this, bindingContext, overrideContext);
           this.processItems();
         };
 
         Repeat.prototype.unbind = function unbind() {
           this.sourceExpression = null;
           this.scope = null;
-          this.collectionStrategy.dispose();
+          if (this.collectionStrategy) {
+            this.collectionStrategy.dispose();
+          }
           this.items = null;
           this.collectionStrategy = null;
           this.viewSlot.removeAll(true);
@@ -136,16 +136,26 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           var _this = this;
 
           var items = this.items;
-          var rmPromise = undefined;
 
-          if (this.collectionObserver) {
-            this.unsubscribeCollection();
-            rmPromise = this.viewSlot.removeAll(true);
+          this.unsubscribeCollection();
+          var rmPromise = this.viewSlot.removeAll(true);
+          if (this.collectionStrategy) {
+            this.collectionStrategy.dispose();
           }
 
           if (!items && items !== 0) {
             return;
           }
+
+          var bindingContext = undefined;
+          var overrideContext = undefined;
+          if (this.scope) {
+            bindingContext = this.scope.bindingContext;
+            overrideContext = this.scope.overrideContext;
+          }
+
+          this.collectionStrategy = this.collectionStrategyLocator.getStrategy(items);
+          this.collectionStrategy.initialize(this, bindingContext, overrideContext);
 
           if (rmPromise instanceof Promise) {
             rmPromise.then(function () {
@@ -199,7 +209,17 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
         };
 
         Repeat.prototype.handleInnerCollectionChanges = function handleInnerCollectionChanges(collection, changes) {
+          var _this2 = this;
+
+          if (this.ignoreMutation) {
+            return;
+          }
+          this.ignoreMutation = true;
           var newItems = this.sourceExpression.evaluate(this.scope, this.lookupFunctions);
+          this.observerLocator.taskQueue.queueMicroTask(function () {
+            return _this2.ignoreMutation = false;
+          });
+
           if (newItems === this.items) {
             return;
           }

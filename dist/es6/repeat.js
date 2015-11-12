@@ -52,6 +52,7 @@ export class Repeat {
     this.key = 'key';
     this.value = 'value';
     this.collectionStrategyLocator = collectionStrategyLocator;
+    this.ignoreMutation = false;
   }
 
   call(context, changes) {
@@ -60,21 +61,20 @@ export class Repeat {
 
   bind(bindingContext, overrideContext) {
     let items = this.items;
+    this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
+    this.scope = { bindingContext, overrideContext };
     if (items === undefined || items === null) {
       return;
     }
-
-    this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
-    this.scope = { bindingContext, overrideContext };
-    this.collectionStrategy = this.collectionStrategyLocator.getStrategy(this.items);
-    this.collectionStrategy.initialize(this, bindingContext, overrideContext);
     this.processItems();
   }
 
   unbind() {
     this.sourceExpression = null;
     this.scope = null;
-    this.collectionStrategy.dispose();
+    if (this.collectionStrategy) {
+      this.collectionStrategy.dispose();
+    }
     this.items = null;
     this.collectionStrategy = null;
     this.viewSlot.removeAll(true);
@@ -95,16 +95,26 @@ export class Repeat {
 
   processItems() {
     let items = this.items;
-    let rmPromise;
 
-    if (this.collectionObserver) {
-      this.unsubscribeCollection();
-      rmPromise = this.viewSlot.removeAll(true);
+    this.unsubscribeCollection();
+    let rmPromise = this.viewSlot.removeAll(true);
+    if (this.collectionStrategy) {
+      this.collectionStrategy.dispose();
     }
 
     if (!items && items !== 0) {
       return;
     }
+
+    let bindingContext;
+    let overrideContext;
+    if (this.scope) {
+      bindingContext = this.scope.bindingContext;
+      overrideContext = this.scope.overrideContext;
+    }
+
+    this.collectionStrategy = this.collectionStrategyLocator.getStrategy(items);
+    this.collectionStrategy.initialize(this, bindingContext, overrideContext);
 
     if (rmPromise instanceof Promise) {
       rmPromise.then(() => {
@@ -158,7 +168,16 @@ export class Repeat {
   }
 
   handleInnerCollectionChanges(collection, changes) {
+    // guard against source expressions that have observable side-effects that could
+    // cause an infinite loop- eg a value converter that mutates the source array.
+    if (this.ignoreMutation) {
+      return;
+    }
+    this.ignoreMutation = true;
     let newItems = this.sourceExpression.evaluate(this.scope, this.lookupFunctions);
+    this.observerLocator.taskQueue.queueMicroTask(() => this.ignoreMutation = false);
+
+    // collection change?
     if (newItems === this.items) {
       return;
     }

@@ -1,3 +1,14 @@
+### 0.17.1 (2015-11-11)
+
+
+#### Bug Fixes
+
+* **compose:** preserve access to parent scope ([a551ce46](http://github.com/aurelia/templating-resources/commit/a551ce46b6ef50b7aef54266e31517c357d1ce32), closes [#145](http://github.com/aurelia/templating-resources/issues/145))
+* **repeat:**
+  * handle evaluate causing side-effects ([7e2a2b0b](http://github.com/aurelia/templating-resources/commit/7e2a2b0bdfce17bf38b80c12d593bcc5fb8a086c))
+  * handle collection instance changes ([738ea609](http://github.com/aurelia/templating-resources/commit/738ea609494c718f58d0a43b610bb9a26ff90d92), closes [#144](http://github.com/aurelia/templating-resources/issues/144))
+
+
 ## 0.17.0 (2015-11-10)
 
 
