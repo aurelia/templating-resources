@@ -175,7 +175,7 @@ export class Repeat {
     }
     this.ignoreMutation = true;
     let newItems = this.sourceExpression.evaluate(this.scope, this.lookupFunctions);
-    this.observerLocator.taskQueue.queueMicroTask(() => this.ignoreMutation = false)
+    this.observerLocator.taskQueue.queueMicroTask(() => this.ignoreMutation = false);
 
     // collection change?
     if (newItems === this.items) {
