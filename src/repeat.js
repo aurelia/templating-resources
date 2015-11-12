@@ -52,6 +52,7 @@ export class Repeat {
     this.key = 'key';
     this.value = 'value';
     this.collectionStrategyLocator = collectionStrategyLocator;
+    this.ignoreMutation = false;
   }
 
   call(context, changes) {
@@ -167,7 +168,16 @@ export class Repeat {
   }
 
   handleInnerCollectionChanges(collection, changes) {
+    // guard against source expressions that have observable side-effects that could
+    // cause an infinite loop- eg a value converter that mutates the source array.
+    if (this.ignoreMutation) {
+      return;
+    }
+    this.ignoreMutation = true;
     let newItems = this.sourceExpression.evaluate(this.scope, this.lookupFunctions);
+    this.observerLocator.taskQueue.queueMicroTask(() => this.ignoreMutation = false)
+
+    // collection change?
     if (newItems === this.items) {
       return;
     }
