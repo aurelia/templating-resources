@@ -13,7 +13,7 @@ define(['exports', 'aurelia-binding', 'aurelia-dependency-injection', './html-sa
     }
 
     SanitizeHTMLValueConverter.prototype.toView = function toView(untrustedMarkup) {
-      if (untrustedMarkup === null) {
+      if (untrustedMarkup === null || untrustedMarkup === undefined) {
         return null;
       }
 

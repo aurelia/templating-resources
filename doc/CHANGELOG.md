@@ -1,3 +1,11 @@
+### 0.17.2 (2015-11-12)
+
+
+#### Bug Fixes
+
+* **sanitize-html:** change toView to return null when untrustedMarkup is undefined ([ab684b08](http://github.com/aurelia/templating-resources/commit/ab684b08b429c71e9209f836ee2632084e3bdf17))
+
+
 ### 0.17.1 (2015-11-11)
 
 

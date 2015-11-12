@@ -18,7 +18,7 @@ var SanitizeHTMLValueConverter = (function () {
   }
 
   SanitizeHTMLValueConverter.prototype.toView = function toView(untrustedMarkup) {
-    if (untrustedMarkup === null) {
+    if (untrustedMarkup === null || untrustedMarkup === undefined) {
       return null;
     }
 

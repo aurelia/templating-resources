@@ -22,7 +22,7 @@ System.register(['aurelia-binding', 'aurelia-dependency-injection', './html-sani
         }
 
         SanitizeHTMLValueConverter.prototype.toView = function toView(untrustedMarkup) {
-          if (untrustedMarkup === null) {
+          if (untrustedMarkup === null || untrustedMarkup === undefined) {
             return null;
           }
 
