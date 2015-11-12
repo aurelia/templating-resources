@@ -29,7 +29,9 @@ export class ViewMock {
 }
 
 export class BoundViewFactoryMock {
-  create(){};
+  create(){
+    return { bind(){} };
+  };
   removeAll(){};
 }
 

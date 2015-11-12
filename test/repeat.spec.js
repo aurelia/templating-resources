@@ -17,16 +17,14 @@ describe('repeat', () => {
     let container = new Container();
     viewSlot = new ViewSlotMock();
     viewFactory = new BoundViewFactoryMock();
-    observerLocator = new ObserverLocator();
-    collectionStrategyLocator = new CollectionStrategyLocator();
+    observerLocator = container.get(ObserverLocator);
+    collectionStrategyLocator = container.get(CollectionStrategyLocator);
     collectionStrategyMock = new CollectionStrategyMock();
     container.registerInstance(TargetInstruction, instructionMock);
     container.registerInstance(ViewResources, viewResourcesMock);
     container.registerInstance(ViewSlot, viewSlot);
     container.registerInstance(BoundViewFactory, viewFactory);
-    container.registerInstance(ObserverLocator, observerLocator);
-    container.registerInstance(CollectionStrategyLocator, collectionStrategyLocator);
-    let templatingEngine = new TemplatingEngine(container, new ModuleAnalyzer());
+    let templatingEngine = container.get(TemplatingEngine);
     repeat = templatingEngine.createViewModelForUnitTest(Repeat);
   });
 
@@ -133,8 +131,7 @@ describe('repeat', () => {
       let bindingContext = { foo: 'bar' }
       let overrideContext = { bar: 'foo' }
       repeat.items = items;
-      repeat.bindingContext = bindingContext;
-      repeat.overrideContext = overrideContext;
+      repeat.scope = { bindingContext: bindingContext, overrideContext: overrideContext };
       spyOn(collectionStrategyMock, 'initialize');
 
       repeat.processItems();
