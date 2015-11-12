@@ -9,11 +9,20 @@ import {DOM} from 'aurelia-pal';
 @customAttribute('show')
 @inject(DOM.Element, Animator)
 export class Show {
+  /**
+  * Creates a new instance of Show.
+  * @param element Target element to conditionally show.
+  * @param animator The animator that conditionally adds or removes the aurelia-hide css class.
+  */
   constructor(element, animator) {
     this.element = element;
     this.animator = animator;
   }
 
+  /**
+  * Invoked everytime the bound value changes.
+  * @param newValue The new value.
+  */
   valueChanged(newValue) {
     if (newValue) {
       this.animator.removeClass(this.element, 'aurelia-hide');
@@ -22,6 +31,9 @@ export class Show {
     }
   }
 
+  /**
+  * Binds the Show attribute.
+  */
   bind(bindingContext) {
     this.valueChanged(this.value);
   }

@@ -1,6 +1,13 @@
 import {CollectionStrategy} from './collection-strategy';
 
+/**
+* A strategy for iterating Arrays.
+*/
 export class ArrayCollectionStrategy extends CollectionStrategy {
+  /**
+  * Process the provided array items.
+  * @param items The underlying array.
+  */
   processItems(items) {
     let i;
     let ii;
@@ -15,10 +22,19 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
     }
   }
 
+  /**
+  * Gets an Array observer.
+  * @param items The items to be observed.
+  */
   getCollectionObserver(items) {
     return this.observerLocator.getArrayObserver(items);
   }
 
+  /**
+  * Handles changes to the underlying array.
+  * @param array The modified array.
+  * @param splices Records of array changes.
+  */
   handleChanges(array, splices) {
     let removeDelta = 0;
     let viewSlot = this.viewSlot;

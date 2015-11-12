@@ -7,41 +7,43 @@ import {
 import {DOM} from 'aurelia-pal';
 
 /**
-* Used to compose a new view / view-model template or bind to an existing instance
-*
-* @class Compose
-* @constructor
-* @param {Container} container The containing container
-* @param {CompositionEngine} compositionEngine The engine used when composing this view
-* @param {ViewSlot} viewSlot The slot the view will be inserted in to
-* @param {ViewResources} viewResources The resources available in the current viewSlot
+* Used to compose a new view / view-model template or bind to an existing instance.
 */
 @customElement('compose')
 @noView
 @inject(DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue)
 export class Compose {
   /**
-  * Model to bind the custom element to
+  * Model to bind the custom element to.
   *
   * @property model
   * @type {CustomElement}
   */
   @bindable model
   /**
-  * View to bind the custom element to
+  * View to bind the custom element to.
   *
   * @property view
   * @type {HtmlElement}
   */
   @bindable view
   /**
-  * View-model to bind the custom element's template to
+  * View-model to bind the custom element's template to.
   *
   * @property viewModel
   * @type {Class}
   */
   @bindable viewModel
 
+  /**
+  * Creates an instance of Compose.
+  * @param element The Compose element.
+  * @param container The dependency injection container instance.
+  * @param compositionEngine CompositionEngine instance to compose the element.
+  * @param viewSlot The slot the view is injected in to.
+  * @param viewResources Collection of resources used to compile the the view.
+  * @param taskQueue The TaskQueue instance.
+  */
   constructor(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
     this.element = element;
     this.container = container;
@@ -54,11 +56,10 @@ export class Compose {
   }
 
   /**
-  * Used to set the bindingContext
+  * Used to set the bindingContext.
   *
-  * @method bind
-  * @param {bindingContext} bindingContext The context in which the view model is executed in
-  * @param {overrideContext} overrideContext The context in which the view model is executed in
+  * @param {bindingContext} bindingContext The context in which the view model is executed in.
+  * @param {overrideContext} overrideContext The context in which the view model is executed in.
   */
   bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
@@ -70,6 +71,9 @@ export class Compose {
     }));
   }
 
+  /**
+  * Unbinds the Compose.
+  */
   unbind(bindingContext, overrideContext) {
     this.bindingContext = null;
     this.overrideContext = null;
@@ -78,6 +82,11 @@ export class Compose {
     this.viewSlot.removeAll(returnToCache, skipAnimation);
   }
 
+  /**
+  * Invoked everytime the bound model changes.
+  * @param newValue The new value.
+  * @param oldValue The old value.
+  */
   modelChanged(newValue, oldValue) {
     if (this.currentInstruction) {
       this.currentInstruction.model = newValue;
@@ -98,6 +107,11 @@ export class Compose {
     });
   }
 
+  /**
+  * Invoked everytime the bound view changes.
+  * @param newValue The new value.
+  * @param oldValue The old value.
+  */
   viewChanged(newValue, oldValue) {
     let instruction = createInstruction(this, {
       view: newValue,
@@ -114,6 +128,11 @@ export class Compose {
     this.taskQueue.queueMicroTask(() => processInstruction(this, this.currentInstruction));
   }
 
+  /**
+    * Invoked everytime the bound view model changes.
+    * @param newValue The new value.
+    * @param oldValue The old value.
+    */
   viewModelChanged(newValue, oldValue) {
     let instruction = createInstruction(this, {
       viewModel: newValue,
