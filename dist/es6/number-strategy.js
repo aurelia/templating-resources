@@ -1,10 +1,20 @@
 import {CollectionStrategy} from './collection-strategy';
 
+/**
+* A strategy for iterating a template n number of times.
+*/
 export class NumberStrategy extends CollectionStrategy {
+  /**
+  * Return the strategies collection observer. In this case none.
+  */
   getCollectionObserver() {
     return;
   }
 
+  /**
+  * Process the provided Number.
+  * @param value The Number of how many time to iterate.
+  */
   processItems(value) {
     let viewFactory = this.viewFactory;
     let viewSlot = this.viewSlot;

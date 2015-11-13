@@ -75,7 +75,7 @@ var Repeat = (function () {
     if (items === undefined || items === null) {
       return;
     }
-    this.processItems();
+    this._processItems();
   };
 
   Repeat.prototype.unbind = function unbind() {
@@ -87,10 +87,10 @@ var Repeat = (function () {
     this.items = null;
     this.collectionStrategy = null;
     this.viewSlot.removeAll(true);
-    this.unsubscribeCollection();
+    this._unsubscribeCollection();
   };
 
-  Repeat.prototype.unsubscribeCollection = function unsubscribeCollection() {
+  Repeat.prototype._unsubscribeCollection = function _unsubscribeCollection() {
     if (this.collectionObserver) {
       this.collectionObserver.unsubscribe(this.callContext, this);
       this.collectionObserver = null;
@@ -99,15 +99,15 @@ var Repeat = (function () {
   };
 
   Repeat.prototype.itemsChanged = function itemsChanged() {
-    this.processItems();
+    this._processItems();
   };
 
-  Repeat.prototype.processItems = function processItems() {
+  Repeat.prototype._processItems = function _processItems() {
     var _this = this;
 
     var items = this.items;
 
-    this.unsubscribeCollection();
+    this._unsubscribeCollection();
     var rmPromise = this.viewSlot.removeAll(true);
     if (this.collectionStrategy) {
       this.collectionStrategy.dispose();
@@ -136,7 +136,7 @@ var Repeat = (function () {
     }
   };
 
-  Repeat.prototype.getInnerCollection = function getInnerCollection() {
+  Repeat.prototype._getInnerCollection = function _getInnerCollection() {
     var expression = unwrapExpression(this.sourceExpression);
     if (!expression) {
       return null;
@@ -144,8 +144,8 @@ var Repeat = (function () {
     return expression.evaluate(this.scope, null);
   };
 
-  Repeat.prototype.observeInnerCollection = function observeInnerCollection() {
-    var items = this.getInnerCollection();
+  Repeat.prototype._observeInnerCollection = function _observeInnerCollection() {
+    var items = this._getInnerCollection();
     if (items instanceof Array) {
       this.collectionObserver = this.observerLocator.getArrayObserver(items);
     } else if (items instanceof Map) {
@@ -158,7 +158,7 @@ var Repeat = (function () {
     return true;
   };
 
-  Repeat.prototype.observeCollection = function observeCollection() {
+  Repeat.prototype._observeCollection = function _observeCollection() {
     var items = this.items;
     this.collectionObserver = this.collectionStrategy.getCollectionObserver(items);
     if (this.collectionObserver) {
@@ -168,8 +168,8 @@ var Repeat = (function () {
   };
 
   Repeat.prototype.processItemsByStrategy = function processItemsByStrategy() {
-    if (!this.observeInnerCollection()) {
-      this.observeCollection();
+    if (!this._observeInnerCollection()) {
+      this._observeCollection();
     }
     this.collectionStrategy.processItems(this.items);
   };

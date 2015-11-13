@@ -35,13 +35,13 @@ var Focus = (function () {
 
   Focus.prototype.valueChanged = function valueChanged(newValue) {
     if (newValue) {
-      this.giveFocus();
+      this._giveFocus();
     } else {
       this.element.blur();
     }
   };
 
-  Focus.prototype.giveFocus = function giveFocus() {
+  Focus.prototype._giveFocus = function _giveFocus() {
     var _this2 = this;
 
     this.taskQueue.queueMicroTask(function () {

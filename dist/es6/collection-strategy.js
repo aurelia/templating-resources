@@ -1,13 +1,26 @@
 import {inject, transient} from 'aurelia-dependency-injection';
 import {ObserverLocator, createOverrideContext} from 'aurelia-binding';
 
+/**
+* Base class that defines common properties and methods for a collection strategy implementation.
+*/
 @inject(ObserverLocator)
 @transient()
 export class CollectionStrategy {
+  /**
+  * Creates an instance of CollectionStrategy.
+  * @param observerLocator The instance of the observerLocator.
+  */
   constructor(observerLocator) {
     this.observerLocator = observerLocator;
   }
 
+  /**
+  * Initializes the strategy collection.
+  * @param repeat The repeat instance.
+  * @param bindingContext The binding context.
+  * @param overrideContext The override context.
+  */
   initialize(repeat, bindingContext, overrideContext) {
     this.viewFactory = repeat.viewFactory;
     this.viewSlot = repeat.viewSlot;
@@ -19,6 +32,9 @@ export class CollectionStrategy {
     this.overrideContext = overrideContext;
   }
 
+  /**
+  * Disposes the collection strategy.
+  */
   dispose() {
     this.viewFactory = null;
     this.viewSlot = null;
@@ -30,6 +46,10 @@ export class CollectionStrategy {
     this.overrideContext = null;
   }
 
+  /**
+  * Update the override context.
+  * @param startIndex index in collection where to start updating.
+  */
   updateOverrideContexts(startIndex) {
     let children = this.viewSlot.children;
     let length = children.length;
@@ -43,11 +63,23 @@ export class CollectionStrategy {
     }
   }
 
+  /**
+    * Creates a complete override context.
+    * @param data The item's value.
+    * @param index The item's index.
+    * @param length The collections total length.
+    * @param key The key in a key/value pair.
+    */
   createFullOverrideContext(data, index, length, key) {
     let context = this.createBaseOverrideContext(data, key);
     return this.updateOverrideContext(context, index, length);
   }
 
+  /**
+  * Creates base of an override context.
+  * @param data The item's value.
+  * @param key The key in a key/value pair.
+  */
   createBaseOverrideContext(data, key) {
     let context = createOverrideContext(undefined, this.overrideContext);
     // is key/value pair (Map)
@@ -61,6 +93,12 @@ export class CollectionStrategy {
     return context;
   }
 
+  /**
+  * Updates the override context.
+  * @param context The context to be updated.
+  * @param index The context's index.
+  * @param length The collection's length.
+  */
   updateOverrideContext(context, index, length) {
     let first = (index === 0);
     let last = (index === length - 1);

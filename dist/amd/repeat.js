@@ -68,7 +68,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       if (items === undefined || items === null) {
         return;
       }
-      this.processItems();
+      this._processItems();
     };
 
     Repeat.prototype.unbind = function unbind() {
@@ -80,10 +80,10 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       this.items = null;
       this.collectionStrategy = null;
       this.viewSlot.removeAll(true);
-      this.unsubscribeCollection();
+      this._unsubscribeCollection();
     };
 
-    Repeat.prototype.unsubscribeCollection = function unsubscribeCollection() {
+    Repeat.prototype._unsubscribeCollection = function _unsubscribeCollection() {
       if (this.collectionObserver) {
         this.collectionObserver.unsubscribe(this.callContext, this);
         this.collectionObserver = null;
@@ -92,15 +92,15 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
     };
 
     Repeat.prototype.itemsChanged = function itemsChanged() {
-      this.processItems();
+      this._processItems();
     };
 
-    Repeat.prototype.processItems = function processItems() {
+    Repeat.prototype._processItems = function _processItems() {
       var _this = this;
 
       var items = this.items;
 
-      this.unsubscribeCollection();
+      this._unsubscribeCollection();
       var rmPromise = this.viewSlot.removeAll(true);
       if (this.collectionStrategy) {
         this.collectionStrategy.dispose();
@@ -129,7 +129,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       }
     };
 
-    Repeat.prototype.getInnerCollection = function getInnerCollection() {
+    Repeat.prototype._getInnerCollection = function _getInnerCollection() {
       var expression = unwrapExpression(this.sourceExpression);
       if (!expression) {
         return null;
@@ -137,8 +137,8 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       return expression.evaluate(this.scope, null);
     };
 
-    Repeat.prototype.observeInnerCollection = function observeInnerCollection() {
-      var items = this.getInnerCollection();
+    Repeat.prototype._observeInnerCollection = function _observeInnerCollection() {
+      var items = this._getInnerCollection();
       if (items instanceof Array) {
         this.collectionObserver = this.observerLocator.getArrayObserver(items);
       } else if (items instanceof Map) {
@@ -151,7 +151,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       return true;
     };
 
-    Repeat.prototype.observeCollection = function observeCollection() {
+    Repeat.prototype._observeCollection = function _observeCollection() {
       var items = this.items;
       this.collectionObserver = this.collectionStrategy.getCollectionObserver(items);
       if (this.collectionObserver) {
@@ -161,8 +161,8 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
     };
 
     Repeat.prototype.processItemsByStrategy = function processItemsByStrategy() {
-      if (!this.observeInnerCollection()) {
-        this.observeCollection();
+      if (!this._observeInnerCollection()) {
+        this._observeCollection();
       }
       this.collectionStrategy.processItems(this.items);
     };

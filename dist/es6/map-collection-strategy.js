@@ -1,10 +1,21 @@
 import {CollectionStrategy} from './collection-strategy';
 
+/**
+* A strategy for iterating Map.
+*/
 export class MapCollectionStrategy extends CollectionStrategy {
+  /**
+  * Gets a Map observer.
+  * @param items The items to be observed.
+  */
   getCollectionObserver(items) {
     return this.observerLocator.getMapObserver(items);
   }
 
+  /**
+  * Process the provided Map entries.
+  * @param items The entries to process.
+  */
   processItems(items) {
     let viewFactory = this.viewFactory;
     let viewSlot = this.viewSlot;
@@ -21,6 +32,11 @@ export class MapCollectionStrategy extends CollectionStrategy {
     });
   }
 
+  /**
+  * Handle changes in a Map collection.
+  * @param map The underlying Map collection.
+  * @param records The change records.
+  */
   handleChanges(map, records) {
     let viewSlot = this.viewSlot;
     let key;

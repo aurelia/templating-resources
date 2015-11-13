@@ -12,7 +12,7 @@ define(['exports', 'aurelia-templating', 'aurelia-logging'], function (exports, 
       this.logger = _aureliaLogging.getLogger('view-spy');
     }
 
-    ViewSpy.prototype.log = function log(lifecycleName, context) {
+    ViewSpy.prototype._log = function _log(lifecycleName, context) {
       if (!this.value && lifecycleName === 'created') {
         this.logger.info(lifecycleName, this.view);
       } else if (this.value && this.value.indexOf(lifecycleName) !== -1) {
@@ -22,23 +22,23 @@ define(['exports', 'aurelia-templating', 'aurelia-logging'], function (exports, 
 
     ViewSpy.prototype.created = function created(view) {
       this.view = view;
-      this.log('created');
+      this._log('created');
     };
 
     ViewSpy.prototype.bind = function bind(bindingContext) {
-      this.log('bind', bindingContext);
+      this._log('bind', bindingContext);
     };
 
     ViewSpy.prototype.attached = function attached() {
-      this.log('attached');
+      this._log('attached');
     };
 
     ViewSpy.prototype.detached = function detached() {
-      this.log('detached');
+      this._log('detached');
     };
 
     ViewSpy.prototype.unbind = function unbind() {
-      this.log('unbind');
+      this._log('unbind');
     };
 
     var _ViewSpy = ViewSpy;

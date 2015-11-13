@@ -1,3 +1,11 @@
+### 0.17.3 (2015-11-12)
+
+
+#### Bug Fixes
+
+* **if:** rebind view ([7d1ebdde](http://github.com/aurelia/templating-resources/commit/7d1ebddec6f823b96a751afc1820059873628e02))
+
+
 ### 0.17.2 (2015-11-12)
 
 

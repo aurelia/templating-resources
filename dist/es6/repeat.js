@@ -18,30 +18,46 @@ import {
 import {CollectionStrategyLocator} from './collection-strategy-locator';
 
 /**
-* Binding to iterate over an array and repeat a template
-*
-* @class Repeat
-* @constructor
-* @param {BoundViewFactory} viewFactory The factory generating the view
-* @param {TargetInstruction} instruction The view instruction
-* @param {ViewSlot} viewSlot The slot the view is injected in to
-* @param {ViewResources} viewResources The view resources
-* @param {ObserverLocator} observerLocator The observer locator instance
+* Binding to iterate over iterable objects (Array, Map and Number) to genereate a template for each iteration.
 */
 @customAttribute('repeat')
 @templateController
 @inject(BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, ObserverLocator, CollectionStrategyLocator)
 export class Repeat {
   /**
-  * List of items to bind the repeater to
+  * List of items to bind the repeater to.
   *
   * @property items
-  * @type {Array}
   */
   @bindable items
+  /**
+  * Local variable which gets assigned on each iteration.
+  *
+  * @property local
+  */
   @bindable local
+  /**
+  * Key when iterating over Maps.
+  *
+  * @property key
+  */
   @bindable key
+  /**
+  * Value when iterating over Maps.
+  *
+  * @property value
+  */
   @bindable value
+
+  /**
+ * Creates an instance of Repeat.
+ * @param viewFactory The factory generating the view
+ * @param instruction The instructions for how the element should be enhanced.
+ * @param viewResources Collection of resources used to compile the the views.
+ * @param viewSlot The slot the view is injected in to.
+ * @param observerLocator The observer locator instance.
+ * @param collectionStrategyLocator The strategy locator to locate best strategy to iterate the collection.
+ */
   constructor(viewFactory, instruction, viewSlot, viewResources, observerLocator, collectionStrategyLocator) {
     this.viewFactory = viewFactory;
     this.instruction = instruction;
@@ -59,6 +75,11 @@ export class Repeat {
     this[context](this.items, changes);
   }
 
+  /**
+  * Binds the repeat to the binding context and override context.
+  * @param bindingContext The binding context.
+  * @param overrideContext An override context for binding.
+  */
   bind(bindingContext, overrideContext) {
     let items = this.items;
     this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
@@ -66,9 +87,12 @@ export class Repeat {
     if (items === undefined || items === null) {
       return;
     }
-    this.processItems();
+    this._processItems();
   }
 
+  /**
+  * Unbinds the repeat
+  */
   unbind() {
     this.sourceExpression = null;
     this.scope = null;
@@ -78,10 +102,10 @@ export class Repeat {
     this.items = null;
     this.collectionStrategy = null;
     this.viewSlot.removeAll(true);
-    this.unsubscribeCollection();
+    this._unsubscribeCollection();
   }
 
-  unsubscribeCollection() {
+  _unsubscribeCollection() {
     if (this.collectionObserver) {
       this.collectionObserver.unsubscribe(this.callContext, this);
       this.collectionObserver = null;
@@ -89,14 +113,17 @@ export class Repeat {
     }
   }
 
+  /**
+  * Invoked everytime item property changes.
+  */
   itemsChanged() {
-    this.processItems();
+    this._processItems();
   }
 
-  processItems() {
+  _processItems() {
     let items = this.items;
 
-    this.unsubscribeCollection();
+    this._unsubscribeCollection();
     let rmPromise = this.viewSlot.removeAll(true);
     if (this.collectionStrategy) {
       this.collectionStrategy.dispose();
@@ -125,7 +152,7 @@ export class Repeat {
     }
   }
 
-  getInnerCollection() {
+  _getInnerCollection() {
     let expression = unwrapExpression(this.sourceExpression);
     if (!expression) {
       return null;
@@ -133,8 +160,8 @@ export class Repeat {
     return expression.evaluate(this.scope, null);
   }
 
-  observeInnerCollection() {
-    let items = this.getInnerCollection();
+  _observeInnerCollection() {
+    let items = this._getInnerCollection();
     if (items instanceof Array) {
       this.collectionObserver = this.observerLocator.getArrayObserver(items);
     } else if (items instanceof Map) {
@@ -147,7 +174,7 @@ export class Repeat {
     return true;
   }
 
-  observeCollection() {
+  _observeCollection() {
     let items = this.items;
     this.collectionObserver = this.collectionStrategy.getCollectionObserver(items);
     if (this.collectionObserver) {
@@ -157,16 +184,22 @@ export class Repeat {
   }
 
   processItemsByStrategy() {
-    if (!this.observeInnerCollection()) {
-      this.observeCollection();
+    if (!this._observeInnerCollection()) {
+      this._observeCollection();
     }
     this.collectionStrategy.processItems(this.items);
   }
 
+  /**
+  * Invoked when the underlying collection changes.
+  */
   handleCollectionChanges(collection, changes) {
     this.collectionStrategy.handleChanges(collection, changes);
   }
 
+  /**
+  * Invoked when the underlying inner collection changes.
+  */
   handleInnerCollectionChanges(collection, changes) {
     // guard against source expressions that have observable side-effects that could
     // cause an infinite loop- eg a value converter that mutates the source array.

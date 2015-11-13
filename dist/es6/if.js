@@ -10,6 +10,12 @@ import {TaskQueue} from 'aurelia-task-queue';
 @templateController
 @inject(BoundViewFactory, ViewSlot, TaskQueue)
 export class If {
+  /**
+  * Creates an instance of If.
+  * @param {BoundViewFactory} viewFactory The factory generating the view
+  * @param {ViewSlot} viewSlot The slot the view is injected in to
+  * @param {TaskQueue} taskQueue
+  */
   constructor(viewFactory, viewSlot, taskQueue) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
@@ -20,6 +26,11 @@ export class If {
     this.overrideContext = null;
   }
 
+  /**
+  * Binds the if to the binding context and override context
+  * @param bindingContext The binding context
+  * @param overrideContext An override context for binding.
+  */
   bind(bindingContext, overrideContext) {
     // Store parent bindingContext, so we can pass it down
     this.bindingContext = bindingContext;
@@ -27,6 +38,10 @@ export class If {
     this.valueChanged(this.value);
   }
 
+  /**
+  * Invoked everytime value property changes.
+  * @param newValue The new value
+  */
   valueChanged(newValue) {
     if (!newValue) {
       if (this.view !== null && this.showing) {
@@ -48,27 +63,35 @@ export class If {
       this.view = this.viewFactory.create();
     }
 
+    if (!this.view.isBound) {
+      this.view.bind(this.bindingContext, this.overrideContext);
+    }
+
     if (!this.showing) {
       this.showing = true;
-
-      if (!this.view.isBound) {
-        this.view.bind(this.bindingContext, this.overrideContext);
-      }
-
       this.viewSlot.add(this.view);
     }
   }
 
+  /**
+  * Unbinds the if
+  */
   unbind() {
-    if (this.view !== null && this.viewFactory.isCaching) {
-      if (this.showing) {
-        this.showing = false;
-        this.viewSlot.remove(this.view, true, true);
-      } else {
-        this.view.returnToCache();
-      }
-
-      this.view = null;
+    if (this.view === null) {
+      return;
     }
+
+    this.view.unbind();
+
+    if (!this.viewFactory.isCaching) {
+      return;
+    }
+
+    if (this.showing) {
+      this.showing = false;
+      this.viewSlot.remove(this.view, true, true);
+    }
+    this.view.returnToCache();
+    this.view = null;
   }
 }
