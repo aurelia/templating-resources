@@ -63,13 +63,12 @@ export class If {
       this.view = this.viewFactory.create();
     }
 
+    if (!this.view.isBound) {
+      this.view.bind(this.bindingContext, this.overrideContext);
+    }
+
     if (!this.showing) {
       this.showing = true;
-
-      if (!this.view.isBound) {
-        this.view.bind(this.bindingContext, this.overrideContext);
-      }
-
       this.viewSlot.add(this.view);
     }
   }
@@ -78,15 +77,21 @@ export class If {
   * Unbinds the if
   */
   unbind() {
-    if (this.view !== null && this.viewFactory.isCaching) {
-      if (this.showing) {
-        this.showing = false;
-        this.viewSlot.remove(this.view, true, true);
-      } else {
-        this.view.returnToCache();
-      }
-
-      this.view = null;
+    if (this.view === null) {
+      return;
     }
+
+    this.view.unbind();
+
+    if (!this.viewFactory.isCaching) {
+      return;
+    }
+
+    if (this.showing) {
+      this.showing = false;
+      this.viewSlot.remove(this.view, true, true);
+    }
+    this.view.returnToCache();
+    this.view = null;
   }
 }
