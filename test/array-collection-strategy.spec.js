@@ -42,9 +42,12 @@ describe('ArrayCollectionStrategy', () => {
       view1 = new ViewMock();
       view2 = new ViewMock();
       view3 = new ViewMock();
-      view1.overrideContext = { item: 'foo' };
-      view2.overrideContext = { item: 'qux' };
-      view3.overrideContext = { item: 'bar' };
+      view1.bindingContext = { item: 'foo' };
+      view1.overrideContext = {};
+      view2.bindingContext = { item: 'qux' };
+      view2.overrideContext = {};
+      view3.bindingContext = { item: 'bar' };
+      view3.overrideContext = {};
       viewSlot.children = [view1, view2, view3];
       spyOn(viewFactory, 'create').and.callFake(() => {});
     });
@@ -88,10 +91,10 @@ describe('ArrayCollectionStrategy', () => {
         expect(viewSlot.children.length).toBe(2);
 
         expect(viewSlot.children[0].overrideContext.$index).toBe(0);
-        expect(viewSlot.children[0].overrideContext.item).toBe('foo');
+        expect(viewSlot.children[0].bindingContext.item).toBe('foo');
 
         expect(viewSlot.children[1].overrideContext.$index).toBe(1);
-        expect(viewSlot.children[1].overrideContext.item).toBe('bar');
+        expect(viewSlot.children[1].bindingContext.item).toBe('bar');
         done();
       });
     });
@@ -109,7 +112,7 @@ describe('ArrayCollectionStrategy', () => {
       strategy.handleChanges(items, splices);
 
       expect(viewSlot.children.length).toBe(4);
-      expect(viewSlot.children[3].overrideContext.item).toBe('norf');
+      expect(viewSlot.children[3].bindingContext.item).toBe('norf');
       expect(viewSlot.children[3].overrideContext.$index).toBe(3);
       expect(viewSlot.children[3].overrideContext.$first).toBe(false);
       expect(viewSlot.children[3].overrideContext.$last).toBe(true);
@@ -117,7 +120,8 @@ describe('ArrayCollectionStrategy', () => {
 
     it('should correctly handle adding and removing (i.e Array.prototype.splice())', () => {
       let view4 = new ViewMock();
-      view4.overrideContext = { item: 'norf' };
+      view4.bindingContext = { item: 'norf' };
+      view4.overrideContext = {};
       let viewSlotMock = new ViewSlotMock();
       viewSlotMock.children = [view1, view2, view3, view4];
       repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator());
@@ -131,8 +135,8 @@ describe('ArrayCollectionStrategy', () => {
       strategy.handleChanges(items, splices);
 
       expect(viewSlotMock.children.length).toBe(2);
-      expect(viewSlotMock.children[0].overrideContext.item).toBe('bar_updated');
-      expect(viewSlotMock.children[1].overrideContext.item).toBe('norf');
+      expect(viewSlotMock.children[0].bindingContext.item).toBe('bar_updated');
+      expect(viewSlotMock.children[1].bindingContext.item).toBe('norf');
     });
 
     it('should correctly handle multiple splices adding and removing (i.e Array.prototype.reverse())', () => {
@@ -156,10 +160,10 @@ describe('ArrayCollectionStrategy', () => {
       strategy.handleChanges(items, splices);
 
       expect(viewSlotMock.children.length).toBe(4);
-      expect(viewSlotMock.children[0].overrideContext.item).toBe('norf');
-      expect(viewSlotMock.children[1].overrideContext.item).toBe('bar');
-      expect(viewSlotMock.children[2].overrideContext.item).toBe('qux');
-      expect(viewSlotMock.children[3].overrideContext.item).toBe('foo');
+      expect(viewSlotMock.children[0].bindingContext.item).toBe('norf');
+      expect(viewSlotMock.children[1].bindingContext.item).toBe('bar');
+      expect(viewSlotMock.children[2].bindingContext.item).toBe('qux');
+      expect(viewSlotMock.children[3].bindingContext.item).toBe('foo');
 
       expect(viewSlotMock.children[0].overrideContext.$index).toBe(0);
       expect(viewSlotMock.children[1].overrideContext.$index).toBe(1);
@@ -194,9 +198,9 @@ describe('ArrayCollectionStrategy', () => {
 
       animationPromise.then(() => {
         expect(viewSlotMock.children.length).toBe(3);
-        expect(viewSlotMock.children[0].overrideContext.item).toBe('qux');
-        expect(viewSlotMock.children[1].overrideContext.item).toBe('foo');
-        expect(viewSlotMock.children[2].overrideContext.item).toBe('bar');
+        expect(viewSlotMock.children[0].bindingContext.item).toBe('qux');
+        expect(viewSlotMock.children[1].bindingContext.item).toBe('foo');
+        expect(viewSlotMock.children[2].bindingContext.item).toBe('bar');
 
         expect(viewSlotMock.children[0].overrideContext.$index).toBe(0);
         expect(viewSlotMock.children[1].overrideContext.$index).toBe(1);

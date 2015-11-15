@@ -26,7 +26,7 @@ export class MapCollectionStrategy extends CollectionStrategy {
     items.forEach((value, key) => {
       overrideContext = this.createFullOverrideContext(value, index, items.size, key);
       view = viewFactory.create();
-      view.bind(undefined, overrideContext);
+      view.bind(overrideContext.bindingContext, overrideContext);
       viewSlot.add(view);
       ++index;
     });
@@ -61,13 +61,13 @@ export class MapCollectionStrategy extends CollectionStrategy {
         }
         overrideContext = this.createFullOverrideContext(map.get(key), removeIndex, map.size, key);
         view = this.viewFactory.create();
-        view.bind(undefined, overrideContext);
+        view.bind(overrideContext.bindingContext, overrideContext);
         viewSlot.insert(removeIndex, view);
         break;
       case 'add':
         overrideContext = this.createFullOverrideContext(map.get(key), map.size - 1, map.size, key);
         view = this.viewFactory.create();
-        view.bind(undefined, overrideContext);
+        view.bind(overrideContext.bindingContext, overrideContext);
         viewSlot.insert(map.size - 1, view);
         break;
       case 'delete':
