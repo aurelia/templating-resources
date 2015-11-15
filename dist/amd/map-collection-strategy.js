@@ -1,4 +1,4 @@
-define(['exports', './collection-strategy'], function (exports, _collectionStrategy) {
+define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', './collection-strategy'], function (exports, _aureliaDependencyInjection, _aureliaBinding, _collectionStrategy) {
   'use strict';
 
   exports.__esModule = true;
@@ -10,10 +10,11 @@ define(['exports', './collection-strategy'], function (exports, _collectionStrat
   var MapCollectionStrategy = (function (_CollectionStrategy) {
     _inherits(MapCollectionStrategy, _CollectionStrategy);
 
-    function MapCollectionStrategy() {
-      _classCallCheck(this, MapCollectionStrategy);
+    function MapCollectionStrategy(observerLocator) {
+      _classCallCheck(this, _MapCollectionStrategy);
 
-      _CollectionStrategy.apply(this, arguments);
+      _CollectionStrategy.call(this);
+      this.observerLocator = observerLocator;
     }
 
     MapCollectionStrategy.prototype.getCollectionObserver = function getCollectionObserver(items) {
@@ -32,7 +33,7 @@ define(['exports', './collection-strategy'], function (exports, _collectionStrat
       items.forEach(function (value, key) {
         overrideContext = _this.createFullOverrideContext(value, index, items.size, key);
         view = viewFactory.create();
-        view.bind(undefined, overrideContext);
+        view.bind(overrideContext.bindingContext, overrideContext);
         viewSlot.add(view);
         ++index;
       });
@@ -64,13 +65,13 @@ define(['exports', './collection-strategy'], function (exports, _collectionStrat
             }
             overrideContext = this.createFullOverrideContext(map.get(key), removeIndex, map.size, key);
             view = this.viewFactory.create();
-            view.bind(undefined, overrideContext);
+            view.bind(overrideContext.bindingContext, overrideContext);
             viewSlot.insert(removeIndex, view);
             break;
           case 'add':
             overrideContext = this.createFullOverrideContext(map.get(key), map.size - 1, map.size, key);
             view = this.viewFactory.create();
-            view.bind(undefined, overrideContext);
+            view.bind(overrideContext.bindingContext, overrideContext);
             viewSlot.insert(map.size - 1, view);
             break;
           case 'delete':
@@ -114,6 +115,8 @@ define(['exports', './collection-strategy'], function (exports, _collectionStrat
       }
     };
 
+    var _MapCollectionStrategy = MapCollectionStrategy;
+    MapCollectionStrategy = _aureliaDependencyInjection.inject(_aureliaBinding.ObserverLocator)(MapCollectionStrategy) || MapCollectionStrategy;
     return MapCollectionStrategy;
   })(_collectionStrategy.CollectionStrategy);
 

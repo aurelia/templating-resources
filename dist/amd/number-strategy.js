@@ -48,7 +48,7 @@ define(['exports', './collection-strategy'], function (exports, _collectionStrat
       for (i = childrenLength, ii = value; i < ii; ++i) {
         overrideContext = this.createFullOverrideContext(i, i, ii);
         view = viewFactory.create();
-        view.bind(undefined, overrideContext);
+        view.bind(overrideContext.bindingContext, overrideContext);
         viewSlot.add(view);
       }
 

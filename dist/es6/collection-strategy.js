@@ -1,20 +1,11 @@
-import {inject, transient} from 'aurelia-dependency-injection';
-import {ObserverLocator, createOverrideContext} from 'aurelia-binding';
+import {transient} from 'aurelia-dependency-injection';
+import {createOverrideContext} from 'aurelia-binding';
 
 /**
 * Base class that defines common properties and methods for a collection strategy implementation.
 */
-@inject(ObserverLocator)
 @transient()
 export class CollectionStrategy {
-  /**
-  * Creates an instance of CollectionStrategy.
-  * @param observerLocator The instance of the observerLocator.
-  */
-  constructor(observerLocator) {
-    this.observerLocator = observerLocator;
-  }
-
   /**
   * Initializes the strategy collection.
   * @param repeat The repeat instance.
@@ -71,8 +62,9 @@ export class CollectionStrategy {
     * @param key The key in a key/value pair.
     */
   createFullOverrideContext(data, index, length, key) {
-    let context = this.createBaseOverrideContext(data, key);
-    return this.updateOverrideContext(context, index, length);
+    let overrideContext = this.createBaseOverrideContext(data, key);
+    this.updateOverrideContext(overrideContext, index, length);
+    return overrideContext;
   }
 
   /**
@@ -81,16 +73,17 @@ export class CollectionStrategy {
   * @param key The key in a key/value pair.
   */
   createBaseOverrideContext(data, key) {
-    let context = createOverrideContext(undefined, this.overrideContext);
+    let bindingContext = {};
+    let overrideContext = createOverrideContext(bindingContext, this.overrideContext);
     // is key/value pair (Map)
     if (typeof key !== 'undefined') {
-      context[this.key] = key;
-      context[this.value] = data;
+      bindingContext[this.key] = key;
+      bindingContext[this.value] = data;
     } else {
-      context[this.local] = data;
+      bindingContext[this.local] = data;
     }
 
-    return context;
+    return overrideContext;
   }
 
   /**
@@ -99,18 +92,16 @@ export class CollectionStrategy {
   * @param index The context's index.
   * @param length The collection's length.
   */
-  updateOverrideContext(context, index, length) {
+  updateOverrideContext(overrideContext, index, length) {
     let first = (index === 0);
     let last = (index === length - 1);
     let even = index % 2 === 0;
 
-    context.$index = index;
-    context.$first = first;
-    context.$last = last;
-    context.$middle = !(first || last);
-    context.$odd = !even;
-    context.$even = even;
-
-    return context;
+    overrideContext.$index = index;
+    overrideContext.$first = first;
+    overrideContext.$last = last;
+    overrideContext.$middle = !(first || last);
+    overrideContext.$odd = !even;
+    overrideContext.$even = even;
   }
 }

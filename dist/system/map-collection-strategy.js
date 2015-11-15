@@ -1,24 +1,29 @@
-System.register(['./collection-strategy'], function (_export) {
+System.register(['aurelia-dependency-injection', 'aurelia-binding', './collection-strategy'], function (_export) {
   'use strict';
 
-  var CollectionStrategy, MapCollectionStrategy;
+  var inject, ObserverLocator, CollectionStrategy, MapCollectionStrategy;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   return {
-    setters: [function (_collectionStrategy) {
+    setters: [function (_aureliaDependencyInjection) {
+      inject = _aureliaDependencyInjection.inject;
+    }, function (_aureliaBinding) {
+      ObserverLocator = _aureliaBinding.ObserverLocator;
+    }, function (_collectionStrategy) {
       CollectionStrategy = _collectionStrategy.CollectionStrategy;
     }],
     execute: function () {
       MapCollectionStrategy = (function (_CollectionStrategy) {
         _inherits(MapCollectionStrategy, _CollectionStrategy);
 
-        function MapCollectionStrategy() {
-          _classCallCheck(this, MapCollectionStrategy);
+        function MapCollectionStrategy(observerLocator) {
+          _classCallCheck(this, _MapCollectionStrategy);
 
-          _CollectionStrategy.apply(this, arguments);
+          _CollectionStrategy.call(this);
+          this.observerLocator = observerLocator;
         }
 
         MapCollectionStrategy.prototype.getCollectionObserver = function getCollectionObserver(items) {
@@ -37,7 +42,7 @@ System.register(['./collection-strategy'], function (_export) {
           items.forEach(function (value, key) {
             overrideContext = _this.createFullOverrideContext(value, index, items.size, key);
             view = viewFactory.create();
-            view.bind(undefined, overrideContext);
+            view.bind(overrideContext.bindingContext, overrideContext);
             viewSlot.add(view);
             ++index;
           });
@@ -69,13 +74,13 @@ System.register(['./collection-strategy'], function (_export) {
                 }
                 overrideContext = this.createFullOverrideContext(map.get(key), removeIndex, map.size, key);
                 view = this.viewFactory.create();
-                view.bind(undefined, overrideContext);
+                view.bind(overrideContext.bindingContext, overrideContext);
                 viewSlot.insert(removeIndex, view);
                 break;
               case 'add':
                 overrideContext = this.createFullOverrideContext(map.get(key), map.size - 1, map.size, key);
                 view = this.viewFactory.create();
-                view.bind(undefined, overrideContext);
+                view.bind(overrideContext.bindingContext, overrideContext);
                 viewSlot.insert(map.size - 1, view);
                 break;
               case 'delete':
@@ -119,6 +124,8 @@ System.register(['./collection-strategy'], function (_export) {
           }
         };
 
+        var _MapCollectionStrategy = MapCollectionStrategy;
+        MapCollectionStrategy = inject(ObserverLocator)(MapCollectionStrategy) || MapCollectionStrategy;
         return MapCollectionStrategy;
       })(CollectionStrategy);
 

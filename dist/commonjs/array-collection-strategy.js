@@ -6,15 +6,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var _aureliaDependencyInjection = require('aurelia-dependency-injection');
+
+var _aureliaBinding = require('aurelia-binding');
+
 var _collectionStrategy = require('./collection-strategy');
 
 var ArrayCollectionStrategy = (function (_CollectionStrategy) {
   _inherits(ArrayCollectionStrategy, _CollectionStrategy);
 
-  function ArrayCollectionStrategy() {
-    _classCallCheck(this, ArrayCollectionStrategy);
+  function ArrayCollectionStrategy(observerLocator) {
+    _classCallCheck(this, _ArrayCollectionStrategy);
 
-    _CollectionStrategy.apply(this, arguments);
+    _CollectionStrategy.call(this);
+    this.observerLocator = observerLocator;
   }
 
   ArrayCollectionStrategy.prototype.processItems = function processItems(items) {
@@ -26,7 +31,7 @@ var ArrayCollectionStrategy = (function (_CollectionStrategy) {
     for (i = 0, ii = items.length; i < ii; ++i) {
       overrideContext = _CollectionStrategy.prototype.createFullOverrideContext.call(this, items[i], i, ii);
       view = this.viewFactory.create();
-      view.bind(undefined, overrideContext);
+      view.bind(overrideContext.bindingContext, overrideContext);
       this.viewSlot.add(view);
     }
   };
@@ -82,7 +87,7 @@ var ArrayCollectionStrategy = (function (_CollectionStrategy) {
       for (; addIndex < end; ++addIndex) {
         var overrideContext = this.createFullOverrideContext(array[addIndex], addIndex, arrayLength);
         var view = this.viewFactory.create();
-        view.bind(undefined, overrideContext);
+        view.bind(overrideContext.bindingContext, overrideContext);
         this.viewSlot.insert(addIndex, view);
       }
     }
@@ -90,6 +95,8 @@ var ArrayCollectionStrategy = (function (_CollectionStrategy) {
     return spliceIndexLow;
   };
 
+  var _ArrayCollectionStrategy = ArrayCollectionStrategy;
+  ArrayCollectionStrategy = _aureliaDependencyInjection.inject(_aureliaBinding.ObserverLocator)(ArrayCollectionStrategy) || ArrayCollectionStrategy;
   return ArrayCollectionStrategy;
 })(_collectionStrategy.CollectionStrategy);
 

@@ -1,9 +1,20 @@
+import {inject} from 'aurelia-dependency-injection';
+import {ObserverLocator} from 'aurelia-binding';
 import {CollectionStrategy} from './collection-strategy';
 
 /**
 * A strategy for iterating Arrays.
 */
+@inject(ObserverLocator)
 export class ArrayCollectionStrategy extends CollectionStrategy {
+  /**
+  * Creates an instance of ArrayCollectionStrategy.
+  * @param observerLocator The instance of the observerLocator.
+  */
+  constructor(observerLocator) {
+    super();
+    this.observerLocator = observerLocator;
+  }
   /**
   * Process the provided array items.
   * @param items The underlying array.
@@ -17,7 +28,7 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
     for (i = 0, ii = items.length; i < ii; ++i) {
       overrideContext = super.createFullOverrideContext(items[i], i, ii);
       view = this.viewFactory.create();
-      view.bind(undefined, overrideContext);
+      view.bind(overrideContext.bindingContext, overrideContext);
       this.viewSlot.add(view);
     }
   }
@@ -80,7 +91,7 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
       for (; addIndex < end; ++addIndex) {
         let overrideContext = this.createFullOverrideContext(array[addIndex], addIndex, arrayLength);
         let view = this.viewFactory.create();
-        view.bind(undefined, overrideContext);
+        view.bind(overrideContext.bindingContext, overrideContext);
         this.viewSlot.insert(addIndex, view);
       }
     }

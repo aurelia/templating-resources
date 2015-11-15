@@ -1,4 +1,4 @@
-define(['exports', './collection-strategy'], function (exports, _collectionStrategy) {
+define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', './collection-strategy'], function (exports, _aureliaDependencyInjection, _aureliaBinding, _collectionStrategy) {
   'use strict';
 
   exports.__esModule = true;
@@ -10,10 +10,11 @@ define(['exports', './collection-strategy'], function (exports, _collectionStrat
   var ArrayCollectionStrategy = (function (_CollectionStrategy) {
     _inherits(ArrayCollectionStrategy, _CollectionStrategy);
 
-    function ArrayCollectionStrategy() {
-      _classCallCheck(this, ArrayCollectionStrategy);
+    function ArrayCollectionStrategy(observerLocator) {
+      _classCallCheck(this, _ArrayCollectionStrategy);
 
-      _CollectionStrategy.apply(this, arguments);
+      _CollectionStrategy.call(this);
+      this.observerLocator = observerLocator;
     }
 
     ArrayCollectionStrategy.prototype.processItems = function processItems(items) {
@@ -25,7 +26,7 @@ define(['exports', './collection-strategy'], function (exports, _collectionStrat
       for (i = 0, ii = items.length; i < ii; ++i) {
         overrideContext = _CollectionStrategy.prototype.createFullOverrideContext.call(this, items[i], i, ii);
         view = this.viewFactory.create();
-        view.bind(undefined, overrideContext);
+        view.bind(overrideContext.bindingContext, overrideContext);
         this.viewSlot.add(view);
       }
     };
@@ -81,7 +82,7 @@ define(['exports', './collection-strategy'], function (exports, _collectionStrat
         for (; addIndex < end; ++addIndex) {
           var overrideContext = this.createFullOverrideContext(array[addIndex], addIndex, arrayLength);
           var view = this.viewFactory.create();
-          view.bind(undefined, overrideContext);
+          view.bind(overrideContext.bindingContext, overrideContext);
           this.viewSlot.insert(addIndex, view);
         }
       }
@@ -89,6 +90,8 @@ define(['exports', './collection-strategy'], function (exports, _collectionStrat
       return spliceIndexLow;
     };
 
+    var _ArrayCollectionStrategy = ArrayCollectionStrategy;
+    ArrayCollectionStrategy = _aureliaDependencyInjection.inject(_aureliaBinding.ObserverLocator)(ArrayCollectionStrategy) || ArrayCollectionStrategy;
     return ArrayCollectionStrategy;
   })(_collectionStrategy.CollectionStrategy);
 

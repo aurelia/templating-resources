@@ -1,3 +1,12 @@
+### 0.17.4 (2015-11-15)
+
+
+#### Bug Fixes
+
+* **collection-strategy:** IE9/10 issue when injecting to base class ([cc567168](http://github.com/aurelia/templating-resources/commit/cc5671684291377ceecc06303e5c0bb661d0c492))
+* **repeat:** make bind contexts consistent with the rest of aurelia ([a35eb838](http://github.com/aurelia/templating-resources/commit/a35eb838d0fcdd82464507d1681e6cd5cb525707))
+
+
 ### 0.17.3 (2015-11-12)
 
 

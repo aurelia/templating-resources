@@ -1,24 +1,29 @@
-System.register(['./collection-strategy'], function (_export) {
+System.register(['aurelia-dependency-injection', 'aurelia-binding', './collection-strategy'], function (_export) {
   'use strict';
 
-  var CollectionStrategy, ArrayCollectionStrategy;
+  var inject, ObserverLocator, CollectionStrategy, ArrayCollectionStrategy;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   return {
-    setters: [function (_collectionStrategy) {
+    setters: [function (_aureliaDependencyInjection) {
+      inject = _aureliaDependencyInjection.inject;
+    }, function (_aureliaBinding) {
+      ObserverLocator = _aureliaBinding.ObserverLocator;
+    }, function (_collectionStrategy) {
       CollectionStrategy = _collectionStrategy.CollectionStrategy;
     }],
     execute: function () {
       ArrayCollectionStrategy = (function (_CollectionStrategy) {
         _inherits(ArrayCollectionStrategy, _CollectionStrategy);
 
-        function ArrayCollectionStrategy() {
-          _classCallCheck(this, ArrayCollectionStrategy);
+        function ArrayCollectionStrategy(observerLocator) {
+          _classCallCheck(this, _ArrayCollectionStrategy);
 
-          _CollectionStrategy.apply(this, arguments);
+          _CollectionStrategy.call(this);
+          this.observerLocator = observerLocator;
         }
 
         ArrayCollectionStrategy.prototype.processItems = function processItems(items) {
@@ -30,7 +35,7 @@ System.register(['./collection-strategy'], function (_export) {
           for (i = 0, ii = items.length; i < ii; ++i) {
             overrideContext = _CollectionStrategy.prototype.createFullOverrideContext.call(this, items[i], i, ii);
             view = this.viewFactory.create();
-            view.bind(undefined, overrideContext);
+            view.bind(overrideContext.bindingContext, overrideContext);
             this.viewSlot.add(view);
           }
         };
@@ -86,7 +91,7 @@ System.register(['./collection-strategy'], function (_export) {
             for (; addIndex < end; ++addIndex) {
               var overrideContext = this.createFullOverrideContext(array[addIndex], addIndex, arrayLength);
               var view = this.viewFactory.create();
-              view.bind(undefined, overrideContext);
+              view.bind(overrideContext.bindingContext, overrideContext);
               this.viewSlot.insert(addIndex, view);
             }
           }
@@ -94,6 +99,8 @@ System.register(['./collection-strategy'], function (_export) {
           return spliceIndexLow;
         };
 
+        var _ArrayCollectionStrategy = ArrayCollectionStrategy;
+        ArrayCollectionStrategy = inject(ObserverLocator)(ArrayCollectionStrategy) || ArrayCollectionStrategy;
         return ArrayCollectionStrategy;
       })(CollectionStrategy);
 

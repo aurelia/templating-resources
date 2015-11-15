@@ -6,10 +6,8 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding'], function 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
   var CollectionStrategy = (function () {
-    function CollectionStrategy(observerLocator) {
+    function CollectionStrategy() {
       _classCallCheck(this, _CollectionStrategy);
-
-      this.observerLocator = observerLocator;
     }
 
     CollectionStrategy.prototype.initialize = function initialize(repeat, bindingContext, overrideContext) {
@@ -48,41 +46,40 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding'], function 
     };
 
     CollectionStrategy.prototype.createFullOverrideContext = function createFullOverrideContext(data, index, length, key) {
-      var context = this.createBaseOverrideContext(data, key);
-      return this.updateOverrideContext(context, index, length);
+      var overrideContext = this.createBaseOverrideContext(data, key);
+      this.updateOverrideContext(overrideContext, index, length);
+      return overrideContext;
     };
 
     CollectionStrategy.prototype.createBaseOverrideContext = function createBaseOverrideContext(data, key) {
-      var context = _aureliaBinding.createOverrideContext(undefined, this.overrideContext);
+      var bindingContext = {};
+      var overrideContext = _aureliaBinding.createOverrideContext(bindingContext, this.overrideContext);
 
       if (typeof key !== 'undefined') {
-        context[this.key] = key;
-        context[this.value] = data;
+        bindingContext[this.key] = key;
+        bindingContext[this.value] = data;
       } else {
-        context[this.local] = data;
+        bindingContext[this.local] = data;
       }
 
-      return context;
+      return overrideContext;
     };
 
-    CollectionStrategy.prototype.updateOverrideContext = function updateOverrideContext(context, index, length) {
+    CollectionStrategy.prototype.updateOverrideContext = function updateOverrideContext(overrideContext, index, length) {
       var first = index === 0;
       var last = index === length - 1;
       var even = index % 2 === 0;
 
-      context.$index = index;
-      context.$first = first;
-      context.$last = last;
-      context.$middle = !(first || last);
-      context.$odd = !even;
-      context.$even = even;
-
-      return context;
+      overrideContext.$index = index;
+      overrideContext.$first = first;
+      overrideContext.$last = last;
+      overrideContext.$middle = !(first || last);
+      overrideContext.$odd = !even;
+      overrideContext.$even = even;
     };
 
     var _CollectionStrategy = CollectionStrategy;
     CollectionStrategy = _aureliaDependencyInjection.transient()(CollectionStrategy) || CollectionStrategy;
-    CollectionStrategy = _aureliaDependencyInjection.inject(_aureliaBinding.ObserverLocator)(CollectionStrategy) || CollectionStrategy;
     return CollectionStrategy;
   })();
 
