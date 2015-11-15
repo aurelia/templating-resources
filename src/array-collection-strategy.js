@@ -28,7 +28,7 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
     for (i = 0, ii = items.length; i < ii; ++i) {
       overrideContext = super.createFullOverrideContext(items[i], i, ii);
       view = this.viewFactory.create();
-      view.bind(undefined, overrideContext);
+      view.bind(overrideContext.bindingContext, overrideContext);
       this.viewSlot.add(view);
     }
   }
@@ -91,7 +91,7 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
       for (; addIndex < end; ++addIndex) {
         let overrideContext = this.createFullOverrideContext(array[addIndex], addIndex, arrayLength);
         let view = this.viewFactory.create();
-        view.bind(undefined, overrideContext);
+        view.bind(overrideContext.bindingContext, overrideContext);
         this.viewSlot.insert(addIndex, view);
       }
     }

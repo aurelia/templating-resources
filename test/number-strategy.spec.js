@@ -44,13 +44,13 @@ describe('NumberStrategy', () => {
 
       expect(viewSlot.children.length).toBe(3);
 
-      expect(viewSlot.children[0].overrideContext.item).toBe(0);
+      expect(viewSlot.children[0].bindingContext.item).toBe(0);
       expect(viewSlot.children[0].overrideContext.$index).toBe(0);
 
-      expect(viewSlot.children[1].overrideContext.item).toBe(1);
+      expect(viewSlot.children[1].bindingContext.item).toBe(1);
       expect(viewSlot.children[1].overrideContext.$index).toBe(1);
 
-      expect(viewSlot.children[2].overrideContext.item).toBe(2);
+      expect(viewSlot.children[2].bindingContext.item).toBe(2);
       expect(viewSlot.children[2].overrideContext.$index).toBe(2);
     });
 
@@ -60,16 +60,16 @@ describe('NumberStrategy', () => {
 
       expect(viewSlot.children.length).toBe(4);
 
-      expect(viewSlot.children[0].overrideContext.item).toBe(0);
+      expect(viewSlot.children[0].bindingContext.item).toBe(0);
       expect(viewSlot.children[0].overrideContext.$index).toBe(0);
 
-      expect(viewSlot.children[1].overrideContext.item).toBe(1);
+      expect(viewSlot.children[1].bindingContext.item).toBe(1);
       expect(viewSlot.children[1].overrideContext.$index).toBe(1);
 
-      expect(viewSlot.children[2].overrideContext.item).toBe(2);
+      expect(viewSlot.children[2].bindingContext.item).toBe(2);
       expect(viewSlot.children[2].overrideContext.$index).toBe(2);
 
-      expect(viewSlot.children[3].overrideContext.item).toBe(3);
+      expect(viewSlot.children[3].bindingContext.item).toBe(3);
       expect(viewSlot.children[3].overrideContext.$index).toBe(3);
     });
 
@@ -79,10 +79,10 @@ describe('NumberStrategy', () => {
 
       expect(viewSlot.children.length).toBe(2);
 
-      expect(viewSlot.children[0].overrideContext.item).toBe(0);
+      expect(viewSlot.children[0].bindingContext.item).toBe(0);
       expect(viewSlot.children[0].overrideContext.$index).toBe(0);
 
-      expect(viewSlot.children[1].overrideContext.item).toBe(1);
+      expect(viewSlot.children[1].bindingContext.item).toBe(1);
       expect(viewSlot.children[1].overrideContext.$index).toBe(1);
     });
 
