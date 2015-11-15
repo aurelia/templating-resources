@@ -1,9 +1,20 @@
+import {inject} from 'aurelia-dependency-injection';
+import {ObserverLocator} from 'aurelia-binding';
 import {CollectionStrategy} from './collection-strategy';
 
 /**
 * A strategy for iterating Map.
 */
+@inject(ObserverLocator)
 export class MapCollectionStrategy extends CollectionStrategy {
+  /**
+  * Creates an instance of MapCollectionStrategy.
+  * @param observerLocator The instance of the observerLocator.
+  */
+  constructor(observerLocator) {
+    super();
+    this.observerLocator = observerLocator;
+  } 
   /**
   * Gets a Map observer.
   * @param items The items to be observed.

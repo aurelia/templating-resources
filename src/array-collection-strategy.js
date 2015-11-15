@@ -1,9 +1,20 @@
+import {inject} from 'aurelia-dependency-injection';
+import {ObserverLocator} from 'aurelia-binding';
 import {CollectionStrategy} from './collection-strategy';
 
 /**
 * A strategy for iterating Arrays.
 */
-export class ArrayCollectionStrategy extends CollectionStrategy {
+@inject(ObserverLocator)
+export class ArrayCollectionStrategy extends CollectionStrategy {   
+  /**
+  * Creates an instance of ArrayCollectionStrategy.
+  * @param observerLocator The instance of the observerLocator.
+  */
+  constructor(observerLocator) {
+    super();
+    this.observerLocator = observerLocator;
+  } 
   /**
   * Process the provided array items.
   * @param items The underlying array.

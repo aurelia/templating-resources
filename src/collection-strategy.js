@@ -1,20 +1,11 @@
-import {inject, transient} from 'aurelia-dependency-injection';
-import {ObserverLocator, createOverrideContext} from 'aurelia-binding';
+import {transient} from 'aurelia-dependency-injection';
+import {createOverrideContext} from 'aurelia-binding';
 
 /**
 * Base class that defines common properties and methods for a collection strategy implementation.
 */
-@inject(ObserverLocator)
 @transient()
 export class CollectionStrategy {
-  /**
-  * Creates an instance of CollectionStrategy.
-  * @param observerLocator The instance of the observerLocator.
-  */
-  constructor(observerLocator) {
-    this.observerLocator = observerLocator;
-  }
-
   /**
   * Initializes the strategy collection.
   * @param repeat The repeat instance.
