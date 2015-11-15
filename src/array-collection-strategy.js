@@ -6,7 +6,7 @@ import {CollectionStrategy} from './collection-strategy';
 * A strategy for iterating Arrays.
 */
 @inject(ObserverLocator)
-export class ArrayCollectionStrategy extends CollectionStrategy {   
+export class ArrayCollectionStrategy extends CollectionStrategy {
   /**
   * Creates an instance of ArrayCollectionStrategy.
   * @param observerLocator The instance of the observerLocator.
@@ -14,7 +14,7 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
   constructor(observerLocator) {
     super();
     this.observerLocator = observerLocator;
-  } 
+  }
   /**
   * Process the provided array items.
   * @param items The underlying array.

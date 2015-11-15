@@ -14,7 +14,7 @@ export class MapCollectionStrategy extends CollectionStrategy {
   constructor(observerLocator) {
     super();
     this.observerLocator = observerLocator;
-  } 
+  }
   /**
   * Gets a Map observer.
   * @param items The items to be observed.
