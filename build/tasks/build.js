@@ -29,6 +29,12 @@ gulp.task('build-index', function(){
     .pipe(gulp.dest(paths.output));
 });
 
+gulp.task('build-es6-temp', function () {
+    return gulp.src(paths.output + jsName)
+      .pipe(to5(assign({}, compilerOptions, {modules:'common'})))
+      .pipe(gulp.dest(paths.output + 'temp'));
+});
+
 gulp.task('build-es6', function () {
   return gulp.src(paths.source)
     .pipe(gulp.dest(paths.output + 'es6'));
@@ -36,35 +42,36 @@ gulp.task('build-es6', function () {
 
 gulp.task('build-commonjs', function () {
   return gulp.src(paths.source)
-    .pipe(to5(assign({}, compilerOptions, {modules:'common'})))
+    .pipe(to5(assign({}, compilerOptions, {modules:'common', plugins: []})))
     .pipe(gulp.dest(paths.output + 'commonjs'));
 });
 
 gulp.task('build-amd', function () {
   return gulp.src(paths.source)
-    .pipe(to5(assign({}, compilerOptions, {modules:'amd'})))
+    .pipe(to5(assign({}, compilerOptions, {modules:'amd', plugins: []})))
     .pipe(gulp.dest(paths.output + 'amd'));
 });
 
 gulp.task('build-system', function () {
   return gulp.src(paths.source)
-    .pipe(to5(assign({}, compilerOptions, {modules:'system'})))
+    .pipe(to5(assign({}, compilerOptions, {modules:'system', plugins: []})))
     .pipe(gulp.dest(paths.output + 'system'));
 });
 
 gulp.task('build-dts', function(){
-  return gulp.src(paths.root + paths.packageName + '.d.ts')
-    .pipe(gulp.dest(paths.output))
-    .pipe(gulp.dest(paths.output + 'es6'))
-    .pipe(gulp.dest(paths.output + 'commonjs'))
-    .pipe(gulp.dest(paths.output + 'amd'))
-    .pipe(gulp.dest(paths.output + 'system'));
+  return gulp.src(paths.output + paths.packageName + '.d.ts')
+      .pipe(rename(paths.packageName + '.d.ts'))
+      .pipe(gulp.dest(paths.output + 'es6'))
+      .pipe(gulp.dest(paths.output + 'commonjs'))
+      .pipe(gulp.dest(paths.output + 'amd'))
+      .pipe(gulp.dest(paths.output + 'system'));
 });
 
 gulp.task('build', function(callback) {
   return runSequence(
     'clean',
-    ['build-index', 'build-es6', 'build-commonjs', 'build-amd', 'build-system'],
+    'build-index',
+    ['build-es6-temp', 'build-es6', 'build-commonjs', 'build-amd', 'build-system'],
     'build-dts',
     callback
   );
