@@ -1,3 +1,11 @@
+## 1.0.0-beta.1.0.1 (2015-11-16)
+
+
+#### Bug Fixes
+
+* **build:** add missing requires ([88d6ac72](http://github.com/aurelia/templating-resources/commit/88d6ac72102869881f001ecdd6f50470c0bfe147))
+
+
 ### 0.17.4 (2015-11-15)
 
 

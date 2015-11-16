@@ -772,7 +772,7 @@
                   "type": {
                     "type": "reference",
                     "name": "Container",
-                    "id": 815,
+                    "id": 846,
                     "moduleName": "\"aurelia-dependency-injection\""
                   }
                 },
@@ -818,7 +818,7 @@
                   "type": {
                     "type": "reference",
                     "name": "Container",
-                    "id": 815,
+                    "id": 846,
                     "moduleName": "\"aurelia-dependency-injection\""
                   }
                 }
@@ -860,7 +860,7 @@
                   "type": {
                     "type": "reference",
                     "name": "ViewResources",
-                    "id": 1508,
+                    "id": 1539,
                     "moduleName": "\"aurelia-templating\""
                   }
                 },
@@ -981,7 +981,7 @@
                   "type": {
                     "type": "reference",
                     "name": "ViewResources",
-                    "id": 1508,
+                    "id": 1539,
                     "moduleName": "\"aurelia-templating\""
                   }
                 },
@@ -994,7 +994,7 @@
                   "type": {
                     "type": "reference",
                     "name": "ViewCompileInstruction",
-                    "id": 1374,
+                    "id": 1405,
                     "moduleName": "\"aurelia-templating\""
                   }
                 }
