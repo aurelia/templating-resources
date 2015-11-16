@@ -1,28 +1,6591 @@
 {
   "id": 2,
-  "name": "\"core-js\"",
+  "name": "\"aurelia-templating-resources\"",
   "kind": 2,
   "kindString": "Module",
   "flags": {},
   "children": [
     {
-      "id": 3,
-      "name": "coreJs",
-      "kind": 32,
-      "kindString": "Variable",
+      "id": 283,
+      "name": "ArrayCollectionStrategy",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "A strategy for iterating Arrays."
+      },
+      "children": [
+        {
+          "id": 284,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Creates an instance of ArrayCollectionStrategy."
+          },
+          "signatures": [
+            {
+              "id": 285,
+              "name": "new ArrayCollectionStrategy",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates an instance of ArrayCollectionStrategy."
+              },
+              "parameters": [
+                {
+                  "id": 286,
+                  "name": "observerLocator",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The instance of the observerLocator.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "ArrayCollectionStrategy",
+                "id": 283,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 313,
+          "name": "createBaseOverrideContext",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 314,
+              "name": "createBaseOverrideContext",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates base of an override context."
+              },
+              "parameters": [
+                {
+                  "id": 315,
+                  "name": "data",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The item's value."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 316,
+                  "name": "key",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The key in a key/value pair.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.createBaseOverrideContext",
+                "id": 251
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.createBaseOverrideContext",
+            "id": 251
+          }
+        },
+        {
+          "id": 307,
+          "name": "createFullOverrideContext",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 308,
+              "name": "createFullOverrideContext",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates a complete override context."
+              },
+              "parameters": [
+                {
+                  "id": 309,
+                  "name": "data",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The item's value."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 310,
+                  "name": "index",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The item's index."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 311,
+                  "name": "length",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The collections total length."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 312,
+                  "name": "key",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The key in a key/value pair.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.createFullOverrideContext",
+                "id": 245
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.createFullOverrideContext",
+            "id": 245
+          }
+        },
+        {
+          "id": 302,
+          "name": "dispose",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 303,
+              "name": "dispose",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Disposes the collection strategy."
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.dispose",
+                "id": 240
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.dispose",
+            "id": 240
+          }
+        },
+        {
+          "id": 290,
+          "name": "getCollectionObserver",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 291,
+              "name": "getCollectionObserver",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Gets an Array observer."
+              },
+              "parameters": [
+                {
+                  "id": 292,
+                  "name": "items",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The items to be observed.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 293,
+          "name": "handleChanges",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 294,
+              "name": "handleChanges",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Handles changes to the underlying array."
+              },
+              "parameters": [
+                {
+                  "id": 295,
+                  "name": "array",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The modified array."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 296,
+                  "name": "splices",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "Records of array changes.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 297,
+          "name": "initialize",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 298,
+              "name": "initialize",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Initializes the strategy collection."
+              },
+              "parameters": [
+                {
+                  "id": 299,
+                  "name": "repeat",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The repeat instance."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 300,
+                  "name": "bindingContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The binding context."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 301,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The override context.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.initialize",
+                "id": 235
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.initialize",
+            "id": 235
+          }
+        },
+        {
+          "id": 287,
+          "name": "processItems",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 288,
+              "name": "processItems",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Process the provided array items."
+              },
+              "parameters": [
+                {
+                  "id": 289,
+                  "name": "items",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The underlying array.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 317,
+          "name": "updateOverrideContext",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 318,
+              "name": "updateOverrideContext",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Updates the override context."
+              },
+              "parameters": [
+                {
+                  "id": 319,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 320,
+                  "name": "index",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The context's index."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 321,
+                  "name": "length",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The collection's length.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.updateOverrideContext",
+                "id": 255
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.updateOverrideContext",
+            "id": 255
+          }
+        },
+        {
+          "id": 304,
+          "name": "updateOverrideContexts",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 305,
+              "name": "updateOverrideContexts",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Update the override context."
+              },
+              "parameters": [
+                {
+                  "id": 306,
+                  "name": "startIndex",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "index in collection where to start updating.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.updateOverrideContexts",
+                "id": 242
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.updateOverrideContexts",
+            "id": 242
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            284
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            313,
+            307,
+            302,
+            290,
+            293,
+            297,
+            287,
+            317,
+            304
+          ]
+        }
+      ],
+      "extendedTypes": [
+        {
+          "type": "reference",
+          "name": "CollectionStrategy",
+          "id": 234
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "BindingSignaler",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 18,
+          "name": "signals",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true
+          },
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        },
+        {
+          "id": 19,
+          "name": "signal",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 20,
+              "name": "signal",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 21,
+                  "name": "name",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "string"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "void"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [
+            18
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            19
+          ]
+        }
+      ]
+    },
+    {
+      "id": 95,
+      "name": "CSSResource",
+      "kind": 128,
+      "kindString": "Class",
       "flags": {},
-      "type": {
-        "type": "instrinct",
-        "name": "any"
-      }
+      "children": [
+        {
+          "id": 96,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {},
+          "signatures": [
+            {
+              "id": 97,
+              "name": "new CSSResource",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 98,
+                  "name": "address",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "string"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "CSSResource",
+                "id": 95,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 99,
+          "name": "initialize",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {},
+          "signatures": [
+            {
+              "id": 100,
+              "name": "initialize",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 101,
+                  "name": "container",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "reference",
+                    "name": "Container",
+                    "id": 815,
+                    "moduleName": "\"aurelia-dependency-injection\""
+                  }
+                },
+                {
+                  "id": 102,
+                  "name": "target",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "reference",
+                    "name": "Function"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "void"
+              }
+            }
+          ]
+        },
+        {
+          "id": 107,
+          "name": "load",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {},
+          "signatures": [
+            {
+              "id": 108,
+              "name": "load",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 109,
+                  "name": "container",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "reference",
+                    "name": "Container",
+                    "id": 815,
+                    "moduleName": "\"aurelia-dependency-injection\""
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "Promise",
+                "typeArguments": [
+                  {
+                    "type": "reference",
+                    "name": "CSSResource",
+                    "id": 95
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": 103,
+          "name": "register",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {},
+          "signatures": [
+            {
+              "id": 104,
+              "name": "register",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 105,
+                  "name": "registry",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "reference",
+                    "name": "ViewResources",
+                    "id": 1508,
+                    "moduleName": "\"aurelia-templating\""
+                  }
+                },
+                {
+                  "id": 106,
+                  "name": "name",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "string"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "void"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            96
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            99,
+            107,
+            103
+          ]
+        }
+      ]
+    },
+    {
+      "id": 110,
+      "name": "CSSViewEngineHooks",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {},
+      "children": [
+        {
+          "id": 111,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {},
+          "signatures": [
+            {
+              "id": 112,
+              "name": "new CSSViewEngineHooks",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 113,
+                  "name": "mode",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "string"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "CSSViewEngineHooks",
+                "id": 110,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 114,
+          "name": "beforeCompile",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {},
+          "signatures": [
+            {
+              "id": 115,
+              "name": "beforeCompile",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 116,
+                  "name": "content",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "reference",
+                    "name": "DocumentFragment"
+                  }
+                },
+                {
+                  "id": 117,
+                  "name": "resources",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "reference",
+                    "name": "ViewResources",
+                    "id": 1508,
+                    "moduleName": "\"aurelia-templating\""
+                  }
+                },
+                {
+                  "id": 118,
+                  "name": "instruction",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "reference",
+                    "name": "ViewCompileInstruction",
+                    "id": 1374,
+                    "moduleName": "\"aurelia-templating\""
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "void"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            111
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            114
+          ]
+        }
+      ]
+    },
+    {
+      "id": 234,
+      "name": "CollectionStrategy",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Base class that defines common properties and methods for a collection strategy implementation."
+      },
+      "children": [
+        {
+          "id": 251,
+          "name": "createBaseOverrideContext",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 252,
+              "name": "createBaseOverrideContext",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates base of an override context."
+              },
+              "parameters": [
+                {
+                  "id": 253,
+                  "name": "data",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The item's value."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 254,
+                  "name": "key",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The key in a key/value pair.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 245,
+          "name": "createFullOverrideContext",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 246,
+              "name": "createFullOverrideContext",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates a complete override context."
+              },
+              "parameters": [
+                {
+                  "id": 247,
+                  "name": "data",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The item's value."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 248,
+                  "name": "index",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The item's index."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 249,
+                  "name": "length",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The collections total length."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 250,
+                  "name": "key",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The key in a key/value pair.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 240,
+          "name": "dispose",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 241,
+              "name": "dispose",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Disposes the collection strategy."
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 235,
+          "name": "initialize",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 236,
+              "name": "initialize",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Initializes the strategy collection."
+              },
+              "parameters": [
+                {
+                  "id": 237,
+                  "name": "repeat",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The repeat instance."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 238,
+                  "name": "bindingContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The binding context."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 239,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The override context.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 255,
+          "name": "updateOverrideContext",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 256,
+              "name": "updateOverrideContext",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Updates the override context."
+              },
+              "parameters": [
+                {
+                  "id": 257,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 258,
+                  "name": "index",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The context's index."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 259,
+                  "name": "length",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The collection's length.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 242,
+          "name": "updateOverrideContexts",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 243,
+              "name": "updateOverrideContexts",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Update the override context."
+              },
+              "parameters": [
+                {
+                  "id": 244,
+                  "name": "startIndex",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "index in collection where to start updating.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            251,
+            245,
+            240,
+            235,
+            255,
+            242
+          ]
+        }
+      ],
+      "extendedBy": [
+        {
+          "type": "reference",
+          "name": "ArrayCollectionStrategy",
+          "id": 283
+        },
+        {
+          "type": "reference",
+          "name": "MapCollectionStrategy",
+          "id": 322
+        },
+        {
+          "type": "reference",
+          "name": "NumberStrategy",
+          "id": 361
+        }
+      ]
+    },
+    {
+      "id": 392,
+      "name": "CollectionStrategyLocator",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Locates the best strategy to best iteraing different types of collections. Custom strategies can be plugged in as well."
+      },
+      "children": [
+        {
+          "id": 393,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Creates a new CollectionStrategyLocator."
+          },
+          "signatures": [
+            {
+              "id": 394,
+              "name": "new CollectionStrategyLocator",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates a new CollectionStrategyLocator."
+              },
+              "parameters": [
+                {
+                  "id": 395,
+                  "name": "container",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The dependency injection container.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "CollectionStrategyLocator",
+                "id": 392,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 396,
+          "name": "addStrategy",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 397,
+              "name": "addStrategy",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Adds a collection strategy to be located when iterating different collection types."
+              },
+              "parameters": [
+                {
+                  "id": 398,
+                  "name": "collectionStrategy",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "A collection strategy that can iterate a specific collection type.\n"
+                  },
+                  "type": {
+                    "type": "reference",
+                    "name": "Function"
+                  }
+                },
+                {
+                  "id": 399,
+                  "name": "matcher",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "reflection",
+                    "declaration": {
+                      "id": 400,
+                      "name": "__type",
+                      "kind": 65536,
+                      "kindString": "Type literal",
+                      "flags": {},
+                      "signatures": [
+                        {
+                          "id": 401,
+                          "name": "__call",
+                          "kind": 4096,
+                          "kindString": "Call signature",
+                          "flags": {},
+                          "parameters": [
+                            {
+                              "id": 402,
+                              "name": "items",
+                              "kind": 32768,
+                              "kindString": "Parameter",
+                              "flags": {},
+                              "type": {
+                                "type": "instrinct",
+                                "name": "any"
+                              }
+                            }
+                          ],
+                          "type": {
+                            "type": "instrinct",
+                            "name": "boolean"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 403,
+          "name": "getStrategy",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 404,
+              "name": "getStrategy",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Gets the best strategy to handle iteration."
+              },
+              "parameters": [
+                {
+                  "id": 405,
+                  "name": "items",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "CollectionStrategy",
+                "id": 234,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            393
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            396,
+            403
+          ]
+        }
+      ]
+    },
+    {
+      "id": 134,
+      "name": "CompileSpy",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Attribute to be placed on any element to have it emit the View Compiler's\nTargetInstruction into the debug console, giving you insight into all the\nparsed bindings, behaviors and event handers for the targeted element."
+      },
+      "children": [
+        {
+          "id": 135,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Creates and instanse of CompileSpy."
+          },
+          "signatures": [
+            {
+              "id": 136,
+              "name": "new CompileSpy",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates and instanse of CompileSpy."
+              },
+              "parameters": [
+                {
+                  "id": 137,
+                  "name": "element",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "target element on where attribute is placed on."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 138,
+                  "name": "instruction",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "instructions for how the target element should be enhanced.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "CompileSpy",
+                "id": 134,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            135
+          ]
+        }
+      ]
+    },
+    {
+      "id": 202,
+      "name": "Compose",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Used to compose a new view / view-model template or bind to an existing instance."
+      },
+      "children": [
+        {
+          "id": 206,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Creates an instance of Compose."
+          },
+          "signatures": [
+            {
+              "id": 207,
+              "name": "new Compose",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates an instance of Compose."
+              },
+              "parameters": [
+                {
+                  "id": 208,
+                  "name": "element",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The Compose element."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 209,
+                  "name": "container",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The dependency injection container instance."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 210,
+                  "name": "compositionEngine",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "CompositionEngine instance to compose the element."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 211,
+                  "name": "viewSlot",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The slot the view is injected in to."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 212,
+                  "name": "viewResources",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "Collection of resources used to compile the the view."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 213,
+                  "name": "taskQueue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The TaskQueue instance.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "Compose",
+                "id": 202,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 203,
+          "name": "model",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true
+          },
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        },
+        {
+          "id": 204,
+          "name": "view",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true
+          },
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        },
+        {
+          "id": 205,
+          "name": "viewModel",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true
+          },
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        },
+        {
+          "id": 214,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 215,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Used to set the bindingContext."
+              },
+              "parameters": [
+                {
+                  "id": 216,
+                  "name": "bindingContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The context in which the view model is executed in."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 217,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The context in which the view model is executed in.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 222,
+          "name": "modelChanged",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 223,
+              "name": "modelChanged",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked everytime the bound model changes."
+              },
+              "parameters": [
+                {
+                  "id": 224,
+                  "name": "newValue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The new value."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 225,
+                  "name": "oldValue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The old value.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 218,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 219,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Unbinds the Compose."
+              },
+              "parameters": [
+                {
+                  "id": 220,
+                  "name": "bindingContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 221,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 226,
+          "name": "viewChanged",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 227,
+              "name": "viewChanged",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked everytime the bound view changes."
+              },
+              "parameters": [
+                {
+                  "id": 228,
+                  "name": "newValue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The new value."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 229,
+                  "name": "oldValue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The old value.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 230,
+          "name": "viewModelChanged",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 231,
+              "name": "viewModelChanged",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked everytime the bound view model changes."
+              },
+              "parameters": [
+                {
+                  "id": 232,
+                  "name": "newValue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The new value."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 233,
+                  "name": "oldValue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The old value.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            206
+          ]
+        },
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [
+            203,
+            204,
+            205
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            214,
+            222,
+            218,
+            226,
+            230
+          ]
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "name": "DebounceBindingBehavior",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 23,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 24,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 25,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 26,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 27,
+                  "name": "delay",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 29,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 30,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 31,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            23,
+            28
+          ]
+        }
+      ]
+    },
+    {
+      "id": 139,
+      "name": "Focus",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "CustomAttribute that binds provided DOM element's focus attribute with a property on the viewmodel."
+      },
+      "children": [
+        {
+          "id": 140,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Creates an instance of Focus.",
+            "tags": [
+              {
+                "tag": "paramelement",
+                "text": "Target element on where attribute is placed on."
+              }
+            ]
+          },
+          "signatures": [
+            {
+              "id": 141,
+              "name": "new Focus",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates an instance of Focus.",
+                "tags": [
+                  {
+                    "tag": "paramelement",
+                    "text": "Target element on where attribute is placed on."
+                  }
+                ]
+              },
+              "parameters": [
+                {
+                  "id": 142,
+                  "name": "element",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 143,
+                  "name": "taskQueue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The TaskQueue instance.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "Focus",
+                "id": 139,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 147,
+          "name": "attached",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 148,
+              "name": "attached",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked when the attribute is attached to the DOM."
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 149,
+          "name": "detached",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 150,
+              "name": "detached",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked when the attribute is detached from the DOM."
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 144,
+          "name": "valueChanged",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 145,
+              "name": "valueChanged",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked everytime the bound value changes."
+              },
+              "parameters": [
+                {
+                  "id": 146,
+                  "name": "newValue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The new value.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            140
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            147,
+            149,
+            144
+          ]
+        }
+      ]
+    },
+    {
+      "id": 91,
+      "name": "HTMLSanitizer",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Default Html Sanitizer to prevent script injection."
+      },
+      "children": [
+        {
+          "id": 92,
+          "name": "sanitize",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 93,
+              "name": "sanitize",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Sanitizes the provided input."
+              },
+              "parameters": [
+                {
+                  "id": 94,
+                  "name": "input",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The input to be sanitized.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            92
+          ]
+        }
+      ]
+    },
+    {
+      "id": 187,
+      "name": "If",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Binding to conditionally include or not include template logic depending on returned result\n- value should be Boolean or will be treated as such (truthy / falsey)"
+      },
+      "children": [
+        {
+          "id": 188,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Creates an instance of If."
+          },
+          "signatures": [
+            {
+              "id": 189,
+              "name": "new If",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates an instance of If."
+              },
+              "parameters": [
+                {
+                  "id": 190,
+                  "name": "viewFactory",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The factory generating the view"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 191,
+                  "name": "viewSlot",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The slot the view is injected in to"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 192,
+                  "name": "taskQueue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "If",
+                "id": 187,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 193,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 194,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Binds the if to the binding context and override context"
+              },
+              "parameters": [
+                {
+                  "id": 195,
+                  "name": "bindingContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The binding context"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 196,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "An override context for binding.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 200,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 201,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Unbinds the if"
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 197,
+          "name": "valueChanged",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 198,
+              "name": "valueChanged",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked everytime value property changes."
+              },
+              "parameters": [
+                {
+                  "id": 199,
+                  "name": "newValue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The new value\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            188
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            193,
+            200,
+            197
+          ]
+        }
+      ]
+    },
+    {
+      "id": 322,
+      "name": "MapCollectionStrategy",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "A strategy for iterating Map."
+      },
+      "children": [
+        {
+          "id": 323,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Creates an instance of MapCollectionStrategy."
+          },
+          "signatures": [
+            {
+              "id": 324,
+              "name": "new MapCollectionStrategy",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates an instance of MapCollectionStrategy."
+              },
+              "parameters": [
+                {
+                  "id": 325,
+                  "name": "observerLocator",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The instance of the observerLocator.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "MapCollectionStrategy",
+                "id": 322,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 352,
+          "name": "createBaseOverrideContext",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 353,
+              "name": "createBaseOverrideContext",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates base of an override context."
+              },
+              "parameters": [
+                {
+                  "id": 354,
+                  "name": "data",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The item's value."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 355,
+                  "name": "key",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The key in a key/value pair.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.createBaseOverrideContext",
+                "id": 251
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.createBaseOverrideContext",
+            "id": 251
+          }
+        },
+        {
+          "id": 346,
+          "name": "createFullOverrideContext",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 347,
+              "name": "createFullOverrideContext",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates a complete override context."
+              },
+              "parameters": [
+                {
+                  "id": 348,
+                  "name": "data",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The item's value."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 349,
+                  "name": "index",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The item's index."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 350,
+                  "name": "length",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The collections total length."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 351,
+                  "name": "key",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The key in a key/value pair.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.createFullOverrideContext",
+                "id": 245
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.createFullOverrideContext",
+            "id": 245
+          }
+        },
+        {
+          "id": 341,
+          "name": "dispose",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 342,
+              "name": "dispose",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Disposes the collection strategy."
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.dispose",
+                "id": 240
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.dispose",
+            "id": 240
+          }
+        },
+        {
+          "id": 326,
+          "name": "getCollectionObserver",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 327,
+              "name": "getCollectionObserver",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Gets a Map observer."
+              },
+              "parameters": [
+                {
+                  "id": 328,
+                  "name": "items",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The items to be observed.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 332,
+          "name": "handleChanges",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 333,
+              "name": "handleChanges",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Handle changes in a Map collection."
+              },
+              "parameters": [
+                {
+                  "id": 334,
+                  "name": "map",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The underlying Map collection."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 335,
+                  "name": "records",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The change records.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 336,
+          "name": "initialize",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 337,
+              "name": "initialize",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Initializes the strategy collection."
+              },
+              "parameters": [
+                {
+                  "id": 338,
+                  "name": "repeat",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The repeat instance."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 339,
+                  "name": "bindingContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The binding context."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 340,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The override context.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.initialize",
+                "id": 235
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.initialize",
+            "id": 235
+          }
+        },
+        {
+          "id": 329,
+          "name": "processItems",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 330,
+              "name": "processItems",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Process the provided Map entries."
+              },
+              "parameters": [
+                {
+                  "id": 331,
+                  "name": "items",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The entries to process.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 356,
+          "name": "updateOverrideContext",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 357,
+              "name": "updateOverrideContext",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Updates the override context."
+              },
+              "parameters": [
+                {
+                  "id": 358,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 359,
+                  "name": "index",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The context's index."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 360,
+                  "name": "length",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The collection's length.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.updateOverrideContext",
+                "id": 255
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.updateOverrideContext",
+            "id": 255
+          }
+        },
+        {
+          "id": 343,
+          "name": "updateOverrideContexts",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 344,
+              "name": "updateOverrideContexts",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Update the override context."
+              },
+              "parameters": [
+                {
+                  "id": 345,
+                  "name": "startIndex",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "index in collection where to start updating.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.updateOverrideContexts",
+                "id": 242
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.updateOverrideContexts",
+            "id": 242
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            323
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            352,
+            346,
+            341,
+            326,
+            332,
+            336,
+            329,
+            356,
+            343
+          ]
+        }
+      ],
+      "extendedTypes": [
+        {
+          "type": "reference",
+          "name": "CollectionStrategy",
+          "id": 234
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "name": "ModeBindingBehavior",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {},
+      "children": [
+        {
+          "id": 43,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {},
+          "signatures": [
+            {
+              "id": 44,
+              "name": "new ModeBindingBehavior",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 45,
+                  "name": "mode",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "ModeBindingBehavior",
+                "id": 42,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 46,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {},
+          "signatures": [
+            {
+              "id": 47,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 48,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 49,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 50,
+                  "name": "lookupFunctions",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 51,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {},
+          "signatures": [
+            {
+              "id": 52,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 53,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 54,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            43
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            46,
+            51
+          ]
+        }
+      ],
+      "extendedBy": [
+        {
+          "type": "reference",
+          "name": "OneTimeBindingBehavior",
+          "id": 55
+        },
+        {
+          "type": "reference",
+          "name": "OneWayBindingBehavior",
+          "id": 67
+        },
+        {
+          "type": "reference",
+          "name": "TwoWayBindingBehavior",
+          "id": 79
+        }
+      ]
+    },
+    {
+      "id": 361,
+      "name": "NumberStrategy",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "A strategy for iterating a template n number of times."
+      },
+      "children": [
+        {
+          "id": 383,
+          "name": "createBaseOverrideContext",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 384,
+              "name": "createBaseOverrideContext",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates base of an override context."
+              },
+              "parameters": [
+                {
+                  "id": 385,
+                  "name": "data",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The item's value."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 386,
+                  "name": "key",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The key in a key/value pair.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.createBaseOverrideContext",
+                "id": 251
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.createBaseOverrideContext",
+            "id": 251
+          }
+        },
+        {
+          "id": 377,
+          "name": "createFullOverrideContext",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 378,
+              "name": "createFullOverrideContext",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates a complete override context."
+              },
+              "parameters": [
+                {
+                  "id": 379,
+                  "name": "data",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The item's value."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 380,
+                  "name": "index",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The item's index."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 381,
+                  "name": "length",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The collections total length."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 382,
+                  "name": "key",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The key in a key/value pair.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.createFullOverrideContext",
+                "id": 245
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.createFullOverrideContext",
+            "id": 245
+          }
+        },
+        {
+          "id": 372,
+          "name": "dispose",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 373,
+              "name": "dispose",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Disposes the collection strategy."
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.dispose",
+                "id": 240
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.dispose",
+            "id": 240
+          }
+        },
+        {
+          "id": 362,
+          "name": "getCollectionObserver",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 363,
+              "name": "getCollectionObserver",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Return the strategies collection observer. In this case none."
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 367,
+          "name": "initialize",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 368,
+              "name": "initialize",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Initializes the strategy collection."
+              },
+              "parameters": [
+                {
+                  "id": 369,
+                  "name": "repeat",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The repeat instance."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 370,
+                  "name": "bindingContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The binding context."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 371,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The override context.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.initialize",
+                "id": 235
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.initialize",
+            "id": 235
+          }
+        },
+        {
+          "id": 364,
+          "name": "processItems",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 365,
+              "name": "processItems",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Process the provided Number."
+              },
+              "parameters": [
+                {
+                  "id": 366,
+                  "name": "value",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The Number of how many time to iterate.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 387,
+          "name": "updateOverrideContext",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 388,
+              "name": "updateOverrideContext",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Updates the override context."
+              },
+              "parameters": [
+                {
+                  "id": 389,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 390,
+                  "name": "index",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The context's index."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 391,
+                  "name": "length",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The collection's length.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.updateOverrideContext",
+                "id": 255
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.updateOverrideContext",
+            "id": 255
+          }
+        },
+        {
+          "id": 374,
+          "name": "updateOverrideContexts",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 375,
+              "name": "updateOverrideContexts",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Update the override context."
+              },
+              "parameters": [
+                {
+                  "id": 376,
+                  "name": "startIndex",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "index in collection where to start updating.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "CollectionStrategy.updateOverrideContexts",
+                "id": 242
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "CollectionStrategy.updateOverrideContexts",
+            "id": 242
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            383,
+            377,
+            372,
+            362,
+            367,
+            364,
+            387,
+            374
+          ]
+        }
+      ],
+      "extendedTypes": [
+        {
+          "type": "reference",
+          "name": "CollectionStrategy",
+          "id": 234
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "name": "OneTimeBindingBehavior",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 56,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 57,
+              "name": "new OneTimeBindingBehavior",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "type": {
+                "type": "reference",
+                "name": "OneTimeBindingBehavior",
+                "id": 55,
+                "moduleName": "\"aurelia-templating-resources\""
+              },
+              "overwrites": {
+                "type": "reference",
+                "name": "ModeBindingBehavior.__constructor",
+                "id": 43
+              }
+            }
+          ],
+          "overwrites": {
+            "type": "reference",
+            "name": "ModeBindingBehavior.__constructor",
+            "id": 43
+          }
+        },
+        {
+          "id": 58,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 59,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 60,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 61,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 62,
+                  "name": "lookupFunctions",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "ModeBindingBehavior.bind",
+                "id": 46
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "ModeBindingBehavior.bind",
+            "id": 46
+          }
+        },
+        {
+          "id": 63,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 64,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 65,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 66,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "ModeBindingBehavior.unbind",
+                "id": 51
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "ModeBindingBehavior.unbind",
+            "id": 51
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            56
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            58,
+            63
+          ]
+        }
+      ],
+      "extendedTypes": [
+        {
+          "type": "reference",
+          "name": "ModeBindingBehavior",
+          "id": 42
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "name": "OneWayBindingBehavior",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 68,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 69,
+              "name": "new OneWayBindingBehavior",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "type": {
+                "type": "reference",
+                "name": "OneWayBindingBehavior",
+                "id": 67,
+                "moduleName": "\"aurelia-templating-resources\""
+              },
+              "overwrites": {
+                "type": "reference",
+                "name": "ModeBindingBehavior.__constructor",
+                "id": 43
+              }
+            }
+          ],
+          "overwrites": {
+            "type": "reference",
+            "name": "ModeBindingBehavior.__constructor",
+            "id": 43
+          }
+        },
+        {
+          "id": 70,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 71,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 72,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 73,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 74,
+                  "name": "lookupFunctions",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "ModeBindingBehavior.bind",
+                "id": 46
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "ModeBindingBehavior.bind",
+            "id": 46
+          }
+        },
+        {
+          "id": 75,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 76,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 77,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 78,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "ModeBindingBehavior.unbind",
+                "id": 51
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "ModeBindingBehavior.unbind",
+            "id": 51
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            68
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            70,
+            75
+          ]
+        }
+      ],
+      "extendedTypes": [
+        {
+          "type": "reference",
+          "name": "ModeBindingBehavior",
+          "id": 42
+        }
+      ]
+    },
+    {
+      "id": 406,
+      "name": "Repeat",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Binding to iterate over iterable objects (Array, Map and Number) to genereate a template for each iteration."
+      },
+      "children": [
+        {
+          "id": 411,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Creates an instance of Repeat."
+          },
+          "signatures": [
+            {
+              "id": 412,
+              "name": "new Repeat",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates an instance of Repeat."
+              },
+              "parameters": [
+                {
+                  "id": 413,
+                  "name": "viewFactory",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The factory generating the view"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 414,
+                  "name": "instruction",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The instructions for how the element should be enhanced."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 415,
+                  "name": "viewSlot",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The slot the view is injected in to."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 416,
+                  "name": "viewResources",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "Collection of resources used to compile the the views."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 417,
+                  "name": "observerLocator",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The observer locator instance."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 418,
+                  "name": "collectionStrategyLocator",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The strategy locator to locate best strategy to iterate the collection.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "Repeat",
+                "id": 406,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 407,
+          "name": "items",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true
+          },
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        },
+        {
+          "id": 409,
+          "name": "key",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true
+          },
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        },
+        {
+          "id": 408,
+          "name": "local",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true
+          },
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        },
+        {
+          "id": 410,
+          "name": "value",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true
+          },
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        },
+        {
+          "id": 423,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 424,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Binds the repeat to the binding context and override context."
+              },
+              "parameters": [
+                {
+                  "id": 425,
+                  "name": "bindingContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The binding context."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 426,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "An override context for binding.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 419,
+          "name": "call",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 420,
+              "name": "call",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 421,
+                  "name": "context",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 422,
+                  "name": "changes",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 433,
+          "name": "handleCollectionChanges",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 434,
+              "name": "handleCollectionChanges",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked when the underlying collection changes."
+              },
+              "parameters": [
+                {
+                  "id": 435,
+                  "name": "collection",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 436,
+                  "name": "changes",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 437,
+          "name": "handleInnerCollectionChanges",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 438,
+              "name": "handleInnerCollectionChanges",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked when the underlying inner collection changes."
+              },
+              "parameters": [
+                {
+                  "id": 439,
+                  "name": "collection",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 440,
+                  "name": "changes",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 429,
+          "name": "itemsChanged",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 430,
+              "name": "itemsChanged",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked everytime item property changes."
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 431,
+          "name": "processItemsByStrategy",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 432,
+              "name": "processItemsByStrategy",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 427,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 428,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Unbinds the repeat"
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            411
+          ]
+        },
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [
+            407,
+            409,
+            408,
+            410
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            423,
+            419,
+            433,
+            437,
+            429,
+            431,
+            427
+          ]
+        }
+      ]
+    },
+    {
+      "id": 151,
+      "name": "Replaceable",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Marks any part of a view to be replacable by the consumer."
+      },
+      "children": [
+        {
+          "id": 152,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {},
+          "signatures": [
+            {
+              "id": 153,
+              "name": "new Replaceable",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {},
+              "parameters": [
+                {
+                  "id": 154,
+                  "name": "viewFactory",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "target The factory generating the view."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 155,
+                  "name": "viewSlot",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "viewSlot The slot the view is injected in to.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "Replaceable",
+                "id": 151,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 156,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 157,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Binds the replaceable to the binding context and override context."
+              },
+              "parameters": [
+                {
+                  "id": 158,
+                  "name": "bindingContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The binding context."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 159,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "An override context for binding.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 160,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 161,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Unbinds the replaceable."
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            152
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            156,
+            160
+          ]
+        }
+      ]
+    },
+    {
+      "id": 276,
+      "name": "SanitizeHTMLValueConverter",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Simple html sanitization converter to preserve whitelisted elements and attributes on a bound property containing html."
+      },
+      "children": [
+        {
+          "id": 277,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Creates an instanse of the value converter."
+          },
+          "signatures": [
+            {
+              "id": 278,
+              "name": "new SanitizeHTMLValueConverter",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates an instanse of the value converter."
+              },
+              "parameters": [
+                {
+                  "id": 279,
+                  "name": "sanitizer",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The html sanitizer.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "SanitizeHTMLValueConverter",
+                "id": 276,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 280,
+          "name": "toView",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 281,
+              "name": "toView",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Process the provided markup that flows to the view."
+              },
+              "parameters": [
+                {
+                  "id": 282,
+                  "name": "untrustedMarkup",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The untrusted markup to be sanitized.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            277
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            280
+          ]
+        }
+      ]
+    },
+    {
+      "id": 162,
+      "name": "Show",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Binding to conditionally show markup in the DOM based on the value.\n- different from \"if\" in that the markup is still added to the DOM, simply not shown."
+      },
+      "children": [
+        {
+          "id": 163,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Creates a new instance of Show."
+          },
+          "signatures": [
+            {
+              "id": 164,
+              "name": "new Show",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates a new instance of Show."
+              },
+              "parameters": [
+                {
+                  "id": 165,
+                  "name": "element",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "Target element to conditionally show."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 166,
+                  "name": "animator",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The animator that conditionally adds or removes the aurelia-hide css class.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "Show",
+                "id": 162,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 170,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 171,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Binds the Show attribute."
+              },
+              "parameters": [
+                {
+                  "id": 172,
+                  "name": "bindingContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 167,
+          "name": "valueChanged",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 168,
+              "name": "valueChanged",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked everytime the bound value changes."
+              },
+              "parameters": [
+                {
+                  "id": 169,
+                  "name": "newValue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The new value.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            163
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            170,
+            167
+          ]
+        }
+      ]
+    },
+    {
+      "id": 260,
+      "name": "SignalBindingBehavior",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 264,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 265,
+              "name": "new SignalBindingBehavior",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 266,
+                  "name": "bindingSignaler",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "SignalBindingBehavior",
+                "id": 260,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 263,
+          "name": "signals",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isExported": true
+          },
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        },
+        {
+          "id": 267,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 268,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 269,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 270,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 271,
+                  "name": "name",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 272,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 273,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 274,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 275,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 261,
+          "name": "inject",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isStatic": true,
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 262,
+              "name": "inject",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            264
+          ]
+        },
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [
+            263
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            267,
+            272,
+            261
+          ]
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "name": "ThrottleBindingBehavior",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 33,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 34,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 35,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 36,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 37,
+                  "name": "delay",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {
+                    "isOptional": true
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 38,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 39,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 40,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 41,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            33,
+            38
+          ]
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "name": "TwoWayBindingBehavior",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 80,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 81,
+              "name": "new TwoWayBindingBehavior",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "type": {
+                "type": "reference",
+                "name": "TwoWayBindingBehavior",
+                "id": 79,
+                "moduleName": "\"aurelia-templating-resources\""
+              },
+              "overwrites": {
+                "type": "reference",
+                "name": "ModeBindingBehavior.__constructor",
+                "id": 43
+              }
+            }
+          ],
+          "overwrites": {
+            "type": "reference",
+            "name": "ModeBindingBehavior.__constructor",
+            "id": 43
+          }
+        },
+        {
+          "id": 82,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 83,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 84,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 85,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 86,
+                  "name": "lookupFunctions",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "ModeBindingBehavior.bind",
+                "id": 46
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "ModeBindingBehavior.bind",
+            "id": 46
+          }
+        },
+        {
+          "id": 87,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 88,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 89,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 90,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              },
+              "inheritedFrom": {
+                "type": "reference",
+                "name": "ModeBindingBehavior.unbind",
+                "id": 51
+              }
+            }
+          ],
+          "inheritedFrom": {
+            "type": "reference",
+            "name": "ModeBindingBehavior.unbind",
+            "id": 51
+          }
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            80
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            82,
+            87
+          ]
+        }
+      ],
+      "extendedTypes": [
+        {
+          "type": "reference",
+          "name": "ModeBindingBehavior",
+          "id": 42
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "UpdateTriggerBindingBehavior",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "children": [
+        {
+          "id": 5,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 6,
+              "name": "new UpdateTriggerBindingBehavior",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 7,
+                  "name": "eventManager",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "UpdateTriggerBindingBehavior",
+                "id": 3,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "inject",
+          "kind": 1024,
+          "kindString": "Property",
+          "flags": {
+            "isStatic": true,
+            "isExported": true
+          },
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        },
+        {
+          "id": 8,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 9,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 10,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 11,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 12,
+                  "name": "events",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {
+                    "isRest": true
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "isArray": true,
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 14,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "parameters": [
+                {
+                  "id": 15,
+                  "name": "binding",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 16,
+                  "name": "source",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            5
+          ]
+        },
+        {
+          "title": "Properties",
+          "kind": 1024,
+          "children": [
+            4
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            8,
+            13
+          ]
+        }
+      ]
+    },
+    {
+      "id": 119,
+      "name": "ViewSpy",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Attribute to be placed on any HTML element in a view to emit the View instance\nto the debug console, giving you insight into the live View instance, including\nall child views, live bindings, behaviors and more."
+      },
+      "children": [
+        {
+          "id": 120,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Creates a new instance of ViewSpy."
+          },
+          "signatures": [
+            {
+              "id": 121,
+              "name": "new ViewSpy",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates a new instance of ViewSpy."
+              },
+              "type": {
+                "type": "reference",
+                "name": "ViewSpy",
+                "id": 119,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 128,
+          "name": "attached",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 129,
+              "name": "attached",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked when the target element is attached to the DOM."
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 125,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 126,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked when the target view is bound."
+              },
+              "parameters": [
+                {
+                  "id": 127,
+                  "name": "bindingContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The target view's binding context.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 122,
+          "name": "created",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 123,
+              "name": "created",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked when the target view is created."
+              },
+              "parameters": [
+                {
+                  "id": 124,
+                  "name": "view",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The target view.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 130,
+          "name": "detached",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 131,
+              "name": "detached",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked when the target element is detached from the DOM."
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 132,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 133,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked when the target element is unbound."
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            120
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            128,
+            125,
+            122,
+            130,
+            132
+          ]
+        }
+      ]
+    },
+    {
+      "id": 173,
+      "name": "With",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "Creates a binding context for decandant elements to bind to."
+      },
+      "children": [
+        {
+          "id": 174,
+          "name": "constructor",
+          "kind": 512,
+          "kindString": "Constructor",
+          "flags": {
+            "isExported": true
+          },
+          "comment": {
+            "shortText": "Creates an instance of With."
+          },
+          "signatures": [
+            {
+              "id": 175,
+              "name": "new With",
+              "kind": 16384,
+              "kindString": "Constructor signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Creates an instance of With."
+              },
+              "parameters": [
+                {
+                  "id": 176,
+                  "name": "viewFactory",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The factory generating the view."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 177,
+                  "name": "viewSlot",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "shortText": "The slot the view is injected in to.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "reference",
+                "name": "With",
+                "id": 173,
+                "moduleName": "\"aurelia-templating-resources\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 178,
+          "name": "bind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 179,
+              "name": "bind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Binds the With with provided binding context and override context."
+              },
+              "parameters": [
+                {
+                  "id": 180,
+                  "name": "bindingContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The binding context."
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 181,
+                  "name": "overrideContext",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "An override context for binding.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 185,
+          "name": "unbind",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 186,
+              "name": "unbind",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Unbinds With"
+              },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 182,
+          "name": "valueChanged",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 183,
+              "name": "valueChanged",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked everytime the bound value changes."
+              },
+              "parameters": [
+                {
+                  "id": 184,
+                  "name": "newValue",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The new value.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Constructors",
+          "kind": 512,
+          "children": [
+            174
+          ]
+        },
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            178,
+            185,
+            182
+          ]
+        }
+      ]
     }
   ],
   "groups": [
     {
-      "title": "Variables",
-      "kind": 32,
+      "title": "Classes",
+      "kind": 128,
       "children": [
-        3
+        283,
+        17,
+        95,
+        110,
+        234,
+        392,
+        134,
+        202,
+        22,
+        139,
+        91,
+        187,
+        322,
+        42,
+        361,
+        55,
+        67,
+        406,
+        151,
+        276,
+        162,
+        260,
+        32,
+        79,
+        3,
+        119,
+        173
       ]
     }
   ]
