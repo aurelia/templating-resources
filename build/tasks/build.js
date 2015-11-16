@@ -4,6 +4,11 @@ var to5 = require('gulp-babel');
 var paths = require('../paths');
 var compilerOptions = require('../babel-options');
 var assign = Object.assign || require('object.assign');
+var through2 = require('through2');
+var concat = require('gulp-concat');
+var insert = require('gulp-insert');
+var rename = require('gulp-rename');
+var tools = require('aurelia-tools');
 
 var jsName = paths.packageName + '.js';
 
@@ -59,7 +64,7 @@ gulp.task('build-dts', function(){
 gulp.task('build', function(callback) {
   return runSequence(
     'clean',
-    ['build-es6', 'build-commonjs', 'build-amd', 'build-system'],
+    ['build-index', 'build-es6', 'build-commonjs', 'build-amd', 'build-system'],
     'build-dts',
     callback
   );
