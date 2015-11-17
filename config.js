@@ -19,6 +19,7 @@ System.config({
     "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.0.0-beta.1",
     "aurelia-loader": "npm:aurelia-loader@1.0.0-beta.1",
     "aurelia-logging": "npm:aurelia-logging@1.0.0-beta.1",
+    "aurelia-metadata": "npm:aurelia-metadata@1.0.0-beta.1",
     "aurelia-pal": "npm:aurelia-pal@1.0.0-beta.1",
     "aurelia-pal-browser": "npm:aurelia-pal-browser@1.0.0-beta.1",
     "aurelia-path": "npm:aurelia-path@1.0.0-beta.1",
