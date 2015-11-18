@@ -345,6 +345,16 @@ describe('Repeat array', () => {
       nq(() => done());
     });
   });
+
+  it('oneTime does not observe changes', () => {
+    let template = `<template><div repeat.for="item of items & oneTime">\${item}</div></template>`;
+    viewModel = { items: [0, 1, 2] };
+    controller = createController(template, viewModel);
+    validateState();
+    expect(hasSubscribers(viewModel, 'items')).toBe(false);
+    expect(hasArraySubscribers(viewModel.items)).toBe(false);
+    controller.unbind();
+  });
 });
 
 describe('Repeat map', () => {
@@ -356,9 +366,5 @@ describe('Repeat number', () => {
 });
 
 describe('Repeat object converted to collection', () => {
-  let viewModel, controller;
-});
-
-describe('Repeat oneTime', () => {
   let viewModel, controller;
 });

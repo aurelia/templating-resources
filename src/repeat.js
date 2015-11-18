@@ -69,6 +69,8 @@ export class Repeat {
     this.value = 'value';
     this.collectionStrategyLocator = collectionStrategyLocator;
     this.ignoreMutation = false;
+    this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
+    this.isOneTime = isOneTime(this.sourceExpression);
   }
 
   call(context, changes) {
@@ -82,7 +84,6 @@ export class Repeat {
   */
   bind(bindingContext, overrideContext) {
     let items = this.items;
-    this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
     this.scope = { bindingContext, overrideContext };
     if (items === undefined || items === null) {
       return;
@@ -94,7 +95,6 @@ export class Repeat {
   * Unbinds the repeat
   */
   unbind() {
-    this.sourceExpression = null;
     this.scope = null;
     if (this.collectionStrategy) {
       this.collectionStrategy.dispose();
@@ -184,7 +184,7 @@ export class Repeat {
   }
 
   processItemsByStrategy() {
-    if (!this._observeInnerCollection()) {
+    if (!this.isOneTime && !this._observeInnerCollection()) {
       this._observeCollection();
     }
     this.collectionStrategy.processItems(this.items);
@@ -237,4 +237,14 @@ function unwrapExpression(expression) {
     unwrapped = true;
   }
   return unwrapped ? expression : null;
+}
+
+function isOneTime(expression) {
+  while (expression instanceof BindingBehavior) {
+    if (expression.name === 'oneTime') {
+      return true;
+    }
+    expression = expression.expression;
+  }
+  return false;
 }
