@@ -117,6 +117,9 @@ function hasSubscribers(obj, propertyName) {
 function hasArraySubscribers(array) {
   return observerLocator.getArrayObserver(array).hasSubscribers();
 }
+function hasMapSubscribers(map) {
+  return observerLocator.getMapObserver(map).hasSubscribers();
+}
 
 describe('Repeat array', () => {
   let viewModel, controller;
@@ -357,8 +360,106 @@ describe('Repeat array', () => {
   });
 });
 
-describe('Repeat map', () => {
+describe('Repeat map [k, v]', () => {
   let viewModel, controller;
+  let obj = {};
+
+  function validateState() {
+    // validate DOM
+    let expectedContent = [];
+    if (viewModel.items !== null && viewModel.items !== undefined) {
+      const toString = x => x === null || x === undefined ? '' : x.toString();
+      expectedContent = Array.from(viewModel.items.entries()).map(([k, v]) => `${toString(k)},${toString(v)}`);
+    }
+    expect(selectContent(controller, 'div')).toEqual(expectedContent);
+
+    // validate contextual data
+    let views = controller.view.children[0].children;
+    let items = viewModel.items ? Array.from(viewModel.items.entries()) : [];
+    for (let i = 0; i < items.length; i++) {
+      expect(views[i].bindingContext.k).toBe(items[i][0]);
+      expect(views[i].bindingContext.v).toBe(items[i][1]);
+      let overrideContext = views[i].overrideContext;
+      expect(overrideContext.parentOverrideContext.bindingContext).toBe(viewModel);
+      expect(overrideContext.bindingContext).toBe(views[i].bindingContext);
+      let first = i === 0;
+      let last = i === items.length - 1;
+      let even = i % 2 === 0;
+      expect(overrideContext.$index).toBe(i);
+      expect(overrideContext.$first).toBe(first);
+      expect(overrideContext.$last).toBe(last);
+      expect(overrideContext.$middle).toBe(!first && !last);
+      expect(overrideContext.$odd).toBe(!even);
+      expect(overrideContext.$even).toBe(even);
+    }
+  }
+
+  beforeEach(() => {
+    let template = `<template><div repeat.for="[k, v] of items">\${k},\${v}</div></template>`;
+    viewModel = { items: new Map([['a', 'b'], ['test', 0], [obj, null], ['hello world', undefined], [6, 7]]) };
+    controller = createController(template, viewModel);
+    validateState();
+  });
+
+  afterEach(() => {
+    controller.unbind();
+    expect(hasSubscribers(viewModel, 'items')).toBe(false);
+    expect(hasMapSubscribers(viewModel.items)).toBe(false);
+  });
+
+  it('handles set', done => {
+    viewModel.items.set('x', 'y');
+    nq(() => validateState());
+    nq(() => viewModel.items.set(999, 24234));
+    nq(() => validateState());
+    nq(() => viewModel.items.set('a', null));
+    nq(() => validateState());
+    nq(() => done());
+  });
+
+  it('handles delete', done => {
+    viewModel.items.delete(6);
+    nq(() => validateState());
+    nq(() => viewModel.items.delete()); // no args
+    nq(() => validateState());
+    nq(() => viewModel.items.delete('a'));
+    nq(() => validateState());
+    nq(() => viewModel.items.delete(null));
+    nq(() => validateState());
+    nq(() => viewModel.items.delete(undefined));
+    nq(() => validateState());
+    nq(() => viewModel.items.delete(obj));
+    nq(() => validateState());
+    nq(() => done());
+  });
+
+  it('handles clear', done => {
+    viewModel.items.clear();
+    nq(() => validateState());
+    nq(() => viewModel.items.clear());
+    nq(() => validateState());
+    nq(() => done());
+  });
+
+  it('handles property change', done => {
+    viewModel.items = null;
+    nq(() => validateState());
+    nq(() => viewModel.items = new Map([['a', 'b']]));
+    nq(() => validateState());
+    nq(() => viewModel.items = undefined);
+    nq(() => validateState());
+    nq(() => viewModel.items = new Map([['a', 'b'], ['x', 'y']]));
+    nq(() => validateState());
+    nq(() => done());
+  });
+
+  it('oneTime does not observe changes', () => {
+    let template = `<template><div repeat.for="[k, v] of items & oneTime">\${k},\${v}</div></template>`;
+    viewModel = { items: new Map([['a', 'b'], ['test', 0], [obj, null], ['hello world', undefined], [6, 7]]) };
+    controller = createController(template, viewModel);
+    validateState();
+    expect(hasMapSubscribers(viewModel.items)).toBe(false);
+  });
 });
 
 describe('Repeat number', () => {

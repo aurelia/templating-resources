@@ -114,7 +114,7 @@ export class MapCollectionStrategy extends CollectionStrategy {
 
     for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
       child = viewSlot.children[i];
-      if (child.overrideContext[this.key] === key) {
+      if (child.bindingContext[this.key] === key) {
         return i;
       }
     }
