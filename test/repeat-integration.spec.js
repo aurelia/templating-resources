@@ -363,6 +363,64 @@ describe('Repeat map', () => {
 
 describe('Repeat number', () => {
   let viewModel, controller;
+
+  function validateState() {
+    // validate DOM
+    let expectedContent = [];
+    if (viewModel.items > 0) {
+      for (let i = 0; i < viewModel.items; i++) {
+        expectedContent.push(i.toString());
+      }
+    }
+    expect(selectContent(controller, 'div')).toEqual(expectedContent);
+
+    // validate contextual data
+    let views = controller.view.children[0].children;
+    for (let i = 0; i < viewModel.items; i++) {
+      expect(views[i].bindingContext.item).toBe(i);
+      let overrideContext = views[i].overrideContext;
+      expect(overrideContext.parentOverrideContext.bindingContext).toBe(viewModel);
+      expect(overrideContext.bindingContext).toBe(views[i].bindingContext);
+      let first = i === 0;
+      let last = i === viewModel.items - 1;
+      let even = i % 2 === 0;
+      expect(overrideContext.$index).toBe(i);
+      expect(overrideContext.$first).toBe(first);
+      expect(overrideContext.$last).toBe(last);
+      expect(overrideContext.$middle).toBe(!first && !last);
+      expect(overrideContext.$odd).toBe(!even);
+      expect(overrideContext.$even).toBe(even);
+    }
+  }
+
+  beforeEach(() => {
+    let template = `<template><div repeat.for="item of items">\${item}</div></template>`;
+    viewModel = { items: 10 };
+    controller = createController(template, viewModel);
+    validateState();
+  });
+
+  afterEach(() => {
+    controller.unbind();
+    expect(hasSubscribers(viewModel, 'items')).toBe(false);
+  });
+
+  it('handles property change', done => {
+    viewModel.items = 5;
+    nq(() => validateState());
+    nq(() => viewModel.items = 12);
+    nq(() => validateState());
+    nq(() => done());
+  });
+
+  it('oneTime does not observe changes', () => {
+    let template = `<template><div repeat.for="item of items & oneTime">\${item}</div></template>`;
+    viewModel = { items: 3 };
+    controller = createController(template, viewModel);
+    validateState();
+    expect(hasSubscribers(viewModel, 'items')).toBe(false);
+    controller.unbind();
+  });
 });
 
 describe('Repeat object converted to collection', () => {
