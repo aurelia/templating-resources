@@ -46,11 +46,10 @@ export class ArrayObserverMock {
   unsubscribe(){};
 }
 
-export class CollectionStrategyMock {
-  initialize() {}
-  processItems() {}
-  getCollectionObserver() {}
-  dispose() {}
+export class RepeatStrategyMock {
+  instanceChanged(repeat: Repeat, items: any) { }
+  instanceMutated(repeat: Repeat, items: any, changes: any) { }
+  getCollectionObserver(observerLocator: any, items: any) { return null; }
 }
 
 export const instructionMock = {

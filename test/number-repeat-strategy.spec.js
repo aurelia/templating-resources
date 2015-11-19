@@ -1,14 +1,14 @@
-import {ObserverLocator} from 'aurelia-binding';
+import {ObserverLocator, createOverrideContext} from 'aurelia-binding';
 import {BoundViewFactory, TemplatingEngine, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
 import {Container} from 'aurelia-dependency-injection';
 import {initialize} from 'aurelia-pal-browser';
 import {Repeat} from '../src/repeat';
-import {CollectionStrategyLocator} from '../src/collection-strategy-locator';
-import {NumberStrategy} from '../src/number-strategy';
-import {ViewSlotMock, BoundViewFactoryMock, CollectionStrategyMock, ViewMock, ArrayObserverMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
+import {RepeatStrategyLocator} from '../src/repeat-strategy-locator';
+import {NumberRepeatStrategy} from '../src/number-repeat-strategy';
+import {ViewSlotMock, BoundViewFactoryMock, RepeatStrategyMock, ViewMock, ArrayObserverMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
 
-describe('NumberStrategy', () => {
-  let repeat, strategy, viewSlot, viewFactory, observerLocator, collectionStrategyLocator, collectionStrategyMock;
+describe('NumberRepeatStrategy', () => {
+  let repeat, strategy, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, repeatStrategyMock;
 
   beforeAll(() => {
     initialize();
@@ -19,28 +19,29 @@ describe('NumberStrategy', () => {
     viewSlot = new ViewSlotMock();
     viewFactory = new BoundViewFactoryMock();
     observerLocator = new ObserverLocator();
-    collectionStrategyLocator = new CollectionStrategyLocator();
-    collectionStrategyMock = new CollectionStrategyMock();
-    strategy = new NumberStrategy();
+    repeatStrategyLocator = new RepeatStrategyLocator();
+    repeatStrategyMock = new RepeatStrategyMock();
+    strategy = new NumberRepeatStrategy();
     container.registerInstance(TargetInstruction, instructionMock);
     container.registerInstance(ViewResources, viewResourcesMock);
     container.registerInstance(ViewSlot, viewSlot);
     container.registerInstance(BoundViewFactory, viewFactory);
     container.registerInstance(ObserverLocator, observerLocator);
-    container.registerInstance(CollectionStrategyLocator, collectionStrategyLocator);
+    container.registerInstance(RepeatStrategyLocator, repeatStrategyLocator);
     let templatingEngine = new TemplatingEngine(container, new ModuleAnalyzer());
     repeat = templatingEngine.createViewModelForUnitTest(Repeat);
   });
 
-  describe('processItems', () => {
+  describe('instanceChanged', () => {
     beforeEach(() => {
       repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlot, viewResourcesMock, new ObserverLocator());
-      strategy.initialize(repeat, {});
+      let bindingContext = {};
+      repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
       viewSlot.children = [];
     });
 
     it('should create provided number of views with correct context', () => {
-      strategy.processItems(3);
+      strategy.instanceChanged(repeat, 3);
 
       expect(viewSlot.children.length).toBe(3);
 
@@ -55,8 +56,8 @@ describe('NumberStrategy', () => {
     });
 
     it('should add views when number is increased', () => {
-      strategy.processItems(3);
-      strategy.processItems(4);
+      strategy.instanceChanged(repeat, 3);
+      strategy.instanceChanged(repeat, 4);
 
       expect(viewSlot.children.length).toBe(4);
 
@@ -74,8 +75,8 @@ describe('NumberStrategy', () => {
     });
 
     it('should remove views when number is decreased', () => {
-      strategy.processItems(4);
-      strategy.processItems(2);
+      strategy.instanceChanged(repeat, 4);
+      strategy.instanceChanged(repeat, 2);
 
       expect(viewSlot.children.length).toBe(2);
 
@@ -87,15 +88,15 @@ describe('NumberStrategy', () => {
     });
 
     it('should remove all view when updated value is 0', () => {
-      strategy.processItems(1);
-      strategy.processItems(0);
+      strategy.instanceChanged(repeat, 1);
+      strategy.instanceChanged(repeat, 0);
 
       expect(viewSlot.children.length).toBe(0);
     });
 
     it('should remove all view when updated value is less than 0', () => {
-      strategy.processItems(5);
-      strategy.processItems(-1);
+      strategy.instanceChanged(repeat, 5);
+      strategy.instanceChanged(repeat, -1);
 
       expect(viewSlot.children.length).toBe(0);
     });

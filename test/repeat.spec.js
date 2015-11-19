@@ -3,11 +3,11 @@ import {BoundViewFactory, TemplatingEngine, ViewSlot, ViewFactory, ModuleAnalyze
 import {Container} from 'aurelia-dependency-injection';
 import {initialize} from 'aurelia-pal-browser';
 import {Repeat} from '../src/repeat';
-import {CollectionStrategyLocator} from '../src/collection-strategy-locator';
-import {ViewSlotMock, BoundViewFactoryMock, CollectionStrategyMock, ViewMock, ArrayObserverMock, instructionMock, viewResourcesMock} from './mocks';
+import {RepeatStrategyLocator} from '../src/repeat-strategy-locator';
+import {ViewSlotMock, BoundViewFactoryMock, RepeatStrategyMock, ViewMock, ArrayObserverMock, instructionMock, viewResourcesMock} from './mocks';
 
 describe('repeat', () => {
-  let repeat, viewSlot, viewFactory, observerLocator, collectionStrategyLocator, collectionStrategyMock;
+  let repeat, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, repeatStrategyMock;
 
   beforeAll(() => {
     initialize();
@@ -18,8 +18,8 @@ describe('repeat', () => {
     viewSlot = new ViewSlotMock();
     viewFactory = new BoundViewFactoryMock();
     observerLocator = container.get(ObserverLocator);
-    collectionStrategyLocator = container.get(CollectionStrategyLocator);
-    collectionStrategyMock = new CollectionStrategyMock();
+    repeatStrategyLocator = container.get(RepeatStrategyLocator);
+    repeatStrategyMock = new RepeatStrategyMock();
     container.registerInstance(TargetInstruction, instructionMock);
     container.registerInstance(ViewResources, viewResourcesMock);
     container.registerInstance(ViewSlot, viewSlot);
@@ -34,7 +34,7 @@ describe('repeat', () => {
       view1 = new ViewMock();
       view2 = new ViewMock();
       viewSlot.children = [view1, view2];
-      spyOn(collectionStrategyLocator, 'getStrategy').and.callFake(() => { return collectionStrategyMock});
+      spyOn(repeatStrategyLocator, 'getStrategy').and.callFake(() => { return repeatStrategyMock});
     });
 
     it('should do nothing if no items provided', () => {
@@ -53,11 +53,10 @@ describe('repeat', () => {
 
   describe('unbind', () => {
     beforeEach(() => {
-      repeat.collectionStrategy = collectionStrategyMock;
+      repeat.collectionStrategy = repeatStrategyMock;
     });
 
     it('should remove all views', () => {
-      spyOn(collectionStrategyMock, 'dispose').and.callFake(() => {});
       spyOn(viewSlot, 'removeAll');
       repeat.unbind();
 
@@ -87,14 +86,13 @@ describe('repeat', () => {
 
       expect(repeat.items).toBeNull();
       expect(repeat.callContext).toBeNull();
-      expect(repeat.collectionStrategy).toBeNull();
       expect(repeat.collectionObserver).toBeNull();
     });
   });
 
   describe('itemsChanged', () => {
     beforeEach(() => {
-      spyOn(collectionStrategyLocator, 'getStrategy').and.callFake(() => { return collectionStrategyMock});
+      spyOn(repeatStrategyLocator, 'getStrategy').and.callFake(() => { return repeatStrategyMock});
     });
 
     it('should unsubscribe collection', () => {
@@ -123,38 +121,17 @@ describe('repeat', () => {
       repeat.items = items;
       repeat.itemsChanged();
 
-      expect(collectionStrategyLocator.getStrategy).toHaveBeenCalledWith(items);
-    });
-
-    it('should initialize the collection strategy', () => {
-      let items = ['foo', 'bar'];
-      let bindingContext = { foo: 'bar' }
-      let overrideContext = { bar: 'foo' }
-      repeat.items = items;
-      repeat.scope = { bindingContext: bindingContext, overrideContext: overrideContext };
-      spyOn(collectionStrategyMock, 'initialize');
-
-      repeat.itemsChanged();
-
-      expect(collectionStrategyMock.initialize).toHaveBeenCalledWith(repeat, bindingContext, overrideContext);
+      expect(repeatStrategyLocator.getStrategy).toHaveBeenCalledWith(items);
     });
 
     it('should subscribe to changes', () => {
       repeat.items = ['foo', 'bar'];
       let collectionObserver = new ArrayObserverMock();
-      spyOn(collectionStrategyMock, 'getCollectionObserver').and.callFake(() => { return collectionObserver });
+      spyOn(repeatStrategyMock, 'getCollectionObserver').and.callFake(() => { return collectionObserver });
       spyOn(collectionObserver, 'subscribe');
       repeat.itemsChanged();
 
       expect(collectionObserver.subscribe).toHaveBeenCalledWith(repeat.callContext, repeat);
-    });
-
-    it('should dispose collection strategy', () => {
-      repeat.collectionStrategy = collectionStrategyMock;
-      spyOn(collectionStrategyMock, 'dispose');
-      repeat.itemsChanged();
-
-      expect(collectionStrategyMock.dispose).toHaveBeenCalled();
     });
   });
 });

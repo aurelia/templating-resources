@@ -1,14 +1,14 @@
-import {ObserverLocator} from 'aurelia-binding';
+import {ObserverLocator, createOverrideContext} from 'aurelia-binding';
 import {BoundViewFactory, TemplatingEngine, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
 import {Container} from 'aurelia-dependency-injection';
 import {initialize} from 'aurelia-pal-browser';
 import {Repeat} from '../src/repeat';
-import {CollectionStrategyLocator} from '../src/collection-strategy-locator';
-import {ArrayCollectionStrategy} from '../src/array-collection-strategy';
-import {ViewSlotMock, BoundViewFactoryMock, CollectionStrategyMock, ViewMock, ArrayObserverMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
+import {RepeatStrategyLocator} from '../src/repeat-strategy-locator';
+import {ArrayRepeatStrategy} from '../src/array-repeat-strategy';
+import {ViewSlotMock, BoundViewFactoryMock, RepeatStrategyMock, ViewMock, ArrayObserverMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
 
-describe('ArrayCollectionStrategy', () => {
-  let repeat, strategy, viewSlot, viewFactory, observerLocator, collectionStrategyLocator, collectionStrategyMock;
+describe('ArrayRepeatStrategy', () => {
+  let repeat, strategy, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, repeatStrategyMock;
 
   beforeAll(() => {
     initialize();
@@ -19,25 +19,24 @@ describe('ArrayCollectionStrategy', () => {
     viewSlot = new ViewSlotMock();
     viewFactory = new BoundViewFactoryMock();
     observerLocator = new ObserverLocator();
-    collectionStrategyLocator = new CollectionStrategyLocator();
-    collectionStrategyMock = new CollectionStrategyMock();
-    strategy = new ArrayCollectionStrategy();
+    repeatStrategyLocator = new RepeatStrategyLocator();
+    repeatStrategyMock = new RepeatStrategyMock();
+    strategy = new ArrayRepeatStrategy();
     container.registerInstance(TargetInstruction, instructionMock);
     container.registerInstance(ViewResources, viewResourcesMock);
     container.registerInstance(ViewSlot, viewSlot);
     container.registerInstance(BoundViewFactory, viewFactory);
     container.registerInstance(ObserverLocator, observerLocator);
-    container.registerInstance(CollectionStrategyLocator, collectionStrategyLocator);
+    container.registerInstance(RepeatStrategyLocator, repeatStrategyLocator);
     let templatingEngine = new TemplatingEngine(container, new ModuleAnalyzer());
     repeat = templatingEngine.createViewModelForUnitTest(Repeat);
   });
 
-  describe('handleChanges', () => {
+  describe('instanceMutated', () => {
     let view1, view2, view3, items, splices;
 
     beforeEach(() => {
-      strategy = new ArrayCollectionStrategy(new ObserverLocator());
-      strategy.initialize(repeat, {});
+      strategy = new ArrayRepeatStrategy();
       viewSlot.children = [];
       view1 = new ViewMock();
       view2 = new ViewMock();
@@ -60,7 +59,7 @@ describe('ArrayCollectionStrategy', () => {
         removed: ['qux']
       }];
       spyOn(viewSlot, 'removeAt').and.callFake(() => { return new ViewMock();});
-      strategy.handleChanges(items, splices);
+      strategy.instanceMutated(repeat, items, splices);
 
       expect(viewSlot.children[0].overrideContext.$index).toBe(0);
       expect(viewSlot.children[1].overrideContext.$index).toBe(1);
@@ -85,7 +84,7 @@ describe('ArrayCollectionStrategy', () => {
 
       spyOn(viewSlot, 'removeAt').and.callFake(() => { return animationPromise });
 
-      strategy.handleChanges(items, splices);
+      strategy.instanceMutated(repeat, items, splices);
 
       Promise.all(rmPromises).then(() => {
         expect(viewSlot.children.length).toBe(2);
@@ -101,7 +100,8 @@ describe('ArrayCollectionStrategy', () => {
 
     it('should correctly handle adding item (i.e Array.prototype.push())', () => {
       repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlot, viewResourcesMock, new ObserverLocator());
-      strategy.initialize(repeat, {});
+      let bindingContext = {};
+      repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
       splices = [{
         addedCount: 1,
         index: 3,
@@ -109,7 +109,7 @@ describe('ArrayCollectionStrategy', () => {
       }];
       items = ['foo', 'qux', 'bar', 'norf'];
       spyOn(viewSlot, 'removeAt').and.callFake(() => { return new ViewMock();});
-      strategy.handleChanges(items, splices);
+      strategy.instanceMutated(repeat, items, splices);
 
       expect(viewSlot.children.length).toBe(4);
       expect(viewSlot.children[3].bindingContext.item).toBe('norf');
@@ -125,14 +125,15 @@ describe('ArrayCollectionStrategy', () => {
       let viewSlotMock = new ViewSlotMock();
       viewSlotMock.children = [view1, view2, view3, view4];
       repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator());
-      strategy.initialize(repeat, {});
+      let bindingContext = {};
+      repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
       splices = [{
         addedCount: 1,
         index: 0,
         removed: ['foo', 'qux', 'bar']
       }];
       items = ['bar_updated', 'norf'];
-      strategy.handleChanges(items, splices);
+      strategy.instanceMutated(repeat, items, splices);
 
       expect(viewSlotMock.children.length).toBe(2);
       expect(viewSlotMock.children[0].bindingContext.item).toBe('bar_updated');
@@ -145,7 +146,8 @@ describe('ArrayCollectionStrategy', () => {
       let viewSlotMock = new ViewSlotMock();
       viewSlotMock.children = [view1, view2, view3, view4];
       repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator());
-      strategy.initialize(repeat, {});
+      let bindingContext = {};
+      repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
 
       splices = [{
         addedCount: 2,
@@ -157,7 +159,7 @@ describe('ArrayCollectionStrategy', () => {
         removed: ['bar', 'norf']
       }];
       items = ['norf', 'bar', 'qux', 'foo'];
-      strategy.handleChanges(items, splices);
+      strategy.instanceMutated(repeat, items, splices);
 
       expect(viewSlotMock.children.length).toBe(4);
       expect(viewSlotMock.children[0].bindingContext.item).toBe('norf');
@@ -175,7 +177,9 @@ describe('ArrayCollectionStrategy', () => {
       let viewSlotMock = new ViewSlotMock();
       viewSlotMock.children = [view1, view2, view3];
       repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator());
-      strategy.initialize(repeat, {});
+      let bindingContext = {};
+      repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
+
       let removeAction = () => {
         viewSlot.children.splice(2, 1);
         return view2;
@@ -194,7 +198,7 @@ describe('ArrayCollectionStrategy', () => {
       spyOn(viewSlot, 'removeAt').and.callFake(() => { return animationPromise });
       items = ['qux', 'foo', 'bar'];
 
-      strategy.handleChanges(items, splices);
+      strategy.instanceMutated(repeat, items, splices);
 
       animationPromise.then(() => {
         expect(viewSlotMock.children.length).toBe(3);
