@@ -1,35 +1,23 @@
-import {inject} from 'aurelia-dependency-injection';
-import {ObserverLocator} from 'aurelia-binding';
-import {CollectionStrategy} from './collection-strategy';
+import {createFullOverrideContext, updateOverrideContexts} from './repeat-utilities';
 
 /**
-* A strategy for iterating Arrays.
+* A strategy for repeating a template over an array.
 */
-@inject(ObserverLocator)
-export class ArrayCollectionStrategy extends CollectionStrategy {
-  /**
-  * Creates an instance of ArrayCollectionStrategy.
-  * @param observerLocator The instance of the observerLocator.
-  */
-  constructor(observerLocator) {
-    super();
-    this.observerLocator = observerLocator;
-  }
+export class ArrayRepeatStrategy {
   /**
   * Process the provided array items.
   * @param items The underlying array.
   */
-  processItems(items) {
+  instanceChanged(repeat, items) {
     let i;
     let ii;
     let overrideContext;
     let view;
-    this.items = items;
     for (i = 0, ii = items.length; i < ii; ++i) {
-      overrideContext = super.createFullOverrideContext(items[i], i, ii);
-      view = this.viewFactory.create();
+      overrideContext = createFullOverrideContext(repeat, items[i], i, ii);
+      view = repeat.viewFactory.create();
       view.bind(overrideContext.bindingContext, overrideContext);
-      this.viewSlot.add(view);
+      repeat.viewSlot.add(view);
     }
   }
 
@@ -37,8 +25,8 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
   * Gets an Array observer.
   * @param items The items to be observed.
   */
-  getCollectionObserver(items) {
-    return this.observerLocator.getArrayObserver(items);
+  getCollectionObserver(observerLocator, items) {
+    return observerLocator.getArrayObserver(items);
   }
 
   /**
@@ -46,9 +34,9 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
   * @param array The modified array.
   * @param splices Records of array changes.
   */
-  handleChanges(array, splices) {
+  instanceMutated(repeat, array, splices) {
     let removeDelta = 0;
-    let viewSlot = this.viewSlot;
+    let viewSlot = repeat.viewSlot;
     let rmPromises = [];
 
     for (let i = 0, ii = splices.length; i < ii; ++i) {
@@ -66,16 +54,16 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
 
     if (rmPromises.length > 0) {
       Promise.all(rmPromises).then(() => {
-        let spliceIndexLow = this._handleAddedSplices(array, splices);
-        this.updateOverrideContexts(spliceIndexLow);
+        let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
+        updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
       });
     } else {
-      let spliceIndexLow = this._handleAddedSplices(array, splices);
-      super.updateOverrideContexts(spliceIndexLow);
+      let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
+      updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
     }
   }
 
-  _handleAddedSplices(array, splices) {
+  _handleAddedSplices(repeat, array, splices) {
     let spliceIndex;
     let spliceIndexLow;
     let arrayLength = array.length;
@@ -89,10 +77,10 @@ export class ArrayCollectionStrategy extends CollectionStrategy {
       }
 
       for (; addIndex < end; ++addIndex) {
-        let overrideContext = this.createFullOverrideContext(array[addIndex], addIndex, arrayLength);
-        let view = this.viewFactory.create();
+        let overrideContext = createFullOverrideContext(repeat, array[addIndex], addIndex, arrayLength);
+        let view = repeat.viewFactory.create();
         view.bind(overrideContext.bindingContext, overrideContext);
-        this.viewSlot.insert(addIndex, view);
+        repeat.viewSlot.insert(addIndex, view);
       }
     }
 

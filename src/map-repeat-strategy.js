@@ -1,41 +1,30 @@
-import {inject} from 'aurelia-dependency-injection';
-import {ObserverLocator} from 'aurelia-binding';
-import {CollectionStrategy} from './collection-strategy';
+import {createFullOverrideContext, updateOverrideContexts} from './repeat-utilities';
 
 /**
-* A strategy for iterating Map.
+* A strategy for repeating a template over a Map.
 */
-@inject(ObserverLocator)
-export class MapCollectionStrategy extends CollectionStrategy {
-  /**
-  * Creates an instance of MapCollectionStrategy.
-  * @param observerLocator The instance of the observerLocator.
-  */
-  constructor(observerLocator) {
-    super();
-    this.observerLocator = observerLocator;
-  }
+export class MapRepeatStrategy {
   /**
   * Gets a Map observer.
   * @param items The items to be observed.
   */
-  getCollectionObserver(items) {
-    return this.observerLocator.getMapObserver(items);
+  getCollectionObserver(observerLocator, items) {
+    return observerLocator.getMapObserver(items);
   }
 
   /**
   * Process the provided Map entries.
   * @param items The entries to process.
   */
-  processItems(items) {
-    let viewFactory = this.viewFactory;
-    let viewSlot = this.viewSlot;
+  instanceChanged(repeat, items) {
+    let viewFactory = repeat.viewFactory;
+    let viewSlot = repeat.viewSlot;
     let index = 0;
     let overrideContext;
     let view;
 
     items.forEach((value, key) => {
-      overrideContext = this.createFullOverrideContext(value, index, items.size, key);
+      overrideContext = createFullOverrideContext(repeat, value, index, items.size, key);
       view = viewFactory.create();
       view.bind(overrideContext.bindingContext, overrideContext);
       viewSlot.add(view);
@@ -48,8 +37,8 @@ export class MapCollectionStrategy extends CollectionStrategy {
   * @param map The underlying Map collection.
   * @param records The change records.
   */
-  handleChanges(map, records) {
-    let viewSlot = this.viewSlot;
+  instanceMutated(repeat, map, records) {
+    let viewSlot = repeat.viewSlot;
     let key;
     let i;
     let ii;
@@ -65,25 +54,25 @@ export class MapCollectionStrategy extends CollectionStrategy {
       key = record.key;
       switch (record.type) {
       case 'update':
-        removeIndex = this._getViewIndexByKey(key);
+        removeIndex = this._getViewIndexByKey(repeat, key);
         viewOrPromise = viewSlot.removeAt(removeIndex, true);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
-        overrideContext = this.createFullOverrideContext(map.get(key), removeIndex, map.size, key);
-        view = this.viewFactory.create();
+        overrideContext = createFullOverrideContext(repeat, map.get(key), removeIndex, map.size, key);
+        view = repeat.viewFactory.create();
         view.bind(overrideContext.bindingContext, overrideContext);
         viewSlot.insert(removeIndex, view);
         break;
       case 'add':
-        overrideContext = this.createFullOverrideContext(map.get(key), map.size - 1, map.size, key);
-        view = this.viewFactory.create();
+        overrideContext = createFullOverrideContext(repeat, map.get(key), map.size - 1, map.size, key);
+        view = repeat.viewFactory.create();
         view.bind(overrideContext.bindingContext, overrideContext);
         viewSlot.insert(map.size - 1, view);
         break;
       case 'delete':
         if (record.oldValue === undefined) { return; }
-        removeIndex = this._getViewIndexByKey(key);
+        removeIndex = this._getViewIndexByKey(repeat, key);
         viewOrPromise = viewSlot.removeAt(removeIndex, true);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
@@ -99,22 +88,22 @@ export class MapCollectionStrategy extends CollectionStrategy {
 
     if (rmPromises.length > 0) {
       Promise.all(rmPromises).then(() => {
-        this.updateOverrideContexts(0);
+        updateOverrideContexts(repeat.viewSlot.children, 0);
       });
     } else {
-      this.updateOverrideContexts(0);
+      updateOverrideContexts(repeat.viewSlot.children, 0);
     }
   }
 
-  _getViewIndexByKey(key) {
-    let viewSlot = this.viewSlot;
+  _getViewIndexByKey(repeat, key) {
+    let viewSlot = repeat.viewSlot;
     let i;
     let ii;
     let child;
 
     for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
       child = viewSlot.children[i];
-      if (child.bindingContext[this.key] === key) {
+      if (child.bindingContext[repeat.key] === key) {
         return i;
       }
     }
