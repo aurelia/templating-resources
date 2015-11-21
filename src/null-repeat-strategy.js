@@ -3,6 +3,7 @@
 */
 export class NullRepeatStrategy {
   instanceChanged(repeat, items) {
+    repeat.viewSlot.removeAll(true);
   }
 
   getCollectionObserver(observerLocator, items) {

@@ -104,18 +104,6 @@ describe('repeat', () => {
       expect(repeat._unsubscribeCollection).toHaveBeenCalled();
     });
 
-    it('should remove all views', () => {
-      repeat.collectionObserver = { unsubscribe: callback => {} };
-      let view1 = new ViewMock();
-      let view2 = new ViewMock();
-      viewSlot.children = [view1, view2];
-      spyOn(viewSlot, 'removeAll');
-
-      repeat.itemsChanged();
-
-      expect(viewSlot.removeAll).toHaveBeenCalled();
-    });
-
     it('should locate collection strategy', () => {
       let items = ['foo', 'bar'];
       repeat.items = items;

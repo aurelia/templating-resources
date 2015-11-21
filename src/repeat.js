@@ -16,6 +16,7 @@ import {
   unwrapExpression,
   isOneTime
 } from './repeat-utilities';
+import {viewsRequireLifecycle} from './analyze-view-factory';
 
 /**
 * Binding to iterate over iterable objects (Array, Map and Number) to genereate a template for each iteration.
@@ -71,6 +72,7 @@ export class Repeat {
     this.ignoreMutation = false;
     this.sourceExpression = getItemsSourceExpression(this.instruction, 'repeat.for');
     this.isOneTime = isOneTime(this.sourceExpression);
+    this.viewsRequireLifecycle = viewsRequireLifecycle(viewFactory);
   }
 
   call(context, changes) {
@@ -105,13 +107,6 @@ export class Repeat {
     }
   }
 
-  processItemsByStrategy() {
-    if (!this.isOneTime && !this._observeInnerCollection()) {
-      this._observeCollection();
-    }
-    this.strategy.instanceChanged(this, this.items);
-  }
-
   /**
   * Invoked everytime the item property changes.
   */
@@ -125,12 +120,11 @@ export class Repeat {
 
     let items = this.items;
     this.strategy = this.strategyLocator.getStrategy(items);
-    let removePromise = this.viewSlot.removeAll(true);
-    if (removePromise instanceof Promise) {
-      removePromise.then(() => this.processItemsByStrategy());
-      return;
+
+    if (!this.isOneTime && !this._observeInnerCollection()) {
+      this._observeCollection();
     }
-    this.processItemsByStrategy();
+    this.strategy.instanceChanged(this, items);
   }
 
   _getInnerCollection() {
@@ -165,8 +159,9 @@ export class Repeat {
     if (newItems === this.items) {
       return;
     }
+    // assign the new value to the items property, which will trigger the
+    // self-subscriber to call itemsChanged.
     this.items = newItems;
-    this.itemsChanged();
   }
 
   _observeInnerCollection() {

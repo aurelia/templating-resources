@@ -17,6 +17,15 @@ export class MapRepeatStrategy {
   * @param items The entries to process.
   */
   instanceChanged(repeat, items) {
+    let removePromise = repeat.viewSlot.removeAll(true);
+    if (removePromise instanceof Promise) {
+      removePromise.then(() => this._standardProcessItems(repeat, items));
+      return;
+    }
+    this._standardProcessItems(repeat, items);
+  }
+
+  _standardProcessItems(repeat, items) {
     let viewFactory = repeat.viewFactory;
     let viewSlot = repeat.viewSlot;
     let index = 0;

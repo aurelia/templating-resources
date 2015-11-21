@@ -29,6 +29,7 @@ export class ViewMock {
 }
 
 export class BoundViewFactoryMock {
+  _viewsRequireLifecycle = true;
   create(){
     return { bind(){} };
   };
@@ -36,6 +37,7 @@ export class BoundViewFactoryMock {
 }
 
 export class ViewFactoryMock {
+  _viewsRequireLifecycle = true;
   create(){
     return new ViewMock();
   }

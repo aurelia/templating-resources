@@ -10,10 +10,13 @@ import {
   ViewSlot
 } from 'aurelia-templating';
 import {Repeat} from '../src/repeat';
+import {If} from '../src/if';
+import {Compose} from '../src/compose';
 import {OneTimeBindingBehavior} from '../src/binding-mode-behaviors';
 import {metadata} from 'aurelia-metadata';
 import {TaskQueue} from 'aurelia-task-queue';
 import {ObserverLocator} from 'aurelia-binding';
+import {viewsRequireLifecycle} from '../src/analyze-view-factory';
 
 // use the browser PAL implementation.
 initializeBrowserPal();
@@ -33,6 +36,17 @@ function createViewResources(container) {
   resource.target = Repeat;
   resource.initialize(container, Repeat);
   resources.registerAttribute('repeat', resource, 'repeat');
+  // if
+  resource = metadata.get(metadata.resource, If);
+  resource.target = If;
+  resource.initialize(container, If);
+  resources.registerAttribute('if', resource, 'if');
+  // compose
+  resource = metadata.get(metadata.resource, Compose);
+  resource.target = Compose;
+  resource.initialize(container, Compose);
+  resources.registerElement('compose', resource);
+
   container.registerInstance(ViewResources, resources);
 
   // slice value converter
@@ -58,10 +72,20 @@ DOM.appendNode(host);
 let viewSlot = new ViewSlot(host, true);
 
 // creates a controller given a html template string and a viewmodel instance.
-function createController(template, viewModel) {
+function createController(template, viewModel, viewsRequireLifecycle) {
   let childContainer = container.createChild();
 
   let viewFactory = viewCompiler.compile(template);
+
+  if (viewsRequireLifecycle !== undefined) {
+    for (let id in viewFactory.instructions) {
+      let targetInstruction = viewFactory.instructions[id];
+      for (let behaviorInstruction of targetInstruction.behaviorInstructions)
+      if (behaviorInstruction.attrName === 'repeat') {
+        behaviorInstruction.viewFactory._viewsRequireLifecycle = viewsRequireLifecycle;
+      }
+    }
+  }
 
   let metadata = new HtmlBehaviorResource();
   function App() {}
@@ -121,7 +145,7 @@ function hasMapSubscribers(map) {
   return observerLocator.getMapObserver(map).hasSubscribers();
 }
 
-describe('Repeat array', () => {
+function describeArrayTests(viewsRequireLifecycle) {
   let viewModel, controller;
 
   function validateState() {
@@ -152,7 +176,7 @@ describe('Repeat array', () => {
     beforeEach(() => {
       let template = `<template><div repeat.for="item of items">\${item}</div></template>`;
       viewModel = { items: ['a', 'b', 'c'] };
-      controller = createController(template, viewModel);
+      controller = createController(template, viewModel, viewsRequireLifecycle);
       validateState();
     });
 
@@ -257,7 +281,7 @@ describe('Repeat array', () => {
     beforeEach(() => {
       let template = `<template><div repeat.for="item of items | slice & noopBehavior">\${item}</div></template>`;
       viewModel = { items: ['a', 'b', 'c'] };
-      controller = createController(template, viewModel);
+      controller = createController(template, viewModel, viewsRequireLifecycle);
       validateState();
     });
 
@@ -306,7 +330,7 @@ describe('Repeat array', () => {
     beforeEach(() => {
       let template = `<template><div repeat.for="item of items | toLength">\${item}</div></template>`;
       viewModel = { items: [0, 1, 2] };
-      controller = createController(template, viewModel);
+      controller = createController(template, viewModel, viewsRequireLifecycle);
       validateState();
     });
 
@@ -352,13 +376,17 @@ describe('Repeat array', () => {
   it('oneTime does not observe changes', () => {
     let template = `<template><div repeat.for="item of items & oneTime">\${item}</div></template>`;
     viewModel = { items: [0, 1, 2] };
-    controller = createController(template, viewModel);
+    controller = createController(template, viewModel, viewsRequireLifecycle);
     validateState();
     expect(hasSubscribers(viewModel, 'items')).toBe(false);
     expect(hasArraySubscribers(viewModel.items)).toBe(false);
     controller.unbind();
   });
-});
+}
+
+describe('Repeat array (pure)', describeArrayTests);
+
+describe('Repeat array (not pure)', describeArrayTests.bind(this, false));
 
 describe('Repeat map [k, v]', () => {
   let viewModel, controller;
@@ -526,4 +554,33 @@ describe('Repeat number', () => {
 
 describe('Repeat object converted to collection', () => {
   let viewModel, controller;
+});
+
+describe('analyze-view-factory', () => {
+  it('analyzes repeat', () => {
+    let template = `<template><div repeat.for="item of items">\${item}</div></template>`,
+        viewFactory = viewCompiler.compile(template);
+    expect(viewsRequireLifecycle(viewFactory)).toBe(false);
+  });
+
+  it('analyzes nested repeat', () => {
+    let template = `<template><div repeat.for="x of y"><div repeat.for="a of b"></div></div></template>`,
+        viewFactory = viewCompiler.compile(template);
+    expect(viewsRequireLifecycle(viewFactory)).toBe(false);
+  });
+
+  it('analyzes nested repeat 2', () => {
+    let template = `<template><div repeat.for="x of y"><div repeat.for="a of b"><div repeat.for="foo of bar"></div></div></div></template>`,
+        viewFactory = viewCompiler.compile(template);
+    expect(viewsRequireLifecycle(viewFactory)).toBe(false);
+  });
+
+  it('analyzes repeat with compose', () => {
+    let template = `<template><compose repeat.for="item of items"></compose></template>`,
+        viewFactory = viewCompiler.compile(template);
+    expect(viewsRequireLifecycle(viewFactory)).toBe(true);
+    template = `<template><div repeat.for="item of items"><compose></compose></div></template>`,
+    viewFactory = viewCompiler.compile(template);
+    expect(viewsRequireLifecycle(viewFactory)).toBe(true);
+  });
 });

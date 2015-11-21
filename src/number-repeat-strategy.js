@@ -16,6 +16,15 @@ export class NumberRepeatStrategy {
   * @param value The Number of how many time to iterate.
   */
   instanceChanged(repeat, value) {
+    let removePromise = repeat.viewSlot.removeAll(true);
+    if (removePromise instanceof Promise) {
+      removePromise.then(() => this._standardProcessItems(repeat, value));
+      return;
+    }
+    this._standardProcessItems(repeat, value);
+  }
+
+  _standardProcessItems(repeat, value) {
     let viewFactory = repeat.viewFactory;
     let viewSlot = repeat.viewSlot;
     let childrenLength = viewSlot.children.length;
