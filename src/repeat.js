@@ -155,13 +155,15 @@ export class Repeat {
     let newItems = this.sourceExpression.evaluate(this.scope, this.lookupFunctions);
     this.observerLocator.taskQueue.queueMicroTask(() => this.ignoreMutation = false);
 
-    // collection change?
+    // call itemsChanged...
     if (newItems === this.items) {
-      return;
+      // call itemsChanged directly.
+      this.itemsChanged();
+    } else {
+      // call itemsChanged indirectly by assigning the new collection value to
+      // the items property, which will trigger the self-subscriber to call itemsChanged.
+      this.items = newItems;
     }
-    // assign the new value to the items property, which will trigger the
-    // self-subscriber to call itemsChanged.
-    this.items = newItems;
   }
 
   _observeInnerCollection() {

@@ -52,6 +52,9 @@ function createViewResources(container) {
   // slice value converter
   resources.registerValueConverter('slice', { toView: array => array ? array.slice(0) : array });
 
+  // no-op value converter
+  resources.registerValueConverter('noopValueConverter', { toView: value => value });
+
   // toLength value converter
   resources.registerValueConverter('toLength', { toView: collection => collection ? (collection.length || collection.size || 0) : 0 });
 
@@ -251,6 +254,55 @@ function describeArrayTests(viewsRequireLifecycle) {
     });
 
     // todo: splice edge cases... negative, no-args, invalid args, etc
+
+    it('handles property change', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      viewModel.items = null;
+      nq(() => {
+        expect(select(controller, 'div').length).toBe(0);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => {
+        viewModel.items = ['x', 'y', 'z'];
+        observer = observerLocator.getArrayObserver(viewModel.items);
+      });
+      nq(() => {
+        validateState();
+        viewModel.items = undefined;
+      });
+      nq(() => {
+        expect(select(controller, 'div').length).toBe(0);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => viewModel.items = []);
+      nq(() => validateState());
+      nq(() => done());
+    });
+  });
+
+  describe('with converter that returns original instance', () => {
+    beforeEach(() => {
+      let template = `<template><div repeat.for="item of items | noopValueConverter">\${item}</div></template>`;
+      viewModel = { items: ['a', 'b', 'c'] };
+      controller = createController(template, viewModel, viewsRequireLifecycle);
+      validateState();
+    });
+
+    afterEach(() => {
+      controller.unbind();
+      expect(hasSubscribers(viewModel, 'items')).toBe(false);
+      expect(hasArraySubscribers(viewModel.items)).toBe(false);
+    });
+
+    it('handles mutation', done => {
+      viewModel.items.push('d');
+      nq(() => validateState());
+      nq(() => viewModel.items.pop());
+      nq(() => validateState());
+      nq(() => viewModel.items.reverse());
+      nq(() => validateState());
+      nq(() => done());
+    });
 
     it('handles property change', done => {
       let observer = observerLocator.getArrayObserver(viewModel.items);
