@@ -5,8 +5,8 @@
 export const lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'with'];
 
 function behaviorRequiresLifecycle(instruction) {
-  let t = instruction.type,
-      name = t.elementName !== null ? t.elementName : t.attributeName;
+  let t = instruction.type;
+  let name = t.elementName !== null ? t.elementName : t.attributeName;
   if (lifecycleOptionalBehaviors.indexOf(name) === -1) {
     return t.handlesAttached || t.handlesBind || t.handlesCreated || t.handlesDetached || t.handlesUnbind;
   }
