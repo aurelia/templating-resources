@@ -1,3 +1,15 @@
+## 1.0.0-beta.1.0.2 (2015-12-03)
+
+
+#### Bug Fixes
+
+* **repeat:**
+  * handle pass-through converters ([b2741c9e](http://github.com/aurelia/templating-resources/commit/b2741c9e437610991b71f769ee8f171352d4ad5e))
+  * fix context in getViewIndexByKey ([7f245ce3](http://github.com/aurelia/templating-resources/commit/7f245ce3b490fa82cae20103281b665a07cf3eb2), closes [#156](http://github.com/aurelia/templating-resources/issues/156))
+  * obey one-time binding behavior ([5fa32e90](http://github.com/aurelia/templating-resources/commit/5fa32e90d394107d500383efa6306b5d8df43996))
+* **signal:** missing this ([078087ce](http://github.com/aurelia/templating-resources/commit/078087ce375e4feb4fd34b83d8da4198527c5aa9), closes [#157](http://github.com/aurelia/templating-resources/issues/157))
+
+
 ## 1.0.0-beta.1.0.1 (2015-11-16)
 
 

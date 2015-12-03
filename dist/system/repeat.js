@@ -1,7 +1,7 @@
-System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-templating', './collection-strategy-locator'], function (_export) {
+System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-templating', './repeat-strategy-locator', './repeat-utilities', './analyze-view-factory'], function (_export) {
   'use strict';
 
-  var inject, ObserverLocator, getChangeRecords, BindingBehavior, ValueConverter, BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, customAttribute, bindable, templateController, CollectionStrategyLocator, Repeat;
+  var inject, ObserverLocator, BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, customAttribute, bindable, templateController, RepeatStrategyLocator, getItemsSourceExpression, unwrapExpression, isOneTime, viewsRequireLifecycle, Repeat;
 
   var _createDecoratedClass = (function () { function defineProperties(target, descriptors, initializers) { for (var i = 0; i < descriptors.length; i++) { var descriptor = descriptors[i]; var decorators = descriptor.decorators; var key = descriptor.key; delete descriptor.key; delete descriptor.decorators; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor || descriptor.initializer) descriptor.writable = true; if (decorators) { for (var f = 0; f < decorators.length; f++) { var decorator = decorators[f]; if (typeof decorator === 'function') { descriptor = decorator(target, key, descriptor) || descriptor; } else { throw new TypeError('The decorator for method ' + descriptor.key + ' is of the invalid type ' + typeof decorator); } } if (descriptor.initializer !== undefined) { initializers[key] = descriptor; continue; } } Object.defineProperty(target, key, descriptor); } } return function (Constructor, protoProps, staticProps, protoInitializers, staticInitializers) { if (protoProps) defineProperties(Constructor.prototype, protoProps, protoInitializers); if (staticProps) defineProperties(Constructor, staticProps, staticInitializers); return Constructor; }; })();
 
@@ -9,31 +9,11 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
 
   function _defineDecoratedPropertyDescriptor(target, key, descriptors) { var _descriptor = descriptors[key]; if (!_descriptor) return; var descriptor = {}; for (var _key in _descriptor) descriptor[_key] = _descriptor[_key]; descriptor.value = descriptor.initializer ? descriptor.initializer.call(target) : undefined; Object.defineProperty(target, key, descriptor); }
 
-  function getSourceExpression(instruction, attrName) {
-    return instruction.behaviorInstructions.filter(function (bi) {
-      return bi.originalAttrName === attrName;
-    })[0].attributes.items.sourceExpression;
-  }
-
-  function unwrapExpression(expression) {
-    var unwrapped = false;
-    while (expression instanceof BindingBehavior) {
-      expression = expression.expression;
-    }
-    while (expression instanceof ValueConverter) {
-      expression = expression.expression;
-      unwrapped = true;
-    }
-    return unwrapped ? expression : null;
-  }
   return {
     setters: [function (_aureliaDependencyInjection) {
       inject = _aureliaDependencyInjection.inject;
     }, function (_aureliaBinding) {
       ObserverLocator = _aureliaBinding.ObserverLocator;
-      getChangeRecords = _aureliaBinding.getChangeRecords;
-      BindingBehavior = _aureliaBinding.BindingBehavior;
-      ValueConverter = _aureliaBinding.ValueConverter;
     }, function (_aureliaTemplating) {
       BoundViewFactory = _aureliaTemplating.BoundViewFactory;
       TargetInstruction = _aureliaTemplating.TargetInstruction;
@@ -42,8 +22,14 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
       customAttribute = _aureliaTemplating.customAttribute;
       bindable = _aureliaTemplating.bindable;
       templateController = _aureliaTemplating.templateController;
-    }, function (_collectionStrategyLocator) {
-      CollectionStrategyLocator = _collectionStrategyLocator.CollectionStrategyLocator;
+    }, function (_repeatStrategyLocator) {
+      RepeatStrategyLocator = _repeatStrategyLocator.RepeatStrategyLocator;
+    }, function (_repeatUtilities) {
+      getItemsSourceExpression = _repeatUtilities.getItemsSourceExpression;
+      unwrapExpression = _repeatUtilities.unwrapExpression;
+      isOneTime = _repeatUtilities.isOneTime;
+    }, function (_analyzeViewFactory) {
+      viewsRequireLifecycle = _analyzeViewFactory.viewsRequireLifecycle;
     }],
     execute: function () {
       Repeat = (function () {
@@ -71,7 +57,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           enumerable: true
         }], null, _instanceInitializers);
 
-        function Repeat(viewFactory, instruction, viewSlot, viewResources, observerLocator, collectionStrategyLocator) {
+        function Repeat(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
           _classCallCheck(this, _Repeat);
 
           _defineDecoratedPropertyDescriptor(this, 'items', _instanceInitializers);
@@ -90,8 +76,11 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           this.local = 'item';
           this.key = 'key';
           this.value = 'value';
-          this.collectionStrategyLocator = collectionStrategyLocator;
+          this.strategyLocator = strategyLocator;
           this.ignoreMutation = false;
+          this.sourceExpression = getItemsSourceExpression(this.instruction, 'repeat.for');
+          this.isOneTime = isOneTime(this.sourceExpression);
+          this.viewsRequireLifecycle = viewsRequireLifecycle(viewFactory);
         }
 
         Repeat.prototype.call = function call(context, changes) {
@@ -99,23 +88,13 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
         };
 
         Repeat.prototype.bind = function bind(bindingContext, overrideContext) {
-          var items = this.items;
-          this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
           this.scope = { bindingContext: bindingContext, overrideContext: overrideContext };
-          if (items === undefined || items === null) {
-            return;
-          }
-          this._processItems();
+          this.itemsChanged();
         };
 
         Repeat.prototype.unbind = function unbind() {
-          this.sourceExpression = null;
           this.scope = null;
-          if (this.collectionStrategy) {
-            this.collectionStrategy.dispose();
-          }
           this.items = null;
-          this.collectionStrategy = null;
           this.viewSlot.removeAll(true);
           this._unsubscribeCollection();
         };
@@ -129,41 +108,19 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
         };
 
         Repeat.prototype.itemsChanged = function itemsChanged() {
-          this._processItems();
-        };
-
-        Repeat.prototype._processItems = function _processItems() {
-          var _this = this;
-
-          var items = this.items;
-
           this._unsubscribeCollection();
-          var rmPromise = this.viewSlot.removeAll(true);
-          if (this.collectionStrategy) {
-            this.collectionStrategy.dispose();
-          }
 
-          if (!items && items !== 0) {
+          if (!this.scope) {
             return;
           }
 
-          var bindingContext = undefined;
-          var overrideContext = undefined;
-          if (this.scope) {
-            bindingContext = this.scope.bindingContext;
-            overrideContext = this.scope.overrideContext;
-          }
+          var items = this.items;
+          this.strategy = this.strategyLocator.getStrategy(items);
 
-          this.collectionStrategy = this.collectionStrategyLocator.getStrategy(items);
-          this.collectionStrategy.initialize(this, bindingContext, overrideContext);
-
-          if (rmPromise instanceof Promise) {
-            rmPromise.then(function () {
-              _this.processItemsByStrategy();
-            });
-          } else {
-            this.processItemsByStrategy();
+          if (!this.isOneTime && !this._observeInnerCollection()) {
+            this._observeCollection();
           }
+          this.strategy.instanceChanged(this, items);
         };
 
         Repeat.prototype._getInnerCollection = function _getInnerCollection() {
@@ -174,42 +131,12 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           return expression.evaluate(this.scope, null);
         };
 
-        Repeat.prototype._observeInnerCollection = function _observeInnerCollection() {
-          var items = this._getInnerCollection();
-          if (items instanceof Array) {
-            this.collectionObserver = this.observerLocator.getArrayObserver(items);
-          } else if (items instanceof Map) {
-            this.collectionObserver = this.observerLocator.getMapObserver(items);
-          } else {
-            return false;
-          }
-          this.callContext = 'handleInnerCollectionChanges';
-          this.collectionObserver.subscribe(this.callContext, this);
-          return true;
+        Repeat.prototype.handleCollectionMutated = function handleCollectionMutated(collection, changes) {
+          this.strategy.instanceMutated(this, collection, changes);
         };
 
-        Repeat.prototype._observeCollection = function _observeCollection() {
-          var items = this.items;
-          this.collectionObserver = this.collectionStrategy.getCollectionObserver(items);
-          if (this.collectionObserver) {
-            this.callContext = 'handleCollectionChanges';
-            this.collectionObserver.subscribe(this.callContext, this);
-          }
-        };
-
-        Repeat.prototype.processItemsByStrategy = function processItemsByStrategy() {
-          if (!this._observeInnerCollection()) {
-            this._observeCollection();
-          }
-          this.collectionStrategy.processItems(this.items);
-        };
-
-        Repeat.prototype.handleCollectionChanges = function handleCollectionChanges(collection, changes) {
-          this.collectionStrategy.handleChanges(collection, changes);
-        };
-
-        Repeat.prototype.handleInnerCollectionChanges = function handleInnerCollectionChanges(collection, changes) {
-          var _this2 = this;
+        Repeat.prototype.handleInnerCollectionMutated = function handleInnerCollectionMutated(collection, changes) {
+          var _this = this;
 
           if (this.ignoreMutation) {
             return;
@@ -217,18 +144,42 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           this.ignoreMutation = true;
           var newItems = this.sourceExpression.evaluate(this.scope, this.lookupFunctions);
           this.observerLocator.taskQueue.queueMicroTask(function () {
-            return _this2.ignoreMutation = false;
+            return _this.ignoreMutation = false;
           });
 
           if (newItems === this.items) {
-            return;
+            this.itemsChanged();
+          } else {
+            this.items = newItems;
           }
-          this.items = newItems;
-          this.itemsChanged();
+        };
+
+        Repeat.prototype._observeInnerCollection = function _observeInnerCollection() {
+          var items = this._getInnerCollection();
+          var strategy = this.strategyLocator.getStrategy(items);
+          if (!strategy) {
+            return false;
+          }
+          this.collectionObserver = strategy.getCollectionObserver(this.observerLocator, items);
+          if (!this.collectionObserver) {
+            return false;
+          }
+          this.callContext = 'handleInnerCollectionMutated';
+          this.collectionObserver.subscribe(this.callContext, this);
+          return true;
+        };
+
+        Repeat.prototype._observeCollection = function _observeCollection() {
+          var items = this.items;
+          this.collectionObserver = this.strategy.getCollectionObserver(this.observerLocator, items);
+          if (this.collectionObserver) {
+            this.callContext = 'handleCollectionMutated';
+            this.collectionObserver.subscribe(this.callContext, this);
+          }
         };
 
         var _Repeat = Repeat;
-        Repeat = inject(BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, ObserverLocator, CollectionStrategyLocator)(Repeat) || Repeat;
+        Repeat = inject(BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, ObserverLocator, RepeatStrategyLocator)(Repeat) || Repeat;
         Repeat = templateController(Repeat) || Repeat;
         Repeat = customAttribute('repeat')(Repeat) || Repeat;
         return Repeat;

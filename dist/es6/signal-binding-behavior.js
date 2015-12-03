@@ -24,7 +24,7 @@ export class SignalBindingBehavior {
   unbind(binding, source) {
     let name = binding.signalName;
     binding.signalName = null;
-    let bindings = signals[name];
+    let bindings = this.signals[name];
     bindings.splice(bindings.indexOf(binding), 1);
   }
 }

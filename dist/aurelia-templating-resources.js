@@ -1,300 +1,66 @@
 import * as LogManager from 'aurelia-logging';
-import {bindingMode,EventManager,sourceContext,createOverrideContext,valueConverter,ObserverLocator,getChangeRecords,BindingBehavior,ValueConverter} from 'aurelia-binding';
-import {ViewResources,resource,ViewCompileInstruction,useView,customElement,bindable,customAttribute,TargetInstruction,BoundViewFactory,ViewSlot,templateController,Animator,CompositionEngine,noView,ViewEngine} from 'aurelia-templating';
-import {Loader} from 'aurelia-loader';
-import {Container,inject,transient} from 'aurelia-dependency-injection';
-import {relativeToFile} from 'aurelia-path';
+import {inject,Container} from 'aurelia-dependency-injection';
+import {BoundViewFactory,ViewSlot,customAttribute,templateController,Animator,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,noView,TargetInstruction,ViewEngine} from 'aurelia-templating';
+import {createOverrideContext,bindingMode,EventManager,BindingBehavior,ValueConverter,sourceContext,valueConverter,ObserverLocator} from 'aurelia-binding';
 import {DOM,FEATURE} from 'aurelia-pal';
 import {TaskQueue} from 'aurelia-task-queue';
-
-const eventNamesRequired = `The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:'blur'">`;
-const notApplicableMessage = `The updateTrigger binding behavior can only be applied to two-way bindings on input/select elements.`;
-
-export class UpdateTriggerBindingBehavior {
-  static inject = [EventManager];
-
-  constructor(eventManager) {
-    this.eventManager = eventManager;
-  }
-
-  bind(binding, source, ...events) {
-    if (events.length === 0) {
-      throw new Error(eventNamesRequired);
-    }
-    if (binding.mode !== bindingMode.twoWay || !binding.targetProperty.handler) {
-      throw new Error(notApplicableMessage);
-    }
-
-    // stash the original element subscribe function.
-    binding.targetProperty.originalHandler = binding.targetProperty.handler;
-
-    // replace the element subscribe function with one that uses the correct events.
-    let handler = this.eventManager.createElementHandler(events);
-    binding.targetProperty.handler = handler;
-  }
-
-  unbind(binding, source) {
-    // restore the state of the binding.
-    binding.targetProperty.handler = binding.targetProperty.originalHandler;
-    binding.targetProperty.originalHandler = null;
-  }
-}
-
-export class BindingSignaler {
-  signals = {};
-
-  signal(name: string): void {
-    let bindings = this.signals[name];
-    if (!bindings) {
-      return;
-    }
-    let i = bindings.length;
-    while (i--) {
-      bindings[i].call(sourceContext);
-    }
-  }
-}
-
-function debounce(newValue) {
-  let state = this.debounceState;
-  if (state.immediate) {
-    state.immediate = false;
-    this.debouncedMethod(newValue);
-    return;
-  }
-  clearTimeout(state.timeoutId);
-  state.timeoutId = setTimeout(
-    () => this.debouncedMethod(newValue),
-    state.delay);
-}
-
-export class DebounceBindingBehavior {
-  bind(binding, source, delay = 200) {
-    // determine which method to debounce.
-    let methodToDebounce = 'updateTarget'; // one-way bindings or interpolation bindings
-    if (binding.callSource) {
-      methodToDebounce = 'callSource';     // listener and call bindings
-    } else if (binding.updateSource && binding.mode === bindingMode.twoWay) {
-      methodToDebounce = 'updateSource';   // two-way bindings
-    }
-
-    // stash the original method and it's name.
-    // note: a generic name like "originalMethod" is not used to avoid collisions
-    // with other binding behavior types.
-    binding.debouncedMethod = binding[methodToDebounce];
-    binding.debouncedMethod.originalName = methodToDebounce;
-
-    // replace the original method with the debouncing version.
-    binding[methodToDebounce] = debounce;
-
-    // create the debounce state.
-    binding.debounceState = {
-      delay: delay,
-      timeoutId: null,
-      immediate: methodToDebounce === 'updateTarget' // should not delay initial target update that occurs during bind.
-    };
-  }
-
-  unbind(binding, source) {
-    // restore the state of the binding.
-    let methodToRestore = binding.debouncedMethod.originalName;
-    binding[methodToRestore] = binding.debouncedMethod;
-    binding.debouncedMethod = null;
-    clearTimeout(binding.debounceState.timeoutId);
-    binding.debounceState = null;
-  }
-}
-
-function throttle(newValue) {
-  let state = this.throttleState;
-  let elapsed = +new Date() - state.last;
-  if (elapsed >= state.delay) {
-    clearTimeout(state.timeoutId);
-    state.timeoutId = null;
-    state.last = +new Date();
-    this.throttledMethod(newValue);
-    return;
-  }
-  state.newValue = newValue;
-  if (state.timeoutId === null) {
-    state.timeoutId = setTimeout(
-      () => {
-        state.timeoutId = null;
-        state.last = +new Date();
-        this.throttledMethod(state.newValue);
-      },
-      state.delay - elapsed);
-  }
-}
-
-export class ThrottleBindingBehavior {
-  bind(binding, source, delay = 200) {
-    // determine which method to throttle.
-    let methodToThrottle = 'updateTarget'; // one-way bindings or interpolation bindings
-    if (binding.callSource) {
-      methodToThrottle = 'callSource';     // listener and call bindings
-    } else if (binding.updateSource && binding.mode === bindingMode.twoWay) {
-      methodToThrottle = 'updateSource';   // two-way bindings
-    }
-
-    // stash the original method and it's name.
-    // note: a generic name like "originalMethod" is not used to avoid collisions
-    // with other binding behavior types.
-    binding.throttledMethod = binding[methodToThrottle];
-    binding.throttledMethod.originalName = methodToThrottle;
-
-    // replace the original method with the throttling version.
-    binding[methodToThrottle] = throttle;
-
-    // create the throttle state.
-    binding.throttleState = {
-      delay: delay,
-      last: 0,
-      timeoutId: null
-    };
-  }
-
-  unbind(binding, source) {
-    // restore the state of the binding.
-    let methodToRestore = binding.throttledMethod.originalName;
-    binding[methodToRestore] = binding.throttledMethod;
-    binding.throttledMethod = null;
-    clearTimeout(binding.throttleState.timeoutId);
-    binding.throttleState = null;
-  }
-}
-
-class ModeBindingBehavior {
-  constructor(mode) {
-    this.mode = mode;
-  }
-
-  bind(binding, source, lookupFunctions) {
-    binding.originalMode = binding.mode;
-    binding.mode = this.mode;
-  }
-
-  unbind(binding, source) {
-    binding.mode = binding.originalMode;
-    binding.originalMode = null;
-  }
-}
-
-export class OneTimeBindingBehavior extends ModeBindingBehavior {
-  constructor() {
-    super(bindingMode.oneTime);
-  }
-}
-
-export class OneWayBindingBehavior extends ModeBindingBehavior {
-  constructor() {
-    super(bindingMode.oneWay);
-  }
-}
-
-export class TwoWayBindingBehavior extends ModeBindingBehavior {
-  constructor() {
-    super(bindingMode.twoWay);
-  }
-}
-
-const SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+import {Loader} from 'aurelia-loader';
+import {relativeToFile} from 'aurelia-path';
 
 /**
-* Default Html Sanitizer to prevent script injection.
+* Creates a binding context for decandant elements to bind to.
 */
-export class HTMLSanitizer {
+@customAttribute('with')
+@templateController
+@inject(BoundViewFactory, ViewSlot)
+export class With {
   /**
-  * Sanitizes the provided input.
-  * @param input The input to be sanitized.
+  * Creates an instance of With.
+  * @param viewFactory The factory generating the view.
+  * @param viewSlot The slot the view is injected in to.
   */
-  sanitize(input) {
-    return input.replace(SCRIPT_REGEX, '');
-  }
-}
-
-/*eslint new-cap:0, padded-blocks:0*/
-let cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
-
-function fixupCSSUrls(address, css) {
-  return css.replace(cssUrlMatcher, (match, p1) => {
-    let quote = p1.charAt(0);
-    if (quote === '\'' || quote === '"') {
-      p1 = p1.substr(1, p1.length - 2);
-    }
-    return 'url(\'' + relativeToFile(p1, address) + '\')';
-  });
-}
-
-class CSSResource {
-  constructor(address: string) {
-    this.address = address;
-    this._global = null;
-    this._scoped = null;
+  constructor(viewFactory, viewSlot) {
+    this.viewFactory = viewFactory;
+    this.viewSlot = viewSlot;
+    this.parentOverrideContext = null;
+    this.view = null;
   }
 
-  initialize(container: Container, target: Function): void {
-    this._global = new target('global');
-    this._scoped = new target('scoped');
+  /**
+  * Binds the With with provided binding context and override context.
+  * @param bindingContext The binding context.
+  * @param overrideContext An override context for binding.
+  */
+  bind(bindingContext, overrideContext) {
+    this.parentOverrideContext = overrideContext;
+    this.valueChanged(this.value);
   }
 
-  register(registry: ViewResources, name?: string): void {
-    registry.registerViewEngineHooks(name === 'scoped' ? this._scoped : this._global);
-  }
-
-  load(container: Container): Promise<CSSResource> {
-    return container.get(Loader).loadText(this.address).then(text => {
-      text = fixupCSSUrls(this.address, text);
-      this._global.css = text;
-      this._scoped.css = text;
-    });
-  }
-}
-
-class CSSViewEngineHooks {
-  constructor(mode: string) {
-    this.mode = mode;
-    this.css = null;
-    this._alreadyGloballyInjected = false;
-  }
-
-  beforeCompile(content: DocumentFragment, resources: ViewResources, instruction: ViewCompileInstruction): void {
-    if (this.mode === 'scoped') {
-      if (instruction.targetShadowDOM) {
-        DOM.injectStyles(this.css, content, true);
-      } else if (FEATURE.scopedCSS) {
-        let styleNode = DOM.injectStyles(this.css, content, true);
-        styleNode.setAttribute('scoped', 'scoped');
-      } else if (!this._alreadyGloballyInjected) {
-        DOM.injectStyles(this.css);
-        this._alreadyGloballyInjected = true;
-      }
-    } else if (!this._alreadyGloballyInjected) {
-      DOM.injectStyles(this.css);
-      this._alreadyGloballyInjected = true;
+  /**
+  * Invoked everytime the bound value changes.
+  * @param newValue The new value.
+  */
+  valueChanged(newValue) {
+    let overrideContext = createOverrideContext(newValue, this.parentOverrideContext);
+    if (!this.view) {
+      this.view = this.viewFactory.create();
+      this.view.bind(newValue, overrideContext);
+      this.viewSlot.add(this.view);
+    } else {
+      this.view.bind(newValue, overrideContext);
     }
   }
-}
 
-export function _createCSSResource(address: string): Function {
-  @resource(new CSSResource(address))
-  class ViewCSS extends CSSViewEngineHooks {}
-  return ViewCSS;
-}
+  /**
+  * Unbinds With
+  */
+  unbind() {
+    this.parentOverrideContext = null;
 
-/*eslint padded-blocks:0*/
-export function _createDynamicElement(name: string, viewUrl: string, bindableNames: string[]): Function {
-  @customElement(name)
-  @useView(viewUrl)
-  class DynamicElement {
-    bind(bindingContext) {
-      this.$parent = bindingContext;
+    if (this.view) {
+      this.view.unbind();
     }
   }
-  for (let i = 0, ii = bindableNames.length; i < ii; ++i) {
-    bindable(bindableNames[i])(DynamicElement);
-  }
-  return DynamicElement;
 }
 
 /**
@@ -358,47 +124,113 @@ export class ViewSpy {
   }
 }
 
-/**
-* Attribute to be placed on any element to have it emit the View Compiler's
-* TargetInstruction into the debug console, giving you insight into all the
-* parsed bindings, behaviors and event handers for the targeted element.
-*/
-@customAttribute('compile-spy')
-@inject(DOM.Element, TargetInstruction)
-export class CompileSpy {
-  /**
-  * Creates and instanse of CompileSpy.
-  * @param element target element on where attribute is placed on.
-  * @param instruction instructions for how the target element should be enhanced.
-  */
-  constructor(element, instruction) {
-    LogManager.getLogger('compile-spy').info(element, instruction);
+const eventNamesRequired = `The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:'blur'">`;
+const notApplicableMessage = `The updateTrigger binding behavior can only be applied to two-way bindings on input/select elements.`;
+
+export class UpdateTriggerBindingBehavior {
+  static inject = [EventManager];
+
+  constructor(eventManager) {
+    this.eventManager = eventManager;
+  }
+
+  bind(binding, source, ...events) {
+    if (events.length === 0) {
+      throw new Error(eventNamesRequired);
+    }
+    if (binding.mode !== bindingMode.twoWay || !binding.targetProperty.handler) {
+      throw new Error(notApplicableMessage);
+    }
+
+    // stash the original element subscribe function.
+    binding.targetProperty.originalHandler = binding.targetProperty.handler;
+
+    // replace the element subscribe function with one that uses the correct events.
+    let handler = this.eventManager.createElementHandler(events);
+    binding.targetProperty.handler = handler;
+  }
+
+  unbind(binding, source) {
+    // restore the state of the binding.
+    binding.targetProperty.handler = binding.targetProperty.originalHandler;
+    binding.targetProperty.originalHandler = null;
+  }
+}
+
+function throttle(newValue) {
+  let state = this.throttleState;
+  let elapsed = +new Date() - state.last;
+  if (elapsed >= state.delay) {
+    clearTimeout(state.timeoutId);
+    state.timeoutId = null;
+    state.last = +new Date();
+    this.throttledMethod(newValue);
+    return;
+  }
+  state.newValue = newValue;
+  if (state.timeoutId === null) {
+    state.timeoutId = setTimeout(
+      () => {
+        state.timeoutId = null;
+        state.last = +new Date();
+        this.throttledMethod(state.newValue);
+      },
+      state.delay - elapsed);
+  }
+}
+
+export class ThrottleBindingBehavior {
+  bind(binding, source, delay = 200) {
+    // determine which method to throttle.
+    let methodToThrottle = 'updateTarget'; // one-way bindings or interpolation bindings
+    if (binding.callSource) {
+      methodToThrottle = 'callSource';     // listener and call bindings
+    } else if (binding.updateSource && binding.mode === bindingMode.twoWay) {
+      methodToThrottle = 'updateSource';   // two-way bindings
+    }
+
+    // stash the original method and it's name.
+    // note: a generic name like "originalMethod" is not used to avoid collisions
+    // with other binding behavior types.
+    binding.throttledMethod = binding[methodToThrottle];
+    binding.throttledMethod.originalName = methodToThrottle;
+
+    // replace the original method with the throttling version.
+    binding[methodToThrottle] = throttle;
+
+    // create the throttle state.
+    binding.throttleState = {
+      delay: delay,
+      last: 0,
+      timeoutId: null
+    };
+  }
+
+  unbind(binding, source) {
+    // restore the state of the binding.
+    let methodToRestore = binding.throttledMethod.originalName;
+    binding[methodToRestore] = binding.throttledMethod;
+    binding.throttledMethod = null;
+    clearTimeout(binding.throttleState.timeoutId);
+    binding.throttleState = null;
   }
 }
 
 /**
-* CustomAttribute that binds provided DOM element's focus attribute with a property on the viewmodel.
+* Binding to conditionally show markup in the DOM based on the value.
+* - different from "if" in that the markup is still added to the DOM, simply not shown.
 */
-@customAttribute('focus', bindingMode.twoWay)
-@inject(DOM.Element, TaskQueue)
-export class Focus {
+@customAttribute('show')
+@inject(DOM.Element, Animator)
+export class Show {
   /**
-  * Creates an instance of Focus.
-  * @paramelement Target element on where attribute is placed on.
-  * @param taskQueue The TaskQueue instance.
+  * Creates a new instance of Show.
+  * @param element Target element to conditionally show.
+  * @param animator The animator that conditionally adds or removes the aurelia-hide css class.
   */
-  constructor(element, taskQueue) {
+  constructor(element, animator) {
     this.element = element;
-    this.taskQueue = taskQueue;
-
-    this.focusListener = e => {
-      this.value = true;
-    };
-    this.blurListener = e => {
-      if (DOM.activeElement !== this.element) {
-        this.value = false;
-      }
-    };
+    this.animator = animator;
   }
 
   /**
@@ -407,34 +239,17 @@ export class Focus {
   */
   valueChanged(newValue) {
     if (newValue) {
-      this._giveFocus();
+      this.animator.removeClass(this.element, 'aurelia-hide');
     } else {
-      this.element.blur();
+      this.animator.addClass(this.element, 'aurelia-hide');
     }
   }
 
-  _giveFocus() {
-    this.taskQueue.queueMicroTask(() => {
-      if (this.value) {
-        this.element.focus();
-      }
-    });
-  }
-
   /**
-  * Invoked when the attribute is attached to the DOM.
+  * Binds the Show attribute.
   */
-  attached() {
-    this.element.addEventListener('focus', this.focusListener);
-    this.element.addEventListener('blur', this.blurListener);
-  }
-
-  /**
-  * Invoked when the attribute is detached from the DOM.
-  */
-  detached() {
-    this.element.removeEventListener('focus', this.focusListener);
-    this.element.removeEventListener('blur', this.blurListener);
+  bind(bindingContext) {
+    this.valueChanged(this.value);
   }
 }
 
@@ -479,95 +294,118 @@ export class Replaceable {
 }
 
 /**
-* Binding to conditionally show markup in the DOM based on the value.
-* - different from "if" in that the markup is still added to the DOM, simply not shown.
+* Update the override context.
+* @param startIndex index in collection where to start updating.
 */
-@customAttribute('show')
-@inject(DOM.Element, Animator)
-export class Show {
-  /**
-  * Creates a new instance of Show.
-  * @param element Target element to conditionally show.
-  * @param animator The animator that conditionally adds or removes the aurelia-hide css class.
-  */
-  constructor(element, animator) {
-    this.element = element;
-    this.animator = animator;
+export function updateOverrideContexts(views, startIndex) {
+  let length = views.length;
+
+  if (startIndex > 0) {
+    startIndex = startIndex - 1;
   }
 
-  /**
-  * Invoked everytime the bound value changes.
-  * @param newValue The new value.
-  */
-  valueChanged(newValue) {
-    if (newValue) {
-      this.animator.removeClass(this.element, 'aurelia-hide');
-    } else {
-      this.animator.addClass(this.element, 'aurelia-hide');
-    }
-  }
-
-  /**
-  * Binds the Show attribute.
-  */
-  bind(bindingContext) {
-    this.valueChanged(this.value);
+  for (; startIndex < length; ++startIndex) {
+    updateOverrideContext(views[startIndex].overrideContext, startIndex, length);
   }
 }
 
 /**
-* Creates a binding context for decandant elements to bind to.
+  * Creates a complete override context.
+  * @param data The item's value.
+  * @param index The item's index.
+  * @param length The collections total length.
+  * @param key The key in a key/value pair.
+  */
+export function createFullOverrideContext(repeat, data, index, length, key) {
+  let bindingContext = {};
+  let overrideContext = createOverrideContext(bindingContext, repeat.scope.overrideContext);
+  // is key/value pair (Map)
+  if (typeof key !== 'undefined') {
+    bindingContext[repeat.key] = key;
+    bindingContext[repeat.value] = data;
+  } else {
+    bindingContext[repeat.local] = data;
+  }
+  updateOverrideContext(overrideContext, index, length);
+  return overrideContext;
+}
+
+/**
+* Updates the override context.
+* @param context The context to be updated.
+* @param index The context's index.
+* @param length The collection's length.
 */
-@customAttribute('with')
-@templateController
-@inject(BoundViewFactory, ViewSlot)
-export class With {
-  /**
-  * Creates an instance of With.
-  * @param viewFactory The factory generating the view.
-  * @param viewSlot The slot the view is injected in to.
-  */
-  constructor(viewFactory, viewSlot) {
-    this.viewFactory = viewFactory;
-    this.viewSlot = viewSlot;
-    this.parentOverrideContext = null;
-    this.view = null;
-  }
+export function updateOverrideContext(overrideContext, index, length) {
+  let first = (index === 0);
+  let last = (index === length - 1);
+  let even = index % 2 === 0;
 
-  /**
-  * Binds the With with provided binding context and override context.
-  * @param bindingContext The binding context.
-  * @param overrideContext An override context for binding.
-  */
-  bind(bindingContext, overrideContext) {
-    this.parentOverrideContext = overrideContext;
-    this.valueChanged(this.value);
-  }
+  overrideContext.$index = index;
+  overrideContext.$first = first;
+  overrideContext.$last = last;
+  overrideContext.$middle = !(first || last);
+  overrideContext.$odd = !even;
+  overrideContext.$even = even;
+}
 
-  /**
-  * Invoked everytime the bound value changes.
-  * @param newValue The new value.
-  */
-  valueChanged(newValue) {
-    let overrideContext = createOverrideContext(newValue, this.parentOverrideContext);
-    if (!this.view) {
-      this.view = this.viewFactory.create();
-      this.view.bind(newValue, overrideContext);
-      this.viewSlot.add(this.view);
-    } else {
-      this.view.bind(newValue, overrideContext);
+/**
+* Gets a repeat instruction's source expression.
+*/
+export function getItemsSourceExpression(instruction, attrName) {
+  return instruction.behaviorInstructions
+    .filter(bi => bi.originalAttrName === attrName)[0]
+    .attributes
+    .items
+    .sourceExpression;
+}
+
+/**
+* Unwraps an expression to expose the inner, pre-converted / behavior-free expression.
+*/
+export function unwrapExpression(expression) {
+  let unwrapped = false;
+  while (expression instanceof BindingBehavior) {
+    expression = expression.expression;
+  }
+  while (expression instanceof ValueConverter) {
+    expression = expression.expression;
+    unwrapped = true;
+  }
+  return unwrapped ? expression : null;
+}
+
+/**
+* Returns whether an expression has the OneTimeBindingBehavior applied.
+*/
+export function isOneTime(expression) {
+  while (expression instanceof BindingBehavior) {
+    if (expression.name === 'oneTime') {
+      return true;
     }
+    expression = expression.expression;
+  }
+  return false;
+}
+
+/**
+* Forces a binding instance to reevaluate.
+*/
+export function refreshBinding(binding) {
+  if (binding.call) {
+    binding.call(sourceContext);
+  }
+}
+
+/**
+* A strategy for repeating a template over null or undefined (does nothing)
+*/
+export class NullRepeatStrategy {
+  instanceChanged(repeat, items) {
+    repeat.viewSlot.removeAll(true);
   }
 
-  /**
-  * Unbinds With
-  */
-  unbind() {
-    this.parentOverrideContext = null;
-
-    if (this.view) {
-      this.view.unbind();
-    }
+  getCollectionObserver(observerLocator, items) {
   }
 }
 
@@ -663,6 +501,217 @@ export class If {
     this.view.returnToCache();
     this.view = null;
   }
+}
+
+const SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+
+/**
+* Default Html Sanitizer to prevent script injection.
+*/
+export class HTMLSanitizer {
+  /**
+  * Sanitizes the provided input.
+  * @param input The input to be sanitized.
+  */
+  sanitize(input) {
+    return input.replace(SCRIPT_REGEX, '');
+  }
+}
+
+/**
+* CustomAttribute that binds provided DOM element's focus attribute with a property on the viewmodel.
+*/
+@customAttribute('focus', bindingMode.twoWay)
+@inject(DOM.Element, TaskQueue)
+export class Focus {
+  /**
+  * Creates an instance of Focus.
+  * @paramelement Target element on where attribute is placed on.
+  * @param taskQueue The TaskQueue instance.
+  */
+  constructor(element, taskQueue) {
+    this.element = element;
+    this.taskQueue = taskQueue;
+
+    this.focusListener = e => {
+      this.value = true;
+    };
+    this.blurListener = e => {
+      if (DOM.activeElement !== this.element) {
+        this.value = false;
+      }
+    };
+  }
+
+  /**
+  * Invoked everytime the bound value changes.
+  * @param newValue The new value.
+  */
+  valueChanged(newValue) {
+    if (newValue) {
+      this._giveFocus();
+    } else {
+      this.element.blur();
+    }
+  }
+
+  _giveFocus() {
+    this.taskQueue.queueMicroTask(() => {
+      if (this.value) {
+        this.element.focus();
+      }
+    });
+  }
+
+  /**
+  * Invoked when the attribute is attached to the DOM.
+  */
+  attached() {
+    this.element.addEventListener('focus', this.focusListener);
+    this.element.addEventListener('blur', this.blurListener);
+  }
+
+  /**
+  * Invoked when the attribute is detached from the DOM.
+  */
+  detached() {
+    this.element.removeEventListener('focus', this.focusListener);
+    this.element.removeEventListener('blur', this.blurListener);
+  }
+}
+
+/*eslint padded-blocks:0*/
+export function _createDynamicElement(name: string, viewUrl: string, bindableNames: string[]): Function {
+  @customElement(name)
+  @useView(viewUrl)
+  class DynamicElement {
+    bind(bindingContext) {
+      this.$parent = bindingContext;
+    }
+  }
+  for (let i = 0, ii = bindableNames.length; i < ii; ++i) {
+    bindable(bindableNames[i])(DynamicElement);
+  }
+  return DynamicElement;
+}
+
+function debounce(newValue) {
+  let state = this.debounceState;
+  if (state.immediate) {
+    state.immediate = false;
+    this.debouncedMethod(newValue);
+    return;
+  }
+  clearTimeout(state.timeoutId);
+  state.timeoutId = setTimeout(
+    () => this.debouncedMethod(newValue),
+    state.delay);
+}
+
+export class DebounceBindingBehavior {
+  bind(binding, source, delay = 200) {
+    // determine which method to debounce.
+    let methodToDebounce = 'updateTarget'; // one-way bindings or interpolation bindings
+    if (binding.callSource) {
+      methodToDebounce = 'callSource';     // listener and call bindings
+    } else if (binding.updateSource && binding.mode === bindingMode.twoWay) {
+      methodToDebounce = 'updateSource';   // two-way bindings
+    }
+
+    // stash the original method and it's name.
+    // note: a generic name like "originalMethod" is not used to avoid collisions
+    // with other binding behavior types.
+    binding.debouncedMethod = binding[methodToDebounce];
+    binding.debouncedMethod.originalName = methodToDebounce;
+
+    // replace the original method with the debouncing version.
+    binding[methodToDebounce] = debounce;
+
+    // create the debounce state.
+    binding.debounceState = {
+      delay: delay,
+      timeoutId: null,
+      immediate: methodToDebounce === 'updateTarget' // should not delay initial target update that occurs during bind.
+    };
+  }
+
+  unbind(binding, source) {
+    // restore the state of the binding.
+    let methodToRestore = binding.debouncedMethod.originalName;
+    binding[methodToRestore] = binding.debouncedMethod;
+    binding.debouncedMethod = null;
+    clearTimeout(binding.debounceState.timeoutId);
+    binding.debounceState = null;
+  }
+}
+
+/*eslint new-cap:0, padded-blocks:0*/
+let cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
+
+function fixupCSSUrls(address, css) {
+  return css.replace(cssUrlMatcher, (match, p1) => {
+    let quote = p1.charAt(0);
+    if (quote === '\'' || quote === '"') {
+      p1 = p1.substr(1, p1.length - 2);
+    }
+    return 'url(\'' + relativeToFile(p1, address) + '\')';
+  });
+}
+
+class CSSResource {
+  constructor(address: string) {
+    this.address = address;
+    this._global = null;
+    this._scoped = null;
+  }
+
+  initialize(container: Container, target: Function): void {
+    this._global = new target('global');
+    this._scoped = new target('scoped');
+  }
+
+  register(registry: ViewResources, name?: string): void {
+    registry.registerViewEngineHooks(name === 'scoped' ? this._scoped : this._global);
+  }
+
+  load(container: Container): Promise<CSSResource> {
+    return container.get(Loader).loadText(this.address).then(text => {
+      text = fixupCSSUrls(this.address, text);
+      this._global.css = text;
+      this._scoped.css = text;
+    });
+  }
+}
+
+class CSSViewEngineHooks {
+  constructor(mode: string) {
+    this.mode = mode;
+    this.css = null;
+    this._alreadyGloballyInjected = false;
+  }
+
+  beforeCompile(content: DocumentFragment, resources: ViewResources, instruction: ViewCompileInstruction): void {
+    if (this.mode === 'scoped') {
+      if (instruction.targetShadowDOM) {
+        DOM.injectStyles(this.css, content, true);
+      } else if (FEATURE.scopedCSS) {
+        let styleNode = DOM.injectStyles(this.css, content, true);
+        styleNode.setAttribute('scoped', 'scoped');
+      } else if (!this._alreadyGloballyInjected) {
+        DOM.injectStyles(this.css);
+        this._alreadyGloballyInjected = true;
+      }
+    } else if (!this._alreadyGloballyInjected) {
+      DOM.injectStyles(this.css);
+      this._alreadyGloballyInjected = true;
+    }
+  }
+}
+
+export function _createCSSResource(address: string): Function {
+  @resource(new CSSResource(address))
+  class ViewCSS extends CSSViewEngineHooks {}
+  return ViewCSS;
 }
 
 /**
@@ -830,135 +879,466 @@ function processInstruction(composer, instruction) {
 }
 
 /**
-* Base class that defines common properties and methods for a collection strategy implementation.
+* Attribute to be placed on any element to have it emit the View Compiler's
+* TargetInstruction into the debug console, giving you insight into all the
+* parsed bindings, behaviors and event handers for the targeted element.
 */
-@transient()
-export class CollectionStrategy {
+@customAttribute('compile-spy')
+@inject(DOM.Element, TargetInstruction)
+export class CompileSpy {
   /**
-  * Initializes the strategy collection.
-  * @param repeat The repeat instance.
-  * @param bindingContext The binding context.
-  * @param overrideContext The override context.
+  * Creates and instanse of CompileSpy.
+  * @param element target element on where attribute is placed on.
+  * @param instruction instructions for how the target element should be enhanced.
   */
-  initialize(repeat, bindingContext, overrideContext) {
-    this.viewFactory = repeat.viewFactory;
-    this.viewSlot = repeat.viewSlot;
-    this.items = repeat.items;
-    this.local = repeat.local;
-    this.key = repeat.key;
-    this.value = repeat.value;
-    this.bindingContext = bindingContext;
-    this.overrideContext = overrideContext;
-  }
-
-  /**
-  * Disposes the collection strategy.
-  */
-  dispose() {
-    this.viewFactory = null;
-    this.viewSlot = null;
-    this.items = null;
-    this.local = null;
-    this.key = null;
-    this.value = null;
-    this.bindingContext = null;
-    this.overrideContext = null;
-  }
-
-  /**
-  * Update the override context.
-  * @param startIndex index in collection where to start updating.
-  */
-  updateOverrideContexts(startIndex) {
-    let children = this.viewSlot.children;
-    let length = children.length;
-
-    if (startIndex > 0) {
-      startIndex = startIndex - 1;
-    }
-
-    for (; startIndex < length; ++startIndex) {
-      this.updateOverrideContext(children[startIndex].overrideContext, startIndex, length);
-    }
-  }
-
-  /**
-    * Creates a complete override context.
-    * @param data The item's value.
-    * @param index The item's index.
-    * @param length The collections total length.
-    * @param key The key in a key/value pair.
-    */
-  createFullOverrideContext(data, index, length, key) {
-    let overrideContext = this.createBaseOverrideContext(data, key);
-    this.updateOverrideContext(overrideContext, index, length);
-    return overrideContext;
-  }
-
-  /**
-  * Creates base of an override context.
-  * @param data The item's value.
-  * @param key The key in a key/value pair.
-  */
-  createBaseOverrideContext(data, key) {
-    let bindingContext = {};
-    let overrideContext = createOverrideContext(bindingContext, this.overrideContext);
-    // is key/value pair (Map)
-    if (typeof key !== 'undefined') {
-      bindingContext[this.key] = key;
-      bindingContext[this.value] = data;
-    } else {
-      bindingContext[this.local] = data;
-    }
-
-    return overrideContext;
-  }
-
-  /**
-  * Updates the override context.
-  * @param context The context to be updated.
-  * @param index The context's index.
-  * @param length The collection's length.
-  */
-  updateOverrideContext(overrideContext, index, length) {
-    let first = (index === 0);
-    let last = (index === length - 1);
-    let even = index % 2 === 0;
-
-    overrideContext.$index = index;
-    overrideContext.$first = first;
-    overrideContext.$last = last;
-    overrideContext.$middle = !(first || last);
-    overrideContext.$odd = !even;
-    overrideContext.$even = even;
+  constructor(element, instruction) {
+    LogManager.getLogger('compile-spy').info(element, instruction);
   }
 }
 
-export class SignalBindingBehavior {
-  static inject() { return [BindingSignaler]; }
-  signals;
+export class BindingSignaler {
+  signals = {};
 
-  constructor(bindingSignaler) {
-    this.signals = bindingSignaler.signals;
+  signal(name: string): void {
+    let bindings = this.signals[name];
+    if (!bindings) {
+      return;
+    }
+    let i = bindings.length;
+    while (i--) {
+      bindings[i].call(sourceContext);
+    }
+  }
+}
+
+class ModeBindingBehavior {
+  constructor(mode) {
+    this.mode = mode;
   }
 
-  bind(binding, source, name) {
-    if (!binding.updateTarget) {
-      throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
-    }
-    if (binding.mode === bindingMode.oneTime) {
-      throw new Error('One-time bindings cannot be signaled.');
-    }
-    let bindings = this.signals[name] || (this.signals[name] = []);
-    bindings.push(binding);
-    binding.signalName = name;
+  bind(binding, source, lookupFunctions) {
+    binding.originalMode = binding.mode;
+    binding.mode = this.mode;
   }
 
   unbind(binding, source) {
-    let name = binding.signalName;
-    binding.signalName = null;
-    let bindings = signals[name];
-    bindings.splice(bindings.indexOf(binding), 1);
+    binding.mode = binding.originalMode;
+    binding.originalMode = null;
+  }
+}
+
+export class OneTimeBindingBehavior extends ModeBindingBehavior {
+  constructor() {
+    super(bindingMode.oneTime);
+  }
+}
+
+export class OneWayBindingBehavior extends ModeBindingBehavior {
+  constructor() {
+    super(bindingMode.oneWay);
+  }
+}
+
+export class TwoWayBindingBehavior extends ModeBindingBehavior {
+  constructor() {
+    super(bindingMode.twoWay);
+  }
+}
+
+/**
+* Behaviors that do not require the composition lifecycle callbacks when replacing
+* their binding context.
+*/
+export const lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'with'];
+
+function behaviorRequiresLifecycle(instruction) {
+  let t = instruction.type;
+  let name = t.elementName !== null ? t.elementName : t.attributeName;
+  if (lifecycleOptionalBehaviors.indexOf(name) === -1) {
+    return t.handlesAttached || t.handlesBind || t.handlesCreated || t.handlesDetached || t.handlesUnbind;
+  }
+  return instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
+}
+
+function targetRequiresLifecycle(instruction) {
+  // check each behavior instruction.
+  let behaviors = instruction.behaviorInstructions;
+  if (behaviors) {
+    let i = behaviors.length;
+    while (i--) {
+      if (behaviorRequiresLifecycle(behaviors[i])) {
+        return true;
+      }
+    }
+  }
+
+  // check the instruction's view factory (if it has one).
+  return instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
+}
+
+export function viewsRequireLifecycle(viewFactory) {
+  // already analyzed?
+  if ('_viewsRequireLifecycle' in viewFactory) {
+    return viewFactory._viewsRequireLifecycle;
+  }
+
+  // access inner view factory.
+  if (viewFactory.viewFactory) {
+    viewFactory._viewsRequireLifecycle = viewsRequireLifecycle(viewFactory.viewFactory);
+    return viewFactory._viewsRequireLifecycle;
+  }
+
+  // template uses animation?
+  if (viewFactory.template.querySelector('.au-animate')) {
+    viewFactory._viewsRequireLifecycle = true;
+    return true;
+  }
+
+  // target instructions require lifecycle?
+  for (let id in viewFactory.instructions) {
+    if (targetRequiresLifecycle(viewFactory.instructions[id])) {
+      viewFactory._viewsRequireLifecycle = true;
+      return true;
+    }
+  }
+
+  // safe to skip lifecycle.
+  viewFactory._viewsRequireLifecycle = false;
+  return false;
+}
+
+/**
+* A strategy for repeating a template over an array.
+*/
+export class ArrayRepeatStrategy {
+  /**
+  * Gets an observer for the specified collection.
+  * @param observerLocator The observer locator instance.
+  * @param items The items to be observed.
+  */
+  getCollectionObserver(observerLocator, items) {
+    return observerLocator.getArrayObserver(items);
+  }
+
+  /**
+  * Handle the repeat's collection instance changing.
+  * @param repeat The repeater instance.
+  * @param items The new array instance.
+  */
+  instanceChanged(repeat, items) {
+    if (repeat.viewsRequireLifecycle) {
+      let removePromise = repeat.viewSlot.removeAll(true);
+      if (removePromise instanceof Promise) {
+        removePromise.then(() => this._standardProcessInstanceChanged(repeat, items));
+        return;
+      }
+      this._standardProcessInstanceChanged(repeat, items);
+      return;
+    }
+    this._inPlaceProcessItems(repeat, items);
+  }
+
+  _standardProcessInstanceChanged(repeat, items) {
+    for (let i = 0, ii = items.length; i < ii; i++) {
+      let overrideContext = createFullOverrideContext(repeat, items[i], i, ii);
+      let view = repeat.viewFactory.create();
+      view.bind(overrideContext.bindingContext, overrideContext);
+      repeat.viewSlot.add(view);
+    }
+  }
+
+  _inPlaceProcessItems(repeat, items) {
+    let itemsLength = items.length;
+    let viewsLength = repeat.viewSlot.children.length;
+    // remove unneeded views.
+    while (viewsLength > itemsLength) {
+      viewsLength--;
+      repeat.viewSlot.removeAt(viewsLength, true);
+    }
+    // avoid repeated evaluating the property-getter for the "local" property.
+    let local = repeat.local;
+    // re-evaluate bindings on existing views.
+    for (let i = 0; i < viewsLength; i++) {
+      let view = repeat.viewSlot.children[i];
+      let last = i === itemsLength - 1;
+      let middle = i !== 0 && !last;
+      // any changes to the binding context?
+      if (view.bindingContext[local] === items[i]
+        && view.overrideContext.$middle === middle
+        && view.overrideContext.$last === last) {
+        // no changes. continue...
+        continue;
+      }
+      // update the binding context and refresh the bindings.
+      view.bindingContext[local] = items[i];
+      view.overrideContext.$middle = middle;
+      view.overrideContext.$last = last;
+      let j = view.bindings.length;
+      while (j--) {
+        refreshBinding(view.bindings[j]);
+      }
+      j = view.controllers.length;
+      while (j--) {
+        let k = view.controllers[j].boundProperties.length;
+        while (k--) {
+          let binding = view.controllers[j].boundProperties[k].binding;
+          refreshBinding(binding);
+        }
+      }
+    }
+    // add new views
+    for (let i = viewsLength; i < itemsLength; i++) {
+      let overrideContext = createFullOverrideContext(repeat, items[i], i, itemsLength);
+      let view = repeat.viewFactory.create();
+      view.bind(overrideContext.bindingContext, overrideContext);
+      repeat.viewSlot.add(view);
+    }
+  }
+
+  /**
+  * Handle the repeat's collection instance mutating.
+  * @param repeat The repeat instance.
+  * @param array The modified array.
+  * @param splices Records of array changes.
+  */
+  instanceMutated(repeat, array, splices) {
+    if (repeat.viewsRequireLifecycle) {
+      this._standardProcessInstanceMutated(repeat, array, splices);
+      return;
+    }
+    this._inPlaceProcessItems(repeat, array);
+  }
+
+  _standardProcessInstanceMutated(repeat, array, splices) {
+    let removeDelta = 0;
+    let viewSlot = repeat.viewSlot;
+    let rmPromises = [];
+
+    for (let i = 0, ii = splices.length; i < ii; ++i) {
+      let splice = splices[i];
+      let removed = splice.removed;
+
+      for (let j = 0, jj = removed.length; j < jj; ++j) {
+        let viewOrPromise = viewSlot.removeAt(splice.index + removeDelta + rmPromises.length, true);
+        if (viewOrPromise instanceof Promise) {
+          rmPromises.push(viewOrPromise);
+        }
+      }
+      removeDelta -= splice.addedCount;
+    }
+
+    if (rmPromises.length > 0) {
+      Promise.all(rmPromises).then(() => {
+        let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
+        updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
+      });
+    } else {
+      let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
+      updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
+    }
+  }
+
+  _handleAddedSplices(repeat, array, splices) {
+    let spliceIndex;
+    let spliceIndexLow;
+    let arrayLength = array.length;
+    for (let i = 0, ii = splices.length; i < ii; ++i) {
+      let splice = splices[i];
+      let addIndex = spliceIndex = splice.index;
+      let end = splice.index + splice.addedCount;
+
+      if (typeof spliceIndexLow === 'undefined' || spliceIndexLow === null || spliceIndexLow > splice.index) {
+        spliceIndexLow = spliceIndex;
+      }
+
+      for (; addIndex < end; ++addIndex) {
+        let overrideContext = createFullOverrideContext(repeat, array[addIndex], addIndex, arrayLength);
+        let view = repeat.viewFactory.create();
+        view.bind(overrideContext.bindingContext, overrideContext);
+        repeat.viewSlot.insert(addIndex, view);
+      }
+    }
+
+    return spliceIndexLow;
+  }
+}
+
+/**
+* A strategy for repeating a template over a Map.
+*/
+export class MapRepeatStrategy {
+  /**
+  * Gets a Map observer.
+  * @param items The items to be observed.
+  */
+  getCollectionObserver(observerLocator, items) {
+    return observerLocator.getMapObserver(items);
+  }
+
+  /**
+  * Process the provided Map entries.
+  * @param items The entries to process.
+  */
+  instanceChanged(repeat, items) {
+    let removePromise = repeat.viewSlot.removeAll(true);
+    if (removePromise instanceof Promise) {
+      removePromise.then(() => this._standardProcessItems(repeat, items));
+      return;
+    }
+    this._standardProcessItems(repeat, items);
+  }
+
+  _standardProcessItems(repeat, items) {
+    let viewFactory = repeat.viewFactory;
+    let viewSlot = repeat.viewSlot;
+    let index = 0;
+    let overrideContext;
+    let view;
+
+    items.forEach((value, key) => {
+      overrideContext = createFullOverrideContext(repeat, value, index, items.size, key);
+      view = viewFactory.create();
+      view.bind(overrideContext.bindingContext, overrideContext);
+      viewSlot.add(view);
+      ++index;
+    });
+  }
+
+  /**
+  * Handle changes in a Map collection.
+  * @param map The underlying Map collection.
+  * @param records The change records.
+  */
+  instanceMutated(repeat, map, records) {
+    let viewSlot = repeat.viewSlot;
+    let key;
+    let i;
+    let ii;
+    let view;
+    let overrideContext;
+    let removeIndex;
+    let record;
+    let rmPromises = [];
+    let viewOrPromise;
+
+    for (i = 0, ii = records.length; i < ii; ++i) {
+      record = records[i];
+      key = record.key;
+      switch (record.type) {
+      case 'update':
+        removeIndex = this._getViewIndexByKey(repeat, key);
+        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        if (viewOrPromise instanceof Promise) {
+          rmPromises.push(viewOrPromise);
+        }
+        overrideContext = createFullOverrideContext(repeat, map.get(key), removeIndex, map.size, key);
+        view = repeat.viewFactory.create();
+        view.bind(overrideContext.bindingContext, overrideContext);
+        viewSlot.insert(removeIndex, view);
+        break;
+      case 'add':
+        overrideContext = createFullOverrideContext(repeat, map.get(key), map.size - 1, map.size, key);
+        view = repeat.viewFactory.create();
+        view.bind(overrideContext.bindingContext, overrideContext);
+        viewSlot.insert(map.size - 1, view);
+        break;
+      case 'delete':
+        if (record.oldValue === undefined) { return; }
+        removeIndex = this._getViewIndexByKey(repeat, key);
+        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        if (viewOrPromise instanceof Promise) {
+          rmPromises.push(viewOrPromise);
+        }
+        break;
+      case 'clear':
+        viewSlot.removeAll(true);
+        break;
+      default:
+        continue;
+      }
+    }
+
+    if (rmPromises.length > 0) {
+      Promise.all(rmPromises).then(() => {
+        updateOverrideContexts(repeat.viewSlot.children, 0);
+      });
+    } else {
+      updateOverrideContexts(repeat.viewSlot.children, 0);
+    }
+  }
+
+  _getViewIndexByKey(repeat, key) {
+    let viewSlot = repeat.viewSlot;
+    let i;
+    let ii;
+    let child;
+
+    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
+      child = viewSlot.children[i];
+      if (child.bindingContext[repeat.key] === key) {
+        return i;
+      }
+    }
+  }
+}
+
+/**
+* A strategy for repeating a template over a number.
+*/
+export class NumberRepeatStrategy {
+  /**
+  * Return the strategies collection observer. In this case none.
+  */
+  getCollectionObserver() {
+    return null;
+  }
+
+  /**
+  * Process the provided Number.
+  * @param value The Number of how many time to iterate.
+  */
+  instanceChanged(repeat, value) {
+    let removePromise = repeat.viewSlot.removeAll(true);
+    if (removePromise instanceof Promise) {
+      removePromise.then(() => this._standardProcessItems(repeat, value));
+      return;
+    }
+    this._standardProcessItems(repeat, value);
+  }
+
+  _standardProcessItems(repeat, value) {
+    let viewFactory = repeat.viewFactory;
+    let viewSlot = repeat.viewSlot;
+    let childrenLength = viewSlot.children.length;
+    let i;
+    let ii;
+    let overrideContext;
+    let view;
+    let viewsToRemove;
+
+    value = Math.floor(value);
+    viewsToRemove = childrenLength - value;
+
+    if (viewsToRemove > 0) {
+      if (viewsToRemove > childrenLength) {
+        viewsToRemove = childrenLength;
+      }
+
+      for (i = 0, ii = viewsToRemove; i < ii; ++i) {
+        viewSlot.removeAt(childrenLength - (i + 1), true);
+      }
+
+      return;
+    }
+
+    for (i = childrenLength, ii = value; i < ii; ++i) {
+      overrideContext = createFullOverrideContext(repeat, i, i, ii);
+      view = viewFactory.create();
+      view.bind(overrideContext.bindingContext, overrideContext);
+      viewSlot.add(view);
+    }
+
+    updateOverrideContexts(repeat.viewSlot.children, 0);
   }
 }
 
@@ -989,315 +1369,83 @@ export class SanitizeHTMLValueConverter {
   }
 }
 
-/**
-* A strategy for iterating Arrays.
-*/
-@inject(ObserverLocator)
-export class ArrayCollectionStrategy extends CollectionStrategy {
-  /**
-  * Creates an instance of ArrayCollectionStrategy.
-  * @param observerLocator The instance of the observerLocator.
-  */
-  constructor(observerLocator) {
-    super();
-    this.observerLocator = observerLocator;
-  }
-  /**
-  * Process the provided array items.
-  * @param items The underlying array.
-  */
-  processItems(items) {
-    let i;
-    let ii;
-    let overrideContext;
-    let view;
-    this.items = items;
-    for (i = 0, ii = items.length; i < ii; ++i) {
-      overrideContext = super.createFullOverrideContext(items[i], i, ii);
-      view = this.viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      this.viewSlot.add(view);
-    }
+export class SignalBindingBehavior {
+  static inject() { return [BindingSignaler]; }
+  signals;
+
+  constructor(bindingSignaler) {
+    this.signals = bindingSignaler.signals;
   }
 
-  /**
-  * Gets an Array observer.
-  * @param items The items to be observed.
-  */
-  getCollectionObserver(items) {
-    return this.observerLocator.getArrayObserver(items);
+  bind(binding, source, name) {
+    if (!binding.updateTarget) {
+      throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
+    }
+    if (binding.mode === bindingMode.oneTime) {
+      throw new Error('One-time bindings cannot be signaled.');
+    }
+    let bindings = this.signals[name] || (this.signals[name] = []);
+    bindings.push(binding);
+    binding.signalName = name;
   }
 
-  /**
-  * Handles changes to the underlying array.
-  * @param array The modified array.
-  * @param splices Records of array changes.
-  */
-  handleChanges(array, splices) {
-    let removeDelta = 0;
-    let viewSlot = this.viewSlot;
-    let rmPromises = [];
-
-    for (let i = 0, ii = splices.length; i < ii; ++i) {
-      let splice = splices[i];
-      let removed = splice.removed;
-
-      for (let j = 0, jj = removed.length; j < jj; ++j) {
-        let viewOrPromise = viewSlot.removeAt(splice.index + removeDelta + rmPromises.length, true);
-        if (viewOrPromise instanceof Promise) {
-          rmPromises.push(viewOrPromise);
-        }
-      }
-      removeDelta -= splice.addedCount;
-    }
-
-    if (rmPromises.length > 0) {
-      Promise.all(rmPromises).then(() => {
-        let spliceIndexLow = this._handleAddedSplices(array, splices);
-        this.updateOverrideContexts(spliceIndexLow);
-      });
-    } else {
-      let spliceIndexLow = this._handleAddedSplices(array, splices);
-      super.updateOverrideContexts(spliceIndexLow);
-    }
-  }
-
-  _handleAddedSplices(array, splices) {
-    let spliceIndex;
-    let spliceIndexLow;
-    let arrayLength = array.length;
-    for (let i = 0, ii = splices.length; i < ii; ++i) {
-      let splice = splices[i];
-      let addIndex = spliceIndex = splice.index;
-      let end = splice.index + splice.addedCount;
-
-      if (typeof spliceIndexLow === 'undefined' || spliceIndexLow === null || spliceIndexLow > splice.index) {
-        spliceIndexLow = spliceIndex;
-      }
-
-      for (; addIndex < end; ++addIndex) {
-        let overrideContext = this.createFullOverrideContext(array[addIndex], addIndex, arrayLength);
-        let view = this.viewFactory.create();
-        view.bind(overrideContext.bindingContext, overrideContext);
-        this.viewSlot.insert(addIndex, view);
-      }
-    }
-
-    return spliceIndexLow;
+  unbind(binding, source) {
+    let name = binding.signalName;
+    binding.signalName = null;
+    let bindings = this.signals[name];
+    bindings.splice(bindings.indexOf(binding), 1);
   }
 }
 
 /**
-* A strategy for iterating Map.
+* A strategy is for repeating a template over an iterable or iterable-like object.
 */
-@inject(ObserverLocator)
-export class MapCollectionStrategy extends CollectionStrategy {
-  /**
-  * Creates an instance of MapCollectionStrategy.
-  * @param observerLocator The instance of the observerLocator.
-  */
-  constructor(observerLocator) {
-    super();
-    this.observerLocator = observerLocator;
-  }
-  /**
-  * Gets a Map observer.
-  * @param items The items to be observed.
-  */
-  getCollectionObserver(items) {
-    return this.observerLocator.getMapObserver(items);
-  }
-
-  /**
-  * Process the provided Map entries.
-  * @param items The entries to process.
-  */
-  processItems(items) {
-    let viewFactory = this.viewFactory;
-    let viewSlot = this.viewSlot;
-    let index = 0;
-    let overrideContext;
-    let view;
-
-    items.forEach((value, key) => {
-      overrideContext = this.createFullOverrideContext(value, index, items.size, key);
-      view = viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      viewSlot.add(view);
-      ++index;
-    });
-  }
-
-  /**
-  * Handle changes in a Map collection.
-  * @param map The underlying Map collection.
-  * @param records The change records.
-  */
-  handleChanges(map, records) {
-    let viewSlot = this.viewSlot;
-    let key;
-    let i;
-    let ii;
-    let view;
-    let overrideContext;
-    let removeIndex;
-    let record;
-    let rmPromises = [];
-    let viewOrPromise;
-
-    for (i = 0, ii = records.length; i < ii; ++i) {
-      record = records[i];
-      key = record.key;
-      switch (record.type) {
-      case 'update':
-        removeIndex = this._getViewIndexByKey(key);
-        viewOrPromise = viewSlot.removeAt(removeIndex, true);
-        if (viewOrPromise instanceof Promise) {
-          rmPromises.push(viewOrPromise);
-        }
-        overrideContext = this.createFullOverrideContext(map.get(key), removeIndex, map.size, key);
-        view = this.viewFactory.create();
-        view.bind(overrideContext.bindingContext, overrideContext);
-        viewSlot.insert(removeIndex, view);
-        break;
-      case 'add':
-        overrideContext = this.createFullOverrideContext(map.get(key), map.size - 1, map.size, key);
-        view = this.viewFactory.create();
-        view.bind(overrideContext.bindingContext, overrideContext);
-        viewSlot.insert(map.size - 1, view);
-        break;
-      case 'delete':
-        if (record.oldValue === undefined) { return; }
-        removeIndex = this._getViewIndexByKey(key);
-        viewOrPromise = viewSlot.removeAt(removeIndex, true);
-        if (viewOrPromise instanceof Promise) {
-          rmPromises.push(viewOrPromise);
-        }
-        break;
-      case 'clear':
-        viewSlot.removeAll(true);
-        break;
-      default:
-        continue;
-      }
-    }
-
-    if (rmPromises.length > 0) {
-      Promise.all(rmPromises).then(() => {
-        this.updateOverrideContexts(0);
-      });
-    } else {
-      this.updateOverrideContexts(0);
-    }
-  }
-
-  _getViewIndexByKey(key) {
-    let viewSlot = this.viewSlot;
-    let i;
-    let ii;
-    let child;
-
-    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
-      child = viewSlot.children[i];
-      if (child.overrideContext[this.key] === key) {
-        return i;
-      }
-    }
-  }
+interface RepeatStrategy {
+  instanceChanged(repeat: Repeat, items: any): void;
+  instanceMutated(repeat: Repeat, items: any, changes: any): void;
+  getCollectionObserver(observerLocator: any, items: any): any;
 }
 
 /**
-* A strategy for iterating a template n number of times.
+* Locates the best strategy to best repeating a template over different types of collections.
+* Custom strategies can be plugged in as well.
 */
-export class NumberStrategy extends CollectionStrategy {
+export class RepeatStrategyLocator {
   /**
-  * Return the strategies collection observer. In this case none.
+  * Creates a new RepeatStrategyLocator.
   */
-  getCollectionObserver() {
-    return;
-  }
-
-  /**
-  * Process the provided Number.
-  * @param value The Number of how many time to iterate.
-  */
-  processItems(value) {
-    let viewFactory = this.viewFactory;
-    let viewSlot = this.viewSlot;
-    let childrenLength = viewSlot.children.length;
-    let i;
-    let ii;
-    let overrideContext;
-    let view;
-    let viewsToRemove;
-
-    value = Math.floor(value);
-    viewsToRemove = childrenLength - value;
-
-    if (viewsToRemove > 0) {
-      if (viewsToRemove > childrenLength) {
-        viewsToRemove = childrenLength;
-      }
-
-      for (i = 0, ii = viewsToRemove; i < ii; ++i) {
-        viewSlot.removeAt(childrenLength - (i + 1), true);
-      }
-
-      return;
-    }
-
-    for (i = childrenLength, ii = value; i < ii; ++i) {
-      overrideContext = this.createFullOverrideContext(i, i, ii);
-      view = viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      viewSlot.add(view);
-    }
-
-    this.updateOverrideContexts(0);
-  }
-}
-
-/**
-* Locates the best strategy to best iteraing different types of collections. Custom strategies can be plugged in as well.
-*/
-@inject(Container)
-export class CollectionStrategyLocator {
-  /**
-  * Creates a new CollectionStrategyLocator.
-  * @param container The dependency injection container.
-  */
-  constructor(container) {
-    this.container = container;
-    this.strategies = [];
+  constructor() {
     this.matchers = [];
+    this.strategies = [];
 
-    this.addStrategy(ArrayCollectionStrategy, items => items instanceof Array);
-    this.addStrategy(MapCollectionStrategy, items => items instanceof Map);
-    this.addStrategy(NumberStrategy, items => typeof items === 'number');
+    this.addStrategy(items => items === null || items === undefined, new NullRepeatStrategy());
+    this.addStrategy(items => items instanceof Array, new ArrayRepeatStrategy());
+    this.addStrategy(items => items instanceof Map, new MapRepeatStrategy());
+    this.addStrategy(items => typeof items === 'number', new NumberRepeatStrategy());
   }
 
   /**
-  * Adds a collection strategy to be located when iterating different collection types.
-  * @param collectionStrategy A collection strategy that can iterate a specific collection type.
+  * Adds a repeat strategy to be located when repeating a template over different collection types.
+  * @param strategy A repeat strategy that can iterate a specific collection type.
   */
-  addStrategy(collectionStrategy: Function, matcher: (items: any) => boolean) {
-    this.strategies.push(collectionStrategy);
+  addStrategy(matcher: (items: any) => boolean, strategy: RepeatStrategy) {
     this.matchers.push(matcher);
+    this.strategies.push(strategy);
   }
 
   /**
   * Gets the best strategy to handle iteration.
   */
-  getStrategy(items: any): CollectionStrategy {
+  getStrategy(items: any): RepeatStrategy {
     let matchers = this.matchers;
 
     for (let i = 0, ii = matchers.length; i < ii; ++i) {
       if (matchers[i](items)) {
-        return this.container.get(this.strategies[i]);
+        return this.strategies[i];
       }
     }
 
-    throw new Error('Object in "repeat" must have a valid collection strategy.');
+    return null;
   }
 }
 
@@ -1307,7 +1455,7 @@ export class CollectionStrategyLocator {
 */
 @customAttribute('repeat')
 @templateController
-@inject(BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, ObserverLocator, CollectionStrategyLocator)
+@inject(BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, ObserverLocator, RepeatStrategyLocator)
 export class Repeat {
   /**
   * List of items to bind the repeater to.
@@ -1343,7 +1491,7 @@ export class Repeat {
  * @param observerLocator The observer locator instance.
  * @param collectionStrategyLocator The strategy locator to locate best strategy to iterate the collection.
  */
-  constructor(viewFactory, instruction, viewSlot, viewResources, observerLocator, collectionStrategyLocator) {
+  constructor(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
     this.viewFactory = viewFactory;
     this.instruction = instruction;
     this.viewSlot = viewSlot;
@@ -1352,8 +1500,11 @@ export class Repeat {
     this.local = 'item';
     this.key = 'key';
     this.value = 'value';
-    this.collectionStrategyLocator = collectionStrategyLocator;
+    this.strategyLocator = strategyLocator;
     this.ignoreMutation = false;
+    this.sourceExpression = getItemsSourceExpression(this.instruction, 'repeat.for');
+    this.isOneTime = isOneTime(this.sourceExpression);
+    this.viewsRequireLifecycle = viewsRequireLifecycle(viewFactory);
   }
 
   call(context, changes) {
@@ -1366,26 +1517,16 @@ export class Repeat {
   * @param overrideContext An override context for binding.
   */
   bind(bindingContext, overrideContext) {
-    let items = this.items;
-    this.sourceExpression = getSourceExpression(this.instruction, 'repeat.for');
     this.scope = { bindingContext, overrideContext };
-    if (items === undefined || items === null) {
-      return;
-    }
-    this._processItems();
+    this.itemsChanged();
   }
 
   /**
   * Unbinds the repeat
   */
   unbind() {
-    this.sourceExpression = null;
     this.scope = null;
-    if (this.collectionStrategy) {
-      this.collectionStrategy.dispose();
-    }
     this.items = null;
-    this.collectionStrategy = null;
     this.viewSlot.removeAll(true);
     this._unsubscribeCollection();
   }
@@ -1399,42 +1540,23 @@ export class Repeat {
   }
 
   /**
-  * Invoked everytime item property changes.
+  * Invoked everytime the item property changes.
   */
   itemsChanged() {
-    this._processItems();
-  }
-
-  _processItems() {
-    let items = this.items;
-
     this._unsubscribeCollection();
-    let rmPromise = this.viewSlot.removeAll(true);
-    if (this.collectionStrategy) {
-      this.collectionStrategy.dispose();
-    }
 
-    if (!items && items !== 0) {
+    // still bound?
+    if (!this.scope) {
       return;
     }
 
-    let bindingContext;
-    let overrideContext;
-    if (this.scope) {
-      bindingContext = this.scope.bindingContext;
-      overrideContext = this.scope.overrideContext;
-    }
+    let items = this.items;
+    this.strategy = this.strategyLocator.getStrategy(items);
 
-    this.collectionStrategy = this.collectionStrategyLocator.getStrategy(items);
-    this.collectionStrategy.initialize(this, bindingContext, overrideContext);
-
-    if (rmPromise instanceof Promise) {
-      rmPromise.then(() => {
-        this.processItemsByStrategy();
-      });
-    } else {
-      this.processItemsByStrategy();
+    if (!this.isOneTime && !this._observeInnerCollection()) {
+      this._observeCollection();
     }
+    this.strategy.instanceChanged(this, items);
   }
 
   _getInnerCollection() {
@@ -1445,47 +1567,17 @@ export class Repeat {
     return expression.evaluate(this.scope, null);
   }
 
-  _observeInnerCollection() {
-    let items = this._getInnerCollection();
-    if (items instanceof Array) {
-      this.collectionObserver = this.observerLocator.getArrayObserver(items);
-    } else if (items instanceof Map) {
-      this.collectionObserver = this.observerLocator.getMapObserver(items);
-    } else {
-      return false;
-    }
-    this.callContext = 'handleInnerCollectionChanges';
-    this.collectionObserver.subscribe(this.callContext, this);
-    return true;
-  }
-
-  _observeCollection() {
-    let items = this.items;
-    this.collectionObserver = this.collectionStrategy.getCollectionObserver(items);
-    if (this.collectionObserver) {
-      this.callContext = 'handleCollectionChanges';
-      this.collectionObserver.subscribe(this.callContext, this);
-    }
-  }
-
-  processItemsByStrategy() {
-    if (!this._observeInnerCollection()) {
-      this._observeCollection();
-    }
-    this.collectionStrategy.processItems(this.items);
-  }
-
   /**
   * Invoked when the underlying collection changes.
   */
-  handleCollectionChanges(collection, changes) {
-    this.collectionStrategy.handleChanges(collection, changes);
+  handleCollectionMutated(collection, changes) {
+    this.strategy.instanceMutated(this, collection, changes);
   }
 
   /**
   * Invoked when the underlying inner collection changes.
   */
-  handleInnerCollectionChanges(collection, changes) {
+  handleInnerCollectionMutated(collection, changes) {
     // guard against source expressions that have observable side-effects that could
     // cause an infinite loop- eg a value converter that mutates the source array.
     if (this.ignoreMutation) {
@@ -1495,33 +1587,40 @@ export class Repeat {
     let newItems = this.sourceExpression.evaluate(this.scope, this.lookupFunctions);
     this.observerLocator.taskQueue.queueMicroTask(() => this.ignoreMutation = false);
 
-    // collection change?
+    // call itemsChanged...
     if (newItems === this.items) {
-      return;
+      // call itemsChanged directly.
+      this.itemsChanged();
+    } else {
+      // call itemsChanged indirectly by assigning the new collection value to
+      // the items property, which will trigger the self-subscriber to call itemsChanged.
+      this.items = newItems;
     }
-    this.items = newItems;
-    this.itemsChanged();
   }
-}
 
-function getSourceExpression(instruction, attrName) {
-  return instruction.behaviorInstructions
-    .filter(bi => bi.originalAttrName === attrName)[0]
-    .attributes
-    .items
-    .sourceExpression;
-}
+  _observeInnerCollection() {
+    let items = this._getInnerCollection();
+    let strategy = this.strategyLocator.getStrategy(items);
+    if (!strategy) {
+      return false;
+    }
+    this.collectionObserver = strategy.getCollectionObserver(this.observerLocator, items);
+    if (!this.collectionObserver) {
+      return false;
+    }
+    this.callContext = 'handleInnerCollectionMutated';
+    this.collectionObserver.subscribe(this.callContext, this);
+    return true;
+  }
 
-function unwrapExpression(expression) {
-  let unwrapped = false;
-  while (expression instanceof BindingBehavior) {
-    expression = expression.expression;
+  _observeCollection() {
+    let items = this.items;
+    this.collectionObserver = this.strategy.getCollectionObserver(this.observerLocator, items);
+    if (this.collectionObserver) {
+      this.callContext = 'handleCollectionMutated';
+      this.collectionObserver.subscribe(this.callContext, this);
+    }
   }
-  while (expression instanceof ValueConverter) {
-    expression = expression.expression;
-    unwrapped = true;
-  }
-  return unwrapped ? expression : null;
 }
 
 function configure(config) {

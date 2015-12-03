@@ -1,67 +1,51 @@
 declare module 'aurelia-templating-resources' {
   import * as LogManager from 'aurelia-logging';
-  import { bindingMode, EventManager, sourceContext, createOverrideContext, valueConverter, ObserverLocator, getChangeRecords, BindingBehavior, ValueConverter }  from 'aurelia-binding';
-  import { ViewResources, resource, ViewCompileInstruction, useView, customElement, bindable, customAttribute, TargetInstruction, BoundViewFactory, ViewSlot, templateController, Animator, CompositionEngine, noView, ViewEngine }  from 'aurelia-templating';
-  import { Loader }  from 'aurelia-loader';
-  import { Container, inject, transient }  from 'aurelia-dependency-injection';
-  import { relativeToFile }  from 'aurelia-path';
+  import { inject, Container }  from 'aurelia-dependency-injection';
+  import { BoundViewFactory, ViewSlot, customAttribute, templateController, Animator, useView, customElement, bindable, ViewResources, resource, ViewCompileInstruction, CompositionEngine, noView, TargetInstruction, ViewEngine }  from 'aurelia-templating';
+  import { createOverrideContext, bindingMode, EventManager, BindingBehavior, ValueConverter, sourceContext, valueConverter, ObserverLocator }  from 'aurelia-binding';
   import { DOM, FEATURE }  from 'aurelia-pal';
   import { TaskQueue }  from 'aurelia-task-queue';
-  export class UpdateTriggerBindingBehavior {
-    static inject: any;
-    constructor(eventManager: any);
-    bind(binding: any, source: any, ...events: any[]): any;
-    unbind(binding: any, source: any): any;
-  }
-  export class BindingSignaler {
-    signals: any;
-    signal(name: string): void;
-  }
-  export class DebounceBindingBehavior {
-    bind(binding: any, source: any, delay?: any): any;
-    
-    //  should not delay initial target update that occurs during bind.
-    unbind(binding: any, source: any): any;
-  }
-  export class ThrottleBindingBehavior {
-    bind(binding: any, source: any, delay?: any): any;
-    unbind(binding: any, source: any): any;
-  }
-  class ModeBindingBehavior {
-    constructor(mode: any);
-    bind(binding: any, source: any, lookupFunctions: any): any;
-    unbind(binding: any, source: any): any;
-  }
-  export class OneTimeBindingBehavior extends ModeBindingBehavior {
-    constructor();
-  }
-  export class OneWayBindingBehavior extends ModeBindingBehavior {
-    constructor();
-  }
-  export class TwoWayBindingBehavior extends ModeBindingBehavior {
-    constructor();
+  import { Loader }  from 'aurelia-loader';
+  import { relativeToFile }  from 'aurelia-path';
+  
+  /**
+  * A strategy is for repeating a template over an iterable or iterable-like object.
+  */
+  export interface RepeatStrategy {
+    instanceChanged(repeat: Repeat, items: any): void;
+    instanceMutated(repeat: Repeat, items: any, changes: any): void;
+    getCollectionObserver(observerLocator: any, items: any): any;
   }
   
   /**
-  * Default Html Sanitizer to prevent script injection.
+  * Creates a binding context for decandant elements to bind to.
   */
-  export class HTMLSanitizer {
+  export class With {
     
     /**
-      * Sanitizes the provided input.
-      * @param input The input to be sanitized.
+      * Creates an instance of With.
+      * @param viewFactory The factory generating the view.
+      * @param viewSlot The slot the view is injected in to.
       */
-    sanitize(input: any): any;
-  }
-  class CSSResource {
-    constructor(address: string);
-    initialize(container: Container, target: Function): void;
-    register(registry: ViewResources, name?: string): void;
-    load(container: Container): Promise<CSSResource>;
-  }
-  class CSSViewEngineHooks {
-    constructor(mode: string);
-    beforeCompile(content: DocumentFragment, resources: ViewResources, instruction: ViewCompileInstruction): void;
+    constructor(viewFactory: any, viewSlot: any);
+    
+    /**
+      * Binds the With with provided binding context and override context.
+      * @param bindingContext The binding context.
+      * @param overrideContext An override context for binding.
+      */
+    bind(bindingContext: any, overrideContext: any): any;
+    
+    /**
+      * Invoked everytime the bound value changes.
+      * @param newValue The new value.
+      */
+    valueChanged(newValue: any): any;
+    
+    /**
+      * Unbinds With
+      */
+    unbind(): any;
   }
   
   /**
@@ -103,73 +87,15 @@ declare module 'aurelia-templating-resources' {
       */
     unbind(): any;
   }
-  
-  /**
-  * Attribute to be placed on any element to have it emit the View Compiler's
-  * TargetInstruction into the debug console, giving you insight into all the
-  * parsed bindings, behaviors and event handers for the targeted element.
-  */
-  export class CompileSpy {
-    
-    /**
-      * Creates and instanse of CompileSpy.
-      * @param element target element on where attribute is placed on.
-      * @param instruction instructions for how the target element should be enhanced.
-      */
-    constructor(element: any, instruction: any);
+  export class UpdateTriggerBindingBehavior {
+    static inject: any;
+    constructor(eventManager: any);
+    bind(binding: any, source: any, ...events: any[]): any;
+    unbind(binding: any, source: any): any;
   }
-  
-  /**
-  * CustomAttribute that binds provided DOM element's focus attribute with a property on the viewmodel.
-  */
-  export class Focus {
-    
-    /**
-      * Creates an instance of Focus.
-      * @paramelement Target element on where attribute is placed on.
-      * @param taskQueue The TaskQueue instance.
-      */
-    constructor(element: any, taskQueue: any);
-    
-    /**
-      * Invoked everytime the bound value changes.
-      * @param newValue The new value.
-      */
-    valueChanged(newValue: any): any;
-    
-    /**
-      * Invoked when the attribute is attached to the DOM.
-      */
-    attached(): any;
-    
-    /**
-      * Invoked when the attribute is detached from the DOM.
-      */
-    detached(): any;
-  }
-  
-  /**
-  * Marks any part of a view to be replacable by the consumer.
-  */
-  export class Replaceable {
-    
-    /**
-      * @param viewFactory target The factory generating the view.
-      * @param viewSlot viewSlot The slot the view is injected in to.
-      */
-    constructor(viewFactory: any, viewSlot: any);
-    
-    /**
-      * Binds the replaceable to the binding context and override context.
-      * @param bindingContext The binding context.
-      * @param overrideContext An override context for binding.
-      */
-    bind(bindingContext: any, overrideContext: any): any;
-    
-    /**
-      * Unbinds the replaceable.
-      */
-    unbind(): any;
+  export class ThrottleBindingBehavior {
+    bind(binding: any, source: any, delay?: any): any;
+    unbind(binding: any, source: any): any;
   }
   
   /**
@@ -198,34 +124,78 @@ declare module 'aurelia-templating-resources' {
   }
   
   /**
-  * Creates a binding context for decandant elements to bind to.
+  * Marks any part of a view to be replacable by the consumer.
   */
-  export class With {
+  export class Replaceable {
     
     /**
-      * Creates an instance of With.
-      * @param viewFactory The factory generating the view.
-      * @param viewSlot The slot the view is injected in to.
+      * @param viewFactory target The factory generating the view.
+      * @param viewSlot viewSlot The slot the view is injected in to.
       */
     constructor(viewFactory: any, viewSlot: any);
     
     /**
-      * Binds the With with provided binding context and override context.
+      * Binds the replaceable to the binding context and override context.
       * @param bindingContext The binding context.
       * @param overrideContext An override context for binding.
       */
     bind(bindingContext: any, overrideContext: any): any;
     
     /**
-      * Invoked everytime the bound value changes.
-      * @param newValue The new value.
-      */
-    valueChanged(newValue: any): any;
-    
-    /**
-      * Unbinds With
+      * Unbinds the replaceable.
       */
     unbind(): any;
+  }
+  
+  /**
+  * Update the override context.
+  * @param startIndex index in collection where to start updating.
+  */
+  export function updateOverrideContexts(views: any, startIndex: any): any;
+  
+  /**
+    * Creates a complete override context.
+    * @param data The item's value.
+    * @param index The item's index.
+    * @param length The collections total length.
+    * @param key The key in a key/value pair.
+    */
+  export function createFullOverrideContext(repeat: any, data: any, index: any, length: any, key: any): any;
+  
+  /**
+  * Updates the override context.
+  * @param context The context to be updated.
+  * @param index The context's index.
+  * @param length The collection's length.
+  */
+  export function updateOverrideContext(overrideContext: any, index: any, length: any): any;
+  
+  /**
+  * Gets a repeat instruction's source expression.
+  */
+  export function getItemsSourceExpression(instruction: any, attrName: any): any;
+  
+  /**
+  * Unwraps an expression to expose the inner, pre-converted / behavior-free expression.
+  */
+  export function unwrapExpression(expression: any): any;
+  
+  /**
+  * Returns whether an expression has the OneTimeBindingBehavior applied.
+  */
+  export function isOneTime(expression: any): any;
+  
+  /**
+  * Forces a binding instance to reevaluate.
+  */
+  export function refreshBinding(binding: any): any;
+  
+  /**
+  * A strategy for repeating a template over null or undefined (does nothing)
+  */
+  export class NullRepeatStrategy {
+    instanceChanged(repeat: any, items: any): any;
+    getCollectionObserver(observerLocator: any, items: any): any;
   }
   
   /**
@@ -259,6 +229,63 @@ declare module 'aurelia-templating-resources' {
       * Unbinds the if
       */
     unbind(): any;
+  }
+  
+  /**
+  * Default Html Sanitizer to prevent script injection.
+  */
+  export class HTMLSanitizer {
+    
+    /**
+      * Sanitizes the provided input.
+      * @param input The input to be sanitized.
+      */
+    sanitize(input: any): any;
+  }
+  
+  /**
+  * CustomAttribute that binds provided DOM element's focus attribute with a property on the viewmodel.
+  */
+  export class Focus {
+    
+    /**
+      * Creates an instance of Focus.
+      * @paramelement Target element on where attribute is placed on.
+      * @param taskQueue The TaskQueue instance.
+      */
+    constructor(element: any, taskQueue: any);
+    
+    /**
+      * Invoked everytime the bound value changes.
+      * @param newValue The new value.
+      */
+    valueChanged(newValue: any): any;
+    
+    /**
+      * Invoked when the attribute is attached to the DOM.
+      */
+    attached(): any;
+    
+    /**
+      * Invoked when the attribute is detached from the DOM.
+      */
+    detached(): any;
+  }
+  export class DebounceBindingBehavior {
+    bind(binding: any, source: any, delay?: any): any;
+    
+    //  should not delay initial target update that occurs during bind.
+    unbind(binding: any, source: any): any;
+  }
+  class CSSResource {
+    constructor(address: string);
+    initialize(container: Container, target: Function): void;
+    register(registry: ViewResources, name?: string): void;
+    load(container: Container): Promise<CSSResource>;
+  }
+  class CSSViewEngineHooks {
+    constructor(mode: string);
+    beforeCompile(content: DocumentFragment, resources: ViewResources, instruction: ViewCompileInstruction): void;
   }
   
   /**
@@ -316,59 +343,113 @@ declare module 'aurelia-templating-resources' {
   }
   
   /**
-  * Base class that defines common properties and methods for a collection strategy implementation.
+  * Attribute to be placed on any element to have it emit the View Compiler's
+  * TargetInstruction into the debug console, giving you insight into all the
+  * parsed bindings, behaviors and event handers for the targeted element.
   */
-  export class CollectionStrategy {
+  export class CompileSpy {
     
     /**
-      * Initializes the strategy collection.
-      * @param repeat The repeat instance.
-      * @param bindingContext The binding context.
-      * @param overrideContext The override context.
+      * Creates and instanse of CompileSpy.
+      * @param element target element on where attribute is placed on.
+      * @param instruction instructions for how the target element should be enhanced.
       */
-    initialize(repeat: any, bindingContext: any, overrideContext: any): any;
-    
-    /**
-      * Disposes the collection strategy.
-      */
-    dispose(): any;
-    
-    /**
-      * Update the override context.
-      * @param startIndex index in collection where to start updating.
-      */
-    updateOverrideContexts(startIndex: any): any;
-    
-    /**
-        * Creates a complete override context.
-        * @param data The item's value.
-        * @param index The item's index.
-        * @param length The collections total length.
-        * @param key The key in a key/value pair.
-        */
-    createFullOverrideContext(data: any, index: any, length: any, key: any): any;
-    
-    /**
-      * Creates base of an override context.
-      * @param data The item's value.
-      * @param key The key in a key/value pair.
-      */
-    createBaseOverrideContext(data: any, key: any): any;
-    
-    /**
-      * Updates the override context.
-      * @param context The context to be updated.
-      * @param index The context's index.
-      * @param length The collection's length.
-      */
-    updateOverrideContext(overrideContext: any, index: any, length: any): any;
+    constructor(element: any, instruction: any);
   }
-  export class SignalBindingBehavior {
-    static inject(): any;
+  export class BindingSignaler {
     signals: any;
-    constructor(bindingSignaler: any);
-    bind(binding: any, source: any, name: any): any;
+    signal(name: string): void;
+  }
+  class ModeBindingBehavior {
+    constructor(mode: any);
+    bind(binding: any, source: any, lookupFunctions: any): any;
     unbind(binding: any, source: any): any;
+  }
+  export class OneTimeBindingBehavior extends ModeBindingBehavior {
+    constructor();
+  }
+  export class OneWayBindingBehavior extends ModeBindingBehavior {
+    constructor();
+  }
+  export class TwoWayBindingBehavior extends ModeBindingBehavior {
+    constructor();
+  }
+  
+  /**
+  * Behaviors that do not require the composition lifecycle callbacks when replacing
+  * their binding context.
+  */
+  export const lifecycleOptionalBehaviors: any;
+  export function viewsRequireLifecycle(viewFactory: any): any;
+  
+  /**
+  * A strategy for repeating a template over an array.
+  */
+  export class ArrayRepeatStrategy {
+    
+    /**
+      * Gets an observer for the specified collection.
+      * @param observerLocator The observer locator instance.
+      * @param items The items to be observed.
+      */
+    getCollectionObserver(observerLocator: any, items: any): any;
+    
+    /**
+      * Handle the repeat's collection instance changing.
+      * @param repeat The repeater instance.
+      * @param items The new array instance.
+      */
+    instanceChanged(repeat: any, items: any): any;
+    
+    /**
+      * Handle the repeat's collection instance mutating.
+      * @param repeat The repeat instance.
+      * @param array The modified array.
+      * @param splices Records of array changes.
+      */
+    instanceMutated(repeat: any, array: any, splices: any): any;
+  }
+  
+  /**
+  * A strategy for repeating a template over a Map.
+  */
+  export class MapRepeatStrategy {
+    
+    /**
+      * Gets a Map observer.
+      * @param items The items to be observed.
+      */
+    getCollectionObserver(observerLocator: any, items: any): any;
+    
+    /**
+      * Process the provided Map entries.
+      * @param items The entries to process.
+      */
+    instanceChanged(repeat: any, items: any): any;
+    
+    /**
+      * Handle changes in a Map collection.
+      * @param map The underlying Map collection.
+      * @param records The change records.
+      */
+    instanceMutated(repeat: any, map: any, records: any): any;
+  }
+  
+  /**
+  * A strategy for repeating a template over a number.
+  */
+  export class NumberRepeatStrategy {
+    
+    /**
+      * Return the strategies collection observer. In this case none.
+      */
+    getCollectionObserver(): any;
+    
+    /**
+      * Process the provided Number.
+      * @param value The Number of how many time to iterate.
+      */
+    instanceChanged(repeat: any, value: any): any;
   }
   
   /**
@@ -388,107 +469,35 @@ declare module 'aurelia-templating-resources' {
       */
     toView(untrustedMarkup: any): any;
   }
-  
-  /**
-  * A strategy for iterating Arrays.
-  */
-  export class ArrayCollectionStrategy extends CollectionStrategy {
-    
-    /**
-      * Creates an instance of ArrayCollectionStrategy.
-      * @param observerLocator The instance of the observerLocator.
-      */
-    constructor(observerLocator: any);
-    
-    /**
-      * Process the provided array items.
-      * @param items The underlying array.
-      */
-    processItems(items: any): any;
-    
-    /**
-      * Gets an Array observer.
-      * @param items The items to be observed.
-      */
-    getCollectionObserver(items: any): any;
-    
-    /**
-      * Handles changes to the underlying array.
-      * @param array The modified array.
-      * @param splices Records of array changes.
-      */
-    handleChanges(array: any, splices: any): any;
+  export class SignalBindingBehavior {
+    static inject(): any;
+    signals: any;
+    constructor(bindingSignaler: any);
+    bind(binding: any, source: any, name: any): any;
+    unbind(binding: any, source: any): any;
   }
   
   /**
-  * A strategy for iterating Map.
+  * Locates the best strategy to best repeating a template over different types of collections.
+  * Custom strategies can be plugged in as well.
   */
-  export class MapCollectionStrategy extends CollectionStrategy {
+  export class RepeatStrategyLocator {
     
     /**
-      * Creates an instance of MapCollectionStrategy.
-      * @param observerLocator The instance of the observerLocator.
+      * Creates a new RepeatStrategyLocator.
       */
-    constructor(observerLocator: any);
+    constructor();
     
     /**
-      * Gets a Map observer.
-      * @param items The items to be observed.
+      * Adds a repeat strategy to be located when repeating a template over different collection types.
+      * @param strategy A repeat strategy that can iterate a specific collection type.
       */
-    getCollectionObserver(items: any): any;
-    
-    /**
-      * Process the provided Map entries.
-      * @param items The entries to process.
-      */
-    processItems(items: any): any;
-    
-    /**
-      * Handle changes in a Map collection.
-      * @param map The underlying Map collection.
-      * @param records The change records.
-      */
-    handleChanges(map: any, records: any): any;
-  }
-  
-  /**
-  * A strategy for iterating a template n number of times.
-  */
-  export class NumberStrategy extends CollectionStrategy {
-    
-    /**
-      * Return the strategies collection observer. In this case none.
-      */
-    getCollectionObserver(): any;
-    
-    /**
-      * Process the provided Number.
-      * @param value The Number of how many time to iterate.
-      */
-    processItems(value: any): any;
-  }
-  
-  /**
-  * Locates the best strategy to best iteraing different types of collections. Custom strategies can be plugged in as well.
-  */
-  export class CollectionStrategyLocator {
-    
-    /**
-      * Creates a new CollectionStrategyLocator.
-      * @param container The dependency injection container.
-      */
-    constructor(container: any);
-    
-    /**
-      * Adds a collection strategy to be located when iterating different collection types.
-      * @param collectionStrategy A collection strategy that can iterate a specific collection type.
-      */
-    addStrategy(collectionStrategy: Function, matcher: ((items: any) => boolean)): any;
+    addStrategy(matcher: ((items: any) => boolean), strategy: RepeatStrategy): any;
     
     /**
       * Gets the best strategy to handle iteration.
       */
-    getStrategy(items: any): CollectionStrategy;
+    getStrategy(items: any): RepeatStrategy;
   }
   
   /*eslint no-loop-func:0, no-unused-vars:0*/
@@ -510,7 +519,7 @@ declare module 'aurelia-templating-resources' {
      * @param observerLocator The observer locator instance.
      * @param collectionStrategyLocator The strategy locator to locate best strategy to iterate the collection.
      */
-    constructor(viewFactory: any, instruction: any, viewSlot: any, viewResources: any, observerLocator: any, collectionStrategyLocator: any);
+    constructor(viewFactory: any, instruction: any, viewSlot: any, viewResources: any, observerLocator: any, strategyLocator: any);
     call(context: any, changes: any): any;
     
     /**
@@ -526,19 +535,18 @@ declare module 'aurelia-templating-resources' {
     unbind(): any;
     
     /**
-      * Invoked everytime item property changes.
+      * Invoked everytime the item property changes.
       */
     itemsChanged(): any;
-    processItemsByStrategy(): any;
     
     /**
       * Invoked when the underlying collection changes.
       */
-    handleCollectionChanges(collection: any, changes: any): any;
+    handleCollectionMutated(collection: any, changes: any): any;
     
     /**
       * Invoked when the underlying inner collection changes.
       */
-    handleInnerCollectionChanges(collection: any, changes: any): any;
+    handleInnerCollectionMutated(collection: any, changes: any): any;
   }
 }

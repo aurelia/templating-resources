@@ -31,7 +31,7 @@ define(['exports', 'aurelia-binding', './binding-signaler'], function (exports, 
     SignalBindingBehavior.prototype.unbind = function unbind(binding, source) {
       var name = binding.signalName;
       binding.signalName = null;
-      var bindings = signals[name];
+      var bindings = this.signals[name];
       bindings.splice(bindings.indexOf(binding), 1);
     };
 
