@@ -50,8 +50,6 @@ function configure(config) {
 
   viewEngine.addResourcePlugin('.html', {
     'fetch': function(address) {
-      address = (address.endsWith('.js') || address.endsWith('.ts')) ? address.substring(0, address.length - 3) : address;
-
       return loader.loadTemplate(address).then(registryEntry => {
         let bindable = registryEntry.template.getAttribute('bindable');
         let elementName = address.replace('.html', '');
@@ -75,7 +73,6 @@ function configure(config) {
 
   viewEngine.addResourcePlugin('.css', {
     'fetch': function(address) {
-      address = (address.endsWith('.js') || address.endsWith('.ts')) ? address.substring(0, address.length - 3) : address;
       return { [address]: _createCSSResource(address) };
     }
   });
