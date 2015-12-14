@@ -1,4 +1,12 @@
-import {createOverrideContext, BindingBehavior, ValueConverter, sourceContext} from 'aurelia-binding';
+import {
+  createOverrideContext,
+  BindingBehavior,
+  ValueConverter,
+  sourceContext,
+  bindingMode
+} from 'aurelia-binding';
+
+const oneTime = bindingMode.oneTime;
 
 /**
 * Update the override context.
@@ -98,8 +106,8 @@ export function isOneTime(expression) {
 /**
 * Forces a binding instance to reevaluate.
 */
-export function refreshBinding(binding) {
-  if (binding.call) {
+export function updateOneTimeBinding(binding) {
+  if (binding.call && binding.mode === oneTime) {
     binding.call(sourceContext);
   }
 }
