@@ -23,7 +23,7 @@ export class UpdateTriggerBindingBehavior {
     if (!targetObserver.handler) {
       throw new Error(notApplicableMessage);
     }
-    binding.targetObserver = targetObserver;    
+    binding.targetObserver = targetObserver;
 
     // stash the original element subscribe function.
     targetObserver.originalHandler = binding.targetObserver.handler;
