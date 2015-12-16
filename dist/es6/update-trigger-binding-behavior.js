@@ -14,21 +14,28 @@ export class UpdateTriggerBindingBehavior {
     if (events.length === 0) {
       throw new Error(eventNamesRequired);
     }
-    if (binding.mode !== bindingMode.twoWay || !binding.targetProperty.handler) {
+    if (binding.mode !== bindingMode.twoWay) {
       throw new Error(notApplicableMessage);
     }
 
+    // ensure the binding's target observer has been set.
+    let targetObserver = binding.observerLocator.getObserver(binding.target, binding.targetProperty);
+    if (!targetObserver.handler) {
+      throw new Error(notApplicableMessage);
+    }
+    binding.targetObserver = targetObserver;
+
     // stash the original element subscribe function.
-    binding.targetProperty.originalHandler = binding.targetProperty.handler;
+    targetObserver.originalHandler = binding.targetObserver.handler;
 
     // replace the element subscribe function with one that uses the correct events.
     let handler = this.eventManager.createElementHandler(events);
-    binding.targetProperty.handler = handler;
+    targetObserver.handler = handler;
   }
 
   unbind(binding, source) {
     // restore the state of the binding.
-    binding.targetProperty.handler = binding.targetProperty.originalHandler;
-    binding.targetProperty.originalHandler = null;
+    binding.targetObserver.handler = binding.targetObserver.originalHandler;
+    binding.targetObserver.originalHandler = null;
   }
 }

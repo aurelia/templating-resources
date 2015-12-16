@@ -65,14 +65,14 @@ define(['exports', './repeat-utilities'], function (exports, _repeatUtilities) {
         view.overrideContext.$last = last;
         var j = view.bindings.length;
         while (j--) {
-          _repeatUtilities.refreshBinding(view.bindings[j]);
+          _repeatUtilities.updateOneTimeBinding(view.bindings[j]);
         }
         j = view.controllers.length;
         while (j--) {
           var k = view.controllers[j].boundProperties.length;
           while (k--) {
             var binding = view.controllers[j].boundProperties[k].binding;
-            _repeatUtilities.refreshBinding(binding);
+            _repeatUtilities.updateOneTimeBinding(binding);
           }
         }
       }

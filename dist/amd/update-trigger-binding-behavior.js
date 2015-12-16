@@ -31,19 +31,25 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
       if (events.length === 0) {
         throw new Error(eventNamesRequired);
       }
-      if (binding.mode !== _aureliaBinding.bindingMode.twoWay || !binding.targetProperty.handler) {
+      if (binding.mode !== _aureliaBinding.bindingMode.twoWay) {
         throw new Error(notApplicableMessage);
       }
 
-      binding.targetProperty.originalHandler = binding.targetProperty.handler;
+      var targetObserver = binding.observerLocator.getObserver(binding.target, binding.targetProperty);
+      if (!targetObserver.handler) {
+        throw new Error(notApplicableMessage);
+      }
+      binding.targetObserver = targetObserver;
+
+      targetObserver.originalHandler = binding.targetObserver.handler;
 
       var handler = this.eventManager.createElementHandler(events);
-      binding.targetProperty.handler = handler;
+      targetObserver.handler = handler;
     };
 
     UpdateTriggerBindingBehavior.prototype.unbind = function unbind(binding, source) {
-      binding.targetProperty.handler = binding.targetProperty.originalHandler;
-      binding.targetProperty.originalHandler = null;
+      binding.targetObserver.handler = binding.targetObserver.originalHandler;
+      binding.targetObserver.originalHandler = null;
     };
 
     return UpdateTriggerBindingBehavior;

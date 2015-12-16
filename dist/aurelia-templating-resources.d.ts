@@ -188,7 +188,7 @@ declare module 'aurelia-templating-resources' {
   /**
   * Forces a binding instance to reevaluate.
   */
-  export function refreshBinding(binding: any): any;
+  export function updateOneTimeBinding(binding: any): any;
   
   /**
   * A strategy for repeating a template over null or undefined (does nothing)

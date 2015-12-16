@@ -12,7 +12,7 @@ exports.updateOverrideContext = updateOverrideContext;
 exports.getItemsSourceExpression = getItemsSourceExpression;
 exports.unwrapExpression = unwrapExpression;
 exports.isOneTime = isOneTime;
-exports.refreshBinding = refreshBinding;
+exports.updateOneTimeBinding = updateOneTimeBinding;
 exports._createDynamicElement = _createDynamicElement;
 exports._createCSSResource = _createCSSResource;
 exports.viewsRequireLifecycle = viewsRequireLifecycle;
@@ -153,19 +153,25 @@ var UpdateTriggerBindingBehavior = (function () {
     if (events.length === 0) {
       throw new Error(eventNamesRequired);
     }
-    if (binding.mode !== _aureliaBinding.bindingMode.twoWay || !binding.targetProperty.handler) {
+    if (binding.mode !== _aureliaBinding.bindingMode.twoWay) {
       throw new Error(notApplicableMessage);
     }
 
-    binding.targetProperty.originalHandler = binding.targetProperty.handler;
+    var targetObserver = binding.observerLocator.getObserver(binding.target, binding.targetProperty);
+    if (!targetObserver.handler) {
+      throw new Error(notApplicableMessage);
+    }
+    binding.targetObserver = targetObserver;
+
+    targetObserver.originalHandler = binding.targetObserver.handler;
 
     var handler = this.eventManager.createElementHandler(events);
-    binding.targetProperty.handler = handler;
+    targetObserver.handler = handler;
   };
 
   UpdateTriggerBindingBehavior.prototype.unbind = function unbind(binding, source) {
-    binding.targetProperty.handler = binding.targetProperty.originalHandler;
-    binding.targetProperty.originalHandler = null;
+    binding.targetObserver.handler = binding.targetObserver.originalHandler;
+    binding.targetObserver.originalHandler = null;
   };
 
   return UpdateTriggerBindingBehavior;
@@ -294,6 +300,8 @@ var Replaceable = (function () {
 
 exports.Replaceable = Replaceable;
 
+var oneTime = _aureliaBinding.bindingMode.oneTime;
+
 function updateOverrideContexts(views, startIndex) {
   var length = views.length;
 
@@ -361,8 +369,8 @@ function isOneTime(expression) {
   return false;
 }
 
-function refreshBinding(binding) {
-  if (binding.call) {
+function updateOneTimeBinding(binding) {
+  if (binding.call && binding.mode === oneTime) {
     binding.call(_aureliaBinding.sourceContext);
   }
 }
@@ -1061,14 +1069,14 @@ var ArrayRepeatStrategy = (function () {
       view.overrideContext.$last = last;
       var j = view.bindings.length;
       while (j--) {
-        refreshBinding(view.bindings[j]);
+        updateOneTimeBinding(view.bindings[j]);
       }
       j = view.controllers.length;
       while (j--) {
         var k = view.controllers[j].boundProperties.length;
         while (k--) {
           var binding = view.controllers[j].boundProperties[k].binding;
-          refreshBinding(binding);
+          updateOneTimeBinding(binding);
         }
       }
     }

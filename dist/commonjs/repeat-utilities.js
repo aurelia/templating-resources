@@ -7,9 +7,11 @@ exports.updateOverrideContext = updateOverrideContext;
 exports.getItemsSourceExpression = getItemsSourceExpression;
 exports.unwrapExpression = unwrapExpression;
 exports.isOneTime = isOneTime;
-exports.refreshBinding = refreshBinding;
+exports.updateOneTimeBinding = updateOneTimeBinding;
 
 var _aureliaBinding = require('aurelia-binding');
+
+var oneTime = _aureliaBinding.bindingMode.oneTime;
 
 function updateOverrideContexts(views, startIndex) {
   var length = views.length;
@@ -78,8 +80,8 @@ function isOneTime(expression) {
   return false;
 }
 
-function refreshBinding(binding) {
-  if (binding.call) {
+function updateOneTimeBinding(binding) {
+  if (binding.call && binding.mode === oneTime) {
     binding.call(_aureliaBinding.sourceContext);
   }
 }

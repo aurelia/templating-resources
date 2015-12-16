@@ -1,7 +1,7 @@
 System.register(['./repeat-utilities'], function (_export) {
   'use strict';
 
-  var createFullOverrideContext, updateOverrideContexts, refreshBinding, ArrayRepeatStrategy;
+  var createFullOverrideContext, updateOverrideContexts, updateOneTimeBinding, ArrayRepeatStrategy;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -9,7 +9,7 @@ System.register(['./repeat-utilities'], function (_export) {
     setters: [function (_repeatUtilities) {
       createFullOverrideContext = _repeatUtilities.createFullOverrideContext;
       updateOverrideContexts = _repeatUtilities.updateOverrideContexts;
-      refreshBinding = _repeatUtilities.refreshBinding;
+      updateOneTimeBinding = _repeatUtilities.updateOneTimeBinding;
     }],
     execute: function () {
       ArrayRepeatStrategy = (function () {
@@ -72,14 +72,14 @@ System.register(['./repeat-utilities'], function (_export) {
             view.overrideContext.$last = last;
             var j = view.bindings.length;
             while (j--) {
-              refreshBinding(view.bindings[j]);
+              updateOneTimeBinding(view.bindings[j]);
             }
             j = view.controllers.length;
             while (j--) {
               var k = view.controllers[j].boundProperties.length;
               while (k--) {
                 var binding = view.controllers[j].boundProperties[k].binding;
-                refreshBinding(binding);
+                updateOneTimeBinding(binding);
               }
             }
           }

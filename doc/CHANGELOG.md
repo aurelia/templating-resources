@@ -1,3 +1,13 @@
+### 1.0.0-beta.1.0.3 (2015-12-16)
+
+
+#### Bug Fixes
+
+* **plugins:**
+  * revert file extentions checking ([c67adfb2](http://github.com/aurelia/templating-resources/commit/c67adfb2549e03a2a94271f20ccced1fea0adf24))
+  * remove possible duplicate file extensions ([842a13e7](http://github.com/aurelia/templating-resources/commit/842a13e7baab62f4c032f6db64cc7661fb69dbf8))
+
+
 ## 1.0.0-beta.1.0.2 (2015-12-03)
 
 

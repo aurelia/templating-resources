@@ -1,6 +1,6 @@
 {
   "name": "aurelia-templating-resources",
-  "version": "1.0.0-beta.1.0.2",
+  "version": "1.0.0-beta.1.0.3",
   "description": "A standard set of behaviors, converters and other resources for use with the Aurelia templating library.",
   "keywords": [
     "aurelia",
@@ -26,11 +26,11 @@
       "lib": "dist/amd"
     },
     "dependencies": {
-      "aurelia-binding": "npm:aurelia-binding@^1.0.0-beta.1",
+      "aurelia-binding": "npm:aurelia-binding@^1.0.0-beta.1.0.3",
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@^1.0.0-beta.1",
       "aurelia-loader": "npm:aurelia-loader@^1.0.0-beta.1",
       "aurelia-logging": "npm:aurelia-logging@^1.0.0-beta.1",
-      "aurelia-pal": "npm:aurelia-pal@^1.0.0-beta.1",
+      "aurelia-pal": "npm:aurelia-pal@^1.0.0-beta.1.0.1",
       "aurelia-path": "npm:aurelia-path@^1.0.0-beta.1",
       "aurelia-task-queue": "npm:aurelia-task-queue@^1.0.0-beta.1",
       "aurelia-templating": "npm:aurelia-templating@^1.0.0-beta.1",
@@ -38,7 +38,7 @@
     },
     "devDependencies": {
       "aurelia-metadata": "npm:aurelia-metadata@^1.0.0-beta.1",
-      "aurelia-pal-browser": "npm:aurelia-pal-browser@^1.0.0-beta.1",
+      "aurelia-pal-browser": "npm:aurelia-pal-browser@^1.0.0-beta.1.0.1",
       "aurelia-templating-binding": "npm:aurelia-templating-binding@^1.0.0-beta.1",
       "babel": "npm:babel-core@^5.1.13",
       "babel-runtime": "npm:babel-runtime@^5.1.13",
@@ -46,11 +46,11 @@
     }
   },
   "dependencies": {
-    "aurelia-binding": "^1.0.0-beta.1",
+    "aurelia-binding": "^1.0.0-beta.1.0.3",
     "aurelia-dependency-injection": "^1.0.0-beta.1",
     "aurelia-loader": "^1.0.0-beta.1",
     "aurelia-logging": "^1.0.0-beta.1",
-    "aurelia-pal": "^1.0.0-beta.1",
+    "aurelia-pal": "^1.0.0-beta.1.0.1",
     "aurelia-path": "^1.0.0-beta.1",
     "aurelia-task-queue": "^1.0.0-beta.1",
     "aurelia-templating": "^1.0.0-beta.1",

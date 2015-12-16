@@ -349,7 +349,7 @@
                   "type": {
                     "type": "reference",
                     "name": "Container",
-                    "id": 799,
+                    "id": 798,
                     "moduleName": "\"aurelia-dependency-injection\""
                   }
                 },
@@ -395,7 +395,7 @@
                   "type": {
                     "type": "reference",
                     "name": "Container",
-                    "id": 799,
+                    "id": 798,
                     "moduleName": "\"aurelia-dependency-injection\""
                   }
                 }
@@ -437,7 +437,7 @@
                   "type": {
                     "type": "reference",
                     "name": "ViewResources",
-                    "id": 1492,
+                    "id": 1504,
                     "moduleName": "\"aurelia-templating\""
                   }
                 },
@@ -558,7 +558,7 @@
                   "type": {
                     "type": "reference",
                     "name": "ViewResources",
-                    "id": 1492,
+                    "id": 1504,
                     "moduleName": "\"aurelia-templating\""
                   }
                 },
@@ -571,7 +571,7 @@
                   "type": {
                     "type": "reference",
                     "name": "ViewCompileInstruction",
-                    "id": 1358,
+                    "id": 1370,
                     "moduleName": "\"aurelia-templating\""
                   }
                 }
@@ -5363,44 +5363,6 @@
       ]
     },
     {
-      "id": 387,
-      "name": "refreshBinding",
-      "kind": 64,
-      "kindString": "Function",
-      "flags": {
-        "isExported": true
-      },
-      "signatures": [
-        {
-          "id": 388,
-          "name": "refreshBinding",
-          "kind": 4096,
-          "kindString": "Call signature",
-          "flags": {},
-          "comment": {
-            "shortText": "Forces a binding instance to reevaluate."
-          },
-          "parameters": [
-            {
-              "id": 389,
-              "name": "binding",
-              "kind": 32768,
-              "kindString": "Parameter",
-              "flags": {},
-              "type": {
-                "type": "instrinct",
-                "name": "any"
-              }
-            }
-          ],
-          "type": {
-            "type": "instrinct",
-            "name": "any"
-          }
-        }
-      ]
-    },
-    {
       "id": 381,
       "name": "unwrapExpression",
       "kind": 64,
@@ -5422,6 +5384,44 @@
             {
               "id": 383,
               "name": "expression",
+              "kind": 32768,
+              "kindString": "Parameter",
+              "flags": {},
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ],
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        }
+      ]
+    },
+    {
+      "id": 387,
+      "name": "updateOneTimeBinding",
+      "kind": 64,
+      "kindString": "Function",
+      "flags": {
+        "isExported": true
+      },
+      "signatures": [
+        {
+          "id": 388,
+          "name": "updateOneTimeBinding",
+          "kind": 4096,
+          "kindString": "Call signature",
+          "flags": {},
+          "comment": {
+            "shortText": "Forces a binding instance to reevaluate."
+          },
+          "parameters": [
+            {
+              "id": 389,
+              "name": "binding",
               "kind": 32768,
               "kindString": "Parameter",
               "flags": {},
@@ -5647,8 +5647,8 @@
         365,
         377,
         384,
-        387,
         381,
+        387,
         372,
         361,
         391

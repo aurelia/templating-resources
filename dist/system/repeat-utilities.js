@@ -1,7 +1,7 @@
 System.register(['aurelia-binding'], function (_export) {
   'use strict';
 
-  var createOverrideContext, BindingBehavior, ValueConverter, sourceContext;
+  var createOverrideContext, BindingBehavior, ValueConverter, sourceContext, bindingMode, oneTime;
 
   _export('updateOverrideContexts', updateOverrideContexts);
 
@@ -15,7 +15,7 @@ System.register(['aurelia-binding'], function (_export) {
 
   _export('isOneTime', isOneTime);
 
-  _export('refreshBinding', refreshBinding);
+  _export('updateOneTimeBinding', updateOneTimeBinding);
 
   function updateOverrideContexts(views, startIndex) {
     var length = views.length;
@@ -84,8 +84,8 @@ System.register(['aurelia-binding'], function (_export) {
     return false;
   }
 
-  function refreshBinding(binding) {
-    if (binding.call) {
+  function updateOneTimeBinding(binding) {
+    if (binding.call && binding.mode === oneTime) {
       binding.call(sourceContext);
     }
   }
@@ -96,7 +96,10 @@ System.register(['aurelia-binding'], function (_export) {
       BindingBehavior = _aureliaBinding.BindingBehavior;
       ValueConverter = _aureliaBinding.ValueConverter;
       sourceContext = _aureliaBinding.sourceContext;
+      bindingMode = _aureliaBinding.bindingMode;
     }],
-    execute: function () {}
+    execute: function () {
+      oneTime = bindingMode.oneTime;
+    }
   };
 });
