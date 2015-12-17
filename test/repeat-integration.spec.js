@@ -489,7 +489,7 @@ function describeArrayTests(viewsRequireLifecycle) {
   });
 }
 
-describe('Repeat array (pure)', describeArrayTests);
+describe('Repeat array (pure)', describeArrayTests.bind(this, true));
 
 describe('Repeat array (not pure)', describeArrayTests.bind(this, false));
 
