@@ -33,7 +33,7 @@ describe('ArrayRepeatStrategy', () => {
   });
 
   describe('instanceMutated', () => {
-    let view1, view2, view3, items, splices;
+    let view1, view2, view3, items, splices, viewFactorySpy;
 
     beforeEach(() => {
       strategy = new ArrayRepeatStrategy();
@@ -48,7 +48,7 @@ describe('ArrayRepeatStrategy', () => {
       view3.bindingContext = { item: 'bar' };
       view3.overrideContext = {};
       viewSlot.children = [view1, view2, view3];
-      spyOn(viewFactory, 'create').and.callFake(() => {});
+      viewFactorySpy = spyOn(viewFactory, 'create').and.callFake(() => {});
     });
 
     it('should update binding context after views are unbinded', () => {
@@ -213,5 +213,51 @@ describe('ArrayRepeatStrategy', () => {
         done();
       });
     });
+
+    describe('during animation', () => {
+      let delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+      let removeAtWithAnimation = animationDuration => {
+        return function(index) {
+          let view = this.children[index];
+          return delay(animationDuration).then(() => {
+            this.children.splice(this.children.indexOf(view), 1);
+          });
+        };
+      };
+
+      beforeEach(() => {
+        viewFactorySpy.and.callFake(() => new ViewMock());
+        spyOn(viewSlot, 'removeAt').and.callFake(removeAtWithAnimation(500));
+      });
+
+      it('should correctly handle insert during remove animation', done => {
+        items = ['qux'];
+        splices = [{
+          addedCount: 0,
+          index: 0,
+          removed: ['foo']
+        }, {
+          addedCount: 0,
+          index: 1,
+          removed: ['bar']
+        }];
+
+        strategy.instanceMutated(repeat, items, splices);
+
+        // after 300ms the leave animation from the previous splice set is still playing
+        delay(300).then(() => {
+          splices = [{ addedCount: 1, index: 1, removed: [] }];
+          strategy.instanceMutated(repeat, ['qux', 'Bar'], splices);
+          return delay(700);
+        })
+        .then(() => {
+          expect(viewSlot.children.length).toEqual(2);
+          expect(viewSlot.children[0].bindingContext.item).toBe('qux');
+          expect(viewSlot.children[1].bindingContext.item).toBe('Bar');
+        })
+        .then(() => done())
+      })
+    })
   });
 });
