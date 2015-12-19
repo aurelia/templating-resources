@@ -1,4 +1,5 @@
 import {createFullOverrideContext, updateOverrideContexts, updateOneTimeBinding} from './repeat-utilities';
+import {mergeSplice} from 'aurelia-binding';
 
 /**
 * A strategy for repeating a template over an array.
@@ -104,7 +105,11 @@ export class ArrayRepeatStrategy {
 
   _standardProcessInstanceMutated(repeat, array, splices) {
     if (repeat.__queuedSplices) {
-      repeat.__queuedSplices.push({ repeat, array, splices });
+      for (let i = 0, ii = splices.length; i < ii; ++i) {
+        let {index, removed, addedCount} = splices[i];
+        mergeSplice(repeat.__queuedSplices, index, removed, addedCount);
+      }
+      repeat.__array = array.slice(0);
       return;
     }
 
@@ -115,15 +120,12 @@ export class ArrayRepeatStrategy {
       let runQueuedSplices = () => {
         if (! queuedSplices.length) {
           delete repeat.__queuedSplices;
+          delete repeat.__array;
           return;
         }
 
-        // TODO: coalesce/normalise queuedSplices here
-
-        // TODO: if the splices are coalesced then _runSplices only has to be
-        //       called once here, will be faster and simpler.
-        let nextSplice = queuedSplices.shift();
-        let nextPromise = this._runSplices(nextSplice.repeat, nextSplice.array, nextSplice.splices) || Promise.resolve();
+        let nextPromise = this._runSplices(repeat, repeat.__array, queuedSplices) || Promise.resolve();
+        queuedSplices = repeat.__queuedSplices = [];
         nextPromise.then(runQueuedSplices);
       }
 
