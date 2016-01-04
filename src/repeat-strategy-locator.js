@@ -1,6 +1,7 @@
 import {NullRepeatStrategy} from './null-repeat-strategy';
 import {ArrayRepeatStrategy} from './array-repeat-strategy';
 import {MapRepeatStrategy} from './map-repeat-strategy';
+import {SetRepeatStrategy} from './set-repeat-strategy';
 import {NumberRepeatStrategy} from './number-repeat-strategy';
 
 /**
@@ -27,6 +28,7 @@ export class RepeatStrategyLocator {
     this.addStrategy(items => items === null || items === undefined, new NullRepeatStrategy());
     this.addStrategy(items => items instanceof Array, new ArrayRepeatStrategy());
     this.addStrategy(items => items instanceof Map, new MapRepeatStrategy());
+    this.addStrategy(items => items instanceof Set, new SetRepeatStrategy());
     this.addStrategy(items => typeof items === 'number', new NumberRepeatStrategy());
   }
 

@@ -147,6 +147,9 @@ function hasArraySubscribers(array) {
 function hasMapSubscribers(map) {
   return observerLocator.getMapObserver(map).hasSubscribers();
 }
+function hasSetSubscribers(set) {
+  return observerLocator.getSetObserver(set).hasSubscribers();
+}
 
 function describeArrayTests(viewsRequireLifecycle) {
   let viewModel, controller;
@@ -592,6 +595,114 @@ describe('Repeat map [k, v]', () => {
     controller = createController(template, viewModel);
     validateState();
     expect(hasMapSubscribers(viewModel.items)).toBe(false);
+  });
+});
+
+describe('Repeat set', () => {
+  let viewModel, controller;
+  let obj = {};
+
+  function validateState() {
+    // validate DOM
+    let expectedContent = [];
+    if (viewModel.items !== null && viewModel.items !== undefined) {
+      const toString = x => x === null || x === undefined ? '' : x.toString();
+      expectedContent = Array.from(viewModel.items.values()).map(item => `${toString(item)}`);
+      //let expectedContent = viewModel.items.map(x => x === null || x === undefined ? '' : x.toString());
+    }
+    expect(selectContent(controller, 'div')).toEqual(expectedContent);
+
+    // validate contextual data
+    let views = controller.view.children[0].children;
+    let items = viewModel.items ? Array.from(viewModel.items.entries()) : [];
+    for (let i = 0; i < items.length; i++) {
+      expect(views[i].bindingContext.item).toBe(items[i][0]);
+      let overrideContext = views[i].overrideContext;
+      expect(overrideContext.parentOverrideContext.bindingContext).toBe(viewModel);
+      expect(overrideContext.bindingContext).toBe(views[i].bindingContext);
+      let first = i === 0;
+      let last = i === items.length - 1;
+      let even = i % 2 === 0;
+      expect(overrideContext.$index).toBe(i);
+      expect(overrideContext.$first).toBe(first);
+      expect(overrideContext.$last).toBe(last);
+      expect(overrideContext.$middle).toBe(!first && !last);
+      expect(overrideContext.$odd).toBe(!even);
+      expect(overrideContext.$even).toBe(even);
+    }
+  }
+
+  beforeEach(() => {
+    let template = `<template><div repeat.for="item of items">\${item}</div></template>`;
+    viewModel = { items: new Set(['a', 'b', 0, null, obj, undefined, 7]) };
+    //viewModel = { items: new Map([['a', 'b'], ['test', 0], [obj, null], ['hello world', undefined], [6, 7]]) };
+    controller = createController(template, viewModel);
+    validateState();
+  });
+
+  afterEach(() => {
+    controller.unbind();
+    expect(hasSubscribers(viewModel, 'items')).toBe(false);
+    expect(hasMapSubscribers(viewModel.items)).toBe(false);
+  });
+
+  it('can render set', done => {
+    nq(() => validateState());
+    nq(() => done());
+  });
+
+  it('handles add', done => {
+    viewModel.items.add('x');
+    nq(() => validateState());
+    nq(() => viewModel.items.add(999));
+    nq(() => validateState());
+    nq(() => viewModel.items.add('a'));
+    nq(() => validateState());
+    nq(() => done());
+  });
+
+  it('handles delete', done => {
+    viewModel.items.delete(6);
+    nq(() => validateState());
+    nq(() => viewModel.items.delete()); // no args
+    nq(() => validateState());
+    nq(() => viewModel.items.delete('a'));
+    nq(() => validateState());
+    nq(() => viewModel.items.delete(null));
+    nq(() => validateState());
+    nq(() => viewModel.items.delete(undefined));
+    nq(() => validateState());
+    nq(() => viewModel.items.delete(obj));
+    nq(() => validateState());
+    nq(() => done());
+  });
+
+  it('handles clear', done => {
+    viewModel.items.clear();
+    nq(() => validateState());
+    nq(() => viewModel.items.clear());
+    nq(() => validateState());
+    nq(() => done());
+  });
+
+  it('handles property change', done => {
+    viewModel.items = null;
+    nq(() => validateState());
+    nq(() => viewModel.items = new Set(['a', 'b']));
+    nq(() => validateState());
+    nq(() => viewModel.items = undefined);
+    nq(() => validateState());
+    nq(() => viewModel.items = new Set(['x', 'y']));
+    nq(() => validateState());
+    nq(() => done());
+  });
+
+  it('oneTime does not observe changes', () => {
+    let template = `<template><div repeat.for="item of items & oneTime">\${item}</div></template>`;
+    viewModel = { items: new Set(['a', 'b', 0, null, obj, undefined, 7]) };
+    controller = createController(template, viewModel);
+    validateState();
+    expect(hasSetSubscribers(viewModel.items)).toBe(false);
   });
 });
 
