@@ -13,9 +13,6 @@ export class SignalBindingBehavior {
     if (!binding.updateTarget) {
       throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
     }
-    if (binding.mode === bindingMode.oneTime) {
-      throw new Error('One-time bindings cannot be signaled.');
-    }
     let bindings = this.signals[name] || (this.signals[name] = []);
     bindings.push(binding);
     binding.signalName = name;

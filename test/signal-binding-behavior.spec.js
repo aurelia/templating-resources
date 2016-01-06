@@ -29,13 +29,13 @@ describe('SignalBindingBehavior', () => {
     bindingSignaler = container.get(BindingSignaler);
   });
 
-  it('should throw in one-time binding', () => {
+  it('should not throw in one-time binding', () => {
     let source = {};
     let scope = createScopeForTest(source);
     let target = document.createElement('input');
     let bindingExpression = bindingEngine.createBindingExpression('value', `'foo' & signal:'test'`, bindingMode.oneTime, lookupFunctions);
     let binding = bindingExpression.createBinding(target);
-    expect(() => binding.bind(scope)).toThrow();
+    expect(() => binding.bind(scope)).not.toThrow();
   });
 
   it('should signal binding', () => {
@@ -43,6 +43,20 @@ describe('SignalBindingBehavior', () => {
     let scope = createScopeForTest(source);
     let target = document.createElement('input');
     let bindingExpression = bindingEngine.createBindingExpression('value', `updateDateTime | testConverter & signal:'test'`, bindingMode.oneWay, lookupFunctions);
+    let binding = bindingExpression.createBinding(target);
+    converterResult = 'hello';
+    binding.bind(scope);
+    expect(target.value).toBe(converterResult);
+    converterResult = 'world';
+    bindingSignaler.signal('test');
+    expect(target.value).toBe(converterResult);
+  });
+
+  it('should signal one-time binding', () => {
+    let source = { updateDateTime: new Date() };
+    let scope = createScopeForTest(source);
+    let target = document.createElement('input');
+    let bindingExpression = bindingEngine.createBindingExpression('value', `updateDateTime | testConverter & signal:'test'`, bindingMode.oneTime, lookupFunctions);
     let binding = bindingExpression.createBinding(target);
     converterResult = 'hello';
     binding.bind(scope);
