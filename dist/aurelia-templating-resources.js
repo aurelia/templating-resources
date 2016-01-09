@@ -1,7 +1,7 @@
 import * as LogManager from 'aurelia-logging';
 import {inject,Container} from 'aurelia-dependency-injection';
-import {BoundViewFactory,ViewSlot,customAttribute,templateController,Animator,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,noView,TargetInstruction,ViewEngine} from 'aurelia-templating';
-import {createOverrideContext,bindingMode,EventManager,BindingBehavior,ValueConverter,sourceContext,valueConverter,ObserverLocator} from 'aurelia-binding';
+import {BoundViewFactory,ViewSlot,customAttribute,templateController,Animator,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,noView,View,TargetInstruction,ViewEngine} from 'aurelia-templating';
+import {createOverrideContext,bindingMode,EventManager,BindingBehavior,ValueConverter,sourceContext,mergeSplice,valueConverter,ObserverLocator} from 'aurelia-binding';
 import {DOM,FEATURE} from 'aurelia-pal';
 import {TaskQueue} from 'aurelia-task-queue';
 import {Loader} from 'aurelia-loader';
@@ -773,10 +773,19 @@ export class Compose {
   }
 
   /**
+  * Invoked when the component has been created.
+  *
+  * @param owningView The view that this component was created inside of.
+  */
+  created(owningView: View) {
+    this.owningView = owningView;
+  }
+
+  /**
   * Used to set the bindingContext.
   *
-  * @param {bindingContext} bindingContext The context in which the view model is executed in.
-  * @param {overrideContext} overrideContext The context in which the view model is executed in.
+  * @param bindingContext The context in which the view model is executed in.
+  * @param overrideContext The context in which the view model is executed in.
   */
   bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
@@ -871,6 +880,7 @@ function createInstruction(composer, instruction) {
   return Object.assign(instruction, {
     bindingContext: composer.bindingContext,
     overrideContext: composer.overrideContext,
+    owningView: composer.owningView,
     container: composer.container,
     viewSlot: composer.viewSlot,
     viewResources: composer.viewResources,
@@ -1119,6 +1129,46 @@ export class ArrayRepeatStrategy {
   }
 
   _standardProcessInstanceMutated(repeat, array, splices) {
+    if (repeat.__queuedSplices) {
+      for (let i = 0, ii = splices.length; i < ii; ++i) {
+        let {index, removed, addedCount} = splices[i];
+        mergeSplice(repeat.__queuedSplices, index, removed, addedCount);
+      }
+      repeat.__array = array.slice(0);
+      return;
+    }
+
+    let maybePromise = this._runSplices(repeat, array, splices);
+    if (maybePromise instanceof Promise) {
+      let queuedSplices = repeat.__queuedSplices = [];
+
+      let runQueuedSplices = () => {
+        if (! queuedSplices.length) {
+          delete repeat.__queuedSplices;
+          delete repeat.__array;
+          return;
+        }
+
+        let nextPromise = this._runSplices(repeat, repeat.__array, queuedSplices) || Promise.resolve();
+        queuedSplices = repeat.__queuedSplices = [];
+        nextPromise.then(runQueuedSplices);
+      };
+
+      maybePromise.then(runQueuedSplices);
+    }
+  }
+
+  /**
+  * Run a normalised set of splices against the viewSlot children.
+  * @param repeat The repeat instance.
+  * @param array The modified array.
+  * @param splices Records of array changes.
+  * @return {Promise|undefined} A promise if animations have to be run.
+  * @pre The splices must be normalised so as:
+  *  * Any item added may not be later removed.
+  *  * Removals are ordered by asending index
+  */
+  _runSplices(repeat, array, splices) {
     let removeDelta = 0;
     let viewSlot = repeat.viewSlot;
     let rmPromises = [];
@@ -1128,6 +1178,7 @@ export class ArrayRepeatStrategy {
       let removed = splice.removed;
 
       for (let j = 0, jj = removed.length; j < jj; ++j) {
+        // the rmPromises.length correction works due to the ordered removal precondition
         let viewOrPromise = viewSlot.removeAt(splice.index + removeDelta + rmPromises.length, true);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
@@ -1137,14 +1188,14 @@ export class ArrayRepeatStrategy {
     }
 
     if (rmPromises.length > 0) {
-      Promise.all(rmPromises).then(() => {
+      return Promise.all(rmPromises).then(() => {
         let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
         updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
       });
-    } else {
-      let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
-      updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
     }
+
+    let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
+    updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
   }
 
   _handleAddedSplices(repeat, array, splices) {
@@ -1352,6 +1403,113 @@ export class NumberRepeatStrategy {
 }
 
 /**
+* A strategy for repeating a template over a Set.
+*/
+export class SetRepeatStrategy {
+  /**
+  * Gets a Set observer.
+  * @param items The items to be observed.
+  */
+  getCollectionObserver(observerLocator, items) {
+    return observerLocator.getSetObserver(items);
+  }
+
+  /**
+  * Process the provided Set entries.
+  * @param items The entries to process.
+  */
+  instanceChanged(repeat, items) {
+    let removePromise = repeat.viewSlot.removeAll(true);
+    if (removePromise instanceof Promise) {
+      removePromise.then(() => this._standardProcessItems(repeat, items));
+      return;
+    }
+    this._standardProcessItems(repeat, items);
+  }
+
+  _standardProcessItems(repeat, items) {
+    let viewFactory = repeat.viewFactory;
+    let viewSlot = repeat.viewSlot;
+    let index = 0;
+    let overrideContext;
+    let view;
+
+    items.forEach(value => {
+      overrideContext = createFullOverrideContext(repeat, value, index, items.size);
+      view = viewFactory.create();
+      view.bind(overrideContext.bindingContext, overrideContext);
+      viewSlot.add(view);
+      ++index;
+    });
+  }
+
+  /**
+  * Handle changes in a Set collection.
+  * @param map The underlying Set collection.
+  * @param records The change records.
+  */
+  instanceMutated(repeat, set, records) {
+    let viewSlot = repeat.viewSlot;
+    let value;
+    let i;
+    let ii;
+    let view;
+    let overrideContext;
+    let removeIndex;
+    let record;
+    let rmPromises = [];
+    let viewOrPromise;
+
+    for (i = 0, ii = records.length; i < ii; ++i) {
+      record = records[i];
+      value = record.value;
+      switch (record.type) {
+      case 'add':
+        overrideContext = createFullOverrideContext(repeat, value, set.size - 1, set.size);
+        view = repeat.viewFactory.create();
+        view.bind(overrideContext.bindingContext, overrideContext);
+        viewSlot.insert(set.size - 1, view);
+        break;
+      case 'delete':
+        removeIndex = this._getViewIndexByValue(repeat, value);
+        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        if (viewOrPromise instanceof Promise) {
+          rmPromises.push(viewOrPromise);
+        }
+        break;
+      case 'clear':
+        viewSlot.removeAll(true);
+        break;
+      default:
+        continue;
+      }
+    }
+
+    if (rmPromises.length > 0) {
+      Promise.all(rmPromises).then(() => {
+        updateOverrideContexts(repeat.viewSlot.children, 0);
+      });
+    } else {
+      updateOverrideContexts(repeat.viewSlot.children, 0);
+    }
+  }
+
+  _getViewIndexByValue(repeat, value) {
+    let viewSlot = repeat.viewSlot;
+    let i;
+    let ii;
+    let child;
+
+    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
+      child = viewSlot.children[i];
+      if (child.bindingContext[repeat.local] === value) {
+        return i;
+      }
+    }
+  }
+}
+
+/**
 * Simple html sanitization converter to preserve whitelisted elements and attributes on a bound property containing html.
 */
 @valueConverter('sanitizeHTML')
@@ -1390,9 +1548,6 @@ export class SignalBindingBehavior {
     if (!binding.updateTarget) {
       throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
     }
-    if (binding.mode === bindingMode.oneTime) {
-      throw new Error('One-time bindings cannot be signaled.');
-    }
     let bindings = this.signals[name] || (this.signals[name] = []);
     bindings.push(binding);
     binding.signalName = name;
@@ -1430,6 +1585,7 @@ export class RepeatStrategyLocator {
     this.addStrategy(items => items === null || items === undefined, new NullRepeatStrategy());
     this.addStrategy(items => items instanceof Array, new ArrayRepeatStrategy());
     this.addStrategy(items => items instanceof Map, new MapRepeatStrategy());
+    this.addStrategy(items => items instanceof Set, new SetRepeatStrategy());
     this.addStrategy(items => typeof items === 'number', new NumberRepeatStrategy());
   }
 

@@ -48,6 +48,10 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
       this.currentViewModel = null;
     }
 
+    Compose.prototype.created = function created(owningView) {
+      this.owningView = owningView;
+    };
+
     Compose.prototype.bind = function bind(bindingContext, overrideContext) {
       this.bindingContext = bindingContext;
       this.overrideContext = overrideContext;
@@ -141,6 +145,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
     return Object.assign(instruction, {
       bindingContext: composer.bindingContext,
       overrideContext: composer.overrideContext,
+      owningView: composer.owningView,
       container: composer.container,
       viewSlot: composer.viewSlot,
       viewResources: composer.viewResources,

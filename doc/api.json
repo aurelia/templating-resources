@@ -6,7 +6,7 @@
   "flags": {},
   "children": [
     {
-      "id": 257,
+      "id": 260,
       "name": "ArrayRepeatStrategy",
       "kind": 128,
       "kindString": "Class",
@@ -18,7 +18,7 @@
       },
       "children": [
         {
-          "id": 258,
+          "id": 261,
           "name": "getCollectionObserver",
           "kind": 2048,
           "kindString": "Method",
@@ -27,7 +27,7 @@
           },
           "signatures": [
             {
-              "id": 259,
+              "id": 262,
               "name": "getCollectionObserver",
               "kind": 4096,
               "kindString": "Call signature",
@@ -37,7 +37,7 @@
               },
               "parameters": [
                 {
-                  "id": 260,
+                  "id": 263,
                   "name": "observerLocator",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -51,7 +51,7 @@
                   }
                 },
                 {
-                  "id": 261,
+                  "id": 264,
                   "name": "items",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -73,7 +73,7 @@
           ]
         },
         {
-          "id": 262,
+          "id": 265,
           "name": "instanceChanged",
           "kind": 2048,
           "kindString": "Method",
@@ -82,7 +82,7 @@
           },
           "signatures": [
             {
-              "id": 263,
+              "id": 266,
               "name": "instanceChanged",
               "kind": 4096,
               "kindString": "Call signature",
@@ -92,7 +92,7 @@
               },
               "parameters": [
                 {
-                  "id": 264,
+                  "id": 267,
                   "name": "repeat",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -106,7 +106,7 @@
                   }
                 },
                 {
-                  "id": 265,
+                  "id": 268,
                   "name": "items",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -128,7 +128,7 @@
           ]
         },
         {
-          "id": 266,
+          "id": 269,
           "name": "instanceMutated",
           "kind": 2048,
           "kindString": "Method",
@@ -137,7 +137,7 @@
           },
           "signatures": [
             {
-              "id": 267,
+              "id": 270,
               "name": "instanceMutated",
               "kind": 4096,
               "kindString": "Call signature",
@@ -147,7 +147,7 @@
               },
               "parameters": [
                 {
-                  "id": 268,
+                  "id": 271,
                   "name": "repeat",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -161,7 +161,7 @@
                   }
                 },
                 {
-                  "id": 269,
+                  "id": 272,
                   "name": "array",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -175,7 +175,7 @@
                   }
                 },
                 {
-                  "id": 270,
+                  "id": 273,
                   "name": "splices",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -202,15 +202,15 @@
           "title": "Methods",
           "kind": 2048,
           "children": [
-            258,
-            262,
-            266
+            261,
+            265,
+            269
           ]
         }
       ]
     },
     {
-      "id": 203,
+      "id": 206,
       "name": "BindingSignaler",
       "kind": 128,
       "kindString": "Class",
@@ -219,7 +219,7 @@
       },
       "children": [
         {
-          "id": 204,
+          "id": 207,
           "name": "signals",
           "kind": 1024,
           "kindString": "Property",
@@ -232,7 +232,7 @@
           }
         },
         {
-          "id": 205,
+          "id": 208,
           "name": "signal",
           "kind": 2048,
           "kindString": "Method",
@@ -241,14 +241,14 @@
           },
           "signatures": [
             {
-              "id": 206,
+              "id": 209,
               "name": "signal",
               "kind": 4096,
               "kindString": "Call signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 207,
+                  "id": 210,
                   "name": "name",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -272,14 +272,14 @@
           "title": "Properties",
           "kind": 1024,
           "children": [
-            204
+            207
           ]
         },
         {
           "title": "Methods",
           "kind": 2048,
           "children": [
-            205
+            208
           ]
         }
       ]
@@ -349,7 +349,7 @@
                   "type": {
                     "type": "reference",
                     "name": "Container",
-                    "id": 798,
+                    "id": 821,
                     "moduleName": "\"aurelia-dependency-injection\""
                   }
                 },
@@ -395,7 +395,7 @@
                   "type": {
                     "type": "reference",
                     "name": "Container",
-                    "id": 798,
+                    "id": 821,
                     "moduleName": "\"aurelia-dependency-injection\""
                   }
                 }
@@ -437,7 +437,7 @@
                   "type": {
                     "type": "reference",
                     "name": "ViewResources",
-                    "id": 1504,
+                    "id": 1530,
                     "moduleName": "\"aurelia-templating\""
                   }
                 },
@@ -558,7 +558,7 @@
                   "type": {
                     "type": "reference",
                     "name": "ViewResources",
-                    "id": 1504,
+                    "id": 1530,
                     "moduleName": "\"aurelia-templating\""
                   }
                 },
@@ -571,7 +571,7 @@
                   "type": {
                     "type": "reference",
                     "name": "ViewCompileInstruction",
-                    "id": 1370,
+                    "id": 1396,
                     "moduleName": "\"aurelia-templating\""
                   }
                 }
@@ -602,7 +602,7 @@
       ]
     },
     {
-      "id": 198,
+      "id": 201,
       "name": "CompileSpy",
       "kind": 128,
       "kindString": "Class",
@@ -614,7 +614,7 @@
       },
       "children": [
         {
-          "id": 199,
+          "id": 202,
           "name": "constructor",
           "kind": 512,
           "kindString": "Constructor",
@@ -626,7 +626,7 @@
           },
           "signatures": [
             {
-              "id": 200,
+              "id": 203,
               "name": "new CompileSpy",
               "kind": 16384,
               "kindString": "Constructor signature",
@@ -636,7 +636,7 @@
               },
               "parameters": [
                 {
-                  "id": 201,
+                  "id": 204,
                   "name": "element",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -650,7 +650,7 @@
                   }
                 },
                 {
-                  "id": 202,
+                  "id": 205,
                   "name": "instruction",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -667,7 +667,7 @@
               "type": {
                 "type": "reference",
                 "name": "CompileSpy",
-                "id": 198,
+                "id": 201,
                 "moduleName": "\"aurelia-templating-resources\""
               }
             }
@@ -679,7 +679,7 @@
           "title": "Constructors",
           "kind": 512,
           "children": [
-            199
+            202
           ]
         }
       ]
@@ -852,7 +852,7 @@
           }
         },
         {
-          "id": 178,
+          "id": 181,
           "name": "bind",
           "kind": 2048,
           "kindString": "Method",
@@ -861,7 +861,7 @@
           },
           "signatures": [
             {
-              "id": 179,
+              "id": 182,
               "name": "bind",
               "kind": 4096,
               "kindString": "Call signature",
@@ -871,7 +871,7 @@
               },
               "parameters": [
                 {
-                  "id": 180,
+                  "id": 183,
                   "name": "bindingContext",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -885,7 +885,7 @@
                   }
                 },
                 {
-                  "id": 181,
+                  "id": 184,
                   "name": "overrideContext",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -907,7 +907,50 @@
           ]
         },
         {
-          "id": 186,
+          "id": 178,
+          "name": "created",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 179,
+              "name": "created",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Invoked when the component has been created."
+              },
+              "parameters": [
+                {
+                  "id": 180,
+                  "name": "owningView",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The view that this component was created inside of.\n"
+                  },
+                  "type": {
+                    "type": "reference",
+                    "name": "View",
+                    "id": 1580,
+                    "moduleName": "\"aurelia-templating\""
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 189,
           "name": "modelChanged",
           "kind": 2048,
           "kindString": "Method",
@@ -916,7 +959,7 @@
           },
           "signatures": [
             {
-              "id": 187,
+              "id": 190,
               "name": "modelChanged",
               "kind": 4096,
               "kindString": "Call signature",
@@ -926,7 +969,7 @@
               },
               "parameters": [
                 {
-                  "id": 188,
+                  "id": 191,
                   "name": "newValue",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -940,7 +983,7 @@
                   }
                 },
                 {
-                  "id": 189,
+                  "id": 192,
                   "name": "oldValue",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -962,7 +1005,7 @@
           ]
         },
         {
-          "id": 182,
+          "id": 185,
           "name": "unbind",
           "kind": 2048,
           "kindString": "Method",
@@ -971,7 +1014,7 @@
           },
           "signatures": [
             {
-              "id": 183,
+              "id": 186,
               "name": "unbind",
               "kind": 4096,
               "kindString": "Call signature",
@@ -981,7 +1024,7 @@
               },
               "parameters": [
                 {
-                  "id": 184,
+                  "id": 187,
                   "name": "bindingContext",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -992,7 +1035,7 @@
                   }
                 },
                 {
-                  "id": 185,
+                  "id": 188,
                   "name": "overrideContext",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1011,7 +1054,7 @@
           ]
         },
         {
-          "id": 190,
+          "id": 193,
           "name": "viewChanged",
           "kind": 2048,
           "kindString": "Method",
@@ -1020,7 +1063,7 @@
           },
           "signatures": [
             {
-              "id": 191,
+              "id": 194,
               "name": "viewChanged",
               "kind": 4096,
               "kindString": "Call signature",
@@ -1030,7 +1073,7 @@
               },
               "parameters": [
                 {
-                  "id": 192,
+                  "id": 195,
                   "name": "newValue",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1044,7 +1087,7 @@
                   }
                 },
                 {
-                  "id": 193,
+                  "id": 196,
                   "name": "oldValue",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1066,7 +1109,7 @@
           ]
         },
         {
-          "id": 194,
+          "id": 197,
           "name": "viewModelChanged",
           "kind": 2048,
           "kindString": "Method",
@@ -1075,7 +1118,7 @@
           },
           "signatures": [
             {
-              "id": 195,
+              "id": 198,
               "name": "viewModelChanged",
               "kind": 4096,
               "kindString": "Call signature",
@@ -1085,7 +1128,7 @@
               },
               "parameters": [
                 {
-                  "id": 196,
+                  "id": 199,
                   "name": "newValue",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1099,7 +1142,7 @@
                   }
                 },
                 {
-                  "id": 197,
+                  "id": 200,
                   "name": "oldValue",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1142,11 +1185,12 @@
           "title": "Methods",
           "kind": 2048,
           "children": [
+            181,
             178,
-            186,
-            182,
-            190,
-            194
+            189,
+            185,
+            193,
+            197
           ]
         }
       ]
@@ -1761,7 +1805,7 @@
       ]
     },
     {
-      "id": 271,
+      "id": 274,
       "name": "MapRepeatStrategy",
       "kind": 128,
       "kindString": "Class",
@@ -1773,7 +1817,7 @@
       },
       "children": [
         {
-          "id": 272,
+          "id": 275,
           "name": "getCollectionObserver",
           "kind": 2048,
           "kindString": "Method",
@@ -1782,7 +1826,7 @@
           },
           "signatures": [
             {
-              "id": 273,
+              "id": 276,
               "name": "getCollectionObserver",
               "kind": 4096,
               "kindString": "Call signature",
@@ -1792,7 +1836,7 @@
               },
               "parameters": [
                 {
-                  "id": 274,
+                  "id": 277,
                   "name": "observerLocator",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1803,7 +1847,7 @@
                   }
                 },
                 {
-                  "id": 275,
+                  "id": 278,
                   "name": "items",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1825,7 +1869,7 @@
           ]
         },
         {
-          "id": 276,
+          "id": 279,
           "name": "instanceChanged",
           "kind": 2048,
           "kindString": "Method",
@@ -1834,7 +1878,7 @@
           },
           "signatures": [
             {
-              "id": 277,
+              "id": 280,
               "name": "instanceChanged",
               "kind": 4096,
               "kindString": "Call signature",
@@ -1844,7 +1888,7 @@
               },
               "parameters": [
                 {
-                  "id": 278,
+                  "id": 281,
                   "name": "repeat",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1855,7 +1899,7 @@
                   }
                 },
                 {
-                  "id": 279,
+                  "id": 282,
                   "name": "items",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1877,7 +1921,7 @@
           ]
         },
         {
-          "id": 280,
+          "id": 283,
           "name": "instanceMutated",
           "kind": 2048,
           "kindString": "Method",
@@ -1886,7 +1930,7 @@
           },
           "signatures": [
             {
-              "id": 281,
+              "id": 284,
               "name": "instanceMutated",
               "kind": 4096,
               "kindString": "Call signature",
@@ -1896,7 +1940,7 @@
               },
               "parameters": [
                 {
-                  "id": 282,
+                  "id": 285,
                   "name": "repeat",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1907,7 +1951,7 @@
                   }
                 },
                 {
-                  "id": 283,
+                  "id": 286,
                   "name": "map",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1921,7 +1965,7 @@
                   }
                 },
                 {
-                  "id": 284,
+                  "id": 287,
                   "name": "records",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1948,36 +1992,36 @@
           "title": "Methods",
           "kind": 2048,
           "children": [
-            272,
-            276,
-            280
+            275,
+            279,
+            283
           ]
         }
       ]
     },
     {
-      "id": 208,
+      "id": 211,
       "name": "ModeBindingBehavior",
       "kind": 128,
       "kindString": "Class",
       "flags": {},
       "children": [
         {
-          "id": 209,
+          "id": 212,
           "name": "constructor",
           "kind": 512,
           "kindString": "Constructor",
           "flags": {},
           "signatures": [
             {
-              "id": 210,
+              "id": 213,
               "name": "new ModeBindingBehavior",
               "kind": 16384,
               "kindString": "Constructor signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 211,
+                  "id": 214,
                   "name": "mode",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -1991,28 +2035,28 @@
               "type": {
                 "type": "reference",
                 "name": "ModeBindingBehavior",
-                "id": 208,
+                "id": 211,
                 "moduleName": "\"aurelia-templating-resources\""
               }
             }
           ]
         },
         {
-          "id": 212,
+          "id": 215,
           "name": "bind",
           "kind": 2048,
           "kindString": "Method",
           "flags": {},
           "signatures": [
             {
-              "id": 213,
+              "id": 216,
               "name": "bind",
               "kind": 4096,
               "kindString": "Call signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 214,
+                  "id": 217,
                   "name": "binding",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2023,7 +2067,7 @@
                   }
                 },
                 {
-                  "id": 215,
+                  "id": 218,
                   "name": "source",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2034,7 +2078,7 @@
                   }
                 },
                 {
-                  "id": 216,
+                  "id": 219,
                   "name": "lookupFunctions",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2053,21 +2097,21 @@
           ]
         },
         {
-          "id": 217,
+          "id": 220,
           "name": "unbind",
           "kind": 2048,
           "kindString": "Method",
           "flags": {},
           "signatures": [
             {
-              "id": 218,
+              "id": 221,
               "name": "unbind",
               "kind": 4096,
               "kindString": "Call signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 219,
+                  "id": 222,
                   "name": "binding",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2078,7 +2122,7 @@
                   }
                 },
                 {
-                  "id": 220,
+                  "id": 223,
                   "name": "source",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2102,15 +2146,15 @@
           "title": "Constructors",
           "kind": 512,
           "children": [
-            209
+            212
           ]
         },
         {
           "title": "Methods",
           "kind": 2048,
           "children": [
-            212,
-            217
+            215,
+            220
           ]
         }
       ],
@@ -2118,17 +2162,17 @@
         {
           "type": "reference",
           "name": "OneTimeBindingBehavior",
-          "id": 221
+          "id": 224
         },
         {
           "type": "reference",
           "name": "OneWayBindingBehavior",
-          "id": 233
+          "id": 236
         },
         {
           "type": "reference",
           "name": "TwoWayBindingBehavior",
-          "id": 245
+          "id": 248
         }
       ]
     },
@@ -2249,7 +2293,7 @@
       ]
     },
     {
-      "id": 285,
+      "id": 288,
       "name": "NumberRepeatStrategy",
       "kind": 128,
       "kindString": "Class",
@@ -2261,7 +2305,7 @@
       },
       "children": [
         {
-          "id": 286,
+          "id": 289,
           "name": "getCollectionObserver",
           "kind": 2048,
           "kindString": "Method",
@@ -2270,7 +2314,7 @@
           },
           "signatures": [
             {
-              "id": 287,
+              "id": 290,
               "name": "getCollectionObserver",
               "kind": 4096,
               "kindString": "Call signature",
@@ -2286,7 +2330,7 @@
           ]
         },
         {
-          "id": 288,
+          "id": 291,
           "name": "instanceChanged",
           "kind": 2048,
           "kindString": "Method",
@@ -2295,7 +2339,7 @@
           },
           "signatures": [
             {
-              "id": 289,
+              "id": 292,
               "name": "instanceChanged",
               "kind": 4096,
               "kindString": "Call signature",
@@ -2305,7 +2349,7 @@
               },
               "parameters": [
                 {
-                  "id": 290,
+                  "id": 293,
                   "name": "repeat",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2316,7 +2360,7 @@
                   }
                 },
                 {
-                  "id": 291,
+                  "id": 294,
                   "name": "value",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2343,14 +2387,14 @@
           "title": "Methods",
           "kind": 2048,
           "children": [
-            286,
-            288
+            289,
+            291
           ]
         }
       ]
     },
     {
-      "id": 221,
+      "id": 224,
       "name": "OneTimeBindingBehavior",
       "kind": 128,
       "kindString": "Class",
@@ -2359,7 +2403,7 @@
       },
       "children": [
         {
-          "id": 222,
+          "id": 225,
           "name": "constructor",
           "kind": 512,
           "kindString": "Constructor",
@@ -2368,7 +2412,7 @@
           },
           "signatures": [
             {
-              "id": 223,
+              "id": 226,
               "name": "new OneTimeBindingBehavior",
               "kind": 16384,
               "kindString": "Constructor signature",
@@ -2376,24 +2420,24 @@
               "type": {
                 "type": "reference",
                 "name": "OneTimeBindingBehavior",
-                "id": 221,
+                "id": 224,
                 "moduleName": "\"aurelia-templating-resources\""
               },
               "overwrites": {
                 "type": "reference",
                 "name": "ModeBindingBehavior.__constructor",
-                "id": 209
+                "id": 212
               }
             }
           ],
           "overwrites": {
             "type": "reference",
             "name": "ModeBindingBehavior.__constructor",
-            "id": 209
+            "id": 212
           }
         },
         {
-          "id": 224,
+          "id": 227,
           "name": "bind",
           "kind": 2048,
           "kindString": "Method",
@@ -2402,14 +2446,14 @@
           },
           "signatures": [
             {
-              "id": 225,
+              "id": 228,
               "name": "bind",
               "kind": 4096,
               "kindString": "Call signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 226,
+                  "id": 229,
                   "name": "binding",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2420,7 +2464,7 @@
                   }
                 },
                 {
-                  "id": 227,
+                  "id": 230,
                   "name": "source",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2431,7 +2475,7 @@
                   }
                 },
                 {
-                  "id": 228,
+                  "id": 231,
                   "name": "lookupFunctions",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2449,18 +2493,18 @@
               "inheritedFrom": {
                 "type": "reference",
                 "name": "ModeBindingBehavior.bind",
-                "id": 212
+                "id": 215
               }
             }
           ],
           "inheritedFrom": {
             "type": "reference",
             "name": "ModeBindingBehavior.bind",
-            "id": 212
+            "id": 215
           }
         },
         {
-          "id": 229,
+          "id": 232,
           "name": "unbind",
           "kind": 2048,
           "kindString": "Method",
@@ -2469,14 +2513,14 @@
           },
           "signatures": [
             {
-              "id": 230,
+              "id": 233,
               "name": "unbind",
               "kind": 4096,
               "kindString": "Call signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 231,
+                  "id": 234,
                   "name": "binding",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2487,7 +2531,7 @@
                   }
                 },
                 {
-                  "id": 232,
+                  "id": 235,
                   "name": "source",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2505,14 +2549,14 @@
               "inheritedFrom": {
                 "type": "reference",
                 "name": "ModeBindingBehavior.unbind",
-                "id": 217
+                "id": 220
               }
             }
           ],
           "inheritedFrom": {
             "type": "reference",
             "name": "ModeBindingBehavior.unbind",
-            "id": 217
+            "id": 220
           }
         }
       ],
@@ -2521,15 +2565,15 @@
           "title": "Constructors",
           "kind": 512,
           "children": [
-            222
+            225
           ]
         },
         {
           "title": "Methods",
           "kind": 2048,
           "children": [
-            224,
-            229
+            227,
+            232
           ]
         }
       ],
@@ -2537,12 +2581,12 @@
         {
           "type": "reference",
           "name": "ModeBindingBehavior",
-          "id": 208
+          "id": 211
         }
       ]
     },
     {
-      "id": 233,
+      "id": 236,
       "name": "OneWayBindingBehavior",
       "kind": 128,
       "kindString": "Class",
@@ -2551,7 +2595,7 @@
       },
       "children": [
         {
-          "id": 234,
+          "id": 237,
           "name": "constructor",
           "kind": 512,
           "kindString": "Constructor",
@@ -2560,7 +2604,7 @@
           },
           "signatures": [
             {
-              "id": 235,
+              "id": 238,
               "name": "new OneWayBindingBehavior",
               "kind": 16384,
               "kindString": "Constructor signature",
@@ -2568,24 +2612,24 @@
               "type": {
                 "type": "reference",
                 "name": "OneWayBindingBehavior",
-                "id": 233,
+                "id": 236,
                 "moduleName": "\"aurelia-templating-resources\""
               },
               "overwrites": {
                 "type": "reference",
                 "name": "ModeBindingBehavior.__constructor",
-                "id": 209
+                "id": 212
               }
             }
           ],
           "overwrites": {
             "type": "reference",
             "name": "ModeBindingBehavior.__constructor",
-            "id": 209
+            "id": 212
           }
         },
         {
-          "id": 236,
+          "id": 239,
           "name": "bind",
           "kind": 2048,
           "kindString": "Method",
@@ -2594,14 +2638,14 @@
           },
           "signatures": [
             {
-              "id": 237,
+              "id": 240,
               "name": "bind",
               "kind": 4096,
               "kindString": "Call signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 238,
+                  "id": 241,
                   "name": "binding",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2612,7 +2656,7 @@
                   }
                 },
                 {
-                  "id": 239,
+                  "id": 242,
                   "name": "source",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2623,7 +2667,7 @@
                   }
                 },
                 {
-                  "id": 240,
+                  "id": 243,
                   "name": "lookupFunctions",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2641,18 +2685,18 @@
               "inheritedFrom": {
                 "type": "reference",
                 "name": "ModeBindingBehavior.bind",
-                "id": 212
+                "id": 215
               }
             }
           ],
           "inheritedFrom": {
             "type": "reference",
             "name": "ModeBindingBehavior.bind",
-            "id": 212
+            "id": 215
           }
         },
         {
-          "id": 241,
+          "id": 244,
           "name": "unbind",
           "kind": 2048,
           "kindString": "Method",
@@ -2661,14 +2705,14 @@
           },
           "signatures": [
             {
-              "id": 242,
+              "id": 245,
               "name": "unbind",
               "kind": 4096,
               "kindString": "Call signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 243,
+                  "id": 246,
                   "name": "binding",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2679,7 +2723,7 @@
                   }
                 },
                 {
-                  "id": 244,
+                  "id": 247,
                   "name": "source",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2697,14 +2741,14 @@
               "inheritedFrom": {
                 "type": "reference",
                 "name": "ModeBindingBehavior.unbind",
-                "id": 217
+                "id": 220
               }
             }
           ],
           "inheritedFrom": {
             "type": "reference",
             "name": "ModeBindingBehavior.unbind",
-            "id": 217
+            "id": 220
           }
         }
       ],
@@ -2713,15 +2757,15 @@
           "title": "Constructors",
           "kind": 512,
           "children": [
-            234
+            237
           ]
         },
         {
           "title": "Methods",
           "kind": 2048,
           "children": [
-            236,
-            241
+            239,
+            244
           ]
         }
       ],
@@ -2729,12 +2773,12 @@
         {
           "type": "reference",
           "name": "ModeBindingBehavior",
-          "id": 208
+          "id": 211
         }
       ]
     },
     {
-      "id": 328,
+      "id": 345,
       "name": "Repeat",
       "kind": 128,
       "kindString": "Class",
@@ -2746,7 +2790,7 @@
       },
       "children": [
         {
-          "id": 333,
+          "id": 350,
           "name": "constructor",
           "kind": 512,
           "kindString": "Constructor",
@@ -2758,7 +2802,7 @@
           },
           "signatures": [
             {
-              "id": 334,
+              "id": 351,
               "name": "new Repeat",
               "kind": 16384,
               "kindString": "Constructor signature",
@@ -2768,7 +2812,7 @@
               },
               "parameters": [
                 {
-                  "id": 335,
+                  "id": 352,
                   "name": "viewFactory",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2782,7 +2826,7 @@
                   }
                 },
                 {
-                  "id": 336,
+                  "id": 353,
                   "name": "instruction",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2796,7 +2840,7 @@
                   }
                 },
                 {
-                  "id": 337,
+                  "id": 354,
                   "name": "viewSlot",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2810,7 +2854,7 @@
                   }
                 },
                 {
-                  "id": 338,
+                  "id": 355,
                   "name": "viewResources",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2824,7 +2868,7 @@
                   }
                 },
                 {
-                  "id": 339,
+                  "id": 356,
                   "name": "observerLocator",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2838,7 +2882,7 @@
                   }
                 },
                 {
-                  "id": 340,
+                  "id": 357,
                   "name": "strategyLocator",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2852,14 +2896,14 @@
               "type": {
                 "type": "reference",
                 "name": "Repeat",
-                "id": 328,
+                "id": 345,
                 "moduleName": "\"aurelia-templating-resources\""
               }
             }
           ]
         },
         {
-          "id": 329,
+          "id": 346,
           "name": "items",
           "kind": 1024,
           "kindString": "Property",
@@ -2872,7 +2916,7 @@
           }
         },
         {
-          "id": 331,
+          "id": 348,
           "name": "key",
           "kind": 1024,
           "kindString": "Property",
@@ -2885,7 +2929,7 @@
           }
         },
         {
-          "id": 330,
+          "id": 347,
           "name": "local",
           "kind": 1024,
           "kindString": "Property",
@@ -2898,7 +2942,7 @@
           }
         },
         {
-          "id": 332,
+          "id": 349,
           "name": "value",
           "kind": 1024,
           "kindString": "Property",
@@ -2911,7 +2955,7 @@
           }
         },
         {
-          "id": 345,
+          "id": 362,
           "name": "bind",
           "kind": 2048,
           "kindString": "Method",
@@ -2920,7 +2964,7 @@
           },
           "signatures": [
             {
-              "id": 346,
+              "id": 363,
               "name": "bind",
               "kind": 4096,
               "kindString": "Call signature",
@@ -2930,7 +2974,7 @@
               },
               "parameters": [
                 {
-                  "id": 347,
+                  "id": 364,
                   "name": "bindingContext",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2944,7 +2988,7 @@
                   }
                 },
                 {
-                  "id": 348,
+                  "id": 365,
                   "name": "overrideContext",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2966,7 +3010,7 @@
           ]
         },
         {
-          "id": 341,
+          "id": 358,
           "name": "call",
           "kind": 2048,
           "kindString": "Method",
@@ -2975,14 +3019,14 @@
           },
           "signatures": [
             {
-              "id": 342,
+              "id": 359,
               "name": "call",
               "kind": 4096,
               "kindString": "Call signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 343,
+                  "id": 360,
                   "name": "context",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -2993,7 +3037,7 @@
                   }
                 },
                 {
-                  "id": 344,
+                  "id": 361,
                   "name": "changes",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3012,7 +3056,7 @@
           ]
         },
         {
-          "id": 353,
+          "id": 370,
           "name": "handleCollectionMutated",
           "kind": 2048,
           "kindString": "Method",
@@ -3021,7 +3065,7 @@
           },
           "signatures": [
             {
-              "id": 354,
+              "id": 371,
               "name": "handleCollectionMutated",
               "kind": 4096,
               "kindString": "Call signature",
@@ -3031,7 +3075,7 @@
               },
               "parameters": [
                 {
-                  "id": 355,
+                  "id": 372,
                   "name": "collection",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3042,7 +3086,7 @@
                   }
                 },
                 {
-                  "id": 356,
+                  "id": 373,
                   "name": "changes",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3061,7 +3105,7 @@
           ]
         },
         {
-          "id": 357,
+          "id": 374,
           "name": "handleInnerCollectionMutated",
           "kind": 2048,
           "kindString": "Method",
@@ -3070,7 +3114,7 @@
           },
           "signatures": [
             {
-              "id": 358,
+              "id": 375,
               "name": "handleInnerCollectionMutated",
               "kind": 4096,
               "kindString": "Call signature",
@@ -3080,7 +3124,7 @@
               },
               "parameters": [
                 {
-                  "id": 359,
+                  "id": 376,
                   "name": "collection",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3091,7 +3135,7 @@
                   }
                 },
                 {
-                  "id": 360,
+                  "id": 377,
                   "name": "changes",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3110,7 +3154,7 @@
           ]
         },
         {
-          "id": 351,
+          "id": 368,
           "name": "itemsChanged",
           "kind": 2048,
           "kindString": "Method",
@@ -3119,7 +3163,7 @@
           },
           "signatures": [
             {
-              "id": 352,
+              "id": 369,
               "name": "itemsChanged",
               "kind": 4096,
               "kindString": "Call signature",
@@ -3135,7 +3179,7 @@
           ]
         },
         {
-          "id": 349,
+          "id": 366,
           "name": "unbind",
           "kind": 2048,
           "kindString": "Method",
@@ -3144,7 +3188,7 @@
           },
           "signatures": [
             {
-              "id": 350,
+              "id": 367,
               "name": "unbind",
               "kind": 4096,
               "kindString": "Call signature",
@@ -3165,35 +3209,35 @@
           "title": "Constructors",
           "kind": 512,
           "children": [
-            333
+            350
           ]
         },
         {
           "title": "Properties",
           "kind": 1024,
           "children": [
-            329,
-            331,
-            330,
-            332
+            346,
+            348,
+            347,
+            349
           ]
         },
         {
           "title": "Methods",
           "kind": 2048,
           "children": [
-            345,
-            341,
-            353,
-            357,
-            351,
-            349
+            362,
+            358,
+            370,
+            374,
+            368,
+            366
           ]
         }
       ]
     },
     {
-      "id": 315,
+      "id": 332,
       "name": "RepeatStrategyLocator",
       "kind": 128,
       "kindString": "Class",
@@ -3205,7 +3249,7 @@
       },
       "children": [
         {
-          "id": 316,
+          "id": 333,
           "name": "constructor",
           "kind": 512,
           "kindString": "Constructor",
@@ -3217,7 +3261,7 @@
           },
           "signatures": [
             {
-              "id": 317,
+              "id": 334,
               "name": "new RepeatStrategyLocator",
               "kind": 16384,
               "kindString": "Constructor signature",
@@ -3228,14 +3272,14 @@
               "type": {
                 "type": "reference",
                 "name": "RepeatStrategyLocator",
-                "id": 315,
+                "id": 332,
                 "moduleName": "\"aurelia-templating-resources\""
               }
             }
           ]
         },
         {
-          "id": 318,
+          "id": 335,
           "name": "addStrategy",
           "kind": 2048,
           "kindString": "Method",
@@ -3244,7 +3288,7 @@
           },
           "signatures": [
             {
-              "id": 319,
+              "id": 336,
               "name": "addStrategy",
               "kind": 4096,
               "kindString": "Call signature",
@@ -3254,7 +3298,7 @@
               },
               "parameters": [
                 {
-                  "id": 320,
+                  "id": 337,
                   "name": "matcher",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3262,21 +3306,21 @@
                   "type": {
                     "type": "reflection",
                     "declaration": {
-                      "id": 321,
+                      "id": 338,
                       "name": "__type",
                       "kind": 65536,
                       "kindString": "Type literal",
                       "flags": {},
                       "signatures": [
                         {
-                          "id": 322,
+                          "id": 339,
                           "name": "__call",
                           "kind": 4096,
                           "kindString": "Call signature",
                           "flags": {},
                           "parameters": [
                             {
-                              "id": 323,
+                              "id": 340,
                               "name": "items",
                               "kind": 32768,
                               "kindString": "Parameter",
@@ -3297,7 +3341,7 @@
                   }
                 },
                 {
-                  "id": 324,
+                  "id": 341,
                   "name": "strategy",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3321,7 +3365,7 @@
           ]
         },
         {
-          "id": 325,
+          "id": 342,
           "name": "getStrategy",
           "kind": 2048,
           "kindString": "Method",
@@ -3330,7 +3374,7 @@
           },
           "signatures": [
             {
-              "id": 326,
+              "id": 343,
               "name": "getStrategy",
               "kind": 4096,
               "kindString": "Call signature",
@@ -3340,7 +3384,7 @@
               },
               "parameters": [
                 {
-                  "id": 327,
+                  "id": 344,
                   "name": "items",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3366,15 +3410,15 @@
           "title": "Constructors",
           "kind": 512,
           "children": [
-            316
+            333
           ]
         },
         {
           "title": "Methods",
           "kind": 2048,
           "children": [
-            318,
-            325
+            335,
+            342
           ]
         }
       ]
@@ -3547,7 +3591,7 @@
       ]
     },
     {
-      "id": 292,
+      "id": 309,
       "name": "SanitizeHTMLValueConverter",
       "kind": 128,
       "kindString": "Class",
@@ -3559,7 +3603,7 @@
       },
       "children": [
         {
-          "id": 293,
+          "id": 310,
           "name": "constructor",
           "kind": 512,
           "kindString": "Constructor",
@@ -3571,7 +3615,7 @@
           },
           "signatures": [
             {
-              "id": 294,
+              "id": 311,
               "name": "new SanitizeHTMLValueConverter",
               "kind": 16384,
               "kindString": "Constructor signature",
@@ -3581,7 +3625,7 @@
               },
               "parameters": [
                 {
-                  "id": 295,
+                  "id": 312,
                   "name": "sanitizer",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3598,14 +3642,14 @@
               "type": {
                 "type": "reference",
                 "name": "SanitizeHTMLValueConverter",
-                "id": 292,
+                "id": 309,
                 "moduleName": "\"aurelia-templating-resources\""
               }
             }
           ]
         },
         {
-          "id": 296,
+          "id": 313,
           "name": "toView",
           "kind": 2048,
           "kindString": "Method",
@@ -3614,7 +3658,7 @@
           },
           "signatures": [
             {
-              "id": 297,
+              "id": 314,
               "name": "toView",
               "kind": 4096,
               "kindString": "Call signature",
@@ -3624,7 +3668,7 @@
               },
               "parameters": [
                 {
-                  "id": 298,
+                  "id": 315,
                   "name": "untrustedMarkup",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3651,14 +3695,206 @@
           "title": "Constructors",
           "kind": 512,
           "children": [
-            293
+            310
           ]
         },
         {
           "title": "Methods",
           "kind": 2048,
           "children": [
-            296
+            313
+          ]
+        }
+      ]
+    },
+    {
+      "id": 295,
+      "name": "SetRepeatStrategy",
+      "kind": 128,
+      "kindString": "Class",
+      "flags": {
+        "isExported": true
+      },
+      "comment": {
+        "shortText": "A strategy for repeating a template over a Set."
+      },
+      "children": [
+        {
+          "id": 296,
+          "name": "getCollectionObserver",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 297,
+              "name": "getCollectionObserver",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Gets a Set observer."
+              },
+              "parameters": [
+                {
+                  "id": 298,
+                  "name": "observerLocator",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 299,
+                  "name": "items",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The items to be observed.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 300,
+          "name": "instanceChanged",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 301,
+              "name": "instanceChanged",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Process the provided Set entries."
+              },
+              "parameters": [
+                {
+                  "id": 302,
+                  "name": "repeat",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 303,
+                  "name": "items",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The entries to process.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        },
+        {
+          "id": 304,
+          "name": "instanceMutated",
+          "kind": 2048,
+          "kindString": "Method",
+          "flags": {
+            "isExported": true
+          },
+          "signatures": [
+            {
+              "id": 305,
+              "name": "instanceMutated",
+              "kind": 4096,
+              "kindString": "Call signature",
+              "flags": {},
+              "comment": {
+                "shortText": "Handle changes in a Set collection."
+              },
+              "parameters": [
+                {
+                  "id": 306,
+                  "name": "repeat",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 307,
+                  "name": "set",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                },
+                {
+                  "id": 308,
+                  "name": "records",
+                  "kind": 32768,
+                  "kindString": "Parameter",
+                  "flags": {},
+                  "comment": {
+                    "text": "The change records.\n"
+                  },
+                  "type": {
+                    "type": "instrinct",
+                    "name": "any"
+                  }
+                }
+              ],
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "title": "Methods",
+          "kind": 2048,
+          "children": [
+            296,
+            300,
+            304
           ]
         }
       ]
@@ -3834,7 +4070,7 @@
       ]
     },
     {
-      "id": 299,
+      "id": 316,
       "name": "SignalBindingBehavior",
       "kind": 128,
       "kindString": "Class",
@@ -3843,7 +4079,7 @@
       },
       "children": [
         {
-          "id": 303,
+          "id": 320,
           "name": "constructor",
           "kind": 512,
           "kindString": "Constructor",
@@ -3852,14 +4088,14 @@
           },
           "signatures": [
             {
-              "id": 304,
+              "id": 321,
               "name": "new SignalBindingBehavior",
               "kind": 16384,
               "kindString": "Constructor signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 305,
+                  "id": 322,
                   "name": "bindingSignaler",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3873,14 +4109,14 @@
               "type": {
                 "type": "reference",
                 "name": "SignalBindingBehavior",
-                "id": 299,
+                "id": 316,
                 "moduleName": "\"aurelia-templating-resources\""
               }
             }
           ]
         },
         {
-          "id": 302,
+          "id": 319,
           "name": "signals",
           "kind": 1024,
           "kindString": "Property",
@@ -3893,7 +4129,7 @@
           }
         },
         {
-          "id": 306,
+          "id": 323,
           "name": "bind",
           "kind": 2048,
           "kindString": "Method",
@@ -3902,14 +4138,14 @@
           },
           "signatures": [
             {
-              "id": 307,
+              "id": 324,
               "name": "bind",
               "kind": 4096,
               "kindString": "Call signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 308,
+                  "id": 325,
                   "name": "binding",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3920,7 +4156,7 @@
                   }
                 },
                 {
-                  "id": 309,
+                  "id": 326,
                   "name": "source",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3931,7 +4167,7 @@
                   }
                 },
                 {
-                  "id": 310,
+                  "id": 327,
                   "name": "name",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3950,7 +4186,7 @@
           ]
         },
         {
-          "id": 311,
+          "id": 328,
           "name": "unbind",
           "kind": 2048,
           "kindString": "Method",
@@ -3959,14 +4195,14 @@
           },
           "signatures": [
             {
-              "id": 312,
+              "id": 329,
               "name": "unbind",
               "kind": 4096,
               "kindString": "Call signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 313,
+                  "id": 330,
                   "name": "binding",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3977,7 +4213,7 @@
                   }
                 },
                 {
-                  "id": 314,
+                  "id": 331,
                   "name": "source",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -3996,7 +4232,7 @@
           ]
         },
         {
-          "id": 300,
+          "id": 317,
           "name": "inject",
           "kind": 2048,
           "kindString": "Method",
@@ -4006,7 +4242,7 @@
           },
           "signatures": [
             {
-              "id": 301,
+              "id": 318,
               "name": "inject",
               "kind": 4096,
               "kindString": "Call signature",
@@ -4024,23 +4260,23 @@
           "title": "Constructors",
           "kind": 512,
           "children": [
-            303
+            320
           ]
         },
         {
           "title": "Properties",
           "kind": 1024,
           "children": [
-            302
+            319
           ]
         },
         {
           "title": "Methods",
           "kind": 2048,
           "children": [
-            306,
-            311,
-            300
+            323,
+            328,
+            317
           ]
         }
       ]
@@ -4172,7 +4408,7 @@
       ]
     },
     {
-      "id": 245,
+      "id": 248,
       "name": "TwoWayBindingBehavior",
       "kind": 128,
       "kindString": "Class",
@@ -4181,7 +4417,7 @@
       },
       "children": [
         {
-          "id": 246,
+          "id": 249,
           "name": "constructor",
           "kind": 512,
           "kindString": "Constructor",
@@ -4190,7 +4426,7 @@
           },
           "signatures": [
             {
-              "id": 247,
+              "id": 250,
               "name": "new TwoWayBindingBehavior",
               "kind": 16384,
               "kindString": "Constructor signature",
@@ -4198,24 +4434,24 @@
               "type": {
                 "type": "reference",
                 "name": "TwoWayBindingBehavior",
-                "id": 245,
+                "id": 248,
                 "moduleName": "\"aurelia-templating-resources\""
               },
               "overwrites": {
                 "type": "reference",
                 "name": "ModeBindingBehavior.__constructor",
-                "id": 209
+                "id": 212
               }
             }
           ],
           "overwrites": {
             "type": "reference",
             "name": "ModeBindingBehavior.__constructor",
-            "id": 209
+            "id": 212
           }
         },
         {
-          "id": 248,
+          "id": 251,
           "name": "bind",
           "kind": 2048,
           "kindString": "Method",
@@ -4224,14 +4460,14 @@
           },
           "signatures": [
             {
-              "id": 249,
+              "id": 252,
               "name": "bind",
               "kind": 4096,
               "kindString": "Call signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 250,
+                  "id": 253,
                   "name": "binding",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -4242,7 +4478,7 @@
                   }
                 },
                 {
-                  "id": 251,
+                  "id": 254,
                   "name": "source",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -4253,7 +4489,7 @@
                   }
                 },
                 {
-                  "id": 252,
+                  "id": 255,
                   "name": "lookupFunctions",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -4271,18 +4507,18 @@
               "inheritedFrom": {
                 "type": "reference",
                 "name": "ModeBindingBehavior.bind",
-                "id": 212
+                "id": 215
               }
             }
           ],
           "inheritedFrom": {
             "type": "reference",
             "name": "ModeBindingBehavior.bind",
-            "id": 212
+            "id": 215
           }
         },
         {
-          "id": 253,
+          "id": 256,
           "name": "unbind",
           "kind": 2048,
           "kindString": "Method",
@@ -4291,14 +4527,14 @@
           },
           "signatures": [
             {
-              "id": 254,
+              "id": 257,
               "name": "unbind",
               "kind": 4096,
               "kindString": "Call signature",
               "flags": {},
               "parameters": [
                 {
-                  "id": 255,
+                  "id": 258,
                   "name": "binding",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -4309,7 +4545,7 @@
                   }
                 },
                 {
-                  "id": 256,
+                  "id": 259,
                   "name": "source",
                   "kind": 32768,
                   "kindString": "Parameter",
@@ -4327,14 +4563,14 @@
               "inheritedFrom": {
                 "type": "reference",
                 "name": "ModeBindingBehavior.unbind",
-                "id": 217
+                "id": 220
               }
             }
           ],
           "inheritedFrom": {
             "type": "reference",
             "name": "ModeBindingBehavior.unbind",
-            "id": 217
+            "id": 220
           }
         }
       ],
@@ -4343,15 +4579,15 @@
           "title": "Constructors",
           "kind": 512,
           "children": [
-            246
+            249
           ]
         },
         {
           "title": "Methods",
           "kind": 2048,
           "children": [
-            248,
-            253
+            251,
+            256
           ]
         }
       ],
@@ -4359,7 +4595,7 @@
         {
           "type": "reference",
           "name": "ModeBindingBehavior",
-          "id": 208
+          "id": 211
         }
       ]
     },
@@ -5072,7 +5308,7 @@
                   "type": {
                     "type": "reference",
                     "name": "Repeat",
-                    "id": 328
+                    "id": 345
                   }
                 },
                 {
@@ -5119,7 +5355,7 @@
                   "type": {
                     "type": "reference",
                     "name": "Repeat",
-                    "id": 328
+                    "id": 345
                   }
                 },
                 {
@@ -5166,7 +5402,7 @@
       ]
     },
     {
-      "id": 390,
+      "id": 407,
       "name": "lifecycleOptionalBehaviors",
       "kind": 32,
       "kindString": "Variable",
@@ -5182,7 +5418,7 @@
       }
     },
     {
-      "id": 365,
+      "id": 382,
       "name": "createFullOverrideContext",
       "kind": 64,
       "kindString": "Function",
@@ -5191,7 +5427,7 @@
       },
       "signatures": [
         {
-          "id": 366,
+          "id": 383,
           "name": "createFullOverrideContext",
           "kind": 4096,
           "kindString": "Call signature",
@@ -5201,7 +5437,7 @@
           },
           "parameters": [
             {
-              "id": 367,
+              "id": 384,
               "name": "repeat",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5212,7 +5448,7 @@
               }
             },
             {
-              "id": 368,
+              "id": 385,
               "name": "data",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5226,7 +5462,7 @@
               }
             },
             {
-              "id": 369,
+              "id": 386,
               "name": "index",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5240,7 +5476,7 @@
               }
             },
             {
-              "id": 370,
+              "id": 387,
               "name": "length",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5254,7 +5490,7 @@
               }
             },
             {
-              "id": 371,
+              "id": 388,
               "name": "key",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5276,7 +5512,7 @@
       ]
     },
     {
-      "id": 377,
+      "id": 394,
       "name": "getItemsSourceExpression",
       "kind": 64,
       "kindString": "Function",
@@ -5285,7 +5521,7 @@
       },
       "signatures": [
         {
-          "id": 378,
+          "id": 395,
           "name": "getItemsSourceExpression",
           "kind": 4096,
           "kindString": "Call signature",
@@ -5295,7 +5531,7 @@
           },
           "parameters": [
             {
-              "id": 379,
+              "id": 396,
               "name": "instruction",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5306,7 +5542,7 @@
               }
             },
             {
-              "id": 380,
+              "id": 397,
               "name": "attrName",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5325,7 +5561,7 @@
       ]
     },
     {
-      "id": 384,
+      "id": 401,
       "name": "isOneTime",
       "kind": 64,
       "kindString": "Function",
@@ -5334,7 +5570,7 @@
       },
       "signatures": [
         {
-          "id": 385,
+          "id": 402,
           "name": "isOneTime",
           "kind": 4096,
           "kindString": "Call signature",
@@ -5344,7 +5580,7 @@
           },
           "parameters": [
             {
-              "id": 386,
+              "id": 403,
               "name": "expression",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5363,7 +5599,7 @@
       ]
     },
     {
-      "id": 381,
+      "id": 398,
       "name": "unwrapExpression",
       "kind": 64,
       "kindString": "Function",
@@ -5372,7 +5608,7 @@
       },
       "signatures": [
         {
-          "id": 382,
+          "id": 399,
           "name": "unwrapExpression",
           "kind": 4096,
           "kindString": "Call signature",
@@ -5382,7 +5618,7 @@
           },
           "parameters": [
             {
-              "id": 383,
+              "id": 400,
               "name": "expression",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5401,7 +5637,7 @@
       ]
     },
     {
-      "id": 387,
+      "id": 404,
       "name": "updateOneTimeBinding",
       "kind": 64,
       "kindString": "Function",
@@ -5410,7 +5646,7 @@
       },
       "signatures": [
         {
-          "id": 388,
+          "id": 405,
           "name": "updateOneTimeBinding",
           "kind": 4096,
           "kindString": "Call signature",
@@ -5420,7 +5656,7 @@
           },
           "parameters": [
             {
-              "id": 389,
+              "id": 406,
               "name": "binding",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5439,7 +5675,7 @@
       ]
     },
     {
-      "id": 372,
+      "id": 389,
       "name": "updateOverrideContext",
       "kind": 64,
       "kindString": "Function",
@@ -5448,7 +5684,7 @@
       },
       "signatures": [
         {
-          "id": 373,
+          "id": 390,
           "name": "updateOverrideContext",
           "kind": 4096,
           "kindString": "Call signature",
@@ -5458,7 +5694,7 @@
           },
           "parameters": [
             {
-              "id": 374,
+              "id": 391,
               "name": "overrideContext",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5469,7 +5705,7 @@
               }
             },
             {
-              "id": 375,
+              "id": 392,
               "name": "index",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5483,7 +5719,7 @@
               }
             },
             {
-              "id": 376,
+              "id": 393,
               "name": "length",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5505,7 +5741,7 @@
       ]
     },
     {
-      "id": 361,
+      "id": 378,
       "name": "updateOverrideContexts",
       "kind": 64,
       "kindString": "Function",
@@ -5514,7 +5750,7 @@
       },
       "signatures": [
         {
-          "id": 362,
+          "id": 379,
           "name": "updateOverrideContexts",
           "kind": 4096,
           "kindString": "Call signature",
@@ -5524,7 +5760,7 @@
           },
           "parameters": [
             {
-              "id": 363,
+              "id": 380,
               "name": "views",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5535,7 +5771,7 @@
               }
             },
             {
-              "id": 364,
+              "id": 381,
               "name": "startIndex",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5557,7 +5793,7 @@
       ]
     },
     {
-      "id": 391,
+      "id": 408,
       "name": "viewsRequireLifecycle",
       "kind": 64,
       "kindString": "Function",
@@ -5566,14 +5802,14 @@
       },
       "signatures": [
         {
-          "id": 392,
+          "id": 409,
           "name": "viewsRequireLifecycle",
           "kind": 4096,
           "kindString": "Call signature",
           "flags": {},
           "parameters": [
             {
-              "id": 393,
+              "id": 410,
               "name": "viewFactory",
               "kind": 32768,
               "kindString": "Parameter",
@@ -5597,30 +5833,31 @@
       "title": "Classes",
       "kind": 128,
       "children": [
-        257,
-        203,
+        260,
+        206,
         142,
         157,
-        198,
+        201,
         166,
         132,
         120,
         116,
         101,
-        271,
-        208,
+        274,
+        211,
         92,
-        285,
-        221,
-        233,
-        328,
-        315,
+        288,
+        224,
+        236,
+        345,
+        332,
         81,
-        292,
+        309,
+        295,
         70,
-        299,
+        316,
         60,
-        245,
+        248,
         46,
         31,
         17
@@ -5637,21 +5874,21 @@
       "title": "Variables",
       "kind": 32,
       "children": [
-        390
+        407
       ]
     },
     {
       "title": "Functions",
       "kind": 64,
       "children": [
-        365,
-        377,
-        384,
-        381,
-        387,
-        372,
-        361,
-        391
+        382,
+        394,
+        401,
+        398,
+        404,
+        389,
+        378,
+        408
       ]
     }
   ]

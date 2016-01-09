@@ -1,8 +1,8 @@
 declare module 'aurelia-templating-resources' {
   import * as LogManager from 'aurelia-logging';
   import { inject, Container }  from 'aurelia-dependency-injection';
-  import { BoundViewFactory, ViewSlot, customAttribute, templateController, Animator, useView, customElement, bindable, ViewResources, resource, ViewCompileInstruction, CompositionEngine, noView, TargetInstruction, ViewEngine }  from 'aurelia-templating';
-  import { createOverrideContext, bindingMode, EventManager, BindingBehavior, ValueConverter, sourceContext, valueConverter, ObserverLocator }  from 'aurelia-binding';
+  import { BoundViewFactory, ViewSlot, customAttribute, templateController, Animator, useView, customElement, bindable, ViewResources, resource, ViewCompileInstruction, CompositionEngine, noView, View, TargetInstruction, ViewEngine }  from 'aurelia-templating';
+  import { createOverrideContext, bindingMode, EventManager, BindingBehavior, ValueConverter, sourceContext, mergeSplice, valueConverter, ObserverLocator }  from 'aurelia-binding';
   import { DOM, FEATURE }  from 'aurelia-pal';
   import { TaskQueue }  from 'aurelia-task-queue';
   import { Loader }  from 'aurelia-loader';
@@ -308,10 +308,17 @@ declare module 'aurelia-templating-resources' {
     constructor(element: any, container: any, compositionEngine: any, viewSlot: any, viewResources: any, taskQueue: any);
     
     /**
+      * Invoked when the component has been created.
+      *
+      * @param owningView The view that this component was created inside of.
+      */
+    created(owningView: View): any;
+    
+    /**
       * Used to set the bindingContext.
       *
-      * @param {bindingContext} bindingContext The context in which the view model is executed in.
-      * @param {overrideContext} overrideContext The context in which the view model is executed in.
+      * @param bindingContext The context in which the view model is executed in.
+      * @param overrideContext The context in which the view model is executed in.
       */
     bind(bindingContext: any, overrideContext: any): any;
     
@@ -450,6 +457,31 @@ declare module 'aurelia-templating-resources' {
       * @param value The Number of how many time to iterate.
       */
     instanceChanged(repeat: any, value: any): any;
+  }
+  
+  /**
+  * A strategy for repeating a template over a Set.
+  */
+  export class SetRepeatStrategy {
+    
+    /**
+      * Gets a Set observer.
+      * @param items The items to be observed.
+      */
+    getCollectionObserver(observerLocator: any, items: any): any;
+    
+    /**
+      * Process the provided Set entries.
+      * @param items The entries to process.
+      */
+    instanceChanged(repeat: any, items: any): any;
+    
+    /**
+      * Handle changes in a Set collection.
+      * @param map The underlying Set collection.
+      * @param records The change records.
+      */
+    instanceMutated(repeat: any, set: any, records: any): any;
   }
   
   /**

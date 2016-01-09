@@ -10,6 +10,8 @@ var _arrayRepeatStrategy = require('./array-repeat-strategy');
 
 var _mapRepeatStrategy = require('./map-repeat-strategy');
 
+var _setRepeatStrategy = require('./set-repeat-strategy');
+
 var _numberRepeatStrategy = require('./number-repeat-strategy');
 
 var RepeatStrategyLocator = (function () {
@@ -28,6 +30,9 @@ var RepeatStrategyLocator = (function () {
     this.addStrategy(function (items) {
       return items instanceof Map;
     }, new _mapRepeatStrategy.MapRepeatStrategy());
+    this.addStrategy(function (items) {
+      return items instanceof Set;
+    }, new _setRepeatStrategy.SetRepeatStrategy());
     this.addStrategy(function (items) {
       return typeof items === 'number';
     }, new _numberRepeatStrategy.NumberRepeatStrategy());

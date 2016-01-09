@@ -1,7 +1,7 @@
-System.register(['./repeat-utilities'], function (_export) {
+System.register(['./repeat-utilities', 'aurelia-binding'], function (_export) {
   'use strict';
 
-  var createFullOverrideContext, updateOverrideContexts, updateOneTimeBinding, ArrayRepeatStrategy;
+  var createFullOverrideContext, updateOverrideContexts, updateOneTimeBinding, mergeSplice, ArrayRepeatStrategy;
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -10,6 +10,8 @@ System.register(['./repeat-utilities'], function (_export) {
       createFullOverrideContext = _repeatUtilities.createFullOverrideContext;
       updateOverrideContexts = _repeatUtilities.updateOverrideContexts;
       updateOneTimeBinding = _repeatUtilities.updateOneTimeBinding;
+    }, function (_aureliaBinding) {
+      mergeSplice = _aureliaBinding.mergeSplice;
     }],
     execute: function () {
       ArrayRepeatStrategy = (function () {
@@ -103,6 +105,44 @@ System.register(['./repeat-utilities'], function (_export) {
         ArrayRepeatStrategy.prototype._standardProcessInstanceMutated = function _standardProcessInstanceMutated(repeat, array, splices) {
           var _this2 = this;
 
+          if (repeat.__queuedSplices) {
+            for (var i = 0, ii = splices.length; i < ii; ++i) {
+              var _splices$i = splices[i];
+              var index = _splices$i.index;
+              var removed = _splices$i.removed;
+              var addedCount = _splices$i.addedCount;
+
+              mergeSplice(repeat.__queuedSplices, index, removed, addedCount);
+            }
+            repeat.__array = array.slice(0);
+            return;
+          }
+
+          var maybePromise = this._runSplices(repeat, array, splices);
+          if (maybePromise instanceof Promise) {
+            (function () {
+              var queuedSplices = repeat.__queuedSplices = [];
+
+              var runQueuedSplices = function runQueuedSplices() {
+                if (!queuedSplices.length) {
+                  delete repeat.__queuedSplices;
+                  delete repeat.__array;
+                  return;
+                }
+
+                var nextPromise = _this2._runSplices(repeat, repeat.__array, queuedSplices) || Promise.resolve();
+                queuedSplices = repeat.__queuedSplices = [];
+                nextPromise.then(runQueuedSplices);
+              };
+
+              maybePromise.then(runQueuedSplices);
+            })();
+          }
+        };
+
+        ArrayRepeatStrategy.prototype._runSplices = function _runSplices(repeat, array, splices) {
+          var _this3 = this;
+
           var removeDelta = 0;
           var viewSlot = repeat.viewSlot;
           var rmPromises = [];
@@ -121,14 +161,14 @@ System.register(['./repeat-utilities'], function (_export) {
           }
 
           if (rmPromises.length > 0) {
-            Promise.all(rmPromises).then(function () {
-              var spliceIndexLow = _this2._handleAddedSplices(repeat, array, splices);
+            return Promise.all(rmPromises).then(function () {
+              var spliceIndexLow = _this3._handleAddedSplices(repeat, array, splices);
               updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
             });
-          } else {
-            var spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
-            updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
           }
+
+          var spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
+          updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
         };
 
         ArrayRepeatStrategy.prototype._handleAddedSplices = function _handleAddedSplices(repeat, array, splices) {

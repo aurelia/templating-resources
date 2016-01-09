@@ -4,8 +4,6 @@ exports.__esModule = true;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _aureliaBinding = require('aurelia-binding');
-
 var _bindingSignaler = require('./binding-signaler');
 
 var SignalBindingBehavior = (function () {
@@ -22,9 +20,6 @@ var SignalBindingBehavior = (function () {
   SignalBindingBehavior.prototype.bind = function bind(binding, source, name) {
     if (!binding.updateTarget) {
       throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
-    }
-    if (binding.mode === _aureliaBinding.bindingMode.oneTime) {
-      throw new Error('One-time bindings cannot be signaled.');
     }
     var bindings = this.signals[name] || (this.signals[name] = []);
     bindings.push(binding);

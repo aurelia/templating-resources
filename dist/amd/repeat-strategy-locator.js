@@ -1,4 +1,4 @@
-define(['exports', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './number-repeat-strategy'], function (exports, _nullRepeatStrategy, _arrayRepeatStrategy, _mapRepeatStrategy, _numberRepeatStrategy) {
+define(['exports', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy'], function (exports, _nullRepeatStrategy, _arrayRepeatStrategy, _mapRepeatStrategy, _setRepeatStrategy, _numberRepeatStrategy) {
   'use strict';
 
   exports.__esModule = true;
@@ -21,6 +21,9 @@ define(['exports', './null-repeat-strategy', './array-repeat-strategy', './map-r
       this.addStrategy(function (items) {
         return items instanceof Map;
       }, new _mapRepeatStrategy.MapRepeatStrategy());
+      this.addStrategy(function (items) {
+        return items instanceof Set;
+      }, new _setRepeatStrategy.SetRepeatStrategy());
       this.addStrategy(function (items) {
         return typeof items === 'number';
       }, new _numberRepeatStrategy.NumberRepeatStrategy());

@@ -1,3 +1,21 @@
+### 1.0.0-beta.1.0.4 (2016-01-08)
+
+
+#### Bug Fixes
+
+* **compose:** properly handle the created callback during dynamic composition ([eddec888](http://github.com/aurelia/templating-resources/commit/eddec88849aac66247d05567b20fec9a30cb572d))
+* **repeat:**
+  * coalesce splices delayed due to leave animation ([a08a74af](http://github.com/aurelia/templating-resources/commit/a08a74af2b181b1b80fa8b7aa67efbe3326d5228))
+  * array sync issue when inserting during leave animation ([68f78707](http://github.com/aurelia/templating-resources/commit/68f78707cb36b777934c5397722bbd1a7b4b808d))
+* **tests:** describe does not expect a done parameter ([3ed2b0f5](http://github.com/aurelia/templating-resources/commit/3ed2b0f5d7558b2b5b5a6ae73cca72ac03888468))
+
+
+#### Features
+
+* **repeat:** add strategy for repeating over Set objects ([dc0432a0](http://github.com/aurelia/templating-resources/commit/dc0432a00920ee2f3b9fc44a6d0955f868d679a8))
+* **signal:** enable signaling one-time bindings ([24ce6720](http://github.com/aurelia/templating-resources/commit/24ce6720b561e6d81affb29e5a86a0d758c84eda), closes [#176](http://github.com/aurelia/templating-resources/issues/176))
+
+
 ### 1.0.0-beta.1.0.3 (2015-12-16)
 
 

@@ -78,7 +78,7 @@ function configure(config) {
           bindable = [];
         }
 
-        return (_ref = {}, _ref[elementName] = _dynamicElement._createDynamicElement(elementName, address, bindable), _ref);
+        return _ref = {}, _ref[elementName] = _dynamicElement._createDynamicElement(elementName, address, bindable), _ref;
       });
     }
   });
@@ -87,7 +87,7 @@ function configure(config) {
     'fetch': function fetch(address) {
       var _ref2;
 
-      return (_ref2 = {}, _ref2[address] = _cssResource._createCSSResource(address), _ref2);
+      return _ref2 = {}, _ref2[address] = _cssResource._createCSSResource(address), _ref2;
     }
   });
 }

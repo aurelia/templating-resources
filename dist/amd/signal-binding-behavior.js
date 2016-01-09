@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-binding', './binding-signaler'], function (exports, _aureliaBinding, _bindingSignaler) {
+define(['exports', './binding-signaler'], function (exports, _bindingSignaler) {
   'use strict';
 
   exports.__esModule = true;
@@ -19,9 +19,6 @@ define(['exports', 'aurelia-binding', './binding-signaler'], function (exports, 
     SignalBindingBehavior.prototype.bind = function bind(binding, source, name) {
       if (!binding.updateTarget) {
         throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
-      }
-      if (binding.mode === _aureliaBinding.bindingMode.oneTime) {
-        throw new Error('One-time bindings cannot be signaled.');
       }
       var bindings = this.signals[name] || (this.signals[name] = []);
       bindings.push(binding);

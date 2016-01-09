@@ -37,7 +37,7 @@ System.register(['./compose', './if', './with', './repeat', './show', './sanitiz
             bindable = [];
           }
 
-          return (_ref = {}, _ref[elementName] = _createDynamicElement(elementName, address, bindable), _ref);
+          return _ref = {}, _ref[elementName] = _createDynamicElement(elementName, address, bindable), _ref;
         });
       }
     });
@@ -46,7 +46,7 @@ System.register(['./compose', './if', './with', './repeat', './show', './sanitiz
       'fetch': function fetch(address) {
         var _ref2;
 
-        return (_ref2 = {}, _ref2[address] = _createCSSResource(address), _ref2);
+        return _ref2 = {}, _ref2[address] = _createCSSResource(address), _ref2;
       }
     });
   }

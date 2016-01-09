@@ -1,4 +1,5 @@
 import {createFullOverrideContext, updateOverrideContexts, updateOneTimeBinding} from './repeat-utilities';
+import {mergeSplice} from 'aurelia-binding';
 
 /**
 * A strategy for repeating a template over an array.
@@ -103,6 +104,46 @@ export class ArrayRepeatStrategy {
   }
 
   _standardProcessInstanceMutated(repeat, array, splices) {
+    if (repeat.__queuedSplices) {
+      for (let i = 0, ii = splices.length; i < ii; ++i) {
+        let {index, removed, addedCount} = splices[i];
+        mergeSplice(repeat.__queuedSplices, index, removed, addedCount);
+      }
+      repeat.__array = array.slice(0);
+      return;
+    }
+
+    let maybePromise = this._runSplices(repeat, array, splices);
+    if (maybePromise instanceof Promise) {
+      let queuedSplices = repeat.__queuedSplices = [];
+
+      let runQueuedSplices = () => {
+        if (! queuedSplices.length) {
+          delete repeat.__queuedSplices;
+          delete repeat.__array;
+          return;
+        }
+
+        let nextPromise = this._runSplices(repeat, repeat.__array, queuedSplices) || Promise.resolve();
+        queuedSplices = repeat.__queuedSplices = [];
+        nextPromise.then(runQueuedSplices);
+      };
+
+      maybePromise.then(runQueuedSplices);
+    }
+  }
+
+  /**
+  * Run a normalised set of splices against the viewSlot children.
+  * @param repeat The repeat instance.
+  * @param array The modified array.
+  * @param splices Records of array changes.
+  * @return {Promise|undefined} A promise if animations have to be run.
+  * @pre The splices must be normalised so as:
+  *  * Any item added may not be later removed.
+  *  * Removals are ordered by asending index
+  */
+  _runSplices(repeat, array, splices) {
     let removeDelta = 0;
     let viewSlot = repeat.viewSlot;
     let rmPromises = [];
@@ -112,6 +153,7 @@ export class ArrayRepeatStrategy {
       let removed = splice.removed;
 
       for (let j = 0, jj = removed.length; j < jj; ++j) {
+        // the rmPromises.length correction works due to the ordered removal precondition
         let viewOrPromise = viewSlot.removeAt(splice.index + removeDelta + rmPromises.length, true);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
@@ -121,14 +163,14 @@ export class ArrayRepeatStrategy {
     }
 
     if (rmPromises.length > 0) {
-      Promise.all(rmPromises).then(() => {
+      return Promise.all(rmPromises).then(() => {
         let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
         updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
       });
-    } else {
-      let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
-      updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
     }
+
+    let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
+    updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
   }
 
   _handleAddedSplices(repeat, array, splices) {

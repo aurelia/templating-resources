@@ -2,7 +2,7 @@ import {Container, inject} from 'aurelia-dependency-injection';
 import {TaskQueue} from 'aurelia-task-queue';
 import {
   CompositionEngine, ViewSlot, ViewResources,
-  customElement, bindable, noView
+  customElement, bindable, noView, View
 } from 'aurelia-templating';
 import {DOM} from 'aurelia-pal';
 
@@ -56,10 +56,19 @@ export class Compose {
   }
 
   /**
+  * Invoked when the component has been created.
+  *
+  * @param owningView The view that this component was created inside of.
+  */
+  created(owningView: View) {
+    this.owningView = owningView;
+  }
+
+  /**
   * Used to set the bindingContext.
   *
-  * @param {bindingContext} bindingContext The context in which the view model is executed in.
-  * @param {overrideContext} overrideContext The context in which the view model is executed in.
+  * @param bindingContext The context in which the view model is executed in.
+  * @param overrideContext The context in which the view model is executed in.
   */
   bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
@@ -154,6 +163,7 @@ function createInstruction(composer, instruction) {
   return Object.assign(instruction, {
     bindingContext: composer.bindingContext,
     overrideContext: composer.overrideContext,
+    owningView: composer.owningView,
     container: composer.container,
     viewSlot: composer.viewSlot,
     viewResources: composer.viewResources,

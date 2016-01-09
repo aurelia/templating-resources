@@ -55,6 +55,10 @@ var Compose = (function () {
     this.currentViewModel = null;
   }
 
+  Compose.prototype.created = function created(owningView) {
+    this.owningView = owningView;
+  };
+
   Compose.prototype.bind = function bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;
@@ -148,6 +152,7 @@ function createInstruction(composer, instruction) {
   return Object.assign(instruction, {
     bindingContext: composer.bindingContext,
     overrideContext: composer.overrideContext,
+    owningView: composer.owningView,
     container: composer.container,
     viewSlot: composer.viewSlot,
     viewResources: composer.viewResources,

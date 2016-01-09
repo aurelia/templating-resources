@@ -749,6 +749,10 @@ var Compose = (function () {
     this.currentViewModel = null;
   }
 
+  Compose.prototype.created = function created(owningView) {
+    this.owningView = owningView;
+  };
+
   Compose.prototype.bind = function bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;
@@ -842,6 +846,7 @@ function createInstruction(composer, instruction) {
   return Object.assign(instruction, {
     bindingContext: composer.bindingContext,
     overrideContext: composer.overrideContext,
+    owningView: composer.owningView,
     container: composer.container,
     viewSlot: composer.viewSlot,
     viewResources: composer.viewResources,
@@ -1100,6 +1105,44 @@ var ArrayRepeatStrategy = (function () {
   ArrayRepeatStrategy.prototype._standardProcessInstanceMutated = function _standardProcessInstanceMutated(repeat, array, splices) {
     var _this11 = this;
 
+    if (repeat.__queuedSplices) {
+      for (var i = 0, ii = splices.length; i < ii; ++i) {
+        var _splices$i = splices[i];
+        var index = _splices$i.index;
+        var removed = _splices$i.removed;
+        var addedCount = _splices$i.addedCount;
+
+        _aureliaBinding.mergeSplice(repeat.__queuedSplices, index, removed, addedCount);
+      }
+      repeat.__array = array.slice(0);
+      return;
+    }
+
+    var maybePromise = this._runSplices(repeat, array, splices);
+    if (maybePromise instanceof Promise) {
+      (function () {
+        var queuedSplices = repeat.__queuedSplices = [];
+
+        var runQueuedSplices = function runQueuedSplices() {
+          if (!queuedSplices.length) {
+            delete repeat.__queuedSplices;
+            delete repeat.__array;
+            return;
+          }
+
+          var nextPromise = _this11._runSplices(repeat, repeat.__array, queuedSplices) || Promise.resolve();
+          queuedSplices = repeat.__queuedSplices = [];
+          nextPromise.then(runQueuedSplices);
+        };
+
+        maybePromise.then(runQueuedSplices);
+      })();
+    }
+  };
+
+  ArrayRepeatStrategy.prototype._runSplices = function _runSplices(repeat, array, splices) {
+    var _this12 = this;
+
     var removeDelta = 0;
     var viewSlot = repeat.viewSlot;
     var rmPromises = [];
@@ -1118,14 +1161,14 @@ var ArrayRepeatStrategy = (function () {
     }
 
     if (rmPromises.length > 0) {
-      Promise.all(rmPromises).then(function () {
-        var spliceIndexLow = _this11._handleAddedSplices(repeat, array, splices);
+      return Promise.all(rmPromises).then(function () {
+        var spliceIndexLow = _this12._handleAddedSplices(repeat, array, splices);
         updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
       });
-    } else {
-      var spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
-      updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
     }
+
+    var spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
+    updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
   };
 
   ArrayRepeatStrategy.prototype._handleAddedSplices = function _handleAddedSplices(repeat, array, splices) {
@@ -1167,12 +1210,12 @@ var MapRepeatStrategy = (function () {
   };
 
   MapRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, items) {
-    var _this12 = this;
+    var _this13 = this;
 
     var removePromise = repeat.viewSlot.removeAll(true);
     if (removePromise instanceof Promise) {
       removePromise.then(function () {
-        return _this12._standardProcessItems(repeat, items);
+        return _this13._standardProcessItems(repeat, items);
       });
       return;
     }
@@ -1284,12 +1327,12 @@ var NumberRepeatStrategy = (function () {
   };
 
   NumberRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, value) {
-    var _this13 = this;
+    var _this14 = this;
 
     var removePromise = repeat.viewSlot.removeAll(true);
     if (removePromise instanceof Promise) {
       removePromise.then(function () {
-        return _this13._standardProcessItems(repeat, value);
+        return _this14._standardProcessItems(repeat, value);
       });
       return;
     }
@@ -1336,6 +1379,109 @@ var NumberRepeatStrategy = (function () {
 
 exports.NumberRepeatStrategy = NumberRepeatStrategy;
 
+var SetRepeatStrategy = (function () {
+  function SetRepeatStrategy() {
+    _classCallCheck(this, SetRepeatStrategy);
+  }
+
+  SetRepeatStrategy.prototype.getCollectionObserver = function getCollectionObserver(observerLocator, items) {
+    return observerLocator.getSetObserver(items);
+  };
+
+  SetRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, items) {
+    var _this15 = this;
+
+    var removePromise = repeat.viewSlot.removeAll(true);
+    if (removePromise instanceof Promise) {
+      removePromise.then(function () {
+        return _this15._standardProcessItems(repeat, items);
+      });
+      return;
+    }
+    this._standardProcessItems(repeat, items);
+  };
+
+  SetRepeatStrategy.prototype._standardProcessItems = function _standardProcessItems(repeat, items) {
+    var viewFactory = repeat.viewFactory;
+    var viewSlot = repeat.viewSlot;
+    var index = 0;
+    var overrideContext = undefined;
+    var view = undefined;
+
+    items.forEach(function (value) {
+      overrideContext = createFullOverrideContext(repeat, value, index, items.size);
+      view = viewFactory.create();
+      view.bind(overrideContext.bindingContext, overrideContext);
+      viewSlot.add(view);
+      ++index;
+    });
+  };
+
+  SetRepeatStrategy.prototype.instanceMutated = function instanceMutated(repeat, set, records) {
+    var viewSlot = repeat.viewSlot;
+    var value = undefined;
+    var i = undefined;
+    var ii = undefined;
+    var view = undefined;
+    var overrideContext = undefined;
+    var removeIndex = undefined;
+    var record = undefined;
+    var rmPromises = [];
+    var viewOrPromise = undefined;
+
+    for (i = 0, ii = records.length; i < ii; ++i) {
+      record = records[i];
+      value = record.value;
+      switch (record.type) {
+        case 'add':
+          overrideContext = createFullOverrideContext(repeat, value, set.size - 1, set.size);
+          view = repeat.viewFactory.create();
+          view.bind(overrideContext.bindingContext, overrideContext);
+          viewSlot.insert(set.size - 1, view);
+          break;
+        case 'delete':
+          removeIndex = this._getViewIndexByValue(repeat, value);
+          viewOrPromise = viewSlot.removeAt(removeIndex, true);
+          if (viewOrPromise instanceof Promise) {
+            rmPromises.push(viewOrPromise);
+          }
+          break;
+        case 'clear':
+          viewSlot.removeAll(true);
+          break;
+        default:
+          continue;
+      }
+    }
+
+    if (rmPromises.length > 0) {
+      Promise.all(rmPromises).then(function () {
+        updateOverrideContexts(repeat.viewSlot.children, 0);
+      });
+    } else {
+      updateOverrideContexts(repeat.viewSlot.children, 0);
+    }
+  };
+
+  SetRepeatStrategy.prototype._getViewIndexByValue = function _getViewIndexByValue(repeat, value) {
+    var viewSlot = repeat.viewSlot;
+    var i = undefined;
+    var ii = undefined;
+    var child = undefined;
+
+    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
+      child = viewSlot.children[i];
+      if (child.bindingContext[repeat.local] === value) {
+        return i;
+      }
+    }
+  };
+
+  return SetRepeatStrategy;
+})();
+
+exports.SetRepeatStrategy = SetRepeatStrategy;
+
 var SanitizeHTMLValueConverter = (function () {
   function SanitizeHTMLValueConverter(sanitizer) {
     _classCallCheck(this, _SanitizeHTMLValueConverter);
@@ -1374,9 +1520,6 @@ var SignalBindingBehavior = (function () {
     if (!binding.updateTarget) {
       throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
     }
-    if (binding.mode === _aureliaBinding.bindingMode.oneTime) {
-      throw new Error('One-time bindings cannot be signaled.');
-    }
     var bindings = this.signals[name] || (this.signals[name] = []);
     bindings.push(binding);
     binding.signalName = name;
@@ -1410,6 +1553,9 @@ var RepeatStrategyLocator = (function () {
     this.addStrategy(function (items) {
       return items instanceof Map;
     }, new MapRepeatStrategy());
+    this.addStrategy(function (items) {
+      return items instanceof Set;
+    }, new SetRepeatStrategy());
     this.addStrategy(function (items) {
       return typeof items === 'number';
     }, new NumberRepeatStrategy());
@@ -1541,7 +1687,7 @@ var Repeat = (function () {
   };
 
   Repeat.prototype.handleInnerCollectionMutated = function handleInnerCollectionMutated(collection, changes) {
-    var _this14 = this;
+    var _this16 = this;
 
     if (this.ignoreMutation) {
       return;
@@ -1549,7 +1695,7 @@ var Repeat = (function () {
     this.ignoreMutation = true;
     var newItems = this.sourceExpression.evaluate(this.scope, this.lookupFunctions);
     this.observerLocator.taskQueue.queueMicroTask(function () {
-      return _this14.ignoreMutation = false;
+      return _this16.ignoreMutation = false;
     });
 
     if (newItems === this.items) {
@@ -1626,7 +1772,7 @@ function configure(config) {
           bindable = [];
         }
 
-        return (_ref = {}, _ref[elementName] = _createDynamicElement(elementName, address, bindable), _ref);
+        return _ref = {}, _ref[elementName] = _createDynamicElement(elementName, address, bindable), _ref;
       });
     }
   });
@@ -1635,7 +1781,7 @@ function configure(config) {
     'fetch': function fetch(address) {
       var _ref2;
 
-      return (_ref2 = {}, _ref2[address] = _createCSSResource(address), _ref2);
+      return _ref2 = {}, _ref2[address] = _createCSSResource(address), _ref2;
     }
   });
 }
