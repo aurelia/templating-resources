@@ -1,4 +1,3 @@
-import {bindingMode} from 'aurelia-binding';
 import {BindingSignaler} from './binding-signaler';
 
 export class SignalBindingBehavior {

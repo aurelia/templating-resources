@@ -127,7 +127,7 @@ export class ArrayRepeatStrategy {
         let nextPromise = this._runSplices(repeat, repeat.__array, queuedSplices) || Promise.resolve();
         queuedSplices = repeat.__queuedSplices = [];
         nextPromise.then(runQueuedSplices);
-      }
+      };
 
       maybePromise.then(runQueuedSplices);
     }
@@ -167,10 +167,10 @@ export class ArrayRepeatStrategy {
         let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
         updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
       });
-    } else {
-      let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
-      updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
     }
+
+    let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
+    updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
   }
 
   _handleAddedSplices(repeat, array, splices) {
