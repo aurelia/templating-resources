@@ -244,6 +244,31 @@ declare module 'aurelia-templating-resources' {
   }
   
   /**
+  * Binding to conditionally show markup in the DOM based on the value.
+  * - different from "if" in that the markup is still added to the DOM, simply not shown.
+  */
+  export class Hide {
+    
+    /**
+      * Creates a new instance of Hide.
+      * @param element Target element to conditionally hide.
+      * @param animator The animator that conditionally adds or removes the aurelia-hide css class.
+      */
+    constructor(element: any, animator: any);
+    
+    /**
+      * Invoked everytime the bound value changes.
+      * @param newValue The new value.
+      */
+    valueChanged(newValue: any): any;
+    
+    /**
+      * Binds the Hide attribute.
+      */
+    bind(bindingContext: any): any;
+  }
+  
+  /**
   * CustomAttribute that binds provided DOM element's focus attribute with a property on the viewmodel.
   */
   export class Focus {
