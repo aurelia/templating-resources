@@ -1,3 +1,12 @@
+### 1.0.0-beta.1.1.0 (2016-01-29)
+
+
+#### Features
+
+* **all:** update jspm meta; core-js; aurelia deps ([c30927e3](http://github.com/aurelia/templating-resources/commit/c30927e3c81818daaefdc47fe418ca13611bfed9))
+* **hide:** add hide binding ([38760b6b](http://github.com/aurelia/templating-resources/commit/38760b6ba00774a7e75572baef0021d8c1c45096))
+
+
 ### 1.0.0-beta.1.0.4 (2016-01-08)
 
 
