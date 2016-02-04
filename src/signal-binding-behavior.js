@@ -12,15 +12,28 @@ export class SignalBindingBehavior {
     if (!binding.updateTarget) {
       throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
     }
-    let bindings = this.signals[name] || (this.signals[name] = []);
-    bindings.push(binding);
-    binding.signalName = name;
+    if (arguments.length > 3) {
+      binding.signalNames = [];
+      let i = arguments.length;
+      while (i-- > 2) {
+        name = arguments[i];
+        let bindings = this.signals[name] || (this.signals[name] = []);
+        bindings.push(binding);
+        binding.signalNames.push(name);
+      }
+    } else {
+      let bindings = this.signals[name] || (this.signals[name] = []);
+      bindings.push(binding);
+      binding.signalNames = [name];
+    }
   }
 
   unbind(binding, source) {
-    let name = binding.signalName;
-    binding.signalName = null;
-    let bindings = this.signals[name];
-    bindings.splice(bindings.indexOf(binding), 1);
+    let names = binding.signalNames;
+    binding.signalNames = null;
+    for (let name of names) {
+      let bindings = this.signals[name];
+      bindings.splice(bindings.indexOf(binding), 1);
+    }
   }
 }
