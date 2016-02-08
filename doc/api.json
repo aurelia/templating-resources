@@ -437,7 +437,7 @@
                   "type": {
                     "type": "reference",
                     "name": "ViewResources",
-                    "id": 1542,
+                    "id": 1523,
                     "moduleName": "\"aurelia-templating\""
                   }
                 },
@@ -558,7 +558,7 @@
                   "type": {
                     "type": "reference",
                     "name": "ViewResources",
-                    "id": 1542,
+                    "id": 1523,
                     "moduleName": "\"aurelia-templating\""
                   }
                 },
@@ -571,7 +571,7 @@
                   "type": {
                     "type": "reference",
                     "name": "ViewCompileInstruction",
-                    "id": 1408,
+                    "id": 1389,
                     "moduleName": "\"aurelia-templating\""
                   }
                 }
@@ -937,7 +937,7 @@
                   "type": {
                     "type": "reference",
                     "name": "View",
-                    "id": 1592,
+                    "id": 1573,
                     "moduleName": "\"aurelia-templating\""
                   }
                 }
