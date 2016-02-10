@@ -109,5 +109,7 @@ export function isOneTime(expression) {
 export function updateOneTimeBinding(binding) {
   if (binding.call && binding.mode === oneTime) {
     binding.call(sourceContext);
+  } else if (binding.updateOneTimeBindings) {
+    binding.updateOneTimeBindings();
   }
 }
