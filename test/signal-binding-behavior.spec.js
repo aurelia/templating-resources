@@ -86,4 +86,21 @@ describe('SignalBindingBehavior', () => {
     bindingSignaler.signal('test');
     expect(target.textContent).toBe(converterResult);
   });
+
+  it('should signal binding with multiple signal names', () => {
+    let source = { updateDateTime: new Date() };
+    let scope = createScopeForTest(source);
+    let target = document.createElement('input');
+    let bindingExpression = bindingEngine.createBindingExpression('value', `updateDateTime | testConverter & signal:'test':'another-test'`, bindingMode.oneWay, lookupFunctions);
+    let binding = bindingExpression.createBinding(target);
+    converterResult = 'hello';
+    binding.bind(scope);
+    expect(target.value).toBe(converterResult);
+    converterResult = 'world';
+    bindingSignaler.signal('test');
+    expect(target.value).toBe(converterResult);
+    converterResult = 'awesome';
+    bindingSignaler.signal('another-test');
+    expect(target.value).toBe(converterResult);
+  });
 });
