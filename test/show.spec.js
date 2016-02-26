@@ -1,3 +1,4 @@
+import './setup';
 import {Show} from '../src/show';
 
 describe('show', () => {

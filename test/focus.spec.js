@@ -1,6 +1,6 @@
-﻿import {TaskQueue} from 'aurelia-task-queue';
+﻿import './setup';
+import {TaskQueue} from 'aurelia-task-queue';
 import {Focus} from '../src/focus';
-import {initialize} from 'aurelia-pal-browser';
 import {DOM} from 'aurelia-pal';
 
 describe('focus', () => {
@@ -15,9 +15,7 @@ describe('focus', () => {
         focus.value = value;
         focus.valueChanged(value);
     }
-
-    beforeAll(() => initialize());
-
+    
     beforeEach(() => {
         element = document.createElement('input');
         document.body.appendChild(element);

@@ -1,5 +1,5 @@
+import './setup';
 import {DOM} from 'aurelia-pal';
-import {initialize as initializeBrowserPal} from 'aurelia-pal-browser';
 import {Container} from 'aurelia-dependency-injection';
 import {configure as configureBindingLanguage} from 'aurelia-templating-binding';
 import {
@@ -17,9 +17,6 @@ import {metadata} from 'aurelia-metadata';
 import {TaskQueue} from 'aurelia-task-queue';
 import {ObserverLocator} from 'aurelia-binding';
 import {viewsRequireLifecycle} from '../src/analyze-view-factory';
-
-// use the browser PAL implementation.
-initializeBrowserPal();
 
 // create the root container.
 let container = new Container();

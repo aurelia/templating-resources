@@ -1,7 +1,7 @@
+import './setup';
 import {Container} from 'aurelia-dependency-injection';
 import {bindingMode, BindingEngine, createScopeForTest} from 'aurelia-binding';
 import {InterpolationBindingExpression} from 'aurelia-templating-binding';
-import {initialize as initializePAL} from 'aurelia-pal-browser';
 import {SignalBindingBehavior} from '../src/signal-binding-behavior';
 import {BindingSignaler} from '../src/binding-signaler';
 
@@ -9,7 +9,6 @@ describe('SignalBindingBehavior', () => {
   let bindingEngine, lookupFunctions, converterResult, bindingSignaler;
 
   beforeAll(() => {
-    initializePAL();
     let container = new Container();
     bindingEngine = container.get(BindingEngine);
     let bindingBehaviors = {

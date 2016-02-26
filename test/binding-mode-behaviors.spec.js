@@ -1,6 +1,6 @@
+import './setup';
 import {Container} from 'aurelia-dependency-injection';
 import {bindingMode, BindingEngine, createScopeForTest} from 'aurelia-binding';
-import {initialize as initializePAL} from 'aurelia-pal-browser';
 import {
   OneTimeBindingBehavior,
   OneWayBindingBehavior,
@@ -11,7 +11,6 @@ describe('binding mode behaviors', () => {
   let bindingEngine;
 
   beforeAll(() => {
-    initializePAL();
     bindingEngine = new Container().get(BindingEngine);
   });
 

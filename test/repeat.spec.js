@@ -1,17 +1,13 @@
+import './setup';
 import {ObserverLocator} from 'aurelia-binding';
 import {BoundViewFactory, TemplatingEngine, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
 import {Container} from 'aurelia-dependency-injection';
-import {initialize} from 'aurelia-pal-browser';
 import {Repeat} from '../src/repeat';
 import {RepeatStrategyLocator} from '../src/repeat-strategy-locator';
 import {ViewSlotMock, BoundViewFactoryMock, RepeatStrategyMock, ViewMock, ArrayObserverMock, instructionMock, viewResourcesMock} from './mocks';
 
 describe('repeat', () => {
   let repeat, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, repeatStrategyMock;
-
-  beforeAll(() => {
-    initialize();
-  });
 
   beforeEach(() => {
     let container = new Container();

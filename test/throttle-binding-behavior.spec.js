@@ -1,3 +1,4 @@
+import './setup';
 import {Container} from 'aurelia-dependency-injection';
 import {
   bindingMode,
@@ -6,7 +7,6 @@ import {
   ValueAttributeObserver,
   createScopeForTest
 } from 'aurelia-binding';
-import {initialize as initializePAL} from 'aurelia-pal-browser';
 import {ThrottleBindingBehavior} from '../src/throttle-binding-behavior';
 import {DOM} from 'aurelia-pal';
 
@@ -14,7 +14,6 @@ describe('ThrottleBindingBehavior', () => {
   let bindingEngine, lookupFunctions;
 
   beforeAll(() => {
-    initializePAL();
     bindingEngine = new Container().get(BindingEngine);
     let bindingBehaviors = {
       throttle: new ThrottleBindingBehavior()

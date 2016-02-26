@@ -1,3 +1,4 @@
+import './setup';
 import {Container} from 'aurelia-dependency-injection';
 import {
   bindingMode,
@@ -6,7 +7,6 @@ import {
   ValueAttributeObserver,
   createScopeForTest
 } from 'aurelia-binding';
-import {initialize as initializePAL} from 'aurelia-pal-browser';
 import {UpdateTriggerBindingBehavior} from '../src/update-trigger-binding-behavior';
 import {DOM} from 'aurelia-pal';
 
@@ -15,7 +15,6 @@ describe('UpdateTriggerBindingBehavior', () => {
 
   beforeAll(() => {
     let container = new Container();
-    initializePAL();
     bindingEngine = container.get(BindingEngine);
     let bindingBehaviors = {
       updateTrigger: container.get(UpdateTriggerBindingBehavior)

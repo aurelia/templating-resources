@@ -1,3 +1,4 @@
+import './setup';
 import {Hide} from '../src/hide';
 
 describe('hide', () => {
