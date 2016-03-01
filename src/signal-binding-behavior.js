@@ -27,7 +27,7 @@ export class SignalBindingBehavior {
       }
       binding.signalName = names;
     } else {
-      throw new Error('Signal name is required.')
+      throw new Error('Signal name is required.');
     }
   }
 
@@ -38,8 +38,8 @@ export class SignalBindingBehavior {
       let names = name;
       let i = names.length;
       while (i--) {
-        let name = names[i];
-        let bindings = this.signals[name];
+        let n = names[i];
+        let bindings = this.signals[n];
         bindings.splice(bindings.indexOf(binding), 1);
       }
     } else {

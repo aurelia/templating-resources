@@ -1,7 +1,7 @@
-System.register(['./compose', './if', './with', './repeat', './show', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './dynamic-element', './css-resource', 'aurelia-pal', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior'], function (_export) {
+System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './dynamic-element', './css-resource', 'aurelia-pal', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior'], function (_export) {
   'use strict';
 
-  var Compose, If, With, Repeat, Show, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createDynamicElement, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior;
+  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createDynamicElement, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior;
 
   function configure(config) {
     if (FEATURE.shadowDOM) {
@@ -10,7 +10,7 @@ System.register(['./compose', './if', './with', './repeat', './show', './sanitiz
       DOM.injectStyles('.aurelia-hide { display:none !important; }');
     }
 
-    config.globalResources('./compose', './if', './with', './repeat', './show', './replaceable', './sanitize-html', './focus', './compile-spy', './view-spy', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
+    config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './replaceable', './sanitize-html', './focus', './compile-spy', './view-spy', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
 
     var viewEngine = config.container.get(ViewEngine);
     var loader = config.aurelia.loader;
@@ -62,6 +62,8 @@ System.register(['./compose', './if', './with', './repeat', './show', './sanitiz
       Repeat = _repeat.Repeat;
     }, function (_show) {
       Show = _show.Show;
+    }, function (_hide) {
+      Hide = _hide.Hide;
     }, function (_sanitizeHtml) {
       SanitizeHTMLValueConverter = _sanitizeHtml.SanitizeHTMLValueConverter;
     }, function (_replaceable) {
@@ -108,6 +110,8 @@ System.register(['./compose', './if', './with', './repeat', './show', './sanitiz
       _export('Repeat', Repeat);
 
       _export('Show', Show);
+
+      _export('Hide', Hide);
 
       _export('HTMLSanitizer', HTMLSanitizer);
 

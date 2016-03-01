@@ -12,6 +12,8 @@ var _repeat = require('./repeat');
 
 var _show = require('./show');
 
+var _hide = require('./hide');
+
 var _sanitizeHtml = require('./sanitize-html');
 
 var _replaceable = require('./replaceable');
@@ -51,7 +53,7 @@ function configure(config) {
     _aureliaPal.DOM.injectStyles('.aurelia-hide { display:none !important; }');
   }
 
-  config.globalResources('./compose', './if', './with', './repeat', './show', './replaceable', './sanitize-html', './focus', './compile-spy', './view-spy', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
+  config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './replaceable', './sanitize-html', './focus', './compile-spy', './view-spy', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
 
   var viewEngine = config.container.get(_aureliaTemplating.ViewEngine);
   var loader = config.aurelia.loader;
@@ -97,6 +99,7 @@ exports.If = _if.If;
 exports.With = _with.With;
 exports.Repeat = _repeat.Repeat;
 exports.Show = _show.Show;
+exports.Hide = _hide.Hide;
 exports.HTMLSanitizer = _htmlSanitizer.HTMLSanitizer;
 exports.SanitizeHTMLValueConverter = _sanitizeHtml.SanitizeHTMLValueConverter;
 exports.Replaceable = _replaceable.Replaceable;

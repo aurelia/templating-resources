@@ -530,7 +530,7 @@ declare module 'aurelia-templating-resources' {
     static inject(): any;
     signals: any;
     constructor(bindingSignaler: any);
-    bind(binding: any, source: any, name: any): any;
+    bind(binding: any, source: any): any;
     unbind(binding: any, source: any): any;
   }
   

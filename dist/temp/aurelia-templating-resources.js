@@ -372,6 +372,8 @@ function isOneTime(expression) {
 function updateOneTimeBinding(binding) {
   if (binding.call && binding.mode === oneTime) {
     binding.call(_aureliaBinding.sourceContext);
+  } else if (binding.updateOneTimeBindings) {
+    binding.updateOneTimeBindings();
   }
 }
 
@@ -1544,20 +1546,44 @@ var SignalBindingBehavior = (function () {
     this.signals = bindingSignaler.signals;
   }
 
-  SignalBindingBehavior.prototype.bind = function bind(binding, source, name) {
+  SignalBindingBehavior.prototype.bind = function bind(binding, source) {
     if (!binding.updateTarget) {
       throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
     }
-    var bindings = this.signals[name] || (this.signals[name] = []);
-    bindings.push(binding);
-    binding.signalName = name;
+    if (arguments.length === 3) {
+      var _name = arguments[2];
+      var bindings = this.signals[_name] || (this.signals[_name] = []);
+      bindings.push(binding);
+      binding.signalName = _name;
+    } else if (arguments.length > 3) {
+      var names = Array.prototype.slice.call(arguments, 2);
+      var i = names.length;
+      while (i--) {
+        var _name2 = names[i];
+        var bindings = this.signals[_name2] || (this.signals[_name2] = []);
+        bindings.push(binding);
+      }
+      binding.signalName = names;
+    } else {
+      throw new Error('Signal name is required.');
+    }
   };
 
   SignalBindingBehavior.prototype.unbind = function unbind(binding, source) {
     var name = binding.signalName;
     binding.signalName = null;
-    var bindings = this.signals[name];
-    bindings.splice(bindings.indexOf(binding), 1);
+    if (Array.isArray(name)) {
+      var names = name;
+      var i = names.length;
+      while (i--) {
+        var n = names[i];
+        var bindings = this.signals[n];
+        bindings.splice(bindings.indexOf(binding), 1);
+      }
+    } else {
+      var bindings = this.signals[name];
+      bindings.splice(bindings.indexOf(binding), 1);
+    }
   };
 
   return SignalBindingBehavior;
@@ -1773,7 +1799,7 @@ function configure(config) {
     _aureliaPal.DOM.injectStyles('.aurelia-hide { display:none !important; }');
   }
 
-  config.globalResources('./compose', './if', './with', './repeat', './show', './replaceable', './sanitize-html', './focus', './compile-spy', './view-spy', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
+  config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './replaceable', './sanitize-html', './focus', './compile-spy', './view-spy', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
 
   var viewEngine = config.container.get(_aureliaTemplating.ViewEngine);
   var loader = config.aurelia.loader;
@@ -1819,6 +1845,7 @@ exports.If = If;
 exports.With = With;
 exports.Repeat = Repeat;
 exports.Show = Show;
+exports.Hide = Hide;
 exports.HTMLSanitizer = HTMLSanitizer;
 exports.SanitizeHTMLValueConverter = SanitizeHTMLValueConverter;
 exports.Replaceable = Replaceable;

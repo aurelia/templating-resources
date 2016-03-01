@@ -87,6 +87,8 @@ System.register(['aurelia-binding'], function (_export) {
   function updateOneTimeBinding(binding) {
     if (binding.call && binding.mode === oneTime) {
       binding.call(sourceContext);
+    } else if (binding.updateOneTimeBindings) {
+      binding.updateOneTimeBindings();
     }
   }
 

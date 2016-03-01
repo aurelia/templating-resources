@@ -83,5 +83,7 @@ function isOneTime(expression) {
 function updateOneTimeBinding(binding) {
   if (binding.call && binding.mode === oneTime) {
     binding.call(_aureliaBinding.sourceContext);
+  } else if (binding.updateOneTimeBindings) {
+    binding.updateOneTimeBindings();
   }
 }

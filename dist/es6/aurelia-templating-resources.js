@@ -3,6 +3,7 @@ import {If} from './if';
 import {With} from './with';
 import {Repeat} from './repeat';
 import {Show} from './show';
+import {Hide} from './hide';
 import {SanitizeHTMLValueConverter} from './sanitize-html';
 import {Replaceable} from './replaceable';
 import {Focus} from './focus';
@@ -33,6 +34,7 @@ function configure(config) {
     './with',
     './repeat',
     './show',
+    './hide',
     './replaceable',
     './sanitize-html',
     './focus',
@@ -84,6 +86,7 @@ export {
   With,
   Repeat,
   Show,
+  Hide,
   HTMLSanitizer,
   SanitizeHTMLValueConverter,
   Replaceable,

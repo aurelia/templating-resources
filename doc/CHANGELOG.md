@@ -1,3 +1,20 @@
+### 1.0.0-beta.1.1.2 (2016-03-01)
+
+
+#### Bug Fixes
+
+* **all:** remove core-js dependency ([54e09743](http://github.com/aurelia/templating-resources/commit/54e09743ab42bd98fab6d9714c169456cf681430))
+* **bower:** remove core-js ([3cf2c8d9](http://github.com/aurelia/templating-resources/commit/3cf2c8d99f09c5f0ab70be8af45562157ce63e0e))
+* **hide:** export hide ([e48cec4e](http://github.com/aurelia/templating-resources/commit/e48cec4e3f4f8f2f6277900f023bc019b81169c4), closes [#192](http://github.com/aurelia/templating-resources/issues/192))
+* **repeat:** ensure one-time interpolation bindings update ([a280d27f](http://github.com/aurelia/templating-resources/commit/a280d27fa9eef6fbd980928ff462cdd9fbeccdab))
+
+
+#### Features
+
+* **all:** update jspm meta; core-js; aurelia deps ([f3f0ffac](http://github.com/aurelia/templating-resources/commit/f3f0ffac37121803f30306c19b23e940e2edc549))
+* **signal:** allow multiple names ([620614ed](http://github.com/aurelia/templating-resources/commit/620614ed3901388039c9c66e00f5f44404b60d93), closes [#170](http://github.com/aurelia/templating-resources/issues/170), [#172](http://github.com/aurelia/templating-resources/issues/172))
+
+
 ### 1.0.0-beta.1.1.1 (2016-02-08)
 
 
