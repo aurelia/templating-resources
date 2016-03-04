@@ -109,16 +109,18 @@ export class ArrayRepeatStrategy {
         let {index, removed, addedCount} = splices[i];
         mergeSplice(repeat.__queuedSplices, index, removed, addedCount);
       }
+      // Array.prototype.slice is used here to clone the array
       repeat.__array = array.slice(0);
       return;
     }
 
+    // Array.prototype.slice is used here to clone the array
     let maybePromise = this._runSplices(repeat, array.slice(0), splices);
     if (maybePromise instanceof Promise) {
       let queuedSplices = repeat.__queuedSplices = [];
 
       let runQueuedSplices = () => {
-        if (! queuedSplices.length) {
+        if (!queuedSplices.length) {
           delete repeat.__queuedSplices;
           delete repeat.__array;
           return;
