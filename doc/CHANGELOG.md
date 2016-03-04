@@ -1,3 +1,11 @@
+### 1.0.0-beta.1.1.3 (2016-03-03)
+
+
+#### Bug Fixes
+
+* **array-repeat-strategy:** prevent array being manipulated during animation ([6445cfb0](http://github.com/aurelia/templating-resources/commit/6445cfb09c4d6d2856a411d2af36431ab47a1ff2), closes [#183](http://github.com/aurelia/templating-resources/issues/183))
+
+
 ### 1.0.0-beta.1.1.2 (2016-03-01)
 
 

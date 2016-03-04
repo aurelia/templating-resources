@@ -1177,7 +1177,7 @@ export class ArrayRepeatStrategy {
       return;
     }
 
-    let maybePromise = this._runSplices(repeat, array, splices);
+    let maybePromise = this._runSplices(repeat, array.slice(0), splices);
     if (maybePromise instanceof Promise) {
       let queuedSplices = repeat.__queuedSplices = [];
 
