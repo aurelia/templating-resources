@@ -109,11 +109,11 @@ export class ArrayRepeatStrategy {
         let {index, removed, addedCount} = splices[i];
         mergeSplice(repeat.__queuedSplices, index, removed, addedCount);
       }
-      repeat.__array = array.slice(0);
+      repeat.__array = array.slice(0, array.length);
       return;
     }
 
-    let maybePromise = this._runSplices(repeat, array.slice(0), splices);
+    let maybePromise = this._runSplices(repeat, array.slice(0, array.length), splices);
     if (maybePromise instanceof Promise) {
       let queuedSplices = repeat.__queuedSplices = [];
 
