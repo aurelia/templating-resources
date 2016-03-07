@@ -120,6 +120,9 @@ export class Repeat {
 
     let items = this.items;
     this.strategy = this.strategyLocator.getStrategy(items);
+    if (!this.strategy) {
+      throw new Error(`Value for '${this.sourceExpression}' is non-repeatable`);
+    }
 
     if (!this.isOneTime && !this._observeInnerCollection()) {
       this._observeCollection();
