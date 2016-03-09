@@ -21,7 +21,7 @@ export class ArrayRepeatStrategy {
   */
   instanceChanged(repeat, items) {
     if (repeat.viewsRequireLifecycle) {
-      let removePromise = repeat.viewSlot.removeAll(true);
+      let removePromise = repeat.removeAllViews(true);
       if (removePromise instanceof Promise) {
         removePromise.then(() => this._standardProcessInstanceChanged(repeat, items));
         return;
@@ -35,25 +35,23 @@ export class ArrayRepeatStrategy {
   _standardProcessInstanceChanged(repeat, items) {
     for (let i = 0, ii = items.length; i < ii; i++) {
       let overrideContext = createFullOverrideContext(repeat, items[i], i, ii);
-      let view = repeat.viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      repeat.viewSlot.add(view);
+      repeat.addView(overrideContext.bindingContext, overrideContext);
     }
   }
 
   _inPlaceProcessItems(repeat, items) {
     let itemsLength = items.length;
-    let viewsLength = repeat.viewSlot.children.length;
+    let viewsLength = repeat.viewCount();
     // remove unneeded views.
     while (viewsLength > itemsLength) {
       viewsLength--;
-      repeat.viewSlot.removeAt(viewsLength, true);
+      repeat.removeView(viewsLength, true);
     }
     // avoid repeated evaluating the property-getter for the "local" property.
     let local = repeat.local;
     // re-evaluate bindings on existing views.
     for (let i = 0; i < viewsLength; i++) {
-      let view = repeat.viewSlot.children[i];
+      let view = repeat.view(i);
       let last = i === itemsLength - 1;
       let middle = i !== 0 && !last;
       // any changes to the binding context?
@@ -83,9 +81,7 @@ export class ArrayRepeatStrategy {
     // add new views
     for (let i = viewsLength; i < itemsLength; i++) {
       let overrideContext = createFullOverrideContext(repeat, items[i], i, itemsLength);
-      let view = repeat.viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      repeat.viewSlot.add(view);
+      repeat.addView(overrideContext.bindingContext, overrideContext);
     }
   }
 
@@ -147,7 +143,6 @@ export class ArrayRepeatStrategy {
   */
   _runSplices(repeat, array, splices) {
     let removeDelta = 0;
-    let viewSlot = repeat.viewSlot;
     let rmPromises = [];
 
     for (let i = 0, ii = splices.length; i < ii; ++i) {
@@ -156,7 +151,7 @@ export class ArrayRepeatStrategy {
 
       for (let j = 0, jj = removed.length; j < jj; ++j) {
         // the rmPromises.length correction works due to the ordered removal precondition
-        let viewOrPromise = viewSlot.removeAt(splice.index + removeDelta + rmPromises.length, true);
+        let viewOrPromise = repeat.removeView(splice.index + removeDelta + rmPromises.length, true);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
@@ -167,12 +162,12 @@ export class ArrayRepeatStrategy {
     if (rmPromises.length > 0) {
       return Promise.all(rmPromises).then(() => {
         let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
-        updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
+        updateOverrideContexts(repeat.views(), spliceIndexLow);
       });
     }
 
     let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
-    updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
+    updateOverrideContexts(repeat.views(), spliceIndexLow);
   }
 
   _handleAddedSplices(repeat, array, splices) {
@@ -190,9 +185,7 @@ export class ArrayRepeatStrategy {
 
       for (; addIndex < end; ++addIndex) {
         let overrideContext = createFullOverrideContext(repeat, array[addIndex], addIndex, arrayLength);
-        let view = repeat.viewFactory.create();
-        view.bind(overrideContext.bindingContext, overrideContext);
-        repeat.viewSlot.insert(addIndex, view);
+        repeat.insertView(addIndex, overrideContext.bindingContext, overrideContext);
       }
     }
 
