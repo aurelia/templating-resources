@@ -17,6 +17,7 @@ import {
   isOneTime
 } from './repeat-utilities';
 import {viewsRequireLifecycle} from './analyze-view-factory';
+import {AbstractRepeater} from './abstract-repeater';
 
 /**
 * Binding to iterate over iterable objects (Array, Map and Number) to genereate a template for each iteration.
@@ -24,7 +25,7 @@ import {viewsRequireLifecycle} from './analyze-view-factory';
 @customAttribute('repeat')
 @templateController
 @inject(BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, ObserverLocator, RepeatStrategyLocator)
-export class Repeat {
+export class Repeat extends AbstractRepeater {
   /**
   * List of items to bind the repeater to.
   *
@@ -60,12 +61,16 @@ export class Repeat {
  * @param collectionStrategyLocator The strategy locator to locate best strategy to iterate the collection.
  */
   constructor(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
+    super({
+      local: 'item',
+      viewsRequireLifecycle: viewsRequireLifecycle(viewFactory)
+    });
+
     this.viewFactory = viewFactory;
     this.instruction = instruction;
     this.viewSlot = viewSlot;
     this.lookupFunctions = viewResources.lookupFunctions;
     this.observerLocator = observerLocator;
-    this.local = 'item';
     this.key = 'key';
     this.value = 'value';
     this.strategyLocator = strategyLocator;
@@ -191,5 +196,30 @@ export class Repeat {
       this.callContext = 'handleCollectionMutated';
       this.collectionObserver.subscribe(this.callContext, this);
     }
+  }
+
+  // implementation of AbstractRepeater
+  viewCount() { return this.viewSlot.children.length; }
+  views() { return this.viewSlot.children; }
+  view(index) { return this.viewSlot.children[index]; }
+
+  addView(bindingContext, overrideContext) {
+    let view = this.viewFactory.create();
+    view.bind(bindingContext, overrideContext);
+    this.viewSlot.add(view);
+  }
+
+  insertView(index, bindingContext, overrideContext) {
+    let view = this.viewFactory.create();
+    view.bind(bindingContext, overrideContext);
+    this.viewSlot.insert(index, view);
+  }
+
+  removeAllViews(returnToCache, skipAnimation) {
+    return this.viewSlot.removeAll(returnToCache, skipAnimation);
+  }
+
+  removeView(index, returnToCache, skipAnimation) {
+    return this.viewSlot.removeAt(index, returnToCache, skipAnimation);
   }
 }
