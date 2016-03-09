@@ -17,7 +17,7 @@ export class SetRepeatStrategy {
   * @param items The entries to process.
   */
   instanceChanged(repeat, items) {
-    let removePromise = repeat.viewSlot.removeAll(true);
+    let removePromise = repeat.removeAllViews(true);
     if (removePromise instanceof Promise) {
       removePromise.then(() => this._standardProcessItems(repeat, items));
       return;
@@ -26,17 +26,13 @@ export class SetRepeatStrategy {
   }
 
   _standardProcessItems(repeat, items) {
-    let viewFactory = repeat.viewFactory;
-    let viewSlot = repeat.viewSlot;
     let index = 0;
     let overrideContext;
     let view;
 
     items.forEach(value => {
       overrideContext = createFullOverrideContext(repeat, value, index, items.size);
-      view = viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      viewSlot.add(view);
+      repeat.addView(overrideContext.bindingContext, overrideContext);
       ++index;
     });
   }
@@ -47,7 +43,6 @@ export class SetRepeatStrategy {
   * @param records The change records.
   */
   instanceMutated(repeat, set, records) {
-    let viewSlot = repeat.viewSlot;
     let value;
     let i;
     let ii;
@@ -64,19 +59,17 @@ export class SetRepeatStrategy {
       switch (record.type) {
       case 'add':
         overrideContext = createFullOverrideContext(repeat, value, set.size - 1, set.size);
-        view = repeat.viewFactory.create();
-        view.bind(overrideContext.bindingContext, overrideContext);
-        viewSlot.insert(set.size - 1, view);
+        repeat.insertView(set.size - 1, overrideContext.bindingContext, overrideContext);
         break;
       case 'delete':
         removeIndex = this._getViewIndexByValue(repeat, value);
-        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        viewOrPromise = repeat.removeView(removeIndex, true);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
         break;
       case 'clear':
-        viewSlot.removeAll(true);
+        repeat.removeAllViews(true);
         break;
       default:
         continue;
@@ -85,21 +78,20 @@ export class SetRepeatStrategy {
 
     if (rmPromises.length > 0) {
       Promise.all(rmPromises).then(() => {
-        updateOverrideContexts(repeat.viewSlot.children, 0);
+        updateOverrideContexts(repeat.views(), 0);
       });
     } else {
-      updateOverrideContexts(repeat.viewSlot.children, 0);
+      updateOverrideContexts(repeat.views(), 0);
     }
   }
 
   _getViewIndexByValue(repeat, value) {
-    let viewSlot = repeat.viewSlot;
     let i;
     let ii;
     let child;
 
-    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
-      child = viewSlot.children[i];
+    for (i = 0, ii = repeat.viewCount(); i < ii; ++i) {
+      child = repeat.view(i);
       if (child.bindingContext[repeat.local] === value) {
         return i;
       }
