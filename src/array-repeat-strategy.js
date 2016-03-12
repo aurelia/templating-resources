@@ -1,4 +1,4 @@
-import {createFullOverrideContext, updateOverrideContexts, updateOneTimeBinding} from './repeat-utilities';
+import {createFullOverrideContext, updateOverrideContexts} from './repeat-utilities';
 import {mergeSplice} from 'aurelia-binding';
 
 /**
@@ -65,18 +65,7 @@ export class ArrayRepeatStrategy {
       view.bindingContext[local] = items[i];
       view.overrideContext.$middle = middle;
       view.overrideContext.$last = last;
-      let j = view.bindings.length;
-      while (j--) {
-        updateOneTimeBinding(view.bindings[j]);
-      }
-      j = view.controllers.length;
-      while (j--) {
-        let k = view.controllers[j].boundProperties.length;
-        while (k--) {
-          let binding = view.controllers[j].boundProperties[k].binding;
-          updateOneTimeBinding(binding);
-        }
-      }
+      repeat.updateBindings(view);
     }
     // add new views
     for (let i = viewsLength; i < itemsLength; i++) {

@@ -82,4 +82,14 @@ export class AbstractRepeater {
   removeView(index: number, returnToCache?: boolean, skipAnimation?: boolean) {
     throw new Error('subclass must implement `removeView`');
   }
+
+  /**
+   * Forces a particular view to update it's bindings, called as part of
+   * an in-place processing of items for better performance
+   *
+   * @param {Object} view the target view for bindings updates
+   */
+  updateBindings(view: View) {
+    throw new Error('subclass must implement `updateBindings`');
+  }
 }

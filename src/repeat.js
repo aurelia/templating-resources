@@ -14,7 +14,8 @@ import {RepeatStrategyLocator} from './repeat-strategy-locator';
 import {
   getItemsSourceExpression,
   unwrapExpression,
-  isOneTime
+  isOneTime,
+  updateOneTimeBinding
 } from './repeat-utilities';
 import {viewsRequireLifecycle} from './analyze-view-factory';
 import {AbstractRepeater} from './abstract-repeater';
@@ -198,7 +199,7 @@ export class Repeat extends AbstractRepeater {
     }
   }
 
-  // implementation of AbstractRepeater
+  // @override AbstractRepeater
   viewCount() { return this.viewSlot.children.length; }
   views() { return this.viewSlot.children; }
   view(index) { return this.viewSlot.children[index]; }
@@ -221,5 +222,20 @@ export class Repeat extends AbstractRepeater {
 
   removeView(index, returnToCache, skipAnimation) {
     return this.viewSlot.removeAt(index, returnToCache, skipAnimation);
+  }
+
+  updateBindings(view: View) {
+    let j = view.bindings.length;
+    while (j--) {
+      updateOneTimeBinding(view.bindings[j]);
+    }
+    j = view.controllers.length;
+    while (j--) {
+      let k = view.controllers[j].boundProperties.length;
+      while (k--) {
+        let binding = view.controllers[j].boundProperties[k].binding;
+        updateOneTimeBinding(binding);
+      }
+    }
   }
 }
