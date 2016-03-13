@@ -16,7 +16,7 @@ export class NumberRepeatStrategy {
   * @param value The Number of how many time to iterate.
   */
   instanceChanged(repeat, value) {
-    let removePromise = repeat.viewSlot.removeAll(true);
+    let removePromise = repeat.removeAllViews(true);
     if (removePromise instanceof Promise) {
       removePromise.then(() => this._standardProcessItems(repeat, value));
       return;
@@ -25,9 +25,7 @@ export class NumberRepeatStrategy {
   }
 
   _standardProcessItems(repeat, value) {
-    let viewFactory = repeat.viewFactory;
-    let viewSlot = repeat.viewSlot;
-    let childrenLength = viewSlot.children.length;
+    let childrenLength = repeat.viewCount();
     let i;
     let ii;
     let overrideContext;
@@ -43,7 +41,7 @@ export class NumberRepeatStrategy {
       }
 
       for (i = 0, ii = viewsToRemove; i < ii; ++i) {
-        viewSlot.removeAt(childrenLength - (i + 1), true);
+        repeat.removeView(childrenLength - (i + 1), true);
       }
 
       return;
@@ -51,11 +49,9 @@ export class NumberRepeatStrategy {
 
     for (i = childrenLength, ii = value; i < ii; ++i) {
       overrideContext = createFullOverrideContext(repeat, i, i, ii);
-      view = viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      viewSlot.add(view);
+      repeat.addView(overrideContext.bindingContext, overrideContext);
     }
 
-    updateOverrideContexts(repeat.viewSlot.children, 0);
+    updateOverrideContexts(repeat.views(), 0);
   }
 }

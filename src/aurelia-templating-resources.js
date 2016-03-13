@@ -20,6 +20,7 @@ import {DebounceBindingBehavior} from './debounce-binding-behavior';
 import {SignalBindingBehavior} from './signal-binding-behavior';
 import {BindingSignaler} from './binding-signaler';
 import {UpdateTriggerBindingBehavior} from './update-trigger-binding-behavior';
+import {AbstractRepeater} from './abstract-repeater';
 
 function configure(config) {
   if (FEATURE.shadowDOM) {
@@ -101,5 +102,6 @@ export {
   DebounceBindingBehavior,
   SignalBindingBehavior,
   BindingSignaler,
-  UpdateTriggerBindingBehavior
+  UpdateTriggerBindingBehavior,
+  AbstractRepeater
 };

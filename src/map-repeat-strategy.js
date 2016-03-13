@@ -17,7 +17,7 @@ export class MapRepeatStrategy {
   * @param items The entries to process.
   */
   instanceChanged(repeat, items) {
-    let removePromise = repeat.viewSlot.removeAll(true);
+    let removePromise = repeat.removeAllViews(true);
     if (removePromise instanceof Promise) {
       removePromise.then(() => this._standardProcessItems(repeat, items));
       return;
@@ -26,17 +26,13 @@ export class MapRepeatStrategy {
   }
 
   _standardProcessItems(repeat, items) {
-    let viewFactory = repeat.viewFactory;
-    let viewSlot = repeat.viewSlot;
     let index = 0;
     let overrideContext;
     let view;
 
     items.forEach((value, key) => {
       overrideContext = createFullOverrideContext(repeat, value, index, items.size, key);
-      view = viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      viewSlot.add(view);
+      repeat.addView(overrideContext.bindingContext, overrideContext);
       ++index;
     });
   }
@@ -47,7 +43,6 @@ export class MapRepeatStrategy {
   * @param records The change records.
   */
   instanceMutated(repeat, map, records) {
-    let viewSlot = repeat.viewSlot;
     let key;
     let i;
     let ii;
@@ -64,31 +59,27 @@ export class MapRepeatStrategy {
       switch (record.type) {
       case 'update':
         removeIndex = this._getViewIndexByKey(repeat, key);
-        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        viewOrPromise = repeat.removeView(removeIndex, true);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
         overrideContext = createFullOverrideContext(repeat, map.get(key), removeIndex, map.size, key);
-        view = repeat.viewFactory.create();
-        view.bind(overrideContext.bindingContext, overrideContext);
-        viewSlot.insert(removeIndex, view);
+        repeat.insertView(removeIndex, overrideContext.bindingContext, overrideContext);
         break;
       case 'add':
         overrideContext = createFullOverrideContext(repeat, map.get(key), map.size - 1, map.size, key);
-        view = repeat.viewFactory.create();
-        view.bind(overrideContext.bindingContext, overrideContext);
-        viewSlot.insert(map.size - 1, view);
+        repeat.insertView(map.size - 1, overrideContext.bindingContext, overrideContext);
         break;
       case 'delete':
         if (record.oldValue === undefined) { return; }
         removeIndex = this._getViewIndexByKey(repeat, key);
-        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        viewOrPromise = repeat.removeView(removeIndex, true);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
         break;
       case 'clear':
-        viewSlot.removeAll(true);
+        repeat.removeAllViews(true);
         break;
       default:
         continue;
@@ -97,21 +88,20 @@ export class MapRepeatStrategy {
 
     if (rmPromises.length > 0) {
       Promise.all(rmPromises).then(() => {
-        updateOverrideContexts(repeat.viewSlot.children, 0);
+        updateOverrideContexts(repeat.views(), 0);
       });
     } else {
-      updateOverrideContexts(repeat.viewSlot.children, 0);
+      updateOverrideContexts(repeat.views(), 0);
     }
   }
 
   _getViewIndexByKey(repeat, key) {
-    let viewSlot = repeat.viewSlot;
     let i;
     let ii;
     let child;
 
-    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
-      child = viewSlot.children[i];
+    for (i = 0, ii = repeat.viewCount(); i < ii; ++i) {
+      child = repeat.view(i);
       if (child.bindingContext[repeat.key] === key) {
         return i;
       }
