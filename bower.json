@@ -17,6 +17,7 @@
     "url": "http://github.com/aurelia/templating-resources"
   },
   "dependencies": {
+    "aurelia-metadata": "^1.0.0-beta.1.1.6",
     "aurelia-binding": "^1.0.0-beta.1.1.0",
     "aurelia-dependency-injection": "^1.0.0-beta.1.1.2",
     "aurelia-loader": "^1.0.0-beta.1.1.0",
