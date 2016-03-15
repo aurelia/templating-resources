@@ -1,6 +1,5 @@
 import {BoundViewFactory, ViewSlot, customAttribute, templateController} from 'aurelia-templating';
 import {inject} from 'aurelia-dependency-injection';
-import {TaskQueue} from 'aurelia-task-queue';
 
 /**
 * Binding to conditionally include or not include template logic depending on returned result
@@ -8,19 +7,17 @@ import {TaskQueue} from 'aurelia-task-queue';
 */
 @customAttribute('if')
 @templateController
-@inject(BoundViewFactory, ViewSlot, TaskQueue)
+@inject(BoundViewFactory, ViewSlot)
 export class If {
   /**
   * Creates an instance of If.
   * @param {BoundViewFactory} viewFactory The factory generating the view
   * @param {ViewSlot} viewSlot The slot the view is injected in to
-  * @param {TaskQueue} taskQueue
   */
-  constructor(viewFactory, viewSlot, taskQueue) {
+  constructor(viewFactory, viewSlot) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
     this.showing = false;
-    this.taskQueue = taskQueue;
     this.view = null;
     this.bindingContext = null;
     this.overrideContext = null;
@@ -45,14 +42,12 @@ export class If {
   valueChanged(newValue) {
     if (!newValue) {
       if (this.view !== null && this.showing) {
-        this.taskQueue.queueMicroTask(() => {
-          let viewOrPromise = this.viewSlot.remove(this.view);
-          if (viewOrPromise instanceof Promise) {
-            viewOrPromise.then(() => this.view.unbind());
-          } else {
-            this.view.unbind();
-          }
-        });
+        let viewOrPromise = this.viewSlot.remove(this.view);
+        if (viewOrPromise instanceof Promise) {
+          viewOrPromise.then(() => this.view.unbind());
+        } else {
+          this.view.unbind();
+        }
       }
 
       this.showing = false;
