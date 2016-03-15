@@ -29,7 +29,6 @@ export class NumberRepeatStrategy {
     let i;
     let ii;
     let overrideContext;
-    let view;
     let viewsToRemove;
 
     value = Math.floor(value);

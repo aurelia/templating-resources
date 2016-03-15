@@ -28,7 +28,6 @@ export class SetRepeatStrategy {
   _standardProcessItems(repeat, items) {
     let index = 0;
     let overrideContext;
-    let view;
 
     items.forEach(value => {
       overrideContext = createFullOverrideContext(repeat, value, index, items.size);
@@ -46,7 +45,6 @@ export class SetRepeatStrategy {
     let value;
     let i;
     let ii;
-    let view;
     let overrideContext;
     let removeIndex;
     let record;
