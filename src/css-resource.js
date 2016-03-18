@@ -8,6 +8,9 @@ import {DOM, FEATURE} from 'aurelia-pal';
 let cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
 function fixupCSSUrls(address, css) {
+  if (typeof css !== 'string') {
+    throw new Error(`Failed loading required CSS file: ${address}`);
+  }
   return css.replace(cssUrlMatcher, (match, p1) => {
     let quote = p1.charAt(0);
     if (quote === '\'' || quote === '"') {
@@ -34,11 +37,14 @@ class CSSResource {
   }
 
   load(container: Container): Promise<CSSResource> {
-    return container.get(Loader).loadText(this.address).then(text => {
-      text = fixupCSSUrls(this.address, text);
-      this._global.css = text;
-      this._scoped.css = text;
-    });
+    return container.get(Loader)
+      .loadText(this.address)
+      .catch(err => null)
+      .then(text => {
+        text = fixupCSSUrls(this.address, text);
+        this._global.css = text;
+        this._scoped.css = text;
+      });
   }
 }
 
