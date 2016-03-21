@@ -106,8 +106,8 @@ export class ArrayRepeatStrategy {
 
       let runQueuedSplices = () => {
         if (!queuedSplices.length) {
-          delete repeat.__queuedSplices;
-          delete repeat.__array;
+          repeat.__queuedSplices = undefined;
+          repeat.__array = undefined;
           return;
         }
 
