@@ -40,9 +40,34 @@ export class If {
   * @param newValue The new value
   */
   valueChanged(newValue) {
+    if (this.__queuedChanges) {
+      this.__queuedChanges.push(newValue);
+      return;
+    }
+
+    let maybePromise = this._runValueChanged(newValue);
+    if (maybePromise instanceof Promise) {
+      let queuedChanges = this.__queuedChanges = [];
+
+      let runQueuedChanges = () => {
+        if (!queuedChanges.length) {
+          this.__queuedChanges = undefined;
+          return;
+        }
+
+        let nextPromise = this._runValueChanged(queuedChanges.shift()) || Promise.resolve();
+        nextPromise.then(runQueuedChanges);
+      };
+
+      maybePromise.then(runQueuedChanges);
+    }
+  }
+
+  _runValueChanged(newValue) {
     if (!newValue) {
+      let viewOrPromise;
       if (this.view !== null && this.showing) {
-        let viewOrPromise = this.viewSlot.remove(this.view);
+        viewOrPromise = this.viewSlot.remove(this.view);
         if (viewOrPromise instanceof Promise) {
           viewOrPromise.then(() => this.view.unbind());
         } else {
@@ -51,7 +76,7 @@ export class If {
       }
 
       this.showing = false;
-      return;
+      return viewOrPromise;
     }
 
     if (this.view === null) {
@@ -64,7 +89,7 @@ export class If {
 
     if (!this.showing) {
       this.showing = true;
-      this.viewSlot.add(this.view);
+      return this.viewSlot.add(this.view);
     }
   }
 
