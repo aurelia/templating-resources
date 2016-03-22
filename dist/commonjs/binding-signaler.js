@@ -1,12 +1,15 @@
 'use strict';
 
-exports.__esModule = true;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.BindingSignaler = undefined;
 
 var _aureliaBinding = require('aurelia-binding');
 
-var BindingSignaler = (function () {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BindingSignaler = exports.BindingSignaler = function () {
   function BindingSignaler() {
     _classCallCheck(this, BindingSignaler);
 
@@ -25,6 +28,4 @@ var BindingSignaler = (function () {
   };
 
   return BindingSignaler;
-})();
-
-exports.BindingSignaler = BindingSignaler;
+}();

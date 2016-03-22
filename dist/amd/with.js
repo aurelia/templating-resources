@@ -1,13 +1,22 @@
 define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aurelia-binding'], function (exports, _aureliaDependencyInjection, _aureliaTemplating, _aureliaBinding) {
   'use strict';
 
-  exports.__esModule = true;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.With = undefined;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
-  var With = (function () {
+  var _dec, _dec2, _class;
+
+  var With = exports.With = (_dec = (0, _aureliaTemplating.customAttribute)('with'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec(_class = (0, _aureliaTemplating.templateController)(_class = _dec2(_class = function () {
     function With(viewFactory, viewSlot) {
-      _classCallCheck(this, _With);
+      _classCallCheck(this, With);
 
       this.viewFactory = viewFactory;
       this.viewSlot = viewSlot;
@@ -21,7 +30,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
     };
 
     With.prototype.valueChanged = function valueChanged(newValue) {
-      var overrideContext = _aureliaBinding.createOverrideContext(newValue, this.parentOverrideContext);
+      var overrideContext = (0, _aureliaBinding.createOverrideContext)(newValue, this.parentOverrideContext);
       if (!this.view) {
         this.view = this.viewFactory.create();
         this.view.bind(newValue, overrideContext);
@@ -39,12 +48,6 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
       }
     };
 
-    var _With = With;
-    With = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(With) || With;
-    With = _aureliaTemplating.templateController(With) || With;
-    With = _aureliaTemplating.customAttribute('with')(With) || With;
     return With;
-  })();
-
-  exports.With = With;
+  }()) || _class) || _class) || _class);
 });

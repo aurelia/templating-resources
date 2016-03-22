@@ -1,10 +1,11 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.viewsRequireLifecycle = viewsRequireLifecycle;
-var lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'with'];
+var lifecycleOptionalBehaviors = exports.lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'with'];
 
-exports.lifecycleOptionalBehaviors = lifecycleOptionalBehaviors;
 function behaviorRequiresLifecycle(instruction) {
   var t = instruction.type;
   var name = t.elementName !== null ? t.elementName : t.attributeName;

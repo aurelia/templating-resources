@@ -1,11 +1,13 @@
-System.register(['aurelia-binding'], function (_export) {
-  'use strict';
+'use strict';
 
-  var bindingMode, EventManager, eventNamesRequired, notApplicableMessage, UpdateTriggerBindingBehavior;
+System.register(['aurelia-binding'], function (_export, _context) {
+  var bindingMode, EventManager, _class, _temp, eventNamesRequired, notApplicableMessage, UpdateTriggerBindingBehavior;
 
-  var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   return {
     setters: [function (_aureliaBinding) {
@@ -16,13 +18,7 @@ System.register(['aurelia-binding'], function (_export) {
       eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
       notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way bindings on input/select elements.';
 
-      UpdateTriggerBindingBehavior = (function () {
-        _createClass(UpdateTriggerBindingBehavior, null, [{
-          key: 'inject',
-          value: [EventManager],
-          enumerable: true
-        }]);
-
+      _export('UpdateTriggerBindingBehavior', UpdateTriggerBindingBehavior = (_temp = _class = function () {
         function UpdateTriggerBindingBehavior(eventManager) {
           _classCallCheck(this, UpdateTriggerBindingBehavior);
 
@@ -59,7 +55,7 @@ System.register(['aurelia-binding'], function (_export) {
         };
 
         return UpdateTriggerBindingBehavior;
-      })();
+      }(), _class.inject = [EventManager], _temp));
 
       _export('UpdateTriggerBindingBehavior', UpdateTriggerBindingBehavior);
     }

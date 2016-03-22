@@ -1,11 +1,18 @@
 define(['exports', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy'], function (exports, _nullRepeatStrategy, _arrayRepeatStrategy, _mapRepeatStrategy, _setRepeatStrategy, _numberRepeatStrategy) {
   'use strict';
 
-  exports.__esModule = true;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.RepeatStrategyLocator = undefined;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
-  var RepeatStrategyLocator = (function () {
+  var RepeatStrategyLocator = exports.RepeatStrategyLocator = function () {
     function RepeatStrategyLocator() {
       _classCallCheck(this, RepeatStrategyLocator);
 
@@ -47,7 +54,5 @@ define(['exports', './null-repeat-strategy', './array-repeat-strategy', './map-r
     };
 
     return RepeatStrategyLocator;
-  })();
-
-  exports.RepeatStrategyLocator = RepeatStrategyLocator;
+  }();
 });

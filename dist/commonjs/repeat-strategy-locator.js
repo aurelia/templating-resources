@@ -1,8 +1,9 @@
 'use strict';
 
-exports.__esModule = true;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.RepeatStrategyLocator = undefined;
 
 var _nullRepeatStrategy = require('./null-repeat-strategy');
 
@@ -14,7 +15,9 @@ var _setRepeatStrategy = require('./set-repeat-strategy');
 
 var _numberRepeatStrategy = require('./number-repeat-strategy');
 
-var RepeatStrategyLocator = (function () {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var RepeatStrategyLocator = exports.RepeatStrategyLocator = function () {
   function RepeatStrategyLocator() {
     _classCallCheck(this, RepeatStrategyLocator);
 
@@ -56,6 +59,4 @@ var RepeatStrategyLocator = (function () {
   };
 
   return RepeatStrategyLocator;
-})();
-
-exports.RepeatStrategyLocator = RepeatStrategyLocator;
+}();

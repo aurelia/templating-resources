@@ -1,9 +1,13 @@
-System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-task-queue'], function (_export) {
-  'use strict';
+'use strict';
 
-  var BoundViewFactory, ViewSlot, customAttribute, templateController, inject, TaskQueue, If;
+System.register(['aurelia-templating', 'aurelia-dependency-injection'], function (_export, _context) {
+  var BoundViewFactory, ViewSlot, customAttribute, templateController, inject, _dec, _dec2, _class, If;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   return {
     setters: [function (_aureliaTemplating) {
@@ -13,18 +17,15 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
       templateController = _aureliaTemplating.templateController;
     }, function (_aureliaDependencyInjection) {
       inject = _aureliaDependencyInjection.inject;
-    }, function (_aureliaTaskQueue) {
-      TaskQueue = _aureliaTaskQueue.TaskQueue;
     }],
     execute: function () {
-      If = (function () {
-        function If(viewFactory, viewSlot, taskQueue) {
-          _classCallCheck(this, _If);
+      _export('If', If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, ViewSlot), _dec(_class = templateController(_class = _dec2(_class = function () {
+        function If(viewFactory, viewSlot) {
+          _classCallCheck(this, If);
 
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
           this.showing = false;
-          this.taskQueue = taskQueue;
           this.view = null;
           this.bindingContext = null;
           this.overrideContext = null;
@@ -39,22 +40,49 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
         If.prototype.valueChanged = function valueChanged(newValue) {
           var _this = this;
 
-          if (!newValue) {
-            if (this.view !== null && this.showing) {
-              this.taskQueue.queueMicroTask(function () {
-                var viewOrPromise = _this.viewSlot.remove(_this.view);
-                if (viewOrPromise instanceof Promise) {
-                  viewOrPromise.then(function () {
-                    return _this.view.unbind();
-                  });
-                } else {
-                  _this.view.unbind();
+          if (this.__queuedChanges) {
+            this.__queuedChanges.push(newValue);
+            return;
+          }
+
+          var maybePromise = this._runValueChanged(newValue);
+          if (maybePromise instanceof Promise) {
+            (function () {
+              var queuedChanges = _this.__queuedChanges = [];
+
+              var runQueuedChanges = function runQueuedChanges() {
+                if (!queuedChanges.length) {
+                  _this.__queuedChanges = undefined;
+                  return;
                 }
-              });
+
+                var nextPromise = _this._runValueChanged(queuedChanges.shift()) || Promise.resolve();
+                nextPromise.then(runQueuedChanges);
+              };
+
+              maybePromise.then(runQueuedChanges);
+            })();
+          }
+        };
+
+        If.prototype._runValueChanged = function _runValueChanged(newValue) {
+          var _this2 = this;
+
+          if (!newValue) {
+            var viewOrPromise = void 0;
+            if (this.view !== null && this.showing) {
+              viewOrPromise = this.viewSlot.remove(this.view);
+              if (viewOrPromise instanceof Promise) {
+                viewOrPromise.then(function () {
+                  return _this2.view.unbind();
+                });
+              } else {
+                this.view.unbind();
+              }
             }
 
             this.showing = false;
-            return;
+            return viewOrPromise;
           }
 
           if (this.view === null) {
@@ -67,7 +95,7 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
 
           if (!this.showing) {
             this.showing = true;
-            this.viewSlot.add(this.view);
+            return this.viewSlot.add(this.view);
           }
         };
 
@@ -90,12 +118,8 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', 'aurelia-
           this.view = null;
         };
 
-        var _If = If;
-        If = inject(BoundViewFactory, ViewSlot, TaskQueue)(If) || If;
-        If = templateController(If) || If;
-        If = customAttribute('if')(If) || If;
         return If;
-      })();
+      }()) || _class) || _class) || _class));
 
       _export('If', If);
     }

@@ -1,23 +1,20 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UpdateTriggerBindingBehavior = undefined;
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _class, _temp;
 
 var _aureliaBinding = require('aurelia-binding');
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
 var notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way bindings on input/select elements.';
 
-var UpdateTriggerBindingBehavior = (function () {
-  _createClass(UpdateTriggerBindingBehavior, null, [{
-    key: 'inject',
-    value: [_aureliaBinding.EventManager],
-    enumerable: true
-  }]);
-
+var UpdateTriggerBindingBehavior = exports.UpdateTriggerBindingBehavior = (_temp = _class = function () {
   function UpdateTriggerBindingBehavior(eventManager) {
     _classCallCheck(this, UpdateTriggerBindingBehavior);
 
@@ -54,6 +51,4 @@ var UpdateTriggerBindingBehavior = (function () {
   };
 
   return UpdateTriggerBindingBehavior;
-})();
-
-exports.UpdateTriggerBindingBehavior = UpdateTriggerBindingBehavior;
+}(), _class.inject = [_aureliaBinding.EventManager], _temp);

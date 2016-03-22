@@ -1,3 +1,19 @@
+### 1.0.0-beta.1.2.0 (2016-03-22)
+
+
+#### Bug Fixes
+
+* **all:** replace removed file and fix lint errors ([6de4d2e6](http://github.com/aurelia/templating-resources/commit/6de4d2e6204126195499f12df20d5ba40d672fb3))
+* **css:** throw on missing CSS file ([e6a2d45e](http://github.com/aurelia/templating-resources/commit/e6a2d45e53dd81c78db093d7431070dbcecd3c27), closes [#189](http://github.com/aurelia/templating-resources/issues/189))
+* **if:** queue up changes when animating ([ae57e50d](http://github.com/aurelia/templating-resources/commit/ae57e50d56fde48cca0ab01fd2791edab6efd0ec))
+* **repeat:** throw on non-repeatable expressions ([1d7bbccc](http://github.com/aurelia/templating-resources/commit/1d7bbcccf350d4420c996d4fa0521f9bff11a55e))
+
+
+#### Features
+
+* **abstract-repeater:** add abstract repeater base class ([949d0091](http://github.com/aurelia/templating-resources/commit/949d009164f7f42b365dae5ddf2bedafee8119af))
+
+
 ### 1.0.0-beta.1.1.3 (2016-03-03)
 
 

@@ -1,9 +1,13 @@
-System.register(['aurelia-dependency-injection', 'aurelia-templating'], function (_export) {
-  'use strict';
+'use strict';
 
-  var inject, BoundViewFactory, ViewSlot, customAttribute, templateController, Replaceable;
+System.register(['aurelia-dependency-injection', 'aurelia-templating'], function (_export, _context) {
+  var inject, BoundViewFactory, ViewSlot, customAttribute, templateController, _dec, _dec2, _class, Replaceable;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   return {
     setters: [function (_aureliaDependencyInjection) {
@@ -15,9 +19,9 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
       templateController = _aureliaTemplating.templateController;
     }],
     execute: function () {
-      Replaceable = (function () {
+      _export('Replaceable', Replaceable = (_dec = customAttribute('replaceable'), _dec2 = inject(BoundViewFactory, ViewSlot), _dec(_class = templateController(_class = _dec2(_class = function () {
         function Replaceable(viewFactory, viewSlot) {
-          _classCallCheck(this, _Replaceable);
+          _classCallCheck(this, Replaceable);
 
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
@@ -37,12 +41,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating'], function
           this.view.unbind();
         };
 
-        var _Replaceable = Replaceable;
-        Replaceable = inject(BoundViewFactory, ViewSlot)(Replaceable) || Replaceable;
-        Replaceable = templateController(Replaceable) || Replaceable;
-        Replaceable = customAttribute('replaceable')(Replaceable) || Replaceable;
         return Replaceable;
-      })();
+      }()) || _class) || _class) || _class));
 
       _export('Replaceable', Replaceable);
     }

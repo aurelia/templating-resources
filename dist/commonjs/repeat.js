@@ -1,12 +1,11 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Repeat = undefined;
 
-var _createDecoratedClass = (function () { function defineProperties(target, descriptors, initializers) { for (var i = 0; i < descriptors.length; i++) { var descriptor = descriptors[i]; var decorators = descriptor.decorators; var key = descriptor.key; delete descriptor.key; delete descriptor.decorators; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor || descriptor.initializer) descriptor.writable = true; if (decorators) { for (var f = 0; f < decorators.length; f++) { var decorator = decorators[f]; if (typeof decorator === 'function') { descriptor = decorator(target, key, descriptor) || descriptor; } else { throw new TypeError('The decorator for method ' + descriptor.key + ' is of the invalid type ' + typeof decorator); } } if (descriptor.initializer !== undefined) { initializers[key] = descriptor; continue; } } Object.defineProperty(target, key, descriptor); } } return function (Constructor, protoProps, staticProps, protoInitializers, staticInitializers) { if (protoProps) defineProperties(Constructor.prototype, protoProps, protoInitializers); if (staticProps) defineProperties(Constructor, staticProps, staticInitializers); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _defineDecoratedPropertyDescriptor(target, key, descriptors) { var _descriptor = descriptors[key]; if (!_descriptor) return; var descriptor = {}; for (var _key in _descriptor) descriptor[_key] = _descriptor[_key]; descriptor.value = descriptor.initializer ? descriptor.initializer.call(target) : undefined; Object.defineProperty(target, key, descriptor); }
+var _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4;
 
 var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
@@ -20,55 +19,89 @@ var _repeatUtilities = require('./repeat-utilities');
 
 var _analyzeViewFactory = require('./analyze-view-factory');
 
-var Repeat = (function () {
-  var _instanceInitializers = {};
+var _abstractRepeater = require('./abstract-repeater');
 
-  _createDecoratedClass(Repeat, [{
-    key: 'items',
-    decorators: [_aureliaTemplating.bindable],
-    initializer: null,
-    enumerable: true
-  }, {
-    key: 'local',
-    decorators: [_aureliaTemplating.bindable],
-    initializer: null,
-    enumerable: true
-  }, {
-    key: 'key',
-    decorators: [_aureliaTemplating.bindable],
-    initializer: null,
-    enumerable: true
-  }, {
-    key: 'value',
-    decorators: [_aureliaTemplating.bindable],
-    initializer: null,
-    enumerable: true
-  }], null, _instanceInitializers);
+function _initDefineProp(target, property, descriptor, context) {
+  if (!descriptor) return;
+  Object.defineProperty(target, property, {
+    enumerable: descriptor.enumerable,
+    configurable: descriptor.configurable,
+    writable: descriptor.writable,
+    value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+  });
+}
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+  var desc = {};
+  Object['ke' + 'ys'](descriptor).forEach(function (key) {
+    desc[key] = descriptor[key];
+  });
+  desc.enumerable = !!desc.enumerable;
+  desc.configurable = !!desc.configurable;
+
+  if ('value' in desc || desc.initializer) {
+    desc.writable = true;
+  }
+
+  desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+    return decorator(target, property, desc) || desc;
+  }, desc);
+
+  if (context && desc.initializer !== void 0) {
+    desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+    desc.initializer = undefined;
+  }
+
+  if (desc.initializer === void 0) {
+    Object['define' + 'Property'](target, property, desc);
+    desc = null;
+  }
+
+  return desc;
+}
+
+function _initializerWarningHelper(descriptor, context) {
+  throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+}
+
+var Repeat = exports.Repeat = (_dec = (0, _aureliaTemplating.customAttribute)('repeat'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.TargetInstruction, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaBinding.ObserverLocator, _repeatStrategyLocator.RepeatStrategyLocator), _dec(_class = (0, _aureliaTemplating.templateController)(_class = _dec2(_class = (_class2 = function (_AbstractRepeater) {
+  _inherits(Repeat, _AbstractRepeater);
 
   function Repeat(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
-    _classCallCheck(this, _Repeat);
+    _classCallCheck(this, Repeat);
 
-    _defineDecoratedPropertyDescriptor(this, 'items', _instanceInitializers);
+    var _this = _possibleConstructorReturn(this, _AbstractRepeater.call(this, {
+      local: 'item',
+      viewsRequireLifecycle: (0, _analyzeViewFactory.viewsRequireLifecycle)(viewFactory)
+    }));
 
-    _defineDecoratedPropertyDescriptor(this, 'local', _instanceInitializers);
+    _initDefineProp(_this, 'items', _descriptor, _this);
 
-    _defineDecoratedPropertyDescriptor(this, 'key', _instanceInitializers);
+    _initDefineProp(_this, 'local', _descriptor2, _this);
 
-    _defineDecoratedPropertyDescriptor(this, 'value', _instanceInitializers);
+    _initDefineProp(_this, 'key', _descriptor3, _this);
 
-    this.viewFactory = viewFactory;
-    this.instruction = instruction;
-    this.viewSlot = viewSlot;
-    this.lookupFunctions = viewResources.lookupFunctions;
-    this.observerLocator = observerLocator;
-    this.local = 'item';
-    this.key = 'key';
-    this.value = 'value';
-    this.strategyLocator = strategyLocator;
-    this.ignoreMutation = false;
-    this.sourceExpression = _repeatUtilities.getItemsSourceExpression(this.instruction, 'repeat.for');
-    this.isOneTime = _repeatUtilities.isOneTime(this.sourceExpression);
-    this.viewsRequireLifecycle = _analyzeViewFactory.viewsRequireLifecycle(viewFactory);
+    _initDefineProp(_this, 'value', _descriptor4, _this);
+
+    _this.viewFactory = viewFactory;
+    _this.instruction = instruction;
+    _this.viewSlot = viewSlot;
+    _this.lookupFunctions = viewResources.lookupFunctions;
+    _this.observerLocator = observerLocator;
+    _this.key = 'key';
+    _this.value = 'value';
+    _this.strategyLocator = strategyLocator;
+    _this.ignoreMutation = false;
+    _this.sourceExpression = (0, _repeatUtilities.getItemsSourceExpression)(_this.instruction, 'repeat.for');
+    _this.isOneTime = (0, _repeatUtilities.isOneTime)(_this.sourceExpression);
+    _this.viewsRequireLifecycle = (0, _analyzeViewFactory.viewsRequireLifecycle)(viewFactory);
+    return _this;
   }
 
   Repeat.prototype.call = function call(context, changes) {
@@ -104,6 +137,9 @@ var Repeat = (function () {
 
     var items = this.items;
     this.strategy = this.strategyLocator.getStrategy(items);
+    if (!this.strategy) {
+      throw new Error('Value for \'' + this.sourceExpression + '\' is non-repeatable');
+    }
 
     if (!this.isOneTime && !this._observeInnerCollection()) {
       this._observeCollection();
@@ -112,7 +148,7 @@ var Repeat = (function () {
   };
 
   Repeat.prototype._getInnerCollection = function _getInnerCollection() {
-    var expression = _repeatUtilities.unwrapExpression(this.sourceExpression);
+    var expression = (0, _repeatUtilities.unwrapExpression)(this.sourceExpression);
     if (!expression) {
       return null;
     }
@@ -124,7 +160,7 @@ var Repeat = (function () {
   };
 
   Repeat.prototype.handleInnerCollectionMutated = function handleInnerCollectionMutated(collection, changes) {
-    var _this = this;
+    var _this2 = this;
 
     if (this.ignoreMutation) {
       return;
@@ -132,7 +168,7 @@ var Repeat = (function () {
     this.ignoreMutation = true;
     var newItems = this.sourceExpression.evaluate(this.scope, this.lookupFunctions);
     this.observerLocator.taskQueue.queueMicroTask(function () {
-      return _this.ignoreMutation = false;
+      return _this2.ignoreMutation = false;
     });
 
     if (newItems === this.items) {
@@ -166,11 +202,64 @@ var Repeat = (function () {
     }
   };
 
-  var _Repeat = Repeat;
-  Repeat = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.TargetInstruction, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaBinding.ObserverLocator, _repeatStrategyLocator.RepeatStrategyLocator)(Repeat) || Repeat;
-  Repeat = _aureliaTemplating.templateController(Repeat) || Repeat;
-  Repeat = _aureliaTemplating.customAttribute('repeat')(Repeat) || Repeat;
-  return Repeat;
-})();
+  Repeat.prototype.viewCount = function viewCount() {
+    return this.viewSlot.children.length;
+  };
 
-exports.Repeat = Repeat;
+  Repeat.prototype.views = function views() {
+    return this.viewSlot.children;
+  };
+
+  Repeat.prototype.view = function view(index) {
+    return this.viewSlot.children[index];
+  };
+
+  Repeat.prototype.addView = function addView(bindingContext, overrideContext) {
+    var view = this.viewFactory.create();
+    view.bind(bindingContext, overrideContext);
+    this.viewSlot.add(view);
+  };
+
+  Repeat.prototype.insertView = function insertView(index, bindingContext, overrideContext) {
+    var view = this.viewFactory.create();
+    view.bind(bindingContext, overrideContext);
+    this.viewSlot.insert(index, view);
+  };
+
+  Repeat.prototype.removeAllViews = function removeAllViews(returnToCache, skipAnimation) {
+    return this.viewSlot.removeAll(returnToCache, skipAnimation);
+  };
+
+  Repeat.prototype.removeView = function removeView(index, returnToCache, skipAnimation) {
+    return this.viewSlot.removeAt(index, returnToCache, skipAnimation);
+  };
+
+  Repeat.prototype.updateBindings = function updateBindings(view) {
+    var j = view.bindings.length;
+    while (j--) {
+      (0, _repeatUtilities.updateOneTimeBinding)(view.bindings[j]);
+    }
+    j = view.controllers.length;
+    while (j--) {
+      var k = view.controllers[j].boundProperties.length;
+      while (k--) {
+        var binding = view.controllers[j].boundProperties[k].binding;
+        (0, _repeatUtilities.updateOneTimeBinding)(binding);
+      }
+    }
+  };
+
+  return Repeat;
+}(_abstractRepeater.AbstractRepeater), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'items', [_aureliaTemplating.bindable], {
+  enumerable: true,
+  initializer: null
+}), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, 'local', [_aureliaTemplating.bindable], {
+  enumerable: true,
+  initializer: null
+}), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, 'key', [_aureliaTemplating.bindable], {
+  enumerable: true,
+  initializer: null
+}), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, 'value', [_aureliaTemplating.bindable], {
+  enumerable: true,
+  initializer: null
+})), _class2)) || _class) || _class) || _class);

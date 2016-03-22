@@ -1,16 +1,20 @@
-System.register(['aurelia-binding'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register(['aurelia-binding'], function (_export, _context) {
   var sourceContext, BindingSignaler;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   return {
     setters: [function (_aureliaBinding) {
       sourceContext = _aureliaBinding.sourceContext;
     }],
     execute: function () {
-      BindingSignaler = (function () {
+      _export('BindingSignaler', BindingSignaler = function () {
         function BindingSignaler() {
           _classCallCheck(this, BindingSignaler);
 
@@ -29,7 +33,7 @@ System.register(['aurelia-binding'], function (_export) {
         };
 
         return BindingSignaler;
-      })();
+      }());
 
       _export('BindingSignaler', BindingSignaler);
     }

@@ -1,6 +1,9 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.AbstractRepeater = exports.UpdateTriggerBindingBehavior = exports.BindingSignaler = exports.SignalBindingBehavior = exports.DebounceBindingBehavior = exports.ThrottleBindingBehavior = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.configure = exports.ViewSpy = exports.CompileSpy = exports.Focus = exports.Replaceable = exports.SanitizeHTMLValueConverter = exports.HTMLSanitizer = exports.Hide = exports.Show = exports.Repeat = exports.With = exports.If = exports.Compose = undefined;
 
 var _compose = require('./compose');
 
@@ -46,6 +49,8 @@ var _bindingSignaler = require('./binding-signaler');
 
 var _updateTriggerBindingBehavior = require('./update-trigger-binding-behavior');
 
+var _abstractRepeater = require('./abstract-repeater');
+
 function configure(config) {
   if (_aureliaPal.FEATURE.shadowDOM) {
     _aureliaPal.DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
@@ -80,7 +85,7 @@ function configure(config) {
           bindable = [];
         }
 
-        return _ref = {}, _ref[elementName] = _dynamicElement._createDynamicElement(elementName, address, bindable), _ref;
+        return _ref = {}, _ref[elementName] = (0, _dynamicElement._createDynamicElement)(elementName, address, bindable), _ref;
       });
     }
   });
@@ -89,7 +94,7 @@ function configure(config) {
     'fetch': function fetch(address) {
       var _ref2;
 
-      return _ref2 = {}, _ref2[address] = _cssResource._createCSSResource(address), _ref2;
+      return _ref2 = {}, _ref2[address] = (0, _cssResource._createCSSResource)(address), _ref2;
     }
   });
 }
@@ -115,3 +120,4 @@ exports.DebounceBindingBehavior = _debounceBindingBehavior.DebounceBindingBehavi
 exports.SignalBindingBehavior = _signalBindingBehavior.SignalBindingBehavior;
 exports.BindingSignaler = _bindingSignaler.BindingSignaler;
 exports.UpdateTriggerBindingBehavior = _updateTriggerBindingBehavior.UpdateTriggerBindingBehavior;
+exports.AbstractRepeater = _abstractRepeater.AbstractRepeater;

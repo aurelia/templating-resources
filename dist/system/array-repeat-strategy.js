@@ -1,20 +1,23 @@
-System.register(['./repeat-utilities', 'aurelia-binding'], function (_export) {
-  'use strict';
+'use strict';
 
-  var createFullOverrideContext, updateOverrideContexts, updateOneTimeBinding, mergeSplice, ArrayRepeatStrategy;
+System.register(['./repeat-utilities', 'aurelia-binding'], function (_export, _context) {
+  var createFullOverrideContext, updateOverrideContexts, mergeSplice, ArrayRepeatStrategy;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   return {
     setters: [function (_repeatUtilities) {
       createFullOverrideContext = _repeatUtilities.createFullOverrideContext;
       updateOverrideContexts = _repeatUtilities.updateOverrideContexts;
-      updateOneTimeBinding = _repeatUtilities.updateOneTimeBinding;
     }, function (_aureliaBinding) {
       mergeSplice = _aureliaBinding.mergeSplice;
     }],
     execute: function () {
-      ArrayRepeatStrategy = (function () {
+      _export('ArrayRepeatStrategy', ArrayRepeatStrategy = function () {
         function ArrayRepeatStrategy() {
           _classCallCheck(this, ArrayRepeatStrategy);
         }
@@ -27,7 +30,7 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export) {
           var _this = this;
 
           if (repeat.viewsRequireLifecycle) {
-            var removePromise = repeat.viewSlot.removeAll(true);
+            var removePromise = repeat.removeAllViews(true);
             if (removePromise instanceof Promise) {
               removePromise.then(function () {
                 return _this._standardProcessInstanceChanged(repeat, items);
@@ -43,25 +46,23 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export) {
         ArrayRepeatStrategy.prototype._standardProcessInstanceChanged = function _standardProcessInstanceChanged(repeat, items) {
           for (var i = 0, ii = items.length; i < ii; i++) {
             var overrideContext = createFullOverrideContext(repeat, items[i], i, ii);
-            var view = repeat.viewFactory.create();
-            view.bind(overrideContext.bindingContext, overrideContext);
-            repeat.viewSlot.add(view);
+            repeat.addView(overrideContext.bindingContext, overrideContext);
           }
         };
 
         ArrayRepeatStrategy.prototype._inPlaceProcessItems = function _inPlaceProcessItems(repeat, items) {
           var itemsLength = items.length;
-          var viewsLength = repeat.viewSlot.children.length;
+          var viewsLength = repeat.viewCount();
 
           while (viewsLength > itemsLength) {
             viewsLength--;
-            repeat.viewSlot.removeAt(viewsLength, true);
+            repeat.removeView(viewsLength, true);
           }
 
           var local = repeat.local;
 
           for (var i = 0; i < viewsLength; i++) {
-            var view = repeat.viewSlot.children[i];
+            var view = repeat.view(i);
             var last = i === itemsLength - 1;
             var middle = i !== 0 && !last;
 
@@ -72,25 +73,12 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export) {
             view.bindingContext[local] = items[i];
             view.overrideContext.$middle = middle;
             view.overrideContext.$last = last;
-            var j = view.bindings.length;
-            while (j--) {
-              updateOneTimeBinding(view.bindings[j]);
-            }
-            j = view.controllers.length;
-            while (j--) {
-              var k = view.controllers[j].boundProperties.length;
-              while (k--) {
-                var binding = view.controllers[j].boundProperties[k].binding;
-                updateOneTimeBinding(binding);
-              }
-            }
+            repeat.updateBindings(view);
           }
 
-          for (var i = viewsLength; i < itemsLength; i++) {
-            var overrideContext = createFullOverrideContext(repeat, items[i], i, itemsLength);
-            var view = repeat.viewFactory.create();
-            view.bind(overrideContext.bindingContext, overrideContext);
-            repeat.viewSlot.add(view);
+          for (var _i = viewsLength; _i < itemsLength; _i++) {
+            var overrideContext = createFullOverrideContext(repeat, items[_i], _i, itemsLength);
+            repeat.addView(overrideContext.bindingContext, overrideContext);
           }
         };
 
@@ -114,6 +102,7 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export) {
 
               mergeSplice(repeat.__queuedSplices, index, removed, addedCount);
             }
+
             repeat.__array = array.slice(0);
             return;
           }
@@ -125,8 +114,8 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export) {
 
               var runQueuedSplices = function runQueuedSplices() {
                 if (!queuedSplices.length) {
-                  delete repeat.__queuedSplices;
-                  delete repeat.__array;
+                  repeat.__queuedSplices = undefined;
+                  repeat.__array = undefined;
                   return;
                 }
 
@@ -144,7 +133,6 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export) {
           var _this3 = this;
 
           var removeDelta = 0;
-          var viewSlot = repeat.viewSlot;
           var rmPromises = [];
 
           for (var i = 0, ii = splices.length; i < ii; ++i) {
@@ -152,7 +140,7 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export) {
             var removed = splice.removed;
 
             for (var j = 0, jj = removed.length; j < jj; ++j) {
-              var viewOrPromise = viewSlot.removeAt(splice.index + removeDelta + rmPromises.length, true);
+              var viewOrPromise = repeat.removeView(splice.index + removeDelta + rmPromises.length, true);
               if (viewOrPromise instanceof Promise) {
                 rmPromises.push(viewOrPromise);
               }
@@ -163,17 +151,17 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export) {
           if (rmPromises.length > 0) {
             return Promise.all(rmPromises).then(function () {
               var spliceIndexLow = _this3._handleAddedSplices(repeat, array, splices);
-              updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
+              updateOverrideContexts(repeat.views(), spliceIndexLow);
             });
           }
 
           var spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
-          updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
+          updateOverrideContexts(repeat.views(), spliceIndexLow);
         };
 
         ArrayRepeatStrategy.prototype._handleAddedSplices = function _handleAddedSplices(repeat, array, splices) {
-          var spliceIndex = undefined;
-          var spliceIndexLow = undefined;
+          var spliceIndex = void 0;
+          var spliceIndexLow = void 0;
           var arrayLength = array.length;
           for (var i = 0, ii = splices.length; i < ii; ++i) {
             var splice = splices[i];
@@ -186,9 +174,7 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export) {
 
             for (; addIndex < end; ++addIndex) {
               var overrideContext = createFullOverrideContext(repeat, array[addIndex], addIndex, arrayLength);
-              var view = repeat.viewFactory.create();
-              view.bind(overrideContext.bindingContext, overrideContext);
-              repeat.viewSlot.insert(addIndex, view);
+              repeat.insertView(addIndex, overrideContext.bindingContext, overrideContext);
             }
           }
 
@@ -196,7 +182,7 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export) {
         };
 
         return ArrayRepeatStrategy;
-      })();
+      }());
 
       _export('ArrayRepeatStrategy', ArrayRepeatStrategy);
     }

@@ -1,9 +1,13 @@
-System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-pal'], function (_export) {
-  'use strict';
+'use strict';
 
-  var inject, customAttribute, Animator, DOM, Hide;
+System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-pal'], function (_export, _context) {
+  var inject, customAttribute, Animator, DOM, _dec, _dec2, _class, Hide;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   return {
     setters: [function (_aureliaDependencyInjection) {
@@ -15,9 +19,9 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
       DOM = _aureliaPal.DOM;
     }],
     execute: function () {
-      Hide = (function () {
+      _export('Hide', Hide = (_dec = customAttribute('hide'), _dec2 = inject(DOM.Element, Animator), _dec(_class = _dec2(_class = function () {
         function Hide(element, animator) {
-          _classCallCheck(this, _Hide);
+          _classCallCheck(this, Hide);
 
           this.element = element;
           this.animator = animator;
@@ -35,11 +39,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
           this.valueChanged(this.value);
         };
 
-        var _Hide = Hide;
-        Hide = inject(DOM.Element, Animator)(Hide) || Hide;
-        Hide = customAttribute('hide')(Hide) || Hide;
         return Hide;
-      })();
+      }()) || _class) || _class));
 
       _export('Hide', Hide);
     }

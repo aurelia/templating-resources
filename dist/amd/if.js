@@ -1,18 +1,26 @@
-define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', 'aurelia-task-queue'], function (exports, _aureliaTemplating, _aureliaDependencyInjection, _aureliaTaskQueue) {
+define(['exports', 'aurelia-templating', 'aurelia-dependency-injection'], function (exports, _aureliaTemplating, _aureliaDependencyInjection) {
   'use strict';
 
-  exports.__esModule = true;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.If = undefined;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
-  var If = (function () {
-    function If(viewFactory, viewSlot, taskQueue) {
-      _classCallCheck(this, _If);
+  var _dec, _dec2, _class;
+
+  var If = exports.If = (_dec = (0, _aureliaTemplating.customAttribute)('if'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec(_class = (0, _aureliaTemplating.templateController)(_class = _dec2(_class = function () {
+    function If(viewFactory, viewSlot) {
+      _classCallCheck(this, If);
 
       this.viewFactory = viewFactory;
       this.viewSlot = viewSlot;
       this.showing = false;
-      this.taskQueue = taskQueue;
       this.view = null;
       this.bindingContext = null;
       this.overrideContext = null;
@@ -27,22 +35,49 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', 'aureli
     If.prototype.valueChanged = function valueChanged(newValue) {
       var _this = this;
 
-      if (!newValue) {
-        if (this.view !== null && this.showing) {
-          this.taskQueue.queueMicroTask(function () {
-            var viewOrPromise = _this.viewSlot.remove(_this.view);
-            if (viewOrPromise instanceof Promise) {
-              viewOrPromise.then(function () {
-                return _this.view.unbind();
-              });
-            } else {
-              _this.view.unbind();
+      if (this.__queuedChanges) {
+        this.__queuedChanges.push(newValue);
+        return;
+      }
+
+      var maybePromise = this._runValueChanged(newValue);
+      if (maybePromise instanceof Promise) {
+        (function () {
+          var queuedChanges = _this.__queuedChanges = [];
+
+          var runQueuedChanges = function runQueuedChanges() {
+            if (!queuedChanges.length) {
+              _this.__queuedChanges = undefined;
+              return;
             }
-          });
+
+            var nextPromise = _this._runValueChanged(queuedChanges.shift()) || Promise.resolve();
+            nextPromise.then(runQueuedChanges);
+          };
+
+          maybePromise.then(runQueuedChanges);
+        })();
+      }
+    };
+
+    If.prototype._runValueChanged = function _runValueChanged(newValue) {
+      var _this2 = this;
+
+      if (!newValue) {
+        var viewOrPromise = void 0;
+        if (this.view !== null && this.showing) {
+          viewOrPromise = this.viewSlot.remove(this.view);
+          if (viewOrPromise instanceof Promise) {
+            viewOrPromise.then(function () {
+              return _this2.view.unbind();
+            });
+          } else {
+            this.view.unbind();
+          }
         }
 
         this.showing = false;
-        return;
+        return viewOrPromise;
       }
 
       if (this.view === null) {
@@ -55,7 +90,7 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', 'aureli
 
       if (!this.showing) {
         this.showing = true;
-        this.viewSlot.add(this.view);
+        return this.viewSlot.add(this.view);
       }
     };
 
@@ -78,12 +113,6 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', 'aureli
       this.view = null;
     };
 
-    var _If = If;
-    If = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot, _aureliaTaskQueue.TaskQueue)(If) || If;
-    If = _aureliaTemplating.templateController(If) || If;
-    If = _aureliaTemplating.customAttribute('if')(If) || If;
     return If;
-  })();
-
-  exports.If = If;
+  }()) || _class) || _class) || _class);
 });

@@ -1,9 +1,13 @@
-System.register(['./null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register(['./null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy'], function (_export, _context) {
   var NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, RepeatStrategyLocator;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   return {
     setters: [function (_nullRepeatStrategy) {
@@ -18,7 +22,7 @@ System.register(['./null-repeat-strategy', './array-repeat-strategy', './map-rep
       NumberRepeatStrategy = _numberRepeatStrategy.NumberRepeatStrategy;
     }],
     execute: function () {
-      RepeatStrategyLocator = (function () {
+      _export('RepeatStrategyLocator', RepeatStrategyLocator = function () {
         function RepeatStrategyLocator() {
           _classCallCheck(this, RepeatStrategyLocator);
 
@@ -60,7 +64,7 @@ System.register(['./null-repeat-strategy', './array-repeat-strategy', './map-rep
         };
 
         return RepeatStrategyLocator;
-      })();
+      }());
 
       _export('RepeatStrategyLocator', RepeatStrategyLocator);
     }

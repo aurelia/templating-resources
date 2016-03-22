@@ -1,12 +1,15 @@
 'use strict';
 
-exports.__esModule = true;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.NumberRepeatStrategy = undefined;
 
 var _repeatUtilities = require('./repeat-utilities');
 
-var NumberRepeatStrategy = (function () {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var NumberRepeatStrategy = exports.NumberRepeatStrategy = function () {
   function NumberRepeatStrategy() {
     _classCallCheck(this, NumberRepeatStrategy);
   }
@@ -18,7 +21,7 @@ var NumberRepeatStrategy = (function () {
   NumberRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, value) {
     var _this = this;
 
-    var removePromise = repeat.viewSlot.removeAll(true);
+    var removePromise = repeat.removeAllViews(true);
     if (removePromise instanceof Promise) {
       removePromise.then(function () {
         return _this._standardProcessItems(repeat, value);
@@ -29,14 +32,11 @@ var NumberRepeatStrategy = (function () {
   };
 
   NumberRepeatStrategy.prototype._standardProcessItems = function _standardProcessItems(repeat, value) {
-    var viewFactory = repeat.viewFactory;
-    var viewSlot = repeat.viewSlot;
-    var childrenLength = viewSlot.children.length;
-    var i = undefined;
-    var ii = undefined;
-    var overrideContext = undefined;
-    var view = undefined;
-    var viewsToRemove = undefined;
+    var childrenLength = repeat.viewCount();
+    var i = void 0;
+    var ii = void 0;
+    var overrideContext = void 0;
+    var viewsToRemove = void 0;
 
     value = Math.floor(value);
     viewsToRemove = childrenLength - value;
@@ -47,23 +47,19 @@ var NumberRepeatStrategy = (function () {
       }
 
       for (i = 0, ii = viewsToRemove; i < ii; ++i) {
-        viewSlot.removeAt(childrenLength - (i + 1), true);
+        repeat.removeView(childrenLength - (i + 1), true);
       }
 
       return;
     }
 
     for (i = childrenLength, ii = value; i < ii; ++i) {
-      overrideContext = _repeatUtilities.createFullOverrideContext(repeat, i, i, ii);
-      view = viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      viewSlot.add(view);
+      overrideContext = (0, _repeatUtilities.createFullOverrideContext)(repeat, i, i, ii);
+      repeat.addView(overrideContext.bindingContext, overrideContext);
     }
 
-    _repeatUtilities.updateOverrideContexts(repeat.viewSlot.children, 0);
+    (0, _repeatUtilities.updateOverrideContexts)(repeat.views(), 0);
   };
 
   return NumberRepeatStrategy;
-})();
-
-exports.NumberRepeatStrategy = NumberRepeatStrategy;
+}();

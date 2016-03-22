@@ -1,9 +1,13 @@
-System.register(['aurelia-binding'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register(['aurelia-binding'], function (_export, _context) {
   var bindingMode, ThrottleBindingBehavior;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   function throttle(newValue) {
     var _this = this;
@@ -32,7 +36,7 @@ System.register(['aurelia-binding'], function (_export) {
       bindingMode = _aureliaBinding.bindingMode;
     }],
     execute: function () {
-      ThrottleBindingBehavior = (function () {
+      _export('ThrottleBindingBehavior', ThrottleBindingBehavior = function () {
         function ThrottleBindingBehavior() {
           _classCallCheck(this, ThrottleBindingBehavior);
         }
@@ -68,7 +72,7 @@ System.register(['aurelia-binding'], function (_export) {
         };
 
         return ThrottleBindingBehavior;
-      })();
+      }());
 
       _export('ThrottleBindingBehavior', ThrottleBindingBehavior);
     }

@@ -1,9 +1,13 @@
-System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-pal'], function (_export) {
-  'use strict';
+'use strict';
 
-  var customAttribute, bindingMode, inject, TaskQueue, DOM, Focus;
+System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-pal'], function (_export, _context) {
+  var customAttribute, bindingMode, inject, TaskQueue, DOM, _dec, _dec2, _class, Focus;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   return {
     setters: [function (_aureliaTemplating) {
@@ -18,11 +22,11 @@ System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-in
       DOM = _aureliaPal.DOM;
     }],
     execute: function () {
-      Focus = (function () {
+      _export('Focus', Focus = (_dec = customAttribute('focus', bindingMode.twoWay), _dec2 = inject(DOM.Element, TaskQueue), _dec(_class = _dec2(_class = function () {
         function Focus(element, taskQueue) {
           var _this = this;
 
-          _classCallCheck(this, _Focus);
+          _classCallCheck(this, Focus);
 
           this.element = element;
           this.taskQueue = taskQueue;
@@ -65,11 +69,8 @@ System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-in
           this.element.removeEventListener('blur', this.blurListener);
         };
 
-        var _Focus = Focus;
-        Focus = inject(DOM.Element, TaskQueue)(Focus) || Focus;
-        Focus = customAttribute('focus', bindingMode.twoWay)(Focus) || Focus;
         return Focus;
-      })();
+      }()) || _class) || _class));
 
       _export('Focus', Focus);
     }

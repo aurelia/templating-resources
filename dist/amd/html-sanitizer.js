@@ -1,13 +1,19 @@
 define(['exports'], function (exports) {
   'use strict';
 
-  exports.__esModule = true;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 
-  var HTMLSanitizer = (function () {
+  var HTMLSanitizer = exports.HTMLSanitizer = function () {
     function HTMLSanitizer() {
       _classCallCheck(this, HTMLSanitizer);
     }
@@ -17,7 +23,5 @@ define(['exports'], function (exports) {
     };
 
     return HTMLSanitizer;
-  })();
-
-  exports.HTMLSanitizer = HTMLSanitizer;
+  }();
 });

@@ -1,30 +1,31 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports._createDynamicElement = _createDynamicElement;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _aureliaTemplating = require('aurelia-templating');
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 function _createDynamicElement(name, viewUrl, bindableNames) {
-  var DynamicElement = (function () {
+  var _dec, _dec2, _class;
+
+  var DynamicElement = (_dec = (0, _aureliaTemplating.customElement)(name), _dec2 = (0, _aureliaTemplating.useView)(viewUrl), _dec(_class = _dec2(_class = function () {
     function DynamicElement() {
-      _classCallCheck(this, _DynamicElement);
+      _classCallCheck(this, DynamicElement);
     }
 
     DynamicElement.prototype.bind = function bind(bindingContext) {
       this.$parent = bindingContext;
     };
 
-    var _DynamicElement = DynamicElement;
-    DynamicElement = _aureliaTemplating.useView(viewUrl)(DynamicElement) || DynamicElement;
-    DynamicElement = _aureliaTemplating.customElement(name)(DynamicElement) || DynamicElement;
     return DynamicElement;
-  })();
+  }()) || _class) || _class);
 
   for (var i = 0, ii = bindableNames.length; i < ii; ++i) {
-    _aureliaTemplating.bindable(bindableNames[i])(DynamicElement);
+    (0, _aureliaTemplating.bindable)(bindableNames[i])(DynamicElement);
   }
   return DynamicElement;
 }

@@ -1,10 +1,13 @@
 'use strict';
 
-exports.__esModule = true;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ThrottleBindingBehavior = undefined;
 
 var _aureliaBinding = require('aurelia-binding');
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function throttle(newValue) {
   var _this = this;
@@ -28,7 +31,7 @@ function throttle(newValue) {
   }
 }
 
-var ThrottleBindingBehavior = (function () {
+var ThrottleBindingBehavior = exports.ThrottleBindingBehavior = function () {
   function ThrottleBindingBehavior() {
     _classCallCheck(this, ThrottleBindingBehavior);
   }
@@ -64,6 +67,4 @@ var ThrottleBindingBehavior = (function () {
   };
 
   return ThrottleBindingBehavior;
-})();
-
-exports.ThrottleBindingBehavior = ThrottleBindingBehavior;
+}();

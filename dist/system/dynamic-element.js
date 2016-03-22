@@ -1,32 +1,12 @@
-System.register(['aurelia-templating'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register(['aurelia-templating'], function (_export, _context) {
   var useView, customElement, bindable;
 
-  _export('_createDynamicElement', _createDynamicElement);
-
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-  function _createDynamicElement(name, viewUrl, bindableNames) {
-    var DynamicElement = (function () {
-      function DynamicElement() {
-        _classCallCheck(this, _DynamicElement);
-      }
-
-      DynamicElement.prototype.bind = function bind(bindingContext) {
-        this.$parent = bindingContext;
-      };
-
-      var _DynamicElement = DynamicElement;
-      DynamicElement = useView(viewUrl)(DynamicElement) || DynamicElement;
-      DynamicElement = customElement(name)(DynamicElement) || DynamicElement;
-      return DynamicElement;
-    })();
-
-    for (var i = 0, ii = bindableNames.length; i < ii; ++i) {
-      bindable(bindableNames[i])(DynamicElement);
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
     }
-    return DynamicElement;
   }
 
   return {
@@ -35,6 +15,29 @@ System.register(['aurelia-templating'], function (_export) {
       customElement = _aureliaTemplating.customElement;
       bindable = _aureliaTemplating.bindable;
     }],
-    execute: function () {}
+    execute: function () {
+      function _createDynamicElement(name, viewUrl, bindableNames) {
+        var _dec, _dec2, _class;
+
+        var DynamicElement = (_dec = customElement(name), _dec2 = useView(viewUrl), _dec(_class = _dec2(_class = function () {
+          function DynamicElement() {
+            _classCallCheck(this, DynamicElement);
+          }
+
+          DynamicElement.prototype.bind = function bind(bindingContext) {
+            this.$parent = bindingContext;
+          };
+
+          return DynamicElement;
+        }()) || _class) || _class);
+
+        for (var i = 0, ii = bindableNames.length; i < ii; ++i) {
+          bindable(bindableNames[i])(DynamicElement);
+        }
+        return DynamicElement;
+      }
+
+      _export('_createDynamicElement', _createDynamicElement);
+    }
   };
 });

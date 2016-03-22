@@ -1,71 +1,41 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = undefined;
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _dec, _class, _dec2, _class2, _dec3, _class3;
 
 var _aureliaBinding = require('aurelia-binding');
 
-var ModeBindingBehavior = (function () {
-  function ModeBindingBehavior(mode) {
-    _classCallCheck(this, ModeBindingBehavior);
+var _aureliaMetadata = require('aurelia-metadata');
 
-    this.mode = mode;
-  }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  ModeBindingBehavior.prototype.bind = function bind(binding, source, lookupFunctions) {
+var modeBindingBehavior = {
+  bind: function bind(binding, source, lookupFunctions) {
     binding.originalMode = binding.mode;
     binding.mode = this.mode;
-  };
-
-  ModeBindingBehavior.prototype.unbind = function unbind(binding, source) {
+  },
+  unbind: function unbind(binding, source) {
     binding.mode = binding.originalMode;
     binding.originalMode = null;
-  };
-
-  return ModeBindingBehavior;
-})();
-
-var OneTimeBindingBehavior = (function (_ModeBindingBehavior) {
-  _inherits(OneTimeBindingBehavior, _ModeBindingBehavior);
-
-  function OneTimeBindingBehavior() {
-    _classCallCheck(this, OneTimeBindingBehavior);
-
-    _ModeBindingBehavior.call(this, _aureliaBinding.bindingMode.oneTime);
   }
+};
 
-  return OneTimeBindingBehavior;
-})(ModeBindingBehavior);
+var OneTimeBindingBehavior = exports.OneTimeBindingBehavior = (_dec = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec(_class = function OneTimeBindingBehavior() {
+  _classCallCheck(this, OneTimeBindingBehavior);
 
-exports.OneTimeBindingBehavior = OneTimeBindingBehavior;
+  this.mode = _aureliaBinding.bindingMode.oneTime;
+}) || _class);
+var OneWayBindingBehavior = exports.OneWayBindingBehavior = (_dec2 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec2(_class2 = function OneWayBindingBehavior() {
+  _classCallCheck(this, OneWayBindingBehavior);
 
-var OneWayBindingBehavior = (function (_ModeBindingBehavior2) {
-  _inherits(OneWayBindingBehavior, _ModeBindingBehavior2);
+  this.mode = _aureliaBinding.bindingMode.oneWay;
+}) || _class2);
+var TwoWayBindingBehavior = exports.TwoWayBindingBehavior = (_dec3 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec3(_class3 = function TwoWayBindingBehavior() {
+  _classCallCheck(this, TwoWayBindingBehavior);
 
-  function OneWayBindingBehavior() {
-    _classCallCheck(this, OneWayBindingBehavior);
-
-    _ModeBindingBehavior2.call(this, _aureliaBinding.bindingMode.oneWay);
-  }
-
-  return OneWayBindingBehavior;
-})(ModeBindingBehavior);
-
-exports.OneWayBindingBehavior = OneWayBindingBehavior;
-
-var TwoWayBindingBehavior = (function (_ModeBindingBehavior3) {
-  _inherits(TwoWayBindingBehavior, _ModeBindingBehavior3);
-
-  function TwoWayBindingBehavior() {
-    _classCallCheck(this, TwoWayBindingBehavior);
-
-    _ModeBindingBehavior3.call(this, _aureliaBinding.bindingMode.twoWay);
-  }
-
-  return TwoWayBindingBehavior;
-})(ModeBindingBehavior);
-
-exports.TwoWayBindingBehavior = TwoWayBindingBehavior;
+  this.mode = _aureliaBinding.bindingMode.twoWay;
+}) || _class3);

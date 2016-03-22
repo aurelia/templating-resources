@@ -1,15 +1,43 @@
 define(['exports', 'aurelia-templating', 'aurelia-logging'], function (exports, _aureliaTemplating, _aureliaLogging) {
   'use strict';
 
-  exports.__esModule = true;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.ViewSpy = undefined;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  var LogManager = _interopRequireWildcard(_aureliaLogging);
 
-  var ViewSpy = (function () {
+  function _interopRequireWildcard(obj) {
+    if (obj && obj.__esModule) {
+      return obj;
+    } else {
+      var newObj = {};
+
+      if (obj != null) {
+        for (var key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+        }
+      }
+
+      newObj.default = obj;
+      return newObj;
+    }
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _dec, _class;
+
+  var ViewSpy = exports.ViewSpy = (_dec = (0, _aureliaTemplating.customAttribute)('view-spy'), _dec(_class = function () {
     function ViewSpy() {
-      _classCallCheck(this, _ViewSpy);
+      _classCallCheck(this, ViewSpy);
 
-      this.logger = _aureliaLogging.getLogger('view-spy');
+      this.logger = LogManager.getLogger('view-spy');
     }
 
     ViewSpy.prototype._log = function _log(lifecycleName, context) {
@@ -41,10 +69,6 @@ define(['exports', 'aurelia-templating', 'aurelia-logging'], function (exports, 
       this._log('unbind');
     };
 
-    var _ViewSpy = ViewSpy;
-    ViewSpy = _aureliaTemplating.customAttribute('view-spy')(ViewSpy) || ViewSpy;
     return ViewSpy;
-  })();
-
-  exports.ViewSpy = ViewSpy;
+  }()) || _class);
 });

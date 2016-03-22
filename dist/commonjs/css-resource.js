@@ -1,11 +1,9 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports._createCSSResource = _createCSSResource;
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _aureliaTemplating = require('aurelia-templating');
 
@@ -17,19 +15,28 @@ var _aureliaPath = require('aurelia-path');
 
 var _aureliaPal = require('aurelia-pal');
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
 function fixupCSSUrls(address, css) {
+  if (typeof css !== 'string') {
+    throw new Error('Failed loading required CSS file: ' + address);
+  }
   return css.replace(cssUrlMatcher, function (match, p1) {
     var quote = p1.charAt(0);
     if (quote === '\'' || quote === '"') {
       p1 = p1.substr(1, p1.length - 2);
     }
-    return 'url(\'' + _aureliaPath.relativeToFile(p1, address) + '\')';
+    return 'url(\'' + (0, _aureliaPath.relativeToFile)(p1, address) + '\')';
   });
 }
 
-var CSSResource = (function () {
+var CSSResource = function () {
   function CSSResource(address) {
     _classCallCheck(this, CSSResource);
 
@@ -50,7 +57,9 @@ var CSSResource = (function () {
   CSSResource.prototype.load = function load(container) {
     var _this = this;
 
-    return container.get(_aureliaLoader.Loader).loadText(this.address).then(function (text) {
+    return container.get(_aureliaLoader.Loader).loadText(this.address).catch(function (err) {
+      return null;
+    }).then(function (text) {
       text = fixupCSSUrls(_this.address, text);
       _this._global.css = text;
       _this._scoped.css = text;
@@ -58,9 +67,9 @@ var CSSResource = (function () {
   };
 
   return CSSResource;
-})();
+}();
 
-var CSSViewEngineHooks = (function () {
+var CSSViewEngineHooks = function () {
   function CSSViewEngineHooks(mode) {
     _classCallCheck(this, CSSViewEngineHooks);
 
@@ -87,22 +96,22 @@ var CSSViewEngineHooks = (function () {
   };
 
   return CSSViewEngineHooks;
-})();
+}();
 
 function _createCSSResource(address) {
-  var ViewCSS = (function (_CSSViewEngineHooks) {
+  var _dec, _class;
+
+  var ViewCSS = (_dec = (0, _aureliaTemplating.resource)(new CSSResource(address)), _dec(_class = function (_CSSViewEngineHooks) {
     _inherits(ViewCSS, _CSSViewEngineHooks);
 
     function ViewCSS() {
-      _classCallCheck(this, _ViewCSS);
+      _classCallCheck(this, ViewCSS);
 
-      _CSSViewEngineHooks.apply(this, arguments);
+      return _possibleConstructorReturn(this, _CSSViewEngineHooks.apply(this, arguments));
     }
 
-    var _ViewCSS = ViewCSS;
-    ViewCSS = _aureliaTemplating.resource(new CSSResource(address))(ViewCSS) || ViewCSS;
     return ViewCSS;
-  })(CSSViewEngineHooks);
+  }(CSSViewEngineHooks)) || _class);
 
   return ViewCSS;
 }

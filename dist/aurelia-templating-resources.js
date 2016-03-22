@@ -1,11 +1,12 @@
 import * as LogManager from 'aurelia-logging';
 import {inject,Container} from 'aurelia-dependency-injection';
-import {BoundViewFactory,ViewSlot,customAttribute,templateController,Animator,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,noView,View,TargetInstruction,ViewEngine} from 'aurelia-templating';
+import {BoundViewFactory,ViewSlot,customAttribute,templateController,Animator,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,noView,View,TargetInstruction} from 'aurelia-templating';
 import {createOverrideContext,bindingMode,EventManager,BindingBehavior,ValueConverter,sourceContext,mergeSplice,valueConverter,ObserverLocator} from 'aurelia-binding';
 import {DOM,FEATURE} from 'aurelia-pal';
 import {TaskQueue} from 'aurelia-task-queue';
 import {Loader} from 'aurelia-loader';
 import {relativeToFile} from 'aurelia-path';
+import {mixin} from 'aurelia-metadata';
 
 /**
 * Creates a binding context for decandant elements to bind to.
@@ -413,7 +414,7 @@ export function updateOneTimeBinding(binding) {
 */
 export class NullRepeatStrategy {
   instanceChanged(repeat, items) {
-    repeat.viewSlot.removeAll(true);
+    repeat.removeAllViews(true);
   }
 
   getCollectionObserver(observerLocator, items) {
@@ -426,19 +427,17 @@ export class NullRepeatStrategy {
 */
 @customAttribute('if')
 @templateController
-@inject(BoundViewFactory, ViewSlot, TaskQueue)
+@inject(BoundViewFactory, ViewSlot)
 export class If {
   /**
   * Creates an instance of If.
   * @param {BoundViewFactory} viewFactory The factory generating the view
   * @param {ViewSlot} viewSlot The slot the view is injected in to
-  * @param {TaskQueue} taskQueue
   */
-  constructor(viewFactory, viewSlot, taskQueue) {
+  constructor(viewFactory, viewSlot) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
     this.showing = false;
-    this.taskQueue = taskQueue;
     this.view = null;
     this.bindingContext = null;
     this.overrideContext = null;
@@ -461,20 +460,43 @@ export class If {
   * @param newValue The new value
   */
   valueChanged(newValue) {
+    if (this.__queuedChanges) {
+      this.__queuedChanges.push(newValue);
+      return;
+    }
+
+    let maybePromise = this._runValueChanged(newValue);
+    if (maybePromise instanceof Promise) {
+      let queuedChanges = this.__queuedChanges = [];
+
+      let runQueuedChanges = () => {
+        if (!queuedChanges.length) {
+          this.__queuedChanges = undefined;
+          return;
+        }
+
+        let nextPromise = this._runValueChanged(queuedChanges.shift()) || Promise.resolve();
+        nextPromise.then(runQueuedChanges);
+      };
+
+      maybePromise.then(runQueuedChanges);
+    }
+  }
+
+  _runValueChanged(newValue) {
     if (!newValue) {
+      let viewOrPromise;
       if (this.view !== null && this.showing) {
-        this.taskQueue.queueMicroTask(() => {
-          let viewOrPromise = this.viewSlot.remove(this.view);
-          if (viewOrPromise instanceof Promise) {
-            viewOrPromise.then(() => this.view.unbind());
-          } else {
-            this.view.unbind();
-          }
-        });
+        viewOrPromise = this.viewSlot.remove(this.view);
+        if (viewOrPromise instanceof Promise) {
+          viewOrPromise.then(() => this.view.unbind());
+        } else {
+          this.view.unbind();
+        }
       }
 
       this.showing = false;
-      return;
+      return viewOrPromise;
     }
 
     if (this.view === null) {
@@ -487,7 +509,7 @@ export class If {
 
     if (!this.showing) {
       this.showing = true;
-      this.viewSlot.add(this.view);
+      return this.viewSlot.add(this.view);
     }
   }
 
@@ -697,6 +719,9 @@ export class DebounceBindingBehavior {
 let cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
 function fixupCSSUrls(address, css) {
+  if (typeof css !== 'string') {
+    throw new Error(`Failed loading required CSS file: ${address}`);
+  }
   return css.replace(cssUrlMatcher, (match, p1) => {
     let quote = p1.charAt(0);
     if (quote === '\'' || quote === '"') {
@@ -723,11 +748,14 @@ class CSSResource {
   }
 
   load(container: Container): Promise<CSSResource> {
-    return container.get(Loader).loadText(this.address).then(text => {
-      text = fixupCSSUrls(this.address, text);
-      this._global.css = text;
-      this._scoped.css = text;
-    });
+    return container.get(Loader)
+      .loadText(this.address)
+      .catch(err => null)
+      .then(text => {
+        text = fixupCSSUrls(this.address, text);
+        this._global.css = text;
+        this._scoped.css = text;
+      });
   }
 }
 
@@ -969,37 +997,36 @@ export class BindingSignaler {
   }
 }
 
-class ModeBindingBehavior {
-  constructor(mode) {
-    this.mode = mode;
-  }
-
+let modeBindingBehavior = {
   bind(binding, source, lookupFunctions) {
     binding.originalMode = binding.mode;
     binding.mode = this.mode;
-  }
+  },
 
   unbind(binding, source) {
     binding.mode = binding.originalMode;
     binding.originalMode = null;
   }
-}
+};
 
-export class OneTimeBindingBehavior extends ModeBindingBehavior {
+@mixin(modeBindingBehavior)
+export class OneTimeBindingBehavior {
   constructor() {
-    super(bindingMode.oneTime);
+    this.mode = bindingMode.oneTime;
   }
 }
 
-export class OneWayBindingBehavior extends ModeBindingBehavior {
+@mixin(modeBindingBehavior)
+export class OneWayBindingBehavior {
   constructor() {
-    super(bindingMode.oneWay);
+    this.mode = bindingMode.oneWay;
   }
 }
 
-export class TwoWayBindingBehavior extends ModeBindingBehavior {
+@mixin(modeBindingBehavior)
+export class TwoWayBindingBehavior {
   constructor() {
-    super(bindingMode.twoWay);
+    this.mode = bindingMode.twoWay;
   }
 }
 
@@ -1066,6 +1093,102 @@ export function viewsRequireLifecycle(viewFactory) {
 }
 
 /**
+* An abstract base class for elements and attributes that repeat
+* views.
+*/
+export class AbstractRepeater {
+  constructor(options) {
+    Object.assign(this, {
+      local: 'items',
+      viewsRequireLifecycle: true
+    }, options);
+  }
+
+  /**
+   * Returns the number of views the repeater knows about.
+   *
+   * @return {Number}  the number of views.
+   */
+  viewCount() {
+    throw new Error('subclass must implement `viewCount`');
+  }
+
+  /**
+   * Returns all of the repeaters views as an array.
+   *
+   * @return {Array} The repeater's array of views;
+   */
+  views() {
+    throw new Error('subclass must implement `views`');
+  }
+
+  /**
+   * Returns a single view from the repeater at the provided index.
+   *
+   * @param {Number} index The index of the requested view.
+   * @return {View|ViewSlot} The requested view.
+   */
+  view(index) {
+    throw new Error('subclass must implement `view`');
+  }
+
+  /**
+   * Adds a view to the repeater, binding the view to the
+   * provided contexts.
+   *
+   * @param {Object} bindingContext The binding context to bind the new view to.
+   * @param {Object} overrideContext A secondary binding context that can override the primary context.
+   */
+  addView(bindingContext, overrideContext) {
+    throw new Error('subclass must implement `addView`');
+  }
+
+  /**
+   * Inserts a view to the repeater at a specific index, binding the view to the
+   * provided contexts.
+   *
+   * @param {Number} index The index at which to create the new view at.
+   * @param {Object} bindingContext The binding context to bind the new view to.
+   * @param {Object} overrideContext A secondary binding context that can override the primary context.
+   */
+  insertView(index, bindingContext, overrideContext) {
+    throw new Error('subclass must implement `insertView`');
+  }
+
+  /**
+   * Removes all views from the repeater.
+   * @param {Boolean} returnToCache Should the view be returned to the view cache?
+   * @param {Boolean} skipAnimation Should the removal animation be skipped?
+   * @return {Promise|null}
+   */
+  removeAllViews(returnToCache?: boolean, skipAnimation?: boolean) {
+    throw new Error('subclass must implement `removeAllViews`');
+  }
+
+  /**
+   * Removes a view from the repeater at a specific index.
+   *
+   * @param {Number} index The index of the view to be removed.
+   * @param {Boolean} returnToCache Should the view be returned to the view cache?
+   * @param {Boolean} skipAnimation Should the removal animation be skipped?
+   * @return {Promise|null}
+   */
+  removeView(index: number, returnToCache?: boolean, skipAnimation?: boolean) {
+    throw new Error('subclass must implement `removeView`');
+  }
+
+  /**
+   * Forces a particular view to update it's bindings, called as part of
+   * an in-place processing of items for better performance
+   *
+   * @param {Object} view the target view for bindings updates
+   */
+  updateBindings(view: View) {
+    throw new Error('subclass must implement `updateBindings`');
+  }
+}
+
+/**
 * A strategy for repeating a template over an array.
 */
 export class ArrayRepeatStrategy {
@@ -1085,7 +1208,7 @@ export class ArrayRepeatStrategy {
   */
   instanceChanged(repeat, items) {
     if (repeat.viewsRequireLifecycle) {
-      let removePromise = repeat.viewSlot.removeAll(true);
+      let removePromise = repeat.removeAllViews(true);
       if (removePromise instanceof Promise) {
         removePromise.then(() => this._standardProcessInstanceChanged(repeat, items));
         return;
@@ -1099,25 +1222,23 @@ export class ArrayRepeatStrategy {
   _standardProcessInstanceChanged(repeat, items) {
     for (let i = 0, ii = items.length; i < ii; i++) {
       let overrideContext = createFullOverrideContext(repeat, items[i], i, ii);
-      let view = repeat.viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      repeat.viewSlot.add(view);
+      repeat.addView(overrideContext.bindingContext, overrideContext);
     }
   }
 
   _inPlaceProcessItems(repeat, items) {
     let itemsLength = items.length;
-    let viewsLength = repeat.viewSlot.children.length;
+    let viewsLength = repeat.viewCount();
     // remove unneeded views.
     while (viewsLength > itemsLength) {
       viewsLength--;
-      repeat.viewSlot.removeAt(viewsLength, true);
+      repeat.removeView(viewsLength, true);
     }
     // avoid repeated evaluating the property-getter for the "local" property.
     let local = repeat.local;
     // re-evaluate bindings on existing views.
     for (let i = 0; i < viewsLength; i++) {
-      let view = repeat.viewSlot.children[i];
+      let view = repeat.view(i);
       let last = i === itemsLength - 1;
       let middle = i !== 0 && !last;
       // any changes to the binding context?
@@ -1131,25 +1252,12 @@ export class ArrayRepeatStrategy {
       view.bindingContext[local] = items[i];
       view.overrideContext.$middle = middle;
       view.overrideContext.$last = last;
-      let j = view.bindings.length;
-      while (j--) {
-        updateOneTimeBinding(view.bindings[j]);
-      }
-      j = view.controllers.length;
-      while (j--) {
-        let k = view.controllers[j].boundProperties.length;
-        while (k--) {
-          let binding = view.controllers[j].boundProperties[k].binding;
-          updateOneTimeBinding(binding);
-        }
-      }
+      repeat.updateBindings(view);
     }
     // add new views
     for (let i = viewsLength; i < itemsLength; i++) {
       let overrideContext = createFullOverrideContext(repeat, items[i], i, itemsLength);
-      let view = repeat.viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      repeat.viewSlot.add(view);
+      repeat.addView(overrideContext.bindingContext, overrideContext);
     }
   }
 
@@ -1173,18 +1281,20 @@ export class ArrayRepeatStrategy {
         let {index, removed, addedCount} = splices[i];
         mergeSplice(repeat.__queuedSplices, index, removed, addedCount);
       }
+      // Array.prototype.slice is used here to clone the array
       repeat.__array = array.slice(0);
       return;
     }
 
+    // Array.prototype.slice is used here to clone the array
     let maybePromise = this._runSplices(repeat, array.slice(0), splices);
     if (maybePromise instanceof Promise) {
       let queuedSplices = repeat.__queuedSplices = [];
 
       let runQueuedSplices = () => {
-        if (! queuedSplices.length) {
-          delete repeat.__queuedSplices;
-          delete repeat.__array;
+        if (!queuedSplices.length) {
+          repeat.__queuedSplices = undefined;
+          repeat.__array = undefined;
           return;
         }
 
@@ -1209,7 +1319,6 @@ export class ArrayRepeatStrategy {
   */
   _runSplices(repeat, array, splices) {
     let removeDelta = 0;
-    let viewSlot = repeat.viewSlot;
     let rmPromises = [];
 
     for (let i = 0, ii = splices.length; i < ii; ++i) {
@@ -1218,7 +1327,7 @@ export class ArrayRepeatStrategy {
 
       for (let j = 0, jj = removed.length; j < jj; ++j) {
         // the rmPromises.length correction works due to the ordered removal precondition
-        let viewOrPromise = viewSlot.removeAt(splice.index + removeDelta + rmPromises.length, true);
+        let viewOrPromise = repeat.removeView(splice.index + removeDelta + rmPromises.length, true);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
@@ -1229,12 +1338,12 @@ export class ArrayRepeatStrategy {
     if (rmPromises.length > 0) {
       return Promise.all(rmPromises).then(() => {
         let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
-        updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
+        updateOverrideContexts(repeat.views(), spliceIndexLow);
       });
     }
 
     let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
-    updateOverrideContexts(repeat.viewSlot.children, spliceIndexLow);
+    updateOverrideContexts(repeat.views(), spliceIndexLow);
   }
 
   _handleAddedSplices(repeat, array, splices) {
@@ -1252,9 +1361,7 @@ export class ArrayRepeatStrategy {
 
       for (; addIndex < end; ++addIndex) {
         let overrideContext = createFullOverrideContext(repeat, array[addIndex], addIndex, arrayLength);
-        let view = repeat.viewFactory.create();
-        view.bind(overrideContext.bindingContext, overrideContext);
-        repeat.viewSlot.insert(addIndex, view);
+        repeat.insertView(addIndex, overrideContext.bindingContext, overrideContext);
       }
     }
 
@@ -1279,7 +1386,7 @@ export class MapRepeatStrategy {
   * @param items The entries to process.
   */
   instanceChanged(repeat, items) {
-    let removePromise = repeat.viewSlot.removeAll(true);
+    let removePromise = repeat.removeAllViews(true);
     if (removePromise instanceof Promise) {
       removePromise.then(() => this._standardProcessItems(repeat, items));
       return;
@@ -1288,17 +1395,12 @@ export class MapRepeatStrategy {
   }
 
   _standardProcessItems(repeat, items) {
-    let viewFactory = repeat.viewFactory;
-    let viewSlot = repeat.viewSlot;
     let index = 0;
     let overrideContext;
-    let view;
 
     items.forEach((value, key) => {
       overrideContext = createFullOverrideContext(repeat, value, index, items.size, key);
-      view = viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      viewSlot.add(view);
+      repeat.addView(overrideContext.bindingContext, overrideContext);
       ++index;
     });
   }
@@ -1309,11 +1411,9 @@ export class MapRepeatStrategy {
   * @param records The change records.
   */
   instanceMutated(repeat, map, records) {
-    let viewSlot = repeat.viewSlot;
     let key;
     let i;
     let ii;
-    let view;
     let overrideContext;
     let removeIndex;
     let record;
@@ -1326,31 +1426,27 @@ export class MapRepeatStrategy {
       switch (record.type) {
       case 'update':
         removeIndex = this._getViewIndexByKey(repeat, key);
-        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        viewOrPromise = repeat.removeView(removeIndex, true);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
         overrideContext = createFullOverrideContext(repeat, map.get(key), removeIndex, map.size, key);
-        view = repeat.viewFactory.create();
-        view.bind(overrideContext.bindingContext, overrideContext);
-        viewSlot.insert(removeIndex, view);
+        repeat.insertView(removeIndex, overrideContext.bindingContext, overrideContext);
         break;
       case 'add':
         overrideContext = createFullOverrideContext(repeat, map.get(key), map.size - 1, map.size, key);
-        view = repeat.viewFactory.create();
-        view.bind(overrideContext.bindingContext, overrideContext);
-        viewSlot.insert(map.size - 1, view);
+        repeat.insertView(map.size - 1, overrideContext.bindingContext, overrideContext);
         break;
       case 'delete':
         if (record.oldValue === undefined) { return; }
         removeIndex = this._getViewIndexByKey(repeat, key);
-        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        viewOrPromise = repeat.removeView(removeIndex, true);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
         break;
       case 'clear':
-        viewSlot.removeAll(true);
+        repeat.removeAllViews(true);
         break;
       default:
         continue;
@@ -1359,21 +1455,20 @@ export class MapRepeatStrategy {
 
     if (rmPromises.length > 0) {
       Promise.all(rmPromises).then(() => {
-        updateOverrideContexts(repeat.viewSlot.children, 0);
+        updateOverrideContexts(repeat.views(), 0);
       });
     } else {
-      updateOverrideContexts(repeat.viewSlot.children, 0);
+      updateOverrideContexts(repeat.views(), 0);
     }
   }
 
   _getViewIndexByKey(repeat, key) {
-    let viewSlot = repeat.viewSlot;
     let i;
     let ii;
     let child;
 
-    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
-      child = viewSlot.children[i];
+    for (i = 0, ii = repeat.viewCount(); i < ii; ++i) {
+      child = repeat.view(i);
       if (child.bindingContext[repeat.key] === key) {
         return i;
       }
@@ -1397,7 +1492,7 @@ export class NumberRepeatStrategy {
   * @param value The Number of how many time to iterate.
   */
   instanceChanged(repeat, value) {
-    let removePromise = repeat.viewSlot.removeAll(true);
+    let removePromise = repeat.removeAllViews(true);
     if (removePromise instanceof Promise) {
       removePromise.then(() => this._standardProcessItems(repeat, value));
       return;
@@ -1406,13 +1501,10 @@ export class NumberRepeatStrategy {
   }
 
   _standardProcessItems(repeat, value) {
-    let viewFactory = repeat.viewFactory;
-    let viewSlot = repeat.viewSlot;
-    let childrenLength = viewSlot.children.length;
+    let childrenLength = repeat.viewCount();
     let i;
     let ii;
     let overrideContext;
-    let view;
     let viewsToRemove;
 
     value = Math.floor(value);
@@ -1424,7 +1516,7 @@ export class NumberRepeatStrategy {
       }
 
       for (i = 0, ii = viewsToRemove; i < ii; ++i) {
-        viewSlot.removeAt(childrenLength - (i + 1), true);
+        repeat.removeView(childrenLength - (i + 1), true);
       }
 
       return;
@@ -1432,12 +1524,10 @@ export class NumberRepeatStrategy {
 
     for (i = childrenLength, ii = value; i < ii; ++i) {
       overrideContext = createFullOverrideContext(repeat, i, i, ii);
-      view = viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      viewSlot.add(view);
+      repeat.addView(overrideContext.bindingContext, overrideContext);
     }
 
-    updateOverrideContexts(repeat.viewSlot.children, 0);
+    updateOverrideContexts(repeat.views(), 0);
   }
 }
 
@@ -1458,7 +1548,7 @@ export class SetRepeatStrategy {
   * @param items The entries to process.
   */
   instanceChanged(repeat, items) {
-    let removePromise = repeat.viewSlot.removeAll(true);
+    let removePromise = repeat.removeAllViews(true);
     if (removePromise instanceof Promise) {
       removePromise.then(() => this._standardProcessItems(repeat, items));
       return;
@@ -1467,17 +1557,12 @@ export class SetRepeatStrategy {
   }
 
   _standardProcessItems(repeat, items) {
-    let viewFactory = repeat.viewFactory;
-    let viewSlot = repeat.viewSlot;
     let index = 0;
     let overrideContext;
-    let view;
 
     items.forEach(value => {
       overrideContext = createFullOverrideContext(repeat, value, index, items.size);
-      view = viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      viewSlot.add(view);
+      repeat.addView(overrideContext.bindingContext, overrideContext);
       ++index;
     });
   }
@@ -1488,11 +1573,9 @@ export class SetRepeatStrategy {
   * @param records The change records.
   */
   instanceMutated(repeat, set, records) {
-    let viewSlot = repeat.viewSlot;
     let value;
     let i;
     let ii;
-    let view;
     let overrideContext;
     let removeIndex;
     let record;
@@ -1505,19 +1588,17 @@ export class SetRepeatStrategy {
       switch (record.type) {
       case 'add':
         overrideContext = createFullOverrideContext(repeat, value, set.size - 1, set.size);
-        view = repeat.viewFactory.create();
-        view.bind(overrideContext.bindingContext, overrideContext);
-        viewSlot.insert(set.size - 1, view);
+        repeat.insertView(set.size - 1, overrideContext.bindingContext, overrideContext);
         break;
       case 'delete':
         removeIndex = this._getViewIndexByValue(repeat, value);
-        viewOrPromise = viewSlot.removeAt(removeIndex, true);
+        viewOrPromise = repeat.removeView(removeIndex, true);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
         break;
       case 'clear':
-        viewSlot.removeAll(true);
+        repeat.removeAllViews(true);
         break;
       default:
         continue;
@@ -1526,21 +1607,20 @@ export class SetRepeatStrategy {
 
     if (rmPromises.length > 0) {
       Promise.all(rmPromises).then(() => {
-        updateOverrideContexts(repeat.viewSlot.children, 0);
+        updateOverrideContexts(repeat.views(), 0);
       });
     } else {
-      updateOverrideContexts(repeat.viewSlot.children, 0);
+      updateOverrideContexts(repeat.views(), 0);
     }
   }
 
   _getViewIndexByValue(repeat, value) {
-    let viewSlot = repeat.viewSlot;
     let i;
     let ii;
     let child;
 
-    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
-      child = viewSlot.children[i];
+    for (i = 0, ii = repeat.viewCount(); i < ii; ++i) {
+      child = repeat.view(i);
       if (child.bindingContext[repeat.local] === value) {
         return i;
       }
@@ -1684,7 +1764,7 @@ export class RepeatStrategyLocator {
 @customAttribute('repeat')
 @templateController
 @inject(BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, ObserverLocator, RepeatStrategyLocator)
-export class Repeat {
+export class Repeat extends AbstractRepeater {
   /**
   * List of items to bind the repeater to.
   *
@@ -1720,12 +1800,16 @@ export class Repeat {
  * @param collectionStrategyLocator The strategy locator to locate best strategy to iterate the collection.
  */
   constructor(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
+    super({
+      local: 'item',
+      viewsRequireLifecycle: viewsRequireLifecycle(viewFactory)
+    });
+
     this.viewFactory = viewFactory;
     this.instruction = instruction;
     this.viewSlot = viewSlot;
     this.lookupFunctions = viewResources.lookupFunctions;
     this.observerLocator = observerLocator;
-    this.local = 'item';
     this.key = 'key';
     this.value = 'value';
     this.strategyLocator = strategyLocator;
@@ -1780,6 +1864,9 @@ export class Repeat {
 
     let items = this.items;
     this.strategy = this.strategyLocator.getStrategy(items);
+    if (!this.strategy) {
+      throw new Error(`Value for '${this.sourceExpression}' is non-repeatable`);
+    }
 
     if (!this.isOneTime && !this._observeInnerCollection()) {
       this._observeCollection();
@@ -1849,87 +1936,44 @@ export class Repeat {
       this.collectionObserver.subscribe(this.callContext, this);
     }
   }
-}
 
-function configure(config) {
-  if (FEATURE.shadowDOM) {
-    DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
-  } else {
-    DOM.injectStyles('.aurelia-hide { display:none !important; }');
+  // @override AbstractRepeater
+  viewCount() { return this.viewSlot.children.length; }
+  views() { return this.viewSlot.children; }
+  view(index) { return this.viewSlot.children[index]; }
+
+  addView(bindingContext, overrideContext) {
+    let view = this.viewFactory.create();
+    view.bind(bindingContext, overrideContext);
+    this.viewSlot.add(view);
   }
 
-  config.globalResources(
-    './compose',
-    './if',
-    './with',
-    './repeat',
-    './show',
-    './hide',
-    './replaceable',
-    './sanitize-html',
-    './focus',
-    './compile-spy',
-    './view-spy',
-    './binding-mode-behaviors',
-    './throttle-binding-behavior',
-    './debounce-binding-behavior',
-    './signal-binding-behavior',
-    './update-trigger-binding-behavior'
-  );
+  insertView(index, bindingContext, overrideContext) {
+    let view = this.viewFactory.create();
+    view.bind(bindingContext, overrideContext);
+    this.viewSlot.insert(index, view);
+  }
 
-  let viewEngine = config.container.get(ViewEngine);
-  let loader = config.aurelia.loader;
+  removeAllViews(returnToCache, skipAnimation) {
+    return this.viewSlot.removeAll(returnToCache, skipAnimation);
+  }
 
-  viewEngine.addResourcePlugin('.html', {
-    'fetch': function(address) {
-      return loader.loadTemplate(address).then(registryEntry => {
-        let bindable = registryEntry.template.getAttribute('bindable');
-        let elementName = address.replace('.html', '');
-        let index = elementName.lastIndexOf('/');
+  removeView(index, returnToCache, skipAnimation) {
+    return this.viewSlot.removeAt(index, returnToCache, skipAnimation);
+  }
 
-        if (index !== 0) {
-          elementName = elementName.substring(index + 1);
-        }
-
-        if (bindable) {
-          bindable = bindable.split(',').map(x => x.trim());
-          registryEntry.template.removeAttribute('bindable');
-        } else {
-          bindable = [];
-        }
-
-        return { [elementName]: _createDynamicElement(elementName, address, bindable) };
-      });
+  updateBindings(view: View) {
+    let j = view.bindings.length;
+    while (j--) {
+      updateOneTimeBinding(view.bindings[j]);
     }
-  });
-
-  viewEngine.addResourcePlugin('.css', {
-    'fetch': function(address) {
-      return { [address]: _createCSSResource(address) };
+    j = view.controllers.length;
+    while (j--) {
+      let k = view.controllers[j].boundProperties.length;
+      while (k--) {
+        let binding = view.controllers[j].boundProperties[k].binding;
+        updateOneTimeBinding(binding);
+      }
     }
-  });
+  }
 }
-
-export {
-  Compose,
-  If,
-  With,
-  Repeat,
-  Show,
-  Hide,
-  HTMLSanitizer,
-  SanitizeHTMLValueConverter,
-  Replaceable,
-  Focus,
-  CompileSpy,
-  ViewSpy,
-  configure,
-  OneTimeBindingBehavior,
-  OneWayBindingBehavior,
-  TwoWayBindingBehavior,
-  ThrottleBindingBehavior,
-  DebounceBindingBehavior,
-  SignalBindingBehavior,
-  BindingSignaler,
-  UpdateTriggerBindingBehavior
-};

@@ -1,7 +1,7 @@
-System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './dynamic-element', './css-resource', 'aurelia-pal', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior'], function (_export) {
-  'use strict';
+'use strict';
 
-  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createDynamicElement, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior;
+System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './dynamic-element', './css-resource', 'aurelia-pal', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater'], function (_export, _context) {
+  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createDynamicElement, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater;
 
   function configure(config) {
     if (FEATURE.shadowDOM) {
@@ -99,6 +99,8 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       BindingSignaler = _bindingSignaler.BindingSignaler;
     }, function (_updateTriggerBindingBehavior) {
       UpdateTriggerBindingBehavior = _updateTriggerBindingBehavior.UpdateTriggerBindingBehavior;
+    }, function (_abstractRepeater) {
+      AbstractRepeater = _abstractRepeater.AbstractRepeater;
     }],
     execute: function () {
       _export('Compose', Compose);
@@ -142,6 +144,8 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       _export('BindingSignaler', BindingSignaler);
 
       _export('UpdateTriggerBindingBehavior', UpdateTriggerBindingBehavior);
+
+      _export('AbstractRepeater', AbstractRepeater);
     }
   };
 });

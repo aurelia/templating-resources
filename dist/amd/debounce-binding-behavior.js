@@ -1,9 +1,16 @@
 define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
   'use strict';
 
-  exports.__esModule = true;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.DebounceBindingBehavior = undefined;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   function debounce(newValue) {
     var _this = this;
@@ -20,7 +27,7 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
     }, state.delay);
   }
 
-  var DebounceBindingBehavior = (function () {
+  var DebounceBindingBehavior = exports.DebounceBindingBehavior = function () {
     function DebounceBindingBehavior() {
       _classCallCheck(this, DebounceBindingBehavior);
     }
@@ -55,7 +62,5 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
     };
 
     return DebounceBindingBehavior;
-  })();
-
-  exports.DebounceBindingBehavior = DebounceBindingBehavior;
+  }();
 });

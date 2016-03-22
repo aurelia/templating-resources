@@ -1,13 +1,22 @@
 define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], function (exports, _aureliaDependencyInjection, _aureliaTemplating) {
   'use strict';
 
-  exports.__esModule = true;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Replaceable = undefined;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
-  var Replaceable = (function () {
+  var _dec, _dec2, _class;
+
+  var Replaceable = exports.Replaceable = (_dec = (0, _aureliaTemplating.customAttribute)('replaceable'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec(_class = (0, _aureliaTemplating.templateController)(_class = _dec2(_class = function () {
     function Replaceable(viewFactory, viewSlot) {
-      _classCallCheck(this, _Replaceable);
+      _classCallCheck(this, Replaceable);
 
       this.viewFactory = viewFactory;
       this.viewSlot = viewSlot;
@@ -27,12 +36,6 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating'], functi
       this.view.unbind();
     };
 
-    var _Replaceable = Replaceable;
-    Replaceable = _aureliaDependencyInjection.inject(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot)(Replaceable) || Replaceable;
-    Replaceable = _aureliaTemplating.templateController(Replaceable) || Replaceable;
-    Replaceable = _aureliaTemplating.customAttribute('replaceable')(Replaceable) || Replaceable;
     return Replaceable;
-  })();
-
-  exports.Replaceable = Replaceable;
+  }()) || _class) || _class) || _class);
 });

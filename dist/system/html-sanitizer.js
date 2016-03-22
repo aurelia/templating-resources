@@ -1,16 +1,20 @@
-System.register([], function (_export) {
-  'use strict';
+'use strict';
 
+System.register([], function (_export, _context) {
   var SCRIPT_REGEX, HTMLSanitizer;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   return {
     setters: [],
     execute: function () {
       SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 
-      HTMLSanitizer = (function () {
+      _export('HTMLSanitizer', HTMLSanitizer = function () {
         function HTMLSanitizer() {
           _classCallCheck(this, HTMLSanitizer);
         }
@@ -20,7 +24,7 @@ System.register([], function (_export) {
         };
 
         return HTMLSanitizer;
-      })();
+      }());
 
       _export('HTMLSanitizer', HTMLSanitizer);
     }

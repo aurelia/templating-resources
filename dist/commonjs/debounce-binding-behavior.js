@@ -1,10 +1,13 @@
 'use strict';
 
-exports.__esModule = true;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.DebounceBindingBehavior = undefined;
 
 var _aureliaBinding = require('aurelia-binding');
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function debounce(newValue) {
   var _this = this;
@@ -21,7 +24,7 @@ function debounce(newValue) {
   }, state.delay);
 }
 
-var DebounceBindingBehavior = (function () {
+var DebounceBindingBehavior = exports.DebounceBindingBehavior = function () {
   function DebounceBindingBehavior() {
     _classCallCheck(this, DebounceBindingBehavior);
   }
@@ -56,6 +59,4 @@ var DebounceBindingBehavior = (function () {
   };
 
   return DebounceBindingBehavior;
-})();
-
-exports.DebounceBindingBehavior = DebounceBindingBehavior;
+}();

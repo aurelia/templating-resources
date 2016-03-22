@@ -1,9 +1,13 @@
-System.register(['aurelia-templating', 'aurelia-logging'], function (_export) {
-  'use strict';
+'use strict';
 
-  var customAttribute, LogManager, ViewSpy;
+System.register(['aurelia-templating', 'aurelia-logging'], function (_export, _context) {
+  var customAttribute, LogManager, _dec, _class, ViewSpy;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   return {
     setters: [function (_aureliaTemplating) {
@@ -12,9 +16,9 @@ System.register(['aurelia-templating', 'aurelia-logging'], function (_export) {
       LogManager = _aureliaLogging;
     }],
     execute: function () {
-      ViewSpy = (function () {
+      _export('ViewSpy', ViewSpy = (_dec = customAttribute('view-spy'), _dec(_class = function () {
         function ViewSpy() {
-          _classCallCheck(this, _ViewSpy);
+          _classCallCheck(this, ViewSpy);
 
           this.logger = LogManager.getLogger('view-spy');
         }
@@ -48,10 +52,8 @@ System.register(['aurelia-templating', 'aurelia-logging'], function (_export) {
           this._log('unbind');
         };
 
-        var _ViewSpy = ViewSpy;
-        ViewSpy = customAttribute('view-spy')(ViewSpy) || ViewSpy;
         return ViewSpy;
-      })();
+      }()) || _class));
 
       _export('ViewSpy', ViewSpy);
     }

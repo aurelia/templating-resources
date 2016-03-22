@@ -1,11 +1,18 @@
 define(['exports', './binding-signaler'], function (exports, _bindingSignaler) {
   'use strict';
 
-  exports.__esModule = true;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.SignalBindingBehavior = undefined;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
-  var SignalBindingBehavior = (function () {
+  var SignalBindingBehavior = exports.SignalBindingBehavior = function () {
     SignalBindingBehavior.inject = function inject() {
       return [_bindingSignaler.BindingSignaler];
     };
@@ -21,17 +28,17 @@ define(['exports', './binding-signaler'], function (exports, _bindingSignaler) {
         throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
       }
       if (arguments.length === 3) {
-        var _name = arguments[2];
-        var bindings = this.signals[_name] || (this.signals[_name] = []);
+        var name = arguments[2];
+        var bindings = this.signals[name] || (this.signals[name] = []);
         bindings.push(binding);
-        binding.signalName = _name;
+        binding.signalName = name;
       } else if (arguments.length > 3) {
         var names = Array.prototype.slice.call(arguments, 2);
         var i = names.length;
         while (i--) {
-          var _name2 = names[i];
-          var bindings = this.signals[_name2] || (this.signals[_name2] = []);
-          bindings.push(binding);
+          var _name = names[i];
+          var _bindings = this.signals[_name] || (this.signals[_name] = []);
+          _bindings.push(binding);
         }
         binding.signalName = names;
       } else {
@@ -51,13 +58,11 @@ define(['exports', './binding-signaler'], function (exports, _bindingSignaler) {
           bindings.splice(bindings.indexOf(binding), 1);
         }
       } else {
-        var bindings = this.signals[name];
-        bindings.splice(bindings.indexOf(binding), 1);
+        var _bindings2 = this.signals[name];
+        _bindings2.splice(_bindings2.indexOf(binding), 1);
       }
     };
 
     return SignalBindingBehavior;
-  })();
-
-  exports.SignalBindingBehavior = SignalBindingBehavior;
+  }();
 });

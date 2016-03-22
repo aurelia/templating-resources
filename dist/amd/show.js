@@ -1,13 +1,22 @@
 define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aurelia-pal'], function (exports, _aureliaDependencyInjection, _aureliaTemplating, _aureliaPal) {
   'use strict';
 
-  exports.__esModule = true;
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Show = undefined;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
-  var Show = (function () {
+  var _dec, _dec2, _class;
+
+  var Show = exports.Show = (_dec = (0, _aureliaTemplating.customAttribute)('show'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator), _dec(_class = _dec2(_class = function () {
     function Show(element, animator) {
-      _classCallCheck(this, _Show);
+      _classCallCheck(this, Show);
 
       this.element = element;
       this.animator = animator;
@@ -25,11 +34,6 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
       this.valueChanged(this.value);
     };
 
-    var _Show = Show;
-    Show = _aureliaDependencyInjection.inject(_aureliaPal.DOM.Element, _aureliaTemplating.Animator)(Show) || Show;
-    Show = _aureliaTemplating.customAttribute('show')(Show) || Show;
     return Show;
-  })();
-
-  exports.Show = Show;
+  }()) || _class) || _class);
 });

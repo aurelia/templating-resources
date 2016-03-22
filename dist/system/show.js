@@ -1,9 +1,13 @@
-System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-pal'], function (_export) {
-  'use strict';
+'use strict';
 
-  var inject, customAttribute, Animator, DOM, Show;
+System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-pal'], function (_export, _context) {
+  var inject, customAttribute, Animator, DOM, _dec, _dec2, _class, Show;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   return {
     setters: [function (_aureliaDependencyInjection) {
@@ -15,9 +19,9 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
       DOM = _aureliaPal.DOM;
     }],
     execute: function () {
-      Show = (function () {
+      _export('Show', Show = (_dec = customAttribute('show'), _dec2 = inject(DOM.Element, Animator), _dec(_class = _dec2(_class = function () {
         function Show(element, animator) {
-          _classCallCheck(this, _Show);
+          _classCallCheck(this, Show);
 
           this.element = element;
           this.animator = animator;
@@ -35,11 +39,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
           this.valueChanged(this.value);
         };
 
-        var _Show = Show;
-        Show = inject(DOM.Element, Animator)(Show) || Show;
-        Show = customAttribute('show')(Show) || Show;
         return Show;
-      })();
+      }()) || _class) || _class));
 
       _export('Show', Show);
     }

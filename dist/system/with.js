@@ -1,9 +1,13 @@
-System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-binding'], function (_export) {
-  'use strict';
+'use strict';
 
-  var inject, BoundViewFactory, ViewSlot, customAttribute, templateController, createOverrideContext, With;
+System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-binding'], function (_export, _context) {
+  var inject, BoundViewFactory, ViewSlot, customAttribute, templateController, createOverrideContext, _dec, _dec2, _class, With;
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   return {
     setters: [function (_aureliaDependencyInjection) {
@@ -17,9 +21,9 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
       createOverrideContext = _aureliaBinding.createOverrideContext;
     }],
     execute: function () {
-      With = (function () {
+      _export('With', With = (_dec = customAttribute('with'), _dec2 = inject(BoundViewFactory, ViewSlot), _dec(_class = templateController(_class = _dec2(_class = function () {
         function With(viewFactory, viewSlot) {
-          _classCallCheck(this, _With);
+          _classCallCheck(this, With);
 
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
@@ -51,12 +55,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
           }
         };
 
-        var _With = With;
-        With = inject(BoundViewFactory, ViewSlot)(With) || With;
-        With = templateController(With) || With;
-        With = customAttribute('with')(With) || With;
         return With;
-      })();
+      }()) || _class) || _class) || _class));
 
       _export('With', With);
     }

@@ -1,12 +1,15 @@
 'use strict';
 
-exports.__esModule = true;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.MapRepeatStrategy = undefined;
 
 var _repeatUtilities = require('./repeat-utilities');
 
-var MapRepeatStrategy = (function () {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var MapRepeatStrategy = exports.MapRepeatStrategy = function () {
   function MapRepeatStrategy() {
     _classCallCheck(this, MapRepeatStrategy);
   }
@@ -18,7 +21,7 @@ var MapRepeatStrategy = (function () {
   MapRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, items) {
     var _this = this;
 
-    var removePromise = repeat.viewSlot.removeAll(true);
+    var removePromise = repeat.removeAllViews(true);
     if (removePromise instanceof Promise) {
       removePromise.then(function () {
         return _this._standardProcessItems(repeat, items);
@@ -29,32 +32,25 @@ var MapRepeatStrategy = (function () {
   };
 
   MapRepeatStrategy.prototype._standardProcessItems = function _standardProcessItems(repeat, items) {
-    var viewFactory = repeat.viewFactory;
-    var viewSlot = repeat.viewSlot;
     var index = 0;
-    var overrideContext = undefined;
-    var view = undefined;
+    var overrideContext = void 0;
 
     items.forEach(function (value, key) {
-      overrideContext = _repeatUtilities.createFullOverrideContext(repeat, value, index, items.size, key);
-      view = viewFactory.create();
-      view.bind(overrideContext.bindingContext, overrideContext);
-      viewSlot.add(view);
+      overrideContext = (0, _repeatUtilities.createFullOverrideContext)(repeat, value, index, items.size, key);
+      repeat.addView(overrideContext.bindingContext, overrideContext);
       ++index;
     });
   };
 
   MapRepeatStrategy.prototype.instanceMutated = function instanceMutated(repeat, map, records) {
-    var viewSlot = repeat.viewSlot;
-    var key = undefined;
-    var i = undefined;
-    var ii = undefined;
-    var view = undefined;
-    var overrideContext = undefined;
-    var removeIndex = undefined;
-    var record = undefined;
+    var key = void 0;
+    var i = void 0;
+    var ii = void 0;
+    var overrideContext = void 0;
+    var removeIndex = void 0;
+    var record = void 0;
     var rmPromises = [];
-    var viewOrPromise = undefined;
+    var viewOrPromise = void 0;
 
     for (i = 0, ii = records.length; i < ii; ++i) {
       record = records[i];
@@ -62,33 +58,29 @@ var MapRepeatStrategy = (function () {
       switch (record.type) {
         case 'update':
           removeIndex = this._getViewIndexByKey(repeat, key);
-          viewOrPromise = viewSlot.removeAt(removeIndex, true);
+          viewOrPromise = repeat.removeView(removeIndex, true);
           if (viewOrPromise instanceof Promise) {
             rmPromises.push(viewOrPromise);
           }
-          overrideContext = _repeatUtilities.createFullOverrideContext(repeat, map.get(key), removeIndex, map.size, key);
-          view = repeat.viewFactory.create();
-          view.bind(overrideContext.bindingContext, overrideContext);
-          viewSlot.insert(removeIndex, view);
+          overrideContext = (0, _repeatUtilities.createFullOverrideContext)(repeat, map.get(key), removeIndex, map.size, key);
+          repeat.insertView(removeIndex, overrideContext.bindingContext, overrideContext);
           break;
         case 'add':
-          overrideContext = _repeatUtilities.createFullOverrideContext(repeat, map.get(key), map.size - 1, map.size, key);
-          view = repeat.viewFactory.create();
-          view.bind(overrideContext.bindingContext, overrideContext);
-          viewSlot.insert(map.size - 1, view);
+          overrideContext = (0, _repeatUtilities.createFullOverrideContext)(repeat, map.get(key), map.size - 1, map.size, key);
+          repeat.insertView(map.size - 1, overrideContext.bindingContext, overrideContext);
           break;
         case 'delete':
           if (record.oldValue === undefined) {
             return;
           }
           removeIndex = this._getViewIndexByKey(repeat, key);
-          viewOrPromise = viewSlot.removeAt(removeIndex, true);
+          viewOrPromise = repeat.removeView(removeIndex, true);
           if (viewOrPromise instanceof Promise) {
             rmPromises.push(viewOrPromise);
           }
           break;
         case 'clear':
-          viewSlot.removeAll(true);
+          repeat.removeAllViews(true);
           break;
         default:
           continue;
@@ -97,21 +89,20 @@ var MapRepeatStrategy = (function () {
 
     if (rmPromises.length > 0) {
       Promise.all(rmPromises).then(function () {
-        _repeatUtilities.updateOverrideContexts(repeat.viewSlot.children, 0);
+        (0, _repeatUtilities.updateOverrideContexts)(repeat.views(), 0);
       });
     } else {
-      _repeatUtilities.updateOverrideContexts(repeat.viewSlot.children, 0);
+      (0, _repeatUtilities.updateOverrideContexts)(repeat.views(), 0);
     }
   };
 
   MapRepeatStrategy.prototype._getViewIndexByKey = function _getViewIndexByKey(repeat, key) {
-    var viewSlot = repeat.viewSlot;
-    var i = undefined;
-    var ii = undefined;
-    var child = undefined;
+    var i = void 0;
+    var ii = void 0;
+    var child = void 0;
 
-    for (i = 0, ii = viewSlot.children.length; i < ii; ++i) {
-      child = viewSlot.children[i];
+    for (i = 0, ii = repeat.viewCount(); i < ii; ++i) {
+      child = repeat.view(i);
       if (child.bindingContext[repeat.key] === key) {
         return i;
       }
@@ -119,6 +110,4 @@ var MapRepeatStrategy = (function () {
   };
 
   return MapRepeatStrategy;
-})();
-
-exports.MapRepeatStrategy = MapRepeatStrategy;
+}();

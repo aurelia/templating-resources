@@ -1,9 +1,8 @@
-System.register([], function (_export) {
-  'use strict';
+'use strict';
 
+System.register([], function (_export, _context) {
   var lifecycleOptionalBehaviors;
 
-  _export('viewsRequireLifecycle', viewsRequireLifecycle);
 
   function behaviorRequiresLifecycle(instruction) {
     var t = instruction.type;
@@ -28,38 +27,40 @@ System.register([], function (_export) {
     return instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
   }
 
-  function viewsRequireLifecycle(viewFactory) {
-    if ('_viewsRequireLifecycle' in viewFactory) {
-      return viewFactory._viewsRequireLifecycle;
-    }
-
-    if (viewFactory.viewFactory) {
-      viewFactory._viewsRequireLifecycle = viewsRequireLifecycle(viewFactory.viewFactory);
-      return viewFactory._viewsRequireLifecycle;
-    }
-
-    if (viewFactory.template.querySelector('.au-animate')) {
-      viewFactory._viewsRequireLifecycle = true;
-      return true;
-    }
-
-    for (var id in viewFactory.instructions) {
-      if (targetRequiresLifecycle(viewFactory.instructions[id])) {
-        viewFactory._viewsRequireLifecycle = true;
-        return true;
-      }
-    }
-
-    viewFactory._viewsRequireLifecycle = false;
-    return false;
-  }
-
   return {
     setters: [],
     execute: function () {
-      lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'with'];
+      _export('lifecycleOptionalBehaviors', lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'with']);
 
       _export('lifecycleOptionalBehaviors', lifecycleOptionalBehaviors);
+
+      function viewsRequireLifecycle(viewFactory) {
+        if ('_viewsRequireLifecycle' in viewFactory) {
+          return viewFactory._viewsRequireLifecycle;
+        }
+
+        if (viewFactory.viewFactory) {
+          viewFactory._viewsRequireLifecycle = viewsRequireLifecycle(viewFactory.viewFactory);
+          return viewFactory._viewsRequireLifecycle;
+        }
+
+        if (viewFactory.template.querySelector('.au-animate')) {
+          viewFactory._viewsRequireLifecycle = true;
+          return true;
+        }
+
+        for (var id in viewFactory.instructions) {
+          if (targetRequiresLifecycle(viewFactory.instructions[id])) {
+            viewFactory._viewsRequireLifecycle = true;
+            return true;
+          }
+        }
+
+        viewFactory._viewsRequireLifecycle = false;
+        return false;
+      }
+
+      _export('viewsRequireLifecycle', viewsRequireLifecycle);
     }
   };
 });

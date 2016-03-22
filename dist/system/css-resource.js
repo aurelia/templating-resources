@@ -1,15 +1,42 @@
-System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-injection', 'aurelia-path', 'aurelia-pal'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-injection', 'aurelia-path', 'aurelia-pal'], function (_export, _context) {
   var ViewResources, resource, ViewCompileInstruction, Loader, Container, relativeToFile, DOM, FEATURE, cssUrlMatcher, CSSResource, CSSViewEngineHooks;
 
-  _export('_createCSSResource', _createCSSResource);
+  function _possibleConstructorReturn(self, call) {
+    if (!self) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
 
-  function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+    return call && (typeof call === "object" || typeof call === "function") ? call : self;
+  }
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+  function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+    }
+
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+      constructor: {
+        value: subClass,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+    if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
   function fixupCSSUrls(address, css) {
+    if (typeof css !== 'string') {
+      throw new Error('Failed loading required CSS file: ' + address);
+    }
     return css.replace(cssUrlMatcher, function (match, p1) {
       var quote = p1.charAt(0);
       if (quote === '\'' || quote === '"') {
@@ -17,24 +44,6 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
       }
       return 'url(\'' + relativeToFile(p1, address) + '\')';
     });
-  }
-
-  function _createCSSResource(address) {
-    var ViewCSS = (function (_CSSViewEngineHooks) {
-      _inherits(ViewCSS, _CSSViewEngineHooks);
-
-      function ViewCSS() {
-        _classCallCheck(this, _ViewCSS);
-
-        _CSSViewEngineHooks.apply(this, arguments);
-      }
-
-      var _ViewCSS = ViewCSS;
-      ViewCSS = resource(new CSSResource(address))(ViewCSS) || ViewCSS;
-      return ViewCSS;
-    })(CSSViewEngineHooks);
-
-    return ViewCSS;
   }
 
   return {
@@ -55,7 +64,7 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
     execute: function () {
       cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
-      CSSResource = (function () {
+      CSSResource = function () {
         function CSSResource(address) {
           _classCallCheck(this, CSSResource);
 
@@ -76,7 +85,9 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
         CSSResource.prototype.load = function load(container) {
           var _this = this;
 
-          return container.get(Loader).loadText(this.address).then(function (text) {
+          return container.get(Loader).loadText(this.address).catch(function (err) {
+            return null;
+          }).then(function (text) {
             text = fixupCSSUrls(_this.address, text);
             _this._global.css = text;
             _this._scoped.css = text;
@@ -84,9 +95,9 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
         };
 
         return CSSResource;
-      })();
+      }();
 
-      CSSViewEngineHooks = (function () {
+      CSSViewEngineHooks = function () {
         function CSSViewEngineHooks(mode) {
           _classCallCheck(this, CSSViewEngineHooks);
 
@@ -113,7 +124,27 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
         };
 
         return CSSViewEngineHooks;
-      })();
+      }();
+
+      function _createCSSResource(address) {
+        var _dec, _class;
+
+        var ViewCSS = (_dec = resource(new CSSResource(address)), _dec(_class = function (_CSSViewEngineHooks) {
+          _inherits(ViewCSS, _CSSViewEngineHooks);
+
+          function ViewCSS() {
+            _classCallCheck(this, ViewCSS);
+
+            return _possibleConstructorReturn(this, _CSSViewEngineHooks.apply(this, arguments));
+          }
+
+          return ViewCSS;
+        }(CSSViewEngineHooks)) || _class);
+
+        return ViewCSS;
+      }
+
+      _export('_createCSSResource', _createCSSResource);
     }
   };
 });

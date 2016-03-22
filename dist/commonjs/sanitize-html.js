@@ -1,8 +1,11 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.SanitizeHTMLValueConverter = undefined;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _dec, _dec2, _class;
 
 var _aureliaBinding = require('aurelia-binding');
 
@@ -10,9 +13,11 @@ var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
 var _htmlSanitizer = require('./html-sanitizer');
 
-var SanitizeHTMLValueConverter = (function () {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SanitizeHTMLValueConverter = exports.SanitizeHTMLValueConverter = (_dec = (0, _aureliaBinding.valueConverter)('sanitizeHTML'), _dec2 = (0, _aureliaDependencyInjection.inject)(_htmlSanitizer.HTMLSanitizer), _dec(_class = _dec2(_class = function () {
   function SanitizeHTMLValueConverter(sanitizer) {
-    _classCallCheck(this, _SanitizeHTMLValueConverter);
+    _classCallCheck(this, SanitizeHTMLValueConverter);
 
     this.sanitizer = sanitizer;
   }
@@ -25,10 +30,5 @@ var SanitizeHTMLValueConverter = (function () {
     return this.sanitizer.sanitize(untrustedMarkup);
   };
 
-  var _SanitizeHTMLValueConverter = SanitizeHTMLValueConverter;
-  SanitizeHTMLValueConverter = _aureliaDependencyInjection.inject(_htmlSanitizer.HTMLSanitizer)(SanitizeHTMLValueConverter) || SanitizeHTMLValueConverter;
-  SanitizeHTMLValueConverter = _aureliaBinding.valueConverter('sanitizeHTML')(SanitizeHTMLValueConverter) || SanitizeHTMLValueConverter;
   return SanitizeHTMLValueConverter;
-})();
-
-exports.SanitizeHTMLValueConverter = SanitizeHTMLValueConverter;
+}()) || _class) || _class);
