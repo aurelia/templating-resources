@@ -103,5 +103,6 @@ export {
   SignalBindingBehavior,
   BindingSignaler,
   UpdateTriggerBindingBehavior,
-  AbstractRepeater
+  AbstractRepeater,
+  RepeatStrategyLocator
 };
