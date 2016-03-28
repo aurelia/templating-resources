@@ -2,13 +2,7 @@ import {ViewEngine} from 'aurelia-templating';
 import {_createDynamicElement} from './dynamic-element';
 
 export function getElementName(address) {
-  let elementName = address.replace('.html', '');
-  let index = elementName.lastIndexOf('/');
-
-  if (index !== 0) {
-    elementName = elementName.substring(index + 1);
-  }
-  return elementName;
+  return /([^\/^\?]+)\.html/i.exec(address)[1].toLowerCase();
 }
 
 export function configure(config) {
