@@ -21,6 +21,7 @@ import {SignalBindingBehavior} from './signal-binding-behavior';
 import {BindingSignaler} from './binding-signaler';
 import {UpdateTriggerBindingBehavior} from './update-trigger-binding-behavior';
 import {AbstractRepeater} from './abstract-repeater';
+import {RepeatStrategyLocator} from './repeat-strategy-locator';
 
 function configure(config) {
   if (FEATURE.shadowDOM) {
