@@ -19,7 +19,8 @@ declare module 'aurelia-templating-resources' {
     CompositionEngine,
     noView,
     View,
-    TargetInstruction
+    TargetInstruction,
+    ViewEngine
   } from 'aurelia-templating';
   import {
     createOverrideContext,
@@ -626,6 +627,8 @@ declare module 'aurelia-templating-resources' {
       */
     toView(untrustedMarkup: any): any;
   }
+  export function getElementName(address: any): any;
+  export function configure(config: any): any;
   export class SignalBindingBehavior {
     static inject(): any;
     signals: any;

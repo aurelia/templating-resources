@@ -10,7 +10,6 @@ import { Focus } from './focus';
 import { CompileSpy } from './compile-spy';
 import { ViewSpy } from './view-spy';
 import { ViewEngine } from 'aurelia-templating';
-import { _createDynamicElement } from './dynamic-element';
 import { _createCSSResource } from './css-resource';
 import { FEATURE, DOM } from 'aurelia-pal';
 import { HTMLSanitizer } from './html-sanitizer';
@@ -21,6 +20,8 @@ import { SignalBindingBehavior } from './signal-binding-behavior';
 import { BindingSignaler } from './binding-signaler';
 import { UpdateTriggerBindingBehavior } from './update-trigger-binding-behavior';
 import { AbstractRepeater } from './abstract-repeater';
+import { RepeatStrategyLocator } from './repeat-strategy-locator';
+import { configure as configureHtmlResourcePlugin } from './html-resource-plugin';
 
 function configure(config) {
   if (FEATURE.shadowDOM) {
@@ -31,32 +32,9 @@ function configure(config) {
 
   config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './replaceable', './sanitize-html', './focus', './compile-spy', './view-spy', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
 
+  configureHtmlResourcePlugin(config);
+
   let viewEngine = config.container.get(ViewEngine);
-  let loader = config.aurelia.loader;
-
-  viewEngine.addResourcePlugin('.html', {
-    'fetch': function (address) {
-      return loader.loadTemplate(address).then(registryEntry => {
-        let bindable = registryEntry.template.getAttribute('bindable');
-        let elementName = address.replace('.html', '');
-        let index = elementName.lastIndexOf('/');
-
-        if (index !== 0) {
-          elementName = elementName.substring(index + 1);
-        }
-
-        if (bindable) {
-          bindable = bindable.split(',').map(x => x.trim());
-          registryEntry.template.removeAttribute('bindable');
-        } else {
-          bindable = [];
-        }
-
-        return { [elementName]: _createDynamicElement(elementName, address, bindable) };
-      });
-    }
-  });
-
   viewEngine.addResourcePlugin('.css', {
     'fetch': function (address) {
       return { [address]: _createCSSResource(address) };
@@ -64,4 +42,4 @@ function configure(config) {
   });
 }
 
-export { Compose, If, With, Repeat, Show, Hide, HTMLSanitizer, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, configure, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater };
+export { Compose, If, With, Repeat, Show, Hide, HTMLSanitizer, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, configure, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator };

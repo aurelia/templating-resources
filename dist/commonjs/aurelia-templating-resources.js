@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.AbstractRepeater = exports.UpdateTriggerBindingBehavior = exports.BindingSignaler = exports.SignalBindingBehavior = exports.DebounceBindingBehavior = exports.ThrottleBindingBehavior = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.configure = exports.ViewSpy = exports.CompileSpy = exports.Focus = exports.Replaceable = exports.SanitizeHTMLValueConverter = exports.HTMLSanitizer = exports.Hide = exports.Show = exports.Repeat = exports.With = exports.If = exports.Compose = undefined;
+exports.RepeatStrategyLocator = exports.AbstractRepeater = exports.UpdateTriggerBindingBehavior = exports.BindingSignaler = exports.SignalBindingBehavior = exports.DebounceBindingBehavior = exports.ThrottleBindingBehavior = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.configure = exports.ViewSpy = exports.CompileSpy = exports.Focus = exports.Replaceable = exports.SanitizeHTMLValueConverter = exports.HTMLSanitizer = exports.Hide = exports.Show = exports.Repeat = exports.With = exports.If = exports.Compose = undefined;
 
 var _compose = require('./compose');
 
@@ -29,8 +29,6 @@ var _viewSpy = require('./view-spy');
 
 var _aureliaTemplating = require('aurelia-templating');
 
-var _dynamicElement = require('./dynamic-element');
-
 var _cssResource = require('./css-resource');
 
 var _aureliaPal = require('aurelia-pal');
@@ -51,6 +49,10 @@ var _updateTriggerBindingBehavior = require('./update-trigger-binding-behavior')
 
 var _abstractRepeater = require('./abstract-repeater');
 
+var _repeatStrategyLocator = require('./repeat-strategy-locator');
+
+var _htmlResourcePlugin = require('./html-resource-plugin');
+
 function configure(config) {
   if (_aureliaPal.FEATURE.shadowDOM) {
     _aureliaPal.DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
@@ -60,41 +62,14 @@ function configure(config) {
 
   config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './replaceable', './sanitize-html', './focus', './compile-spy', './view-spy', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
 
+  (0, _htmlResourcePlugin.configure)(config);
+
   var viewEngine = config.container.get(_aureliaTemplating.ViewEngine);
-  var loader = config.aurelia.loader;
-
-  viewEngine.addResourcePlugin('.html', {
-    'fetch': function fetch(address) {
-      return loader.loadTemplate(address).then(function (registryEntry) {
-        var _ref;
-
-        var bindable = registryEntry.template.getAttribute('bindable');
-        var elementName = address.replace('.html', '');
-        var index = elementName.lastIndexOf('/');
-
-        if (index !== 0) {
-          elementName = elementName.substring(index + 1);
-        }
-
-        if (bindable) {
-          bindable = bindable.split(',').map(function (x) {
-            return x.trim();
-          });
-          registryEntry.template.removeAttribute('bindable');
-        } else {
-          bindable = [];
-        }
-
-        return _ref = {}, _ref[elementName] = (0, _dynamicElement._createDynamicElement)(elementName, address, bindable), _ref;
-      });
-    }
-  });
-
   viewEngine.addResourcePlugin('.css', {
     'fetch': function fetch(address) {
-      var _ref2;
+      var _ref;
 
-      return _ref2 = {}, _ref2[address] = (0, _cssResource._createCSSResource)(address), _ref2;
+      return _ref = {}, _ref[address] = (0, _cssResource._createCSSResource)(address), _ref;
     }
   });
 }
@@ -121,3 +96,4 @@ exports.SignalBindingBehavior = _signalBindingBehavior.SignalBindingBehavior;
 exports.BindingSignaler = _bindingSignaler.BindingSignaler;
 exports.UpdateTriggerBindingBehavior = _updateTriggerBindingBehavior.UpdateTriggerBindingBehavior;
 exports.AbstractRepeater = _abstractRepeater.AbstractRepeater;
+exports.RepeatStrategyLocator = _repeatStrategyLocator.RepeatStrategyLocator;

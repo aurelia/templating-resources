@@ -343,7 +343,7 @@
                   "type": {
                     "type": "reference",
                     "name": "View",
-                    "id": 1666,
+                    "id": 1672,
                     "moduleName": "\"aurelia-templating\""
                   }
                 }
@@ -1096,7 +1096,7 @@
                   "type": {
                     "type": "reference",
                     "name": "View",
-                    "id": 1666,
+                    "id": 1672,
                     "moduleName": "\"aurelia-templating\""
                   }
                 }
@@ -3326,7 +3326,7 @@
                   "type": {
                     "type": "reference",
                     "name": "View",
-                    "id": 1666,
+                    "id": 1672,
                     "moduleName": "\"aurelia-templating\""
                   }
                 }
@@ -5528,6 +5528,41 @@
       }
     },
     {
+      "id": 419,
+      "name": "configure",
+      "kind": 64,
+      "kindString": "Function",
+      "flags": {
+        "isExported": true
+      },
+      "signatures": [
+        {
+          "id": 420,
+          "name": "configure",
+          "kind": 4096,
+          "kindString": "Call signature",
+          "flags": {},
+          "parameters": [
+            {
+              "id": 421,
+              "name": "config",
+              "kind": 32768,
+              "kindString": "Parameter",
+              "flags": {},
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ],
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        }
+      ]
+    },
+    {
       "id": 387,
       "name": "createFullOverrideContext",
       "kind": 64,
@@ -5608,6 +5643,41 @@
               "comment": {
                 "text": "The key in a key/value pair.\n"
               },
+              "type": {
+                "type": "instrinct",
+                "name": "any"
+              }
+            }
+          ],
+          "type": {
+            "type": "instrinct",
+            "name": "any"
+          }
+        }
+      ]
+    },
+    {
+      "id": 416,
+      "name": "getElementName",
+      "kind": 64,
+      "kindString": "Function",
+      "flags": {
+        "isExported": true
+      },
+      "signatures": [
+        {
+          "id": 417,
+          "name": "getElementName",
+          "kind": 4096,
+          "kindString": "Call signature",
+          "flags": {},
+          "parameters": [
+            {
+              "id": 418,
+              "name": "address",
+              "kind": 32768,
+              "kindString": "Parameter",
+              "flags": {},
               "type": {
                 "type": "instrinct",
                 "name": "any"
@@ -5990,7 +6060,9 @@
       "title": "Functions",
       "kind": 64,
       "children": [
+        419,
         387,
+        416,
         399,
         406,
         403,

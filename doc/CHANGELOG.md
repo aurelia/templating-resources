@@ -1,3 +1,13 @@
+### 1.0.0-beta.1.2.1 (2016-03-29)
+
+
+#### Bug Fixes
+
+* **exports:** export RepeatStrategyLocator ([1c3c4189](http://github.com/aurelia/templating-resources/commit/1c3c4189eb983c4430d31a41e68f664116de1361))
+* **html-resource-plugin:** handle query string and mixed casing ([86afdd8c](http://github.com/aurelia/templating-resources/commit/86afdd8c76192b0adcfb670482ff9ee8f40d7a03), closes [#203](http://github.com/aurelia/templating-resources/issues/203))
+* **index:** add missing import to re-export ([1f9d44b3](http://github.com/aurelia/templating-resources/commit/1f9d44b3dc1d40e536ad414ec11be1811fafa565))
+
+
 ### 1.0.0-beta.1.2.0 (2016-03-22)
 
 
