@@ -22,6 +22,11 @@ import {UpdateTriggerBindingBehavior} from './update-trigger-binding-behavior';
 import {AbstractRepeater} from './abstract-repeater';
 import {RepeatStrategyLocator} from './repeat-strategy-locator';
 import {configure as configureHtmlResourcePlugin} from './html-resource-plugin';
+import {NullRepeatStrategy} from './null-repeat-strategy';
+import {ArrayRepeatStrategy} from './array-repeat-strategy';
+import {MapRepeatStrategy} from './map-repeat-strategy';
+import {SetRepeatStrategy} from './set-repeat-strategy';
+import {NumberRepeatStrategy} from './number-repeat-strategy';
 
 function configure(config) {
   if (FEATURE.shadowDOM) {
@@ -82,5 +87,10 @@ export {
   BindingSignaler,
   UpdateTriggerBindingBehavior,
   AbstractRepeater,
-  RepeatStrategyLocator
+  RepeatStrategyLocator,
+  NullRepeatStrategy,
+  ArrayRepeatStrategy,
+  MapRepeatStrategy,
+  SetRepeatStrategy,
+  NumberRepeatStrategy
 };
