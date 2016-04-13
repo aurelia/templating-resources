@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.RepeatStrategyLocator = exports.AbstractRepeater = exports.UpdateTriggerBindingBehavior = exports.BindingSignaler = exports.SignalBindingBehavior = exports.DebounceBindingBehavior = exports.ThrottleBindingBehavior = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.configure = exports.ViewSpy = exports.CompileSpy = exports.Focus = exports.Replaceable = exports.SanitizeHTMLValueConverter = exports.HTMLSanitizer = exports.Hide = exports.Show = exports.Repeat = exports.With = exports.If = exports.Compose = undefined;
+exports.NumberRepeatStrategy = exports.SetRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.NullRepeatStrategy = exports.RepeatStrategyLocator = exports.AbstractRepeater = exports.UpdateTriggerBindingBehavior = exports.BindingSignaler = exports.SignalBindingBehavior = exports.DebounceBindingBehavior = exports.ThrottleBindingBehavior = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.configure = exports.ViewSpy = exports.CompileSpy = exports.Focus = exports.Replaceable = exports.SanitizeHTMLValueConverter = exports.HTMLSanitizer = exports.Hide = exports.Show = exports.Repeat = exports.With = exports.If = exports.Compose = undefined;
 
 var _compose = require('./compose');
 
@@ -53,6 +53,16 @@ var _repeatStrategyLocator = require('./repeat-strategy-locator');
 
 var _htmlResourcePlugin = require('./html-resource-plugin');
 
+var _nullRepeatStrategy = require('./null-repeat-strategy');
+
+var _arrayRepeatStrategy = require('./array-repeat-strategy');
+
+var _mapRepeatStrategy = require('./map-repeat-strategy');
+
+var _setRepeatStrategy = require('./set-repeat-strategy');
+
+var _numberRepeatStrategy = require('./number-repeat-strategy');
+
 function configure(config) {
   if (_aureliaPal.FEATURE.shadowDOM) {
     _aureliaPal.DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
@@ -97,3 +107,8 @@ exports.BindingSignaler = _bindingSignaler.BindingSignaler;
 exports.UpdateTriggerBindingBehavior = _updateTriggerBindingBehavior.UpdateTriggerBindingBehavior;
 exports.AbstractRepeater = _abstractRepeater.AbstractRepeater;
 exports.RepeatStrategyLocator = _repeatStrategyLocator.RepeatStrategyLocator;
+exports.NullRepeatStrategy = _nullRepeatStrategy.NullRepeatStrategy;
+exports.ArrayRepeatStrategy = _arrayRepeatStrategy.ArrayRepeatStrategy;
+exports.MapRepeatStrategy = _mapRepeatStrategy.MapRepeatStrategy;
+exports.SetRepeatStrategy = _setRepeatStrategy.SetRepeatStrategy;
+exports.NumberRepeatStrategy = _numberRepeatStrategy.NumberRepeatStrategy;

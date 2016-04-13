@@ -1,6 +1,6 @@
 {
   "name": "aurelia-templating-resources",
-  "version": "1.0.0-beta.1.2.1",
+  "version": "1.0.0-beta.1.2.2",
   "description": "A standard set of behaviors, converters and other resources for use with the Aurelia templating library.",
   "keywords": [
     "aurelia",
@@ -20,10 +20,22 @@
   },
   "jspm": {
     "registry": "npm",
+    "jspmPackage": true,
     "main": "aurelia-templating-resources",
     "format": "amd",
     "directories": {
       "dist": "dist/amd"
+    },
+    "peerDependencies": {
+      "aurelia-binding": "^1.0.0-beta.1.1.0",
+      "aurelia-dependency-injection": "^1.0.0-beta.1.1.2",
+      "aurelia-loader": "^1.0.0-beta.1.1.0",
+      "aurelia-logging": "^1.0.0-beta.1.1.1",
+      "aurelia-metadata": "^1.0.0-beta.1.1.6",
+      "aurelia-pal": "^1.0.0-beta.1.1.1",
+      "aurelia-path": "^1.0.0-beta.1.1.0",
+      "aurelia-task-queue": "^1.0.0-beta.1.1.0",
+      "aurelia-templating": "^1.0.0-beta.1.1.0"
     },
     "dependencies": {
       "aurelia-binding": "^1.0.0-beta.1.1.0",

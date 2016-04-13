@@ -1,7 +1,7 @@
 'use strict';
 
-System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './css-resource', 'aurelia-pal', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin'], function (_export, _context) {
-  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin;
+System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './css-resource', 'aurelia-pal', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy'], function (_export, _context) {
+  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy;
 
   function configure(config) {
     if (FEATURE.shadowDOM) {
@@ -76,6 +76,16 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       RepeatStrategyLocator = _repeatStrategyLocator.RepeatStrategyLocator;
     }, function (_htmlResourcePlugin) {
       configureHtmlResourcePlugin = _htmlResourcePlugin.configure;
+    }, function (_nullRepeatStrategy) {
+      NullRepeatStrategy = _nullRepeatStrategy.NullRepeatStrategy;
+    }, function (_arrayRepeatStrategy) {
+      ArrayRepeatStrategy = _arrayRepeatStrategy.ArrayRepeatStrategy;
+    }, function (_mapRepeatStrategy) {
+      MapRepeatStrategy = _mapRepeatStrategy.MapRepeatStrategy;
+    }, function (_setRepeatStrategy) {
+      SetRepeatStrategy = _setRepeatStrategy.SetRepeatStrategy;
+    }, function (_numberRepeatStrategy) {
+      NumberRepeatStrategy = _numberRepeatStrategy.NumberRepeatStrategy;
     }],
     execute: function () {
       _export('Compose', Compose);
@@ -123,6 +133,16 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       _export('AbstractRepeater', AbstractRepeater);
 
       _export('RepeatStrategyLocator', RepeatStrategyLocator);
+
+      _export('NullRepeatStrategy', NullRepeatStrategy);
+
+      _export('ArrayRepeatStrategy', ArrayRepeatStrategy);
+
+      _export('MapRepeatStrategy', MapRepeatStrategy);
+
+      _export('SetRepeatStrategy', SetRepeatStrategy);
+
+      _export('NumberRepeatStrategy', NumberRepeatStrategy);
     }
   };
 });

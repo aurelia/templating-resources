@@ -1,3 +1,7 @@
+### 1.0.0-beta.1.2.2 (2016-04-13)
+
+* fix(index): export repeat strategies
+
 ### 1.0.0-beta.1.2.1 (2016-03-29)
 
 
