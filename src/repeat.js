@@ -148,6 +148,9 @@ export class Repeat extends AbstractRepeater {
   * Invoked when the underlying collection changes.
   */
   handleCollectionMutated(collection, changes) {
+    if (!this.collectionObserver) {
+      return;
+    }
     this.strategy.instanceMutated(this, collection, changes);
   }
 
@@ -155,6 +158,9 @@ export class Repeat extends AbstractRepeater {
   * Invoked when the underlying inner collection changes.
   */
   handleInnerCollectionMutated(collection, changes) {
+    if (!this.collectionObserver) {
+      return;
+    }
     // guard against source expressions that have observable side-effects that could
     // cause an infinite loop- eg a value converter that mutates the source array.
     if (this.ignoreMutation) {
