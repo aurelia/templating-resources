@@ -204,7 +204,7 @@ function describeArrayTests(viewsRequireLifecycle) {
       nq(() => validateState());
       nq(() => {
         viewModel.items.pop();
-//        viewModel.items.pop();  // todo: report bug
+        viewModel.items.pop();
       });
       nq(() => validateState());
       nq(() => viewModel.items.pop());
@@ -227,7 +227,7 @@ function describeArrayTests(viewsRequireLifecycle) {
       nq(() => validateState());
       nq(() => {
         viewModel.items.shift();
-  //      viewModel.items.shift();  // todo: report bug
+        viewModel.items.shift();
       });
       nq(() => validateState());
       nq(() => viewModel.items.shift());
