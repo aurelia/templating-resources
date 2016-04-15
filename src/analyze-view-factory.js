@@ -7,10 +7,9 @@ export const lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'wit
 function behaviorRequiresLifecycle(instruction) {
   let t = instruction.type;
   let name = t.elementName !== null ? t.elementName : t.attributeName;
-  if (lifecycleOptionalBehaviors.indexOf(name) === -1) {
-    return t.handlesAttached || t.handlesBind || t.handlesCreated || t.handlesDetached || t.handlesUnbind;
-  }
-  return instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
+  return lifecycleOptionalBehaviors.indexOf(name) === -1 && (t.handlesAttached || t.handlesBind || t.handlesCreated || t.handlesDetached || t.handlesUnbind)
+    || t.viewFactory && viewsRequireLifecycle(t.viewFactory)
+    || instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
 }
 
 function targetRequiresLifecycle(instruction) {
