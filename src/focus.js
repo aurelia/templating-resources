@@ -1,4 +1,4 @@
-﻿import {customAttribute} from 'aurelia-templating';
+import {customAttribute} from 'aurelia-templating';
 import {bindingMode} from 'aurelia-binding';
 import {inject} from 'aurelia-dependency-injection';
 import {TaskQueue} from 'aurelia-task-queue';
@@ -18,6 +18,8 @@ export class Focus {
   constructor(element, taskQueue) {
     this.element = element;
     this.taskQueue = taskQueue;
+    this.isAttached = false;
+    this.needsApply = false;
 
     this.focusListener = e => {
       this.value = true;
@@ -34,25 +36,33 @@ export class Focus {
   * @param newValue The new value.
   */
   valueChanged(newValue) {
-    if (newValue) {
-      this._giveFocus();
+    if (this.isAttached) {
+      this._apply();
     } else {
-      this.element.blur();
+      this.needsApply = true;
     }
   }
 
-  _giveFocus() {
-    this.taskQueue.queueMicroTask(() => {
-      if (this.value) {
-        this.element.focus();
-      }
-    });
+  _apply() {
+    if (this.value) {
+      this.taskQueue.queueMicroTask(() => {
+        if (this.value) {
+          this.element.focus();
+        }
+      });
+    } else {
+      this.element.blur();
+    }
   }
 
   /**
   * Invoked when the attribute is attached to the DOM.
   */
   attached() {
+    this.isAttached = true;
+    if (this.needsApply) {
+      this._apply();
+    }
     this.element.addEventListener('focus', this.focusListener);
     this.element.addEventListener('blur', this.blurListener);
   }
@@ -61,6 +71,7 @@ export class Focus {
   * Invoked when the attribute is detached from the DOM.
   */
   detached() {
+    this.isAttached = false;
     this.element.removeEventListener('focus', this.focusListener);
     this.element.removeEventListener('blur', this.blurListener);
   }
