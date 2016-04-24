@@ -1,4 +1,4 @@
-import {createFullOverrideContext, updateOverrideContexts} from './repeat-utilities';
+import {createFullOverrideContext, updateOverrideContexts, updateOverrideContext, indexOf} from './repeat-utilities';
 import {mergeSplice} from 'aurelia-binding';
 
 /**
@@ -20,16 +20,100 @@ export class ArrayRepeatStrategy {
   * @param items The new array instance.
   */
   instanceChanged(repeat, items) {
-    if (repeat.viewsRequireLifecycle) {
-      let removePromise = repeat.removeAllViews(true);
-      if (removePromise instanceof Promise) {
-        removePromise.then(() => this._standardProcessInstanceChanged(repeat, items));
-        return;
-      }
+    const itemsLength = items.length;
+    
+    // if the new instance does not contain any items, 
+    // just remove all views and don't do any further processing
+    if (!items || itemsLength === 0) {
+      repeat.removeAllViews(true);
+      return;
+    }
+    
+    const children = repeat.views();
+    const viewsLength = children.length;
+    
+    // likewise, if we previously didn't have any views, 
+    // simply make them and return
+    if (viewsLength === 0) {
       this._standardProcessInstanceChanged(repeat, items);
       return;
     }
-    this._inPlaceProcessItems(repeat, items);
+    
+    if (repeat.viewsRequireLifecycle) {
+      const childrenSnapshot = children.slice(0);
+      const itemNameInBindingContext = repeat.local;
+      const matcher = repeat.matcher();
+      
+      // the cache of the current state (it will be transformed along with the views to keep track of indicies)
+      let itemsPreviouslyInViews = [];
+      const viewsToRemove = [];
+      
+      for (let index = 0; index < viewsLength; index++) {
+        const view = childrenSnapshot[index];
+        const oldItem = view.bindingContext[itemNameInBindingContext];
+        
+        if (indexOf(items, oldItem, matcher) === -1) {
+          // remove the item if no longer in the new instance of items
+          viewsToRemove.push(view);
+        } else {
+          // or add the item to the cache list
+          itemsPreviouslyInViews.push(oldItem);
+        }
+      }
+      
+      let updateViews;
+      let removePromise;
+      
+      if (itemsPreviouslyInViews.length > 0) {
+        removePromise = repeat.removeViews(viewsToRemove, true);
+        updateViews = () => {
+          // update views (create new and move existing)
+          for (let index = 0; index < itemsLength; index++) {
+            const item = items[index];
+            const indexOfView = indexOf(itemsPreviouslyInViews, item, matcher, index);
+            let view;
+            
+            if (indexOfView === -1) { // create views for new items
+              const overrideContext = createFullOverrideContext(repeat, items[index], index, itemsLength);
+              repeat.insertView(index, overrideContext.bindingContext, overrideContext);
+              // reflect the change in our cache list so indicies are valid
+              itemsPreviouslyInViews.splice(index, 0, undefined);
+            }
+            else if (indexOfView === index) { // leave unchanged items
+              view = children[indexOfView];
+              itemsPreviouslyInViews[indexOfView] = undefined;
+            }
+            else { // move the element to the right place
+              view = children[indexOfView];
+              repeat.moveView(indexOfView, index);
+              itemsPreviouslyInViews.splice(indexOfView, 1);
+              itemsPreviouslyInViews.splice(index, 0, undefined);
+            }
+            
+            if (view) {
+              updateOverrideContext(view.overrideContext, index, itemsLength);
+            }
+          }
+          
+          // remove extraneous elements in case of duplicates, 
+          // also update binding contexts if objects changed using the matcher function
+          this._inPlaceProcessItems(repeat, items);
+        }
+      } else {
+        // if all of the items are different, remove all and add all from scratch
+        removePromise = repeat.removeAllViews(true);
+        updateViews = () => this._standardProcessInstanceChanged(repeat, items);
+      }
+      
+      if (removePromise instanceof Promise) {
+        removePromise.then(updateViews);
+      } else {
+        updateViews();
+      }
+    } else {
+      // no lifecycle needed, use the fast in-place processing
+      this._inPlaceProcessItems(repeat, items);
+    }
   }
 
   _standardProcessInstanceChanged(repeat, items) {

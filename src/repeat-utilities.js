@@ -113,3 +113,21 @@ export function updateOneTimeBinding(binding) {
     binding.updateOneTimeBindings();
   }
 }
+
+/**
+ * Returns the index of the element in an array, optionally using a matcher function.
+ */
+export function indexOf(array, item, matcher, startIndex) {
+  if (!matcher) {
+    // native indexOf is more performant than a for loop
+    return array.indexOf(item);
+  }
+  const length = array.length;
+  for (let index = startIndex || 0; index <= length; index++) {
+    const testItem = array[index];
+    if (matcher(testItem, item)) {
+      return index;
+    }
+  }
+  return -1;
+}

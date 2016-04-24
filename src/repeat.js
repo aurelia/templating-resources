@@ -92,6 +92,7 @@ export class Repeat extends AbstractRepeater {
   */
   bind(bindingContext, overrideContext) {
     this.scope = { bindingContext, overrideContext };
+    this.matcherBinding = this._captureAndRemoveMatcherBinding();
     this.itemsChanged();
   }
 
@@ -101,6 +102,7 @@ export class Repeat extends AbstractRepeater {
   unbind() {
     this.scope = null;
     this.items = null;
+    this.matcherBinding = null;
     this.viewSlot.removeAll(true);
     this._unsubscribeCollection();
   }
@@ -204,11 +206,31 @@ export class Repeat extends AbstractRepeater {
       this.collectionObserver.subscribe(this.callContext, this);
     }
   }
+  
+  _captureAndRemoveMatcherBinding() {
+    if (this.viewFactory.viewFactory) {
+      const instructions = this.viewFactory.viewFactory.instructions;
+      const instructionIds = Object.keys(instructions);
+      for (let i = 0; i < instructionIds.length; i++) {
+        const expressions = instructions[instructionIds[i]].expressions;
+        if (expressions) {
+          for (let ii = 0; i < expressions.length; i++) {
+            if (expressions[ii].targetProperty === 'matcher') {
+              const matcherBinding = expressions[ii];
+              expressions.splice(ii, 1);
+              return matcherBinding;
+            }
+          }
+        }
+      }
+    }
+  }
 
   // @override AbstractRepeater
   viewCount() { return this.viewSlot.children.length; }
   views() { return this.viewSlot.children; }
   view(index) { return this.viewSlot.children[index]; }
+  matcher() { return this.matcherBinding ? this.matcherBinding.sourceExpression.evaluate(this.scope, this.matcherBinding.lookupFunctions) : null; }
 
   addView(bindingContext, overrideContext) {
     let view = this.viewFactory.create();
@@ -221,9 +243,17 @@ export class Repeat extends AbstractRepeater {
     view.bind(bindingContext, overrideContext);
     this.viewSlot.insert(index, view);
   }
+  
+  moveView(sourceIndex, targetIndex) {
+    this.viewSlot.move(sourceIndex, targetIndex);
+  }
 
   removeAllViews(returnToCache, skipAnimation) {
     return this.viewSlot.removeAll(returnToCache, skipAnimation);
+  }
+
+  removeViews(viewsToRemove, returnToCache, skipAnimation) {
+    return this.viewSlot.removeMany(viewsToRemove, returnToCache, skipAnimation);
   }
 
   removeView(index, returnToCache, skipAnimation) {
