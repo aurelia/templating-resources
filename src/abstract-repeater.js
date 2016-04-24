@@ -39,6 +39,15 @@ export class AbstractRepeater {
   }
 
   /**
+   * Returns the matcher function to be used by the repeater, or null if strict matching is to be performed.
+   *
+   * @return {Function|null} The requested matcher function.
+   */
+  matcher() {
+    throw new Error('subclass must implement `matcher`');
+  }
+
+  /**
    * Adds a view to the repeater, binding the view to the
    * provided contexts.
    *
@@ -60,6 +69,16 @@ export class AbstractRepeater {
   insertView(index, bindingContext, overrideContext) {
     throw new Error('subclass must implement `insertView`');
   }
+  
+  /**
+   * Moves a view across the repeater.
+   *
+   * @param {Number} sourceIndex The index of the view to be moved.
+   * @param {Number} sourceIndex The index where the view should be placed at.
+   */
+  moveView(sourceIndex, targetIndex) {
+    throw new Error('subclass must implement `moveView`');
+  }
 
   /**
    * Removes all views from the repeater.
@@ -69,6 +88,18 @@ export class AbstractRepeater {
    */
   removeAllViews(returnToCache?: boolean, skipAnimation?: boolean) {
     throw new Error('subclass must implement `removeAllViews`');
+  }
+
+  /**
+   * Removes an array of Views from the repeater.
+   *
+   * @param {Array} viewsToRemove The array of views to be removed.
+   * @param {Boolean} returnToCache Should the view be returned to the view cache?
+   * @param {Boolean} skipAnimation Should the removal animation be skipped?
+   * @return {Promise|null}
+   */
+  removeViews(viewsToRemove: Array<View>, returnToCache?: boolean, skipAnimation?: boolean) {
+    throw new Error('subclass must implement `removeView`');
   }
 
   /**

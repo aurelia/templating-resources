@@ -151,15 +151,16 @@ function hasSetSubscribers(set) {
 function describeArrayTests(viewsRequireLifecycle) {
   let viewModel, controller;
 
-  function validateState() {
-    // validate DOM
-    let expectedContent = viewModel.items.map(x => x === null || x === undefined ? '' : x.toString());
-    expect(selectContent(controller, 'div')).toEqual(expectedContent);
-
-    // validate contextual data
+  function validateContextualData(isObject = false) {
     let views = controller.view.children[0].children;
     for (let i = 0; i < viewModel.items.length; i++) {
-      expect(views[i].bindingContext.item).toBe(viewModel.items[i]);
+      if (!isObject) {
+        expect(views[i].bindingContext.item).toBe(viewModel.items[i]);
+      } else {
+        expect(views[i].bindingContext.item.id).toBe(viewModel.items[i].id);
+        expect(views[i].bindingContext.item.text).toBe(viewModel.items[i].text);
+      }
+      
       let overrideContext = views[i].overrideContext;
       expect(overrideContext.parentOverrideContext.bindingContext).toBe(viewModel);
       expect(overrideContext.bindingContext).toBe(views[i].bindingContext);
@@ -173,6 +174,24 @@ function describeArrayTests(viewsRequireLifecycle) {
       expect(overrideContext.$odd).toBe(!even);
       expect(overrideContext.$even).toBe(even);
     }
+  }
+
+  function validateState() {
+    // validate DOM
+    let expectedContent = viewModel.items.map(x => x === null || x === undefined ? '' : x.toString());
+    expect(selectContent(controller, 'div')).toEqual(expectedContent);
+
+    // validate contextual data
+    validateContextualData();
+  }
+  
+  function validateObjectState() {
+    // validate DOM
+    let expectedContent = viewModel.items.map(x => x === null || x === undefined ? '' : x.text.toString());
+    expect(selectContent(controller, 'div')).toEqual(expectedContent);
+
+    // validate contextual data
+    validateContextualData(true);
   }
 
   describe('direct expression', () => {
@@ -332,7 +351,522 @@ function describeArrayTests(viewsRequireLifecycle) {
       nq(() => done());
     });
   });
+  
+  describe('reuse elements', () => {
+    beforeEach(() => {
+      let template = `<template><div repeat.for="item of items">\${item}</div></template>`;
+      viewModel = { items: ['a', 'b', 'c'] };
+      controller = createController(template, viewModel, viewsRequireLifecycle);
+      validateState();
+    });
 
+    afterEach(() => {
+      controller.unbind();
+      expect(hasSubscribers(viewModel, 'items')).toBe(false);
+      expect(hasArraySubscribers(viewModel.items)).toBe(false);
+    });
+
+    it('handles untouched items (new Array instance)', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => {
+        viewModel.items = ['a', 'b', 'c'];
+      });
+      nq(() => validateState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        expect(newDivs[0]).toBe(divs[0]);
+        expect(newDivs[1]).toBe(divs[1]);
+        expect(newDivs[2]).toBe(divs[2]);
+        expect(newDivs.length).toBe(3);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles new item at the end', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => {
+        viewModel.items = ['a', 'b', 'c', 'new'];
+      });
+      nq(() => validateState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        expect(newDivs[0]).toBe(divs[0]);
+        expect(newDivs[1]).toBe(divs[1]);
+        expect(newDivs[2]).toBe(divs[2]);
+        expect(newDivs[3].innerText).toBe('new');
+        expect(newDivs.length).toBe(4);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles new item at the beginning', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => {
+        viewModel.items = ['new', 'a', 'b', 'c'];
+      });
+      nq(() => validateState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        expect(newDivs[0].innerText).toBe('new');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[1]).toBe(divs[0]);
+          expect(newDivs[2]).toBe(divs[1]);
+          expect(newDivs[3]).toBe(divs[2]);
+        } else {
+          expect(newDivs[1].innerText).toBe('a');
+          expect(newDivs[2].innerText).toBe('b');
+          expect(newDivs[3].innerText).toBe('c');
+        }
+        expect(newDivs.length).toBe(4);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles new item in the middle', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => {
+        viewModel.items = ['a', 'b', 'new', 'c'];
+      });
+      nq(() => validateState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[0]).toBe(divs[0]);
+          expect(newDivs[1]).toBe(divs[1]);
+          expect(newDivs[3]).toBe(divs[2]);
+        } else {
+          expect(newDivs[0].innerText).toBe('a');
+          expect(newDivs[1].innerText).toBe('b');
+          expect(newDivs[3].innerText).toBe('c');
+        }
+        expect(newDivs[2].innerText).toBe('new');
+        expect(newDivs.length).toBe(4);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles removed item at the beginning', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => {
+        viewModel.items = ['b', 'c'];
+      });
+      nq(() => validateState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[0]).toBe(divs[1]);
+          expect(newDivs[1]).toBe(divs[2]);
+        } else {
+          expect(newDivs[0].innerText).toBe('b');
+          expect(newDivs[1].innerText).toBe('c');
+        }
+        expect(newDivs.length).toBe(2);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles removed item in the middle', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => {
+        viewModel.items = ['a', 'c'];
+      });
+      nq(() => validateState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[0]).toBe(divs[0]);
+          expect(newDivs[1]).toBe(divs[2]);
+        } else {
+          expect(newDivs[0].innerText).toBe('a');
+          expect(newDivs[1].innerText).toBe('c');
+        }
+        expect(newDivs.length).toBe(2);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles removed item at the end', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => {
+        viewModel.items = ['a', 'b'];
+      });
+      nq(() => validateState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[0]).toBe(divs[0]);
+          expect(newDivs[1]).toBe(divs[1]);
+        } else {
+          expect(newDivs[0].innerText).toBe('a');
+          expect(newDivs[1].innerText).toBe('b');
+        }
+        expect(newDivs.length).toBe(2);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles removed all items', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => {
+        viewModel.items = [];
+      });
+      nq(() => validateState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        expect(newDivs.length).toBe(0);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles moved items', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => {
+        viewModel.items = ['c', 'b', 'a'];
+      });
+      nq(() => validateState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[0]).toBe(divs[2]);
+          expect(newDivs[1]).toBe(divs[1]);
+          expect(newDivs[2]).toBe(divs[0]);
+        } else {
+          expect(newDivs[0].innerText).toBe('c');
+          expect(newDivs[1].innerText).toBe('b');
+          expect(newDivs[2].innerText).toBe('a');
+        }
+        expect(newDivs.length).toBe(3);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles untouched, moved, added and removed items at once', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => {
+        viewModel.items = ['c', 'b', 'new'];
+      });
+      nq(() => validateState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[0]).toBe(divs[2]);
+          expect(newDivs[1]).toBe(divs[1]);
+        } else {
+          expect(newDivs[0].innerText).toBe('c');
+          expect(newDivs[1].innerText).toBe('b');
+        }
+        expect(newDivs[2].innerText).toBe('new');
+        expect(newDivs.length).toBe(3);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles duplicate items at the end', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => {
+        viewModel.items = ['a', 'b', 'c', 'c'];
+      });
+      nq(() => validateState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[0]).toBe(divs[0]);
+          expect(newDivs[1]).toBe(divs[1]);
+          expect(newDivs[2]).toBe(divs[2]);
+        } else {
+          expect(newDivs[0].innerText).toBe('a');
+          expect(newDivs[1].innerText).toBe('b');
+          expect(newDivs[2].innerText).toBe('c');
+        }
+        expect(newDivs[3].innerText).toBe('c');
+        expect(newDivs.length).toBe(4);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => {
+        viewModel.items = ['a', 'b', 'c'];
+      });
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        expect(newDivs[0]).toBe(divs[0]);
+        expect(newDivs[1]).toBe(divs[1]);
+        expect(newDivs[2]).toBe(divs[2]);
+        expect(newDivs.length).toBe(3);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => validateState());
+      nq(() => done());
+    });
+
+    it('handles multiple duplicate items in various places', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => {
+        viewModel.items = ['a', 'a', 'b', 'b', 'c', 'c'];
+      });
+      nq(() => validateState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[0]).toBe(divs[0]);
+          expect(newDivs[2]).toBe(divs[1]);
+          expect(newDivs[4]).toBe(divs[2]);
+        } else {
+          expect(newDivs[0].innerText).toBe('a');
+          expect(newDivs[2].innerText).toBe('b');
+          expect(newDivs[4].innerText).toBe('c');
+        }
+        expect(newDivs[1].innerText).toBe('a');
+        expect(newDivs[3].innerText).toBe('b');
+        expect(newDivs[5].innerText).toBe('c');
+        expect(newDivs.length).toBe(6);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => {
+        viewModel.items = ['a', 'b', 'c'];
+      });
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[0]).toBe(divs[0]);
+          expect(newDivs[1]).toBe(divs[1]);
+          expect(newDivs[2]).toBe(divs[2]);
+        } else {
+          // reuse old divs with new values
+          expect(newDivs[0]).toBe(divs[0]);
+          expect(newDivs[1]).toBe(divs[1]);
+          expect(newDivs[2]).toBe(divs[2]);
+          expect(newDivs[0].innerText).toBe('a');
+          expect(newDivs[1].innerText).toBe('b');
+          expect(newDivs[2].innerText).toBe('c');
+        }
+        expect(newDivs.length).toBe(3);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => validateState());
+      nq(() => done());
+    });
+
+    it('handles adding multiple items when none existed', done => {
+      let observer;
+      nq(() => {
+        viewModel.items = [];
+      });
+      nq(() => validateState());
+      nq(() => {
+        viewModel.items = ['a', 'b', 'c'];
+        observer = observerLocator.getArrayObserver(viewModel.items);
+      });
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        expect(newDivs[0].innerText).toBe('a');
+        expect(newDivs[1].innerText).toBe('b');
+        expect(newDivs[2].innerText).toBe('c');
+        expect(newDivs.length).toBe(3);
+        expect(observer.hasSubscribers()).toBe(true);
+      });
+      nq(() => done());
+    });
+  });
+  
+  describe('reuse elements with a matcher', () => {
+    beforeEach(() => {
+      let template = `<template><div repeat.for="item of items" matcher.bind="matcher">\${item.text}</div></template>`;
+      viewModel = {
+        items: [{ id: 0, text: 'a' }, { id: 1, text: 'b' }, { id: 2, text: 'c' }],
+        matcher: (a, b) => a.id === b.id
+      };
+      controller = createController(template, viewModel, viewsRequireLifecycle);
+      validateObjectState();
+    });
+
+    afterEach(() => {
+      controller.unbind();
+      expect(hasSubscribers(viewModel, 'items')).toBe(false);
+      expect(hasArraySubscribers(viewModel.items)).toBe(false);
+    });
+    
+    it('handles new items, same content', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+      });
+      nq(() => {
+        viewModel.items = [{ id: 0, text: 'a' }, { id: 1, text: 'b' }, { id: 2, text: 'c' }];
+      });
+      nq(() => validateObjectState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[0]).toBe(divs[0]);
+          expect(newDivs[1]).toBe(divs[1]);
+          expect(newDivs[2]).toBe(divs[2]);
+        } else {
+          expect(newDivs[0].innerText).toBe('a');
+          expect(newDivs[1].innerText).toBe('b');
+          expect(newDivs[2].innerText).toBe('c');
+        }
+        expect(newDivs.length).toBe(3);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles new items, different content', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+      });
+      nq(() => {
+        viewModel.items = [{ id: 0, text: 'a' }, { id: 1, text: 'c' }, { id: 2, text: 'b' }];
+      });
+      nq(() => validateObjectState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        expect(newDivs[0]).toBe(divs[0]);
+        expect(newDivs[1]).toBe(divs[1]);
+        expect(newDivs[2]).toBe(divs[2]);
+        expect(newDivs[0].innerText).toBe('a');
+        expect(newDivs[1].innerText).toBe('c');
+        expect(newDivs[2].innerText).toBe('b');
+        expect(newDivs.length).toBe(3);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles new items shifted, same content', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+      });
+      nq(() => {
+        viewModel.items = [{ id: 1, text: 'b' }, { id: 2, text: 'c' }, { id: 0, text: 'a' }];
+      });
+      nq(() => validateObjectState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[0]).toBe(divs[1]);
+          expect(newDivs[1]).toBe(divs[2]);
+          expect(newDivs[2]).toBe(divs[0]);
+        } else {
+          expect(newDivs[0]).toBe(divs[0]);
+          expect(newDivs[1]).toBe(divs[1]);
+          expect(newDivs[2]).toBe(divs[2]);
+        }
+        expect(newDivs[0].innerText).toBe('b');
+        expect(newDivs[1].innerText).toBe('c');
+        expect(newDivs[2].innerText).toBe('a');
+        expect(newDivs.length).toBe(3);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+
+    it('handles new items shifted with new content', done => {
+      let observer = observerLocator.getArrayObserver(viewModel.items);
+      let divs;
+      nq(() => {
+        divs = select(controller, 'div');
+      });
+      nq(() => {
+        viewModel.items = [{ id: 1, text: 'new' }, { id: 2, text: 'new' }, { id: 0, text: 'new' }];
+      });
+      nq(() => validateObjectState());
+      nq(() => {
+        const newDivs = select(controller, 'div');
+        if (viewsRequireLifecycle) {
+          expect(newDivs[0]).toBe(divs[1]);
+          expect(newDivs[1]).toBe(divs[2]);
+          expect(newDivs[2]).toBe(divs[0]);
+        }
+        else {
+          expect(newDivs[0]).toBe(divs[0]);
+          expect(newDivs[1]).toBe(divs[1]);
+          expect(newDivs[2]).toBe(divs[2]);
+        }
+        expect(newDivs[0].innerText).toBe('new');
+        expect(newDivs[1].innerText).toBe('new');
+        expect(newDivs[2].innerText).toBe('new');
+        expect(newDivs.length).toBe(3);
+        expect(observer.hasSubscribers()).toBe(false);
+      });
+      nq(() => done());
+    });
+  });
+  
   describe('with converter that returns original instance', () => {
     beforeEach(() => {
       let template = `<template><div repeat.for="item of items | noopValueConverter">\${item}</div></template>`;
