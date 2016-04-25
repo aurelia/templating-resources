@@ -123,9 +123,8 @@ export function indexOf(array, item, matcher, startIndex) {
     return array.indexOf(item);
   }
   const length = array.length;
-  for (let index = startIndex || 0; index <= length; index++) {
-    const testItem = array[index];
-    if (matcher(testItem, item)) {
+  for (let index = startIndex || 0; index < length; index++) {
+    if (matcher(array[index], item)) {
       return index;
     }
   }
