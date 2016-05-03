@@ -1,3 +1,14 @@
+### 1.0.0-beta.1.2.3 (2016-05-03)
+
+
+#### Bug Fixes
+
+* **Repeat:** ignore changes after unsubscribe ([96b721f9](http://github.com/aurelia/templating-resources/commit/96b721f9a2ea9662aa514481dd75271f5b4be413))
+* **analyze-view-factory:** analyze type's view-factory ([3cc65d97](http://github.com/aurelia/templating-resources/commit/3cc65d974cbfc0c7930fd7766f0d4b828de70965))
+* **focus:** focus on attach ([3991d999](http://github.com/aurelia/templating-resources/commit/3991d99902394bb9f692a83c857727115a6477df), closes [#199](http://github.com/aurelia/templating-resources/issues/199))
+* **repeat-utilities:** remove unnecessary variable and loop evaluation ([504c8e69](http://github.com/aurelia/templating-resources/commit/504c8e6936b034bfdc3556c15817e0c8e8056bf0))
+
+
 ### 1.0.0-beta.1.2.2 (2016-04-13)
 
 * fix(index): export repeat strategies

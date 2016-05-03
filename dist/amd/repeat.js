@@ -121,12 +121,14 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
 
     Repeat.prototype.bind = function bind(bindingContext, overrideContext) {
       this.scope = { bindingContext: bindingContext, overrideContext: overrideContext };
+      this.matcherBinding = this._captureAndRemoveMatcherBinding();
       this.itemsChanged();
     };
 
     Repeat.prototype.unbind = function unbind() {
       this.scope = null;
       this.items = null;
+      this.matcherBinding = null;
       this.viewSlot.removeAll(true);
       this._unsubscribeCollection();
     };
@@ -167,11 +169,18 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
     };
 
     Repeat.prototype.handleCollectionMutated = function handleCollectionMutated(collection, changes) {
+      if (!this.collectionObserver) {
+        return;
+      }
       this.strategy.instanceMutated(this, collection, changes);
     };
 
     Repeat.prototype.handleInnerCollectionMutated = function handleInnerCollectionMutated(collection, changes) {
       var _this2 = this;
+
+      if (!this.collectionObserver) {
+        return;
+      }
 
       if (this.ignoreMutation) {
         return;
@@ -213,6 +222,25 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       }
     };
 
+    Repeat.prototype._captureAndRemoveMatcherBinding = function _captureAndRemoveMatcherBinding() {
+      if (this.viewFactory.viewFactory) {
+        var instructions = this.viewFactory.viewFactory.instructions;
+        var instructionIds = Object.keys(instructions);
+        for (var i = 0; i < instructionIds.length; i++) {
+          var expressions = instructions[instructionIds[i]].expressions;
+          if (expressions) {
+            for (var ii = 0; i < expressions.length; i++) {
+              if (expressions[ii].targetProperty === 'matcher') {
+                var matcherBinding = expressions[ii];
+                expressions.splice(ii, 1);
+                return matcherBinding;
+              }
+            }
+          }
+        }
+      }
+    };
+
     Repeat.prototype.viewCount = function viewCount() {
       return this.viewSlot.children.length;
     };
@@ -223,6 +251,10 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
 
     Repeat.prototype.view = function view(index) {
       return this.viewSlot.children[index];
+    };
+
+    Repeat.prototype.matcher = function matcher() {
+      return this.matcherBinding ? this.matcherBinding.sourceExpression.evaluate(this.scope, this.matcherBinding.lookupFunctions) : null;
     };
 
     Repeat.prototype.addView = function addView(bindingContext, overrideContext) {
@@ -237,8 +269,16 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
       this.viewSlot.insert(index, view);
     };
 
+    Repeat.prototype.moveView = function moveView(sourceIndex, targetIndex) {
+      this.viewSlot.move(sourceIndex, targetIndex);
+    };
+
     Repeat.prototype.removeAllViews = function removeAllViews(returnToCache, skipAnimation) {
       return this.viewSlot.removeAll(returnToCache, skipAnimation);
+    };
+
+    Repeat.prototype.removeViews = function removeViews(viewsToRemove, returnToCache, skipAnimation) {
+      return this.viewSlot.removeMany(viewsToRemove, returnToCache, skipAnimation);
     };
 
     Repeat.prototype.removeView = function removeView(index, returnToCache, skipAnimation) {

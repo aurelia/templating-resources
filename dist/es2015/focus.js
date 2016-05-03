@@ -10,6 +10,8 @@ export let Focus = (_dec = customAttribute('focus', bindingMode.twoWay), _dec2 =
   constructor(element, taskQueue) {
     this.element = element;
     this.taskQueue = taskQueue;
+    this.isAttached = false;
+    this.needsApply = false;
 
     this.focusListener = e => {
       this.value = true;
@@ -22,27 +24,37 @@ export let Focus = (_dec = customAttribute('focus', bindingMode.twoWay), _dec2 =
   }
 
   valueChanged(newValue) {
-    if (newValue) {
-      this._giveFocus();
+    if (this.isAttached) {
+      this._apply();
+    } else {
+      this.needsApply = true;
+    }
+  }
+
+  _apply() {
+    if (this.value) {
+      this.taskQueue.queueMicroTask(() => {
+        if (this.value) {
+          this.element.focus();
+        }
+      });
     } else {
       this.element.blur();
     }
   }
 
-  _giveFocus() {
-    this.taskQueue.queueMicroTask(() => {
-      if (this.value) {
-        this.element.focus();
-      }
-    });
-  }
-
   attached() {
+    this.isAttached = true;
+    if (this.needsApply) {
+      this.needsApply = false;
+      this._apply();
+    }
     this.element.addEventListener('focus', this.focusListener);
     this.element.addEventListener('blur', this.blurListener);
   }
 
   detached() {
+    this.isAttached = false;
     this.element.removeEventListener('focus', this.focusListener);
     this.element.removeEventListener('blur', this.blurListener);
   }

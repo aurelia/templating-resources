@@ -10,6 +10,7 @@ exports.getItemsSourceExpression = getItemsSourceExpression;
 exports.unwrapExpression = unwrapExpression;
 exports.isOneTime = isOneTime;
 exports.updateOneTimeBinding = updateOneTimeBinding;
+exports.indexOf = indexOf;
 
 var _aureliaBinding = require('aurelia-binding');
 
@@ -88,4 +89,17 @@ function updateOneTimeBinding(binding) {
   } else if (binding.updateOneTimeBindings) {
     binding.updateOneTimeBindings();
   }
+}
+
+function indexOf(array, item, matcher, startIndex) {
+  if (!matcher) {
+    return array.indexOf(item);
+  }
+  var length = array.length;
+  for (var index = startIndex || 0; index < length; index++) {
+    if (matcher(array[index], item)) {
+      return index;
+    }
+  }
+  return -1;
 }

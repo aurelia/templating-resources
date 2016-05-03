@@ -206,7 +206,7 @@ export class Repeat extends AbstractRepeater {
       this.collectionObserver.subscribe(this.callContext, this);
     }
   }
-  
+
   _captureAndRemoveMatcherBinding() {
     if (this.viewFactory.viewFactory) {
       const instructions = this.viewFactory.viewFactory.instructions;
@@ -243,7 +243,7 @@ export class Repeat extends AbstractRepeater {
     view.bind(bindingContext, overrideContext);
     this.viewSlot.insert(index, view);
   }
-  
+
   moveView(sourceIndex, targetIndex) {
     this.viewSlot.move(sourceIndex, targetIndex);
   }

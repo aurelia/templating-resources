@@ -19,6 +19,10 @@ export let AbstractRepeater = class AbstractRepeater {
     throw new Error('subclass must implement `view`');
   }
 
+  matcher() {
+    throw new Error('subclass must implement `matcher`');
+  }
+
   addView(bindingContext, overrideContext) {
     throw new Error('subclass must implement `addView`');
   }
@@ -27,8 +31,16 @@ export let AbstractRepeater = class AbstractRepeater {
     throw new Error('subclass must implement `insertView`');
   }
 
+  moveView(sourceIndex, targetIndex) {
+    throw new Error('subclass must implement `moveView`');
+  }
+
   removeAllViews(returnToCache, skipAnimation) {
     throw new Error('subclass must implement `removeAllViews`');
+  }
+
+  removeViews(viewsToRemove, returnToCache, skipAnimation) {
+    throw new Error('subclass must implement `removeView`');
   }
 
   removeView(index, returnToCache, skipAnimation) {

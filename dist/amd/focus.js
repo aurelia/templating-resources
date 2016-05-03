@@ -22,6 +22,8 @@ define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-dependency-
 
       this.element = element;
       this.taskQueue = taskQueue;
+      this.isAttached = false;
+      this.needsApply = false;
 
       this.focusListener = function (e) {
         _this.value = true;
@@ -34,29 +36,39 @@ define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-dependency-
     }
 
     Focus.prototype.valueChanged = function valueChanged(newValue) {
-      if (newValue) {
-        this._giveFocus();
+      if (this.isAttached) {
+        this._apply();
+      } else {
+        this.needsApply = true;
+      }
+    };
+
+    Focus.prototype._apply = function _apply() {
+      var _this2 = this;
+
+      if (this.value) {
+        this.taskQueue.queueMicroTask(function () {
+          if (_this2.value) {
+            _this2.element.focus();
+          }
+        });
       } else {
         this.element.blur();
       }
     };
 
-    Focus.prototype._giveFocus = function _giveFocus() {
-      var _this2 = this;
-
-      this.taskQueue.queueMicroTask(function () {
-        if (_this2.value) {
-          _this2.element.focus();
-        }
-      });
-    };
-
     Focus.prototype.attached = function attached() {
+      this.isAttached = true;
+      if (this.needsApply) {
+        this.needsApply = false;
+        this._apply();
+      }
       this.element.addEventListener('focus', this.focusListener);
       this.element.addEventListener('blur', this.blurListener);
     };
 
     Focus.prototype.detached = function detached() {
+      this.isAttached = false;
       this.element.removeEventListener('focus', this.focusListener);
       this.element.removeEventListener('blur', this.blurListener);
     };

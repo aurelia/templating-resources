@@ -14,6 +14,7 @@ exports.getItemsSourceExpression = getItemsSourceExpression;
 exports.unwrapExpression = unwrapExpression;
 exports.isOneTime = isOneTime;
 exports.updateOneTimeBinding = updateOneTimeBinding;
+exports.indexOf = indexOf;
 exports._createDynamicElement = _createDynamicElement;
 exports._createCSSResource = _createCSSResource;
 exports.viewsRequireLifecycle = viewsRequireLifecycle;
@@ -395,6 +396,19 @@ function updateOneTimeBinding(binding) {
   }
 }
 
+function indexOf(array, item, matcher, startIndex) {
+  if (!matcher) {
+    return array.indexOf(item);
+  }
+  var length = array.length;
+  for (var index = startIndex || 0; index < length; index++) {
+    if (matcher(array[index], item)) {
+      return index;
+    }
+  }
+  return -1;
+}
+
 var NullRepeatStrategy = exports.NullRepeatStrategy = function () {
   function NullRepeatStrategy() {
     _classCallCheck(this, NullRepeatStrategy);
@@ -556,6 +570,8 @@ var Focus = exports.Focus = (_dec12 = (0, _aureliaTemplating.customAttribute)('f
 
     this.element = element;
     this.taskQueue = taskQueue;
+    this.isAttached = false;
+    this.needsApply = false;
 
     this.focusListener = function (e) {
       _this4.value = true;
@@ -568,29 +584,39 @@ var Focus = exports.Focus = (_dec12 = (0, _aureliaTemplating.customAttribute)('f
   }
 
   Focus.prototype.valueChanged = function valueChanged(newValue) {
-    if (newValue) {
-      this._giveFocus();
+    if (this.isAttached) {
+      this._apply();
+    } else {
+      this.needsApply = true;
+    }
+  };
+
+  Focus.prototype._apply = function _apply() {
+    var _this5 = this;
+
+    if (this.value) {
+      this.taskQueue.queueMicroTask(function () {
+        if (_this5.value) {
+          _this5.element.focus();
+        }
+      });
     } else {
       this.element.blur();
     }
   };
 
-  Focus.prototype._giveFocus = function _giveFocus() {
-    var _this5 = this;
-
-    this.taskQueue.queueMicroTask(function () {
-      if (_this5.value) {
-        _this5.element.focus();
-      }
-    });
-  };
-
   Focus.prototype.attached = function attached() {
+    this.isAttached = true;
+    if (this.needsApply) {
+      this.needsApply = false;
+      this._apply();
+    }
     this.element.addEventListener('focus', this.focusListener);
     this.element.addEventListener('blur', this.blurListener);
   };
 
   Focus.prototype.detached = function detached() {
+    this.isAttached = false;
     this.element.removeEventListener('focus', this.focusListener);
     this.element.removeEventListener('blur', this.blurListener);
   };
@@ -961,10 +987,7 @@ var lifecycleOptionalBehaviors = exports.lifecycleOptionalBehaviors = ['focus', 
 function behaviorRequiresLifecycle(instruction) {
   var t = instruction.type;
   var name = t.elementName !== null ? t.elementName : t.attributeName;
-  if (lifecycleOptionalBehaviors.indexOf(name) === -1) {
-    return t.handlesAttached || t.handlesBind || t.handlesCreated || t.handlesDetached || t.handlesUnbind;
-  }
-  return instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
+  return lifecycleOptionalBehaviors.indexOf(name) === -1 && (t.handlesAttached || t.handlesBind || t.handlesCreated || t.handlesDetached || t.handlesUnbind) || t.viewFactory && viewsRequireLifecycle(t.viewFactory) || instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
 }
 
 function targetRequiresLifecycle(instruction) {
@@ -1029,6 +1052,10 @@ var AbstractRepeater = exports.AbstractRepeater = function () {
     throw new Error('subclass must implement `view`');
   };
 
+  AbstractRepeater.prototype.matcher = function matcher() {
+    throw new Error('subclass must implement `matcher`');
+  };
+
   AbstractRepeater.prototype.addView = function addView(bindingContext, overrideContext) {
     throw new Error('subclass must implement `addView`');
   };
@@ -1037,8 +1064,16 @@ var AbstractRepeater = exports.AbstractRepeater = function () {
     throw new Error('subclass must implement `insertView`');
   };
 
+  AbstractRepeater.prototype.moveView = function moveView(sourceIndex, targetIndex) {
+    throw new Error('subclass must implement `moveView`');
+  };
+
   AbstractRepeater.prototype.removeAllViews = function removeAllViews(returnToCache, skipAnimation) {
     throw new Error('subclass must implement `removeAllViews`');
+  };
+
+  AbstractRepeater.prototype.removeViews = function removeViews(viewsToRemove, returnToCache, skipAnimation) {
+    throw new Error('subclass must implement `removeView`');
   };
 
   AbstractRepeater.prototype.removeView = function removeView(index, returnToCache, skipAnimation) {
@@ -1064,18 +1099,90 @@ var ArrayRepeatStrategy = exports.ArrayRepeatStrategy = function () {
   ArrayRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, items) {
     var _this12 = this;
 
-    if (repeat.viewsRequireLifecycle) {
-      var removePromise = repeat.removeAllViews(true);
-      if (removePromise instanceof Promise) {
-        removePromise.then(function () {
-          return _this12._standardProcessInstanceChanged(repeat, items);
-        });
-        return;
-      }
+    var itemsLength = items.length;
+
+    if (!items || itemsLength === 0) {
+      repeat.removeAllViews(true);
+      return;
+    }
+
+    var children = repeat.views();
+    var viewsLength = children.length;
+
+    if (viewsLength === 0) {
       this._standardProcessInstanceChanged(repeat, items);
       return;
     }
-    this._inPlaceProcessItems(repeat, items);
+
+    if (repeat.viewsRequireLifecycle) {
+      (function () {
+        var childrenSnapshot = children.slice(0);
+        var itemNameInBindingContext = repeat.local;
+        var matcher = repeat.matcher();
+
+        var itemsPreviouslyInViews = [];
+        var viewsToRemove = [];
+
+        for (var index = 0; index < viewsLength; index++) {
+          var view = childrenSnapshot[index];
+          var oldItem = view.bindingContext[itemNameInBindingContext];
+
+          if (indexOf(items, oldItem, matcher) === -1) {
+            viewsToRemove.push(view);
+          } else {
+            itemsPreviouslyInViews.push(oldItem);
+          }
+        }
+
+        var updateViews = void 0;
+        var removePromise = void 0;
+
+        if (itemsPreviouslyInViews.length > 0) {
+          removePromise = repeat.removeViews(viewsToRemove, true);
+          updateViews = function updateViews() {
+            for (var _index = 0; _index < itemsLength; _index++) {
+              var item = items[_index];
+              var indexOfView = indexOf(itemsPreviouslyInViews, item, matcher, _index);
+              var _view = void 0;
+
+              if (indexOfView === -1) {
+                var overrideContext = createFullOverrideContext(repeat, items[_index], _index, itemsLength);
+                repeat.insertView(_index, overrideContext.bindingContext, overrideContext);
+
+                itemsPreviouslyInViews.splice(_index, 0, undefined);
+              } else if (indexOfView === _index) {
+                _view = children[indexOfView];
+                itemsPreviouslyInViews[indexOfView] = undefined;
+              } else {
+                _view = children[indexOfView];
+                repeat.moveView(indexOfView, _index);
+                itemsPreviouslyInViews.splice(indexOfView, 1);
+                itemsPreviouslyInViews.splice(_index, 0, undefined);
+              }
+
+              if (_view) {
+                updateOverrideContext(_view.overrideContext, _index, itemsLength);
+              }
+            }
+
+            _this12._inPlaceProcessItems(repeat, items);
+          };
+        } else {
+          removePromise = repeat.removeAllViews(true);
+          updateViews = function updateViews() {
+            return _this12._standardProcessInstanceChanged(repeat, items);
+          };
+        }
+
+        if (removePromise instanceof Promise) {
+          removePromise.then(updateViews);
+        } else {
+          updateViews();
+        }
+      })();
+    } else {
+      this._inPlaceProcessItems(repeat, items);
+    }
   };
 
   ArrayRepeatStrategy.prototype._standardProcessInstanceChanged = function _standardProcessInstanceChanged(repeat, items) {
@@ -1655,12 +1762,14 @@ var Repeat = exports.Repeat = (_dec26 = (0, _aureliaTemplating.customAttribute)(
 
   Repeat.prototype.bind = function bind(bindingContext, overrideContext) {
     this.scope = { bindingContext: bindingContext, overrideContext: overrideContext };
+    this.matcherBinding = this._captureAndRemoveMatcherBinding();
     this.itemsChanged();
   };
 
   Repeat.prototype.unbind = function unbind() {
     this.scope = null;
     this.items = null;
+    this.matcherBinding = null;
     this.viewSlot.removeAll(true);
     this._unsubscribeCollection();
   };
@@ -1701,11 +1810,18 @@ var Repeat = exports.Repeat = (_dec26 = (0, _aureliaTemplating.customAttribute)(
   };
 
   Repeat.prototype.handleCollectionMutated = function handleCollectionMutated(collection, changes) {
+    if (!this.collectionObserver) {
+      return;
+    }
     this.strategy.instanceMutated(this, collection, changes);
   };
 
   Repeat.prototype.handleInnerCollectionMutated = function handleInnerCollectionMutated(collection, changes) {
     var _this19 = this;
+
+    if (!this.collectionObserver) {
+      return;
+    }
 
     if (this.ignoreMutation) {
       return;
@@ -1747,6 +1863,25 @@ var Repeat = exports.Repeat = (_dec26 = (0, _aureliaTemplating.customAttribute)(
     }
   };
 
+  Repeat.prototype._captureAndRemoveMatcherBinding = function _captureAndRemoveMatcherBinding() {
+    if (this.viewFactory.viewFactory) {
+      var instructions = this.viewFactory.viewFactory.instructions;
+      var instructionIds = Object.keys(instructions);
+      for (var i = 0; i < instructionIds.length; i++) {
+        var expressions = instructions[instructionIds[i]].expressions;
+        if (expressions) {
+          for (var ii = 0; i < expressions.length; i++) {
+            if (expressions[ii].targetProperty === 'matcher') {
+              var matcherBinding = expressions[ii];
+              expressions.splice(ii, 1);
+              return matcherBinding;
+            }
+          }
+        }
+      }
+    }
+  };
+
   Repeat.prototype.viewCount = function viewCount() {
     return this.viewSlot.children.length;
   };
@@ -1757,6 +1892,10 @@ var Repeat = exports.Repeat = (_dec26 = (0, _aureliaTemplating.customAttribute)(
 
   Repeat.prototype.view = function view(index) {
     return this.viewSlot.children[index];
+  };
+
+  Repeat.prototype.matcher = function matcher() {
+    return this.matcherBinding ? this.matcherBinding.sourceExpression.evaluate(this.scope, this.matcherBinding.lookupFunctions) : null;
   };
 
   Repeat.prototype.addView = function addView(bindingContext, overrideContext) {
@@ -1771,8 +1910,16 @@ var Repeat = exports.Repeat = (_dec26 = (0, _aureliaTemplating.customAttribute)(
     this.viewSlot.insert(index, view);
   };
 
+  Repeat.prototype.moveView = function moveView(sourceIndex, targetIndex) {
+    this.viewSlot.move(sourceIndex, targetIndex);
+  };
+
   Repeat.prototype.removeAllViews = function removeAllViews(returnToCache, skipAnimation) {
     return this.viewSlot.removeAll(returnToCache, skipAnimation);
+  };
+
+  Repeat.prototype.removeViews = function removeViews(viewsToRemove, returnToCache, skipAnimation) {
+    return this.viewSlot.removeMany(viewsToRemove, returnToCache, skipAnimation);
   };
 
   Repeat.prototype.removeView = function removeView(index, returnToCache, skipAnimation) {

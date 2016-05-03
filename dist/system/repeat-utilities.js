@@ -100,6 +100,21 @@ System.register(['aurelia-binding'], function (_export, _context) {
       }
 
       _export('updateOneTimeBinding', updateOneTimeBinding);
+
+      function indexOf(array, item, matcher, startIndex) {
+        if (!matcher) {
+          return array.indexOf(item);
+        }
+        var length = array.length;
+        for (var index = startIndex || 0; index < length; index++) {
+          if (matcher(array[index], item)) {
+            return index;
+          }
+        }
+        return -1;
+      }
+
+      _export('indexOf', indexOf);
     }
   };
 });

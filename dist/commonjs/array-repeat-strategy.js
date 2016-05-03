@@ -23,18 +23,90 @@ var ArrayRepeatStrategy = exports.ArrayRepeatStrategy = function () {
   ArrayRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, items) {
     var _this = this;
 
-    if (repeat.viewsRequireLifecycle) {
-      var removePromise = repeat.removeAllViews(true);
-      if (removePromise instanceof Promise) {
-        removePromise.then(function () {
-          return _this._standardProcessInstanceChanged(repeat, items);
-        });
-        return;
-      }
+    var itemsLength = items.length;
+
+    if (!items || itemsLength === 0) {
+      repeat.removeAllViews(true);
+      return;
+    }
+
+    var children = repeat.views();
+    var viewsLength = children.length;
+
+    if (viewsLength === 0) {
       this._standardProcessInstanceChanged(repeat, items);
       return;
     }
-    this._inPlaceProcessItems(repeat, items);
+
+    if (repeat.viewsRequireLifecycle) {
+      (function () {
+        var childrenSnapshot = children.slice(0);
+        var itemNameInBindingContext = repeat.local;
+        var matcher = repeat.matcher();
+
+        var itemsPreviouslyInViews = [];
+        var viewsToRemove = [];
+
+        for (var index = 0; index < viewsLength; index++) {
+          var view = childrenSnapshot[index];
+          var oldItem = view.bindingContext[itemNameInBindingContext];
+
+          if ((0, _repeatUtilities.indexOf)(items, oldItem, matcher) === -1) {
+            viewsToRemove.push(view);
+          } else {
+            itemsPreviouslyInViews.push(oldItem);
+          }
+        }
+
+        var updateViews = void 0;
+        var removePromise = void 0;
+
+        if (itemsPreviouslyInViews.length > 0) {
+          removePromise = repeat.removeViews(viewsToRemove, true);
+          updateViews = function updateViews() {
+            for (var _index = 0; _index < itemsLength; _index++) {
+              var item = items[_index];
+              var indexOfView = (0, _repeatUtilities.indexOf)(itemsPreviouslyInViews, item, matcher, _index);
+              var _view = void 0;
+
+              if (indexOfView === -1) {
+                var overrideContext = (0, _repeatUtilities.createFullOverrideContext)(repeat, items[_index], _index, itemsLength);
+                repeat.insertView(_index, overrideContext.bindingContext, overrideContext);
+
+                itemsPreviouslyInViews.splice(_index, 0, undefined);
+              } else if (indexOfView === _index) {
+                _view = children[indexOfView];
+                itemsPreviouslyInViews[indexOfView] = undefined;
+              } else {
+                _view = children[indexOfView];
+                repeat.moveView(indexOfView, _index);
+                itemsPreviouslyInViews.splice(indexOfView, 1);
+                itemsPreviouslyInViews.splice(_index, 0, undefined);
+              }
+
+              if (_view) {
+                (0, _repeatUtilities.updateOverrideContext)(_view.overrideContext, _index, itemsLength);
+              }
+            }
+
+            _this._inPlaceProcessItems(repeat, items);
+          };
+        } else {
+          removePromise = repeat.removeAllViews(true);
+          updateViews = function updateViews() {
+            return _this._standardProcessInstanceChanged(repeat, items);
+          };
+        }
+
+        if (removePromise instanceof Promise) {
+          removePromise.then(updateViews);
+        } else {
+          updateViews();
+        }
+      })();
+    } else {
+      this._inPlaceProcessItems(repeat, items);
+    }
   };
 
   ArrayRepeatStrategy.prototype._standardProcessInstanceChanged = function _standardProcessInstanceChanged(repeat, items) {

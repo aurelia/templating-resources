@@ -69,7 +69,7 @@ export class AbstractRepeater {
   insertView(index, bindingContext, overrideContext) {
     throw new Error('subclass must implement `insertView`');
   }
-  
+
   /**
    * Moves a view across the repeater.
    *

@@ -410,6 +410,23 @@ export function updateOneTimeBinding(binding) {
 }
 
 /**
+ * Returns the index of the element in an array, optionally using a matcher function.
+ */
+export function indexOf(array, item, matcher, startIndex) {
+  if (!matcher) {
+    // native indexOf is more performant than a for loop
+    return array.indexOf(item);
+  }
+  const length = array.length;
+  for (let index = startIndex || 0; index < length; index++) {
+    if (matcher(array[index], item)) {
+      return index;
+    }
+  }
+  return -1;
+}
+
+/**
 * A strategy for repeating a template over null or undefined (does nothing)
 */
 export class NullRepeatStrategy {
@@ -602,6 +619,8 @@ export class Focus {
   constructor(element, taskQueue) {
     this.element = element;
     this.taskQueue = taskQueue;
+    this.isAttached = false;
+    this.needsApply = false;
 
     this.focusListener = e => {
       this.value = true;
@@ -618,25 +637,34 @@ export class Focus {
   * @param newValue The new value.
   */
   valueChanged(newValue) {
-    if (newValue) {
-      this._giveFocus();
+    if (this.isAttached) {
+      this._apply();
     } else {
-      this.element.blur();
+      this.needsApply = true;
     }
   }
 
-  _giveFocus() {
-    this.taskQueue.queueMicroTask(() => {
-      if (this.value) {
-        this.element.focus();
-      }
-    });
+  _apply() {
+    if (this.value) {
+      this.taskQueue.queueMicroTask(() => {
+        if (this.value) {
+          this.element.focus();
+        }
+      });
+    } else {
+      this.element.blur();
+    }
   }
 
   /**
   * Invoked when the attribute is attached to the DOM.
   */
   attached() {
+    this.isAttached = true;
+    if (this.needsApply) {
+      this.needsApply = false;
+      this._apply();
+    }
     this.element.addEventListener('focus', this.focusListener);
     this.element.addEventListener('blur', this.blurListener);
   }
@@ -645,6 +673,7 @@ export class Focus {
   * Invoked when the attribute is detached from the DOM.
   */
   detached() {
+    this.isAttached = false;
     this.element.removeEventListener('focus', this.focusListener);
     this.element.removeEventListener('blur', this.blurListener);
   }
@@ -1039,10 +1068,9 @@ export const lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'wit
 function behaviorRequiresLifecycle(instruction) {
   let t = instruction.type;
   let name = t.elementName !== null ? t.elementName : t.attributeName;
-  if (lifecycleOptionalBehaviors.indexOf(name) === -1) {
-    return t.handlesAttached || t.handlesBind || t.handlesCreated || t.handlesDetached || t.handlesUnbind;
-  }
-  return instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
+  return lifecycleOptionalBehaviors.indexOf(name) === -1 && (t.handlesAttached || t.handlesBind || t.handlesCreated || t.handlesDetached || t.handlesUnbind)
+    || t.viewFactory && viewsRequireLifecycle(t.viewFactory)
+    || instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
 }
 
 function targetRequiresLifecycle(instruction) {
@@ -1133,6 +1161,15 @@ export class AbstractRepeater {
   }
 
   /**
+   * Returns the matcher function to be used by the repeater, or null if strict matching is to be performed.
+   *
+   * @return {Function|null} The requested matcher function.
+   */
+  matcher() {
+    throw new Error('subclass must implement `matcher`');
+  }
+
+  /**
    * Adds a view to the repeater, binding the view to the
    * provided contexts.
    *
@@ -1156,6 +1193,16 @@ export class AbstractRepeater {
   }
 
   /**
+   * Moves a view across the repeater.
+   *
+   * @param {Number} sourceIndex The index of the view to be moved.
+   * @param {Number} sourceIndex The index where the view should be placed at.
+   */
+  moveView(sourceIndex, targetIndex) {
+    throw new Error('subclass must implement `moveView`');
+  }
+
+  /**
    * Removes all views from the repeater.
    * @param {Boolean} returnToCache Should the view be returned to the view cache?
    * @param {Boolean} skipAnimation Should the removal animation be skipped?
@@ -1163,6 +1210,18 @@ export class AbstractRepeater {
    */
   removeAllViews(returnToCache?: boolean, skipAnimation?: boolean) {
     throw new Error('subclass must implement `removeAllViews`');
+  }
+
+  /**
+   * Removes an array of Views from the repeater.
+   *
+   * @param {Array} viewsToRemove The array of views to be removed.
+   * @param {Boolean} returnToCache Should the view be returned to the view cache?
+   * @param {Boolean} skipAnimation Should the removal animation be skipped?
+   * @return {Promise|null}
+   */
+  removeViews(viewsToRemove: Array<View>, returnToCache?: boolean, skipAnimation?: boolean) {
+    throw new Error('subclass must implement `removeView`');
   }
 
   /**
@@ -1207,16 +1266,98 @@ export class ArrayRepeatStrategy {
   * @param items The new array instance.
   */
   instanceChanged(repeat, items) {
-    if (repeat.viewsRequireLifecycle) {
-      let removePromise = repeat.removeAllViews(true);
-      if (removePromise instanceof Promise) {
-        removePromise.then(() => this._standardProcessInstanceChanged(repeat, items));
-        return;
-      }
+    const itemsLength = items.length;
+
+    // if the new instance does not contain any items,
+    // just remove all views and don't do any further processing
+    if (!items || itemsLength === 0) {
+      repeat.removeAllViews(true);
+      return;
+    }
+
+    const children = repeat.views();
+    const viewsLength = children.length;
+
+    // likewise, if we previously didn't have any views,
+    // simply make them and return
+    if (viewsLength === 0) {
       this._standardProcessInstanceChanged(repeat, items);
       return;
     }
-    this._inPlaceProcessItems(repeat, items);
+
+    if (repeat.viewsRequireLifecycle) {
+      const childrenSnapshot = children.slice(0);
+      const itemNameInBindingContext = repeat.local;
+      const matcher = repeat.matcher();
+
+      // the cache of the current state (it will be transformed along with the views to keep track of indicies)
+      let itemsPreviouslyInViews = [];
+      const viewsToRemove = [];
+
+      for (let index = 0; index < viewsLength; index++) {
+        const view = childrenSnapshot[index];
+        const oldItem = view.bindingContext[itemNameInBindingContext];
+
+        if (indexOf(items, oldItem, matcher) === -1) {
+          // remove the item if no longer in the new instance of items
+          viewsToRemove.push(view);
+        } else {
+          // or add the item to the cache list
+          itemsPreviouslyInViews.push(oldItem);
+        }
+      }
+
+      let updateViews;
+      let removePromise;
+
+      if (itemsPreviouslyInViews.length > 0) {
+        removePromise = repeat.removeViews(viewsToRemove, true);
+        updateViews = () => {
+          // update views (create new and move existing)
+          for (let index = 0; index < itemsLength; index++) {
+            const item = items[index];
+            const indexOfView = indexOf(itemsPreviouslyInViews, item, matcher, index);
+            let view;
+
+            if (indexOfView === -1) { // create views for new items
+              const overrideContext = createFullOverrideContext(repeat, items[index], index, itemsLength);
+              repeat.insertView(index, overrideContext.bindingContext, overrideContext);
+              // reflect the change in our cache list so indicies are valid
+              itemsPreviouslyInViews.splice(index, 0, undefined);
+            } else if (indexOfView === index) { // leave unchanged items
+              view = children[indexOfView];
+              itemsPreviouslyInViews[indexOfView] = undefined;
+            } else { // move the element to the right place
+              view = children[indexOfView];
+              repeat.moveView(indexOfView, index);
+              itemsPreviouslyInViews.splice(indexOfView, 1);
+              itemsPreviouslyInViews.splice(index, 0, undefined);
+            }
+
+            if (view) {
+              updateOverrideContext(view.overrideContext, index, itemsLength);
+            }
+          }
+
+          // remove extraneous elements in case of duplicates,
+          // also update binding contexts if objects changed using the matcher function
+          this._inPlaceProcessItems(repeat, items);
+        };
+      } else {
+        // if all of the items are different, remove all and add all from scratch
+        removePromise = repeat.removeAllViews(true);
+        updateViews = () => this._standardProcessInstanceChanged(repeat, items);
+      }
+
+      if (removePromise instanceof Promise) {
+        removePromise.then(updateViews);
+      } else {
+        updateViews();
+      }
+    } else {
+      // no lifecycle needed, use the fast in-place processing
+      this._inPlaceProcessItems(repeat, items);
+    }
   }
 
   _standardProcessInstanceChanged(repeat, items) {
@@ -1857,6 +1998,7 @@ export class Repeat extends AbstractRepeater {
   */
   bind(bindingContext, overrideContext) {
     this.scope = { bindingContext, overrideContext };
+    this.matcherBinding = this._captureAndRemoveMatcherBinding();
     this.itemsChanged();
   }
 
@@ -1866,6 +2008,7 @@ export class Repeat extends AbstractRepeater {
   unbind() {
     this.scope = null;
     this.items = null;
+    this.matcherBinding = null;
     this.viewSlot.removeAll(true);
     this._unsubscribeCollection();
   }
@@ -1913,6 +2056,9 @@ export class Repeat extends AbstractRepeater {
   * Invoked when the underlying collection changes.
   */
   handleCollectionMutated(collection, changes) {
+    if (!this.collectionObserver) {
+      return;
+    }
     this.strategy.instanceMutated(this, collection, changes);
   }
 
@@ -1920,6 +2066,9 @@ export class Repeat extends AbstractRepeater {
   * Invoked when the underlying inner collection changes.
   */
   handleInnerCollectionMutated(collection, changes) {
+    if (!this.collectionObserver) {
+      return;
+    }
     // guard against source expressions that have observable side-effects that could
     // cause an infinite loop- eg a value converter that mutates the source array.
     if (this.ignoreMutation) {
@@ -1964,10 +2113,30 @@ export class Repeat extends AbstractRepeater {
     }
   }
 
+  _captureAndRemoveMatcherBinding() {
+    if (this.viewFactory.viewFactory) {
+      const instructions = this.viewFactory.viewFactory.instructions;
+      const instructionIds = Object.keys(instructions);
+      for (let i = 0; i < instructionIds.length; i++) {
+        const expressions = instructions[instructionIds[i]].expressions;
+        if (expressions) {
+          for (let ii = 0; i < expressions.length; i++) {
+            if (expressions[ii].targetProperty === 'matcher') {
+              const matcherBinding = expressions[ii];
+              expressions.splice(ii, 1);
+              return matcherBinding;
+            }
+          }
+        }
+      }
+    }
+  }
+
   // @override AbstractRepeater
   viewCount() { return this.viewSlot.children.length; }
   views() { return this.viewSlot.children; }
   view(index) { return this.viewSlot.children[index]; }
+  matcher() { return this.matcherBinding ? this.matcherBinding.sourceExpression.evaluate(this.scope, this.matcherBinding.lookupFunctions) : null; }
 
   addView(bindingContext, overrideContext) {
     let view = this.viewFactory.create();
@@ -1981,8 +2150,16 @@ export class Repeat extends AbstractRepeater {
     this.viewSlot.insert(index, view);
   }
 
+  moveView(sourceIndex, targetIndex) {
+    this.viewSlot.move(sourceIndex, targetIndex);
+  }
+
   removeAllViews(returnToCache, skipAnimation) {
     return this.viewSlot.removeAll(returnToCache, skipAnimation);
+  }
+
+  removeViews(viewsToRemove, returnToCache, skipAnimation) {
+    return this.viewSlot.removeMany(viewsToRemove, returnToCache, skipAnimation);
   }
 
   removeView(index, returnToCache, skipAnimation) {

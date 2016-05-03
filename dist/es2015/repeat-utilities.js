@@ -74,3 +74,16 @@ export function updateOneTimeBinding(binding) {
     binding.updateOneTimeBindings();
   }
 }
+
+export function indexOf(array, item, matcher, startIndex) {
+  if (!matcher) {
+    return array.indexOf(item);
+  }
+  const length = array.length;
+  for (let index = startIndex || 0; index < length; index++) {
+    if (matcher(array[index], item)) {
+      return index;
+    }
+  }
+  return -1;
+}

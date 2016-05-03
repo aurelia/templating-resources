@@ -1,4 +1,4 @@
-import { createFullOverrideContext, updateOverrideContexts } from './repeat-utilities';
+import { createFullOverrideContext, updateOverrideContexts, updateOverrideContext, indexOf } from './repeat-utilities';
 import { mergeSplice } from 'aurelia-binding';
 
 export let ArrayRepeatStrategy = class ArrayRepeatStrategy {
@@ -7,16 +7,86 @@ export let ArrayRepeatStrategy = class ArrayRepeatStrategy {
   }
 
   instanceChanged(repeat, items) {
-    if (repeat.viewsRequireLifecycle) {
-      let removePromise = repeat.removeAllViews(true);
-      if (removePromise instanceof Promise) {
-        removePromise.then(() => this._standardProcessInstanceChanged(repeat, items));
-        return;
-      }
+    const itemsLength = items.length;
+
+    if (!items || itemsLength === 0) {
+      repeat.removeAllViews(true);
+      return;
+    }
+
+    const children = repeat.views();
+    const viewsLength = children.length;
+
+    if (viewsLength === 0) {
       this._standardProcessInstanceChanged(repeat, items);
       return;
     }
-    this._inPlaceProcessItems(repeat, items);
+
+    if (repeat.viewsRequireLifecycle) {
+      const childrenSnapshot = children.slice(0);
+      const itemNameInBindingContext = repeat.local;
+      const matcher = repeat.matcher();
+
+      let itemsPreviouslyInViews = [];
+      const viewsToRemove = [];
+
+      for (let index = 0; index < viewsLength; index++) {
+        const view = childrenSnapshot[index];
+        const oldItem = view.bindingContext[itemNameInBindingContext];
+
+        if (indexOf(items, oldItem, matcher) === -1) {
+          viewsToRemove.push(view);
+        } else {
+          itemsPreviouslyInViews.push(oldItem);
+        }
+      }
+
+      let updateViews;
+      let removePromise;
+
+      if (itemsPreviouslyInViews.length > 0) {
+        removePromise = repeat.removeViews(viewsToRemove, true);
+        updateViews = () => {
+          for (let index = 0; index < itemsLength; index++) {
+            const item = items[index];
+            const indexOfView = indexOf(itemsPreviouslyInViews, item, matcher, index);
+            let view;
+
+            if (indexOfView === -1) {
+              const overrideContext = createFullOverrideContext(repeat, items[index], index, itemsLength);
+              repeat.insertView(index, overrideContext.bindingContext, overrideContext);
+
+              itemsPreviouslyInViews.splice(index, 0, undefined);
+            } else if (indexOfView === index) {
+              view = children[indexOfView];
+              itemsPreviouslyInViews[indexOfView] = undefined;
+            } else {
+              view = children[indexOfView];
+              repeat.moveView(indexOfView, index);
+              itemsPreviouslyInViews.splice(indexOfView, 1);
+              itemsPreviouslyInViews.splice(index, 0, undefined);
+            }
+
+            if (view) {
+              updateOverrideContext(view.overrideContext, index, itemsLength);
+            }
+          }
+
+          this._inPlaceProcessItems(repeat, items);
+        };
+      } else {
+        removePromise = repeat.removeAllViews(true);
+        updateViews = () => this._standardProcessInstanceChanged(repeat, items);
+      }
+
+      if (removePromise instanceof Promise) {
+        removePromise.then(updateViews);
+      } else {
+        updateViews();
+      }
+    } else {
+      this._inPlaceProcessItems(repeat, items);
+    }
   }
 
   _standardProcessInstanceChanged(repeat, items) {

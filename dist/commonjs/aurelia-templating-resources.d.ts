@@ -233,6 +233,11 @@ declare module 'aurelia-templating-resources' {
   export function updateOneTimeBinding(binding: any): any;
   
   /**
+   * Returns the index of the element in an array, optionally using a matcher function.
+   */
+  export function indexOf(array: any, item: any, matcher: any, startIndex: any): any;
+  
+  /**
   * A strategy for repeating a template over null or undefined (does nothing)
   */
   export class NullRepeatStrategy {
@@ -470,6 +475,13 @@ declare module 'aurelia-templating-resources' {
     view(index: any): any;
     
     /**
+       * Returns the matcher function to be used by the repeater, or null if strict matching is to be performed.
+       *
+       * @return {Function|null} The requested matcher function.
+       */
+    matcher(): any;
+    
+    /**
        * Adds a view to the repeater, binding the view to the
        * provided contexts.
        *
@@ -489,12 +501,30 @@ declare module 'aurelia-templating-resources' {
     insertView(index: any, bindingContext: any, overrideContext: any): any;
     
     /**
+       * Moves a view across the repeater.
+       *
+       * @param {Number} sourceIndex The index of the view to be moved.
+       * @param {Number} sourceIndex The index where the view should be placed at.
+       */
+    moveView(sourceIndex: any, targetIndex: any): any;
+    
+    /**
        * Removes all views from the repeater.
        * @param {Boolean} returnToCache Should the view be returned to the view cache?
        * @param {Boolean} skipAnimation Should the removal animation be skipped?
        * @return {Promise|null}
        */
     removeAllViews(returnToCache?: boolean, skipAnimation?: boolean): any;
+    
+    /**
+       * Removes an array of Views from the repeater.
+       *
+       * @param {Array} viewsToRemove The array of views to be removed.
+       * @param {Boolean} returnToCache Should the view be returned to the view cache?
+       * @param {Boolean} skipAnimation Should the removal animation be skipped?
+       * @return {Promise|null}
+       */
+    removeViews(viewsToRemove: Array<View>, returnToCache?: boolean, skipAnimation?: boolean): any;
     
     /**
        * Removes a view from the repeater at a specific index.
@@ -717,9 +747,12 @@ declare module 'aurelia-templating-resources' {
     viewCount(): any;
     views(): any;
     view(index: any): any;
+    matcher(): any;
     addView(bindingContext: any, overrideContext: any): any;
     insertView(index: any, bindingContext: any, overrideContext: any): any;
+    moveView(sourceIndex: any, targetIndex: any): any;
     removeAllViews(returnToCache: any, skipAnimation: any): any;
+    removeViews(viewsToRemove: any, returnToCache: any, skipAnimation: any): any;
     removeView(index: any, returnToCache: any, skipAnimation: any): any;
     updateBindings(view: View): any;
   }
