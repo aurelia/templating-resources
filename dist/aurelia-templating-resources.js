@@ -1095,6 +1095,9 @@ export function viewsRequireLifecycle(viewFactory) {
     return viewFactory._viewsRequireLifecycle;
   }
 
+  // set prop to avoid infinite recursion.
+  viewFactory._viewsRequireLifecycle = false;
+
   // access inner view factory.
   if (viewFactory.viewFactory) {
     viewFactory._viewsRequireLifecycle = viewsRequireLifecycle(viewFactory.viewFactory);

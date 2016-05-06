@@ -1,3 +1,11 @@
+### 1.0.0-beta.1.2.4 (2016-05-05)
+
+
+#### Bug Fixes
+
+* **analyze-view-factory:** prevent infinite recursion ([e9797aa1](http://github.com/aurelia/templating-resources/commit/e9797aa1eca167b9aba535f692e57f84c1b6de85), closes [#219](http://github.com/aurelia/templating-resources/issues/219))
+
+
 ### 1.0.0-beta.1.2.3 (2016-05-03)
 
 

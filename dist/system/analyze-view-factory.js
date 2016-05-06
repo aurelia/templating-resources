@@ -36,6 +36,8 @@ System.register([], function (_export, _context) {
           return viewFactory._viewsRequireLifecycle;
         }
 
+        viewFactory._viewsRequireLifecycle = false;
+
         if (viewFactory.viewFactory) {
           viewFactory._viewsRequireLifecycle = viewsRequireLifecycle(viewFactory.viewFactory);
           return viewFactory._viewsRequireLifecycle;

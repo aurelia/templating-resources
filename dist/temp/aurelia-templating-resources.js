@@ -1009,6 +1009,8 @@ function viewsRequireLifecycle(viewFactory) {
     return viewFactory._viewsRequireLifecycle;
   }
 
+  viewFactory._viewsRequireLifecycle = false;
+
   if (viewFactory.viewFactory) {
     viewFactory._viewsRequireLifecycle = viewsRequireLifecycle(viewFactory.viewFactory);
     return viewFactory._viewsRequireLifecycle;
