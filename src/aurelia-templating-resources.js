@@ -27,6 +27,14 @@ import {ArrayRepeatStrategy} from './array-repeat-strategy';
 import {MapRepeatStrategy} from './map-repeat-strategy';
 import {SetRepeatStrategy} from './set-repeat-strategy';
 import {NumberRepeatStrategy} from './number-repeat-strategy';
+import {
+  createFullOverrideContext,
+  updateOverrideContext,
+  getItemsSourceExpression,
+  isOneTime,
+  updateOneTimeBinding
+} from './repeat-utilities';
+import {viewsRequireLifecycle} from './analyze-view-factory';
 
 function configure(config) {
   if (FEATURE.shadowDOM) {
@@ -92,5 +100,11 @@ export {
   ArrayRepeatStrategy,
   MapRepeatStrategy,
   SetRepeatStrategy,
-  NumberRepeatStrategy
+  NumberRepeatStrategy,
+  createFullOverrideContext,
+  updateOverrideContext,
+  getItemsSourceExpression,
+  isOneTime,
+  updateOneTimeBinding,
+  viewsRequireLifecycle
 };
