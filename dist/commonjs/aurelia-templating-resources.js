@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.NumberRepeatStrategy = exports.SetRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.NullRepeatStrategy = exports.RepeatStrategyLocator = exports.AbstractRepeater = exports.UpdateTriggerBindingBehavior = exports.BindingSignaler = exports.SignalBindingBehavior = exports.DebounceBindingBehavior = exports.ThrottleBindingBehavior = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.configure = exports.ViewSpy = exports.CompileSpy = exports.Focus = exports.Replaceable = exports.SanitizeHTMLValueConverter = exports.HTMLSanitizer = exports.Hide = exports.Show = exports.Repeat = exports.With = exports.If = exports.Compose = undefined;
+exports.viewsRequireLifecycle = exports.updateOneTimeBinding = exports.isOneTime = exports.getItemsSourceExpression = exports.updateOverrideContext = exports.createFullOverrideContext = exports.NumberRepeatStrategy = exports.SetRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.NullRepeatStrategy = exports.RepeatStrategyLocator = exports.AbstractRepeater = exports.UpdateTriggerBindingBehavior = exports.BindingSignaler = exports.SignalBindingBehavior = exports.DebounceBindingBehavior = exports.ThrottleBindingBehavior = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.configure = exports.ViewSpy = exports.CompileSpy = exports.Focus = exports.Replaceable = exports.SanitizeHTMLValueConverter = exports.HTMLSanitizer = exports.Hide = exports.Show = exports.Repeat = exports.With = exports.If = exports.Compose = undefined;
 
 var _compose = require('./compose');
 
@@ -63,6 +63,10 @@ var _setRepeatStrategy = require('./set-repeat-strategy');
 
 var _numberRepeatStrategy = require('./number-repeat-strategy');
 
+var _repeatUtilities = require('./repeat-utilities');
+
+var _analyzeViewFactory = require('./analyze-view-factory');
+
 function configure(config) {
   if (_aureliaPal.FEATURE.shadowDOM) {
     _aureliaPal.DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
@@ -112,3 +116,9 @@ exports.ArrayRepeatStrategy = _arrayRepeatStrategy.ArrayRepeatStrategy;
 exports.MapRepeatStrategy = _mapRepeatStrategy.MapRepeatStrategy;
 exports.SetRepeatStrategy = _setRepeatStrategy.SetRepeatStrategy;
 exports.NumberRepeatStrategy = _numberRepeatStrategy.NumberRepeatStrategy;
+exports.createFullOverrideContext = _repeatUtilities.createFullOverrideContext;
+exports.updateOverrideContext = _repeatUtilities.updateOverrideContext;
+exports.getItemsSourceExpression = _repeatUtilities.getItemsSourceExpression;
+exports.isOneTime = _repeatUtilities.isOneTime;
+exports.updateOneTimeBinding = _repeatUtilities.updateOneTimeBinding;
+exports.viewsRequireLifecycle = _analyzeViewFactory.viewsRequireLifecycle;

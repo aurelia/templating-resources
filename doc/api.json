@@ -426,7 +426,7 @@
                       {
                         "type": "reference",
                         "name": "View",
-                        "id": 1703
+                        "id": 1681
                       }
                     ]
                   }
@@ -502,7 +502,7 @@
                   "type": {
                     "type": "reference",
                     "name": "View",
-                    "id": 1703,
+                    "id": 1681,
                     "moduleName": "\"aurelia-templating\""
                   }
                 }
@@ -1258,7 +1258,7 @@
                   "type": {
                     "type": "reference",
                     "name": "View",
-                    "id": 1703,
+                    "id": 1681,
                     "moduleName": "\"aurelia-templating\""
                   }
                 }
@@ -3643,7 +3643,7 @@
                   "type": {
                     "type": "reference",
                     "name": "View",
-                    "id": 1703,
+                    "id": 1681,
                     "moduleName": "\"aurelia-templating\""
                   }
                 }

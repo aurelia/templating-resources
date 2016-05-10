@@ -1,7 +1,7 @@
 'use strict';
 
-System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './css-resource', 'aurelia-pal', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy'], function (_export, _context) {
-  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy;
+System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './css-resource', 'aurelia-pal', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy', './repeat-utilities', './analyze-view-factory'], function (_export, _context) {
+  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, viewsRequireLifecycle;
 
   function configure(config) {
     if (FEATURE.shadowDOM) {
@@ -86,6 +86,14 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       SetRepeatStrategy = _setRepeatStrategy.SetRepeatStrategy;
     }, function (_numberRepeatStrategy) {
       NumberRepeatStrategy = _numberRepeatStrategy.NumberRepeatStrategy;
+    }, function (_repeatUtilities) {
+      createFullOverrideContext = _repeatUtilities.createFullOverrideContext;
+      updateOverrideContext = _repeatUtilities.updateOverrideContext;
+      getItemsSourceExpression = _repeatUtilities.getItemsSourceExpression;
+      isOneTime = _repeatUtilities.isOneTime;
+      updateOneTimeBinding = _repeatUtilities.updateOneTimeBinding;
+    }, function (_analyzeViewFactory) {
+      viewsRequireLifecycle = _analyzeViewFactory.viewsRequireLifecycle;
     }],
     execute: function () {
       _export('Compose', Compose);
@@ -143,6 +151,18 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       _export('SetRepeatStrategy', SetRepeatStrategy);
 
       _export('NumberRepeatStrategy', NumberRepeatStrategy);
+
+      _export('createFullOverrideContext', createFullOverrideContext);
+
+      _export('updateOverrideContext', updateOverrideContext);
+
+      _export('getItemsSourceExpression', getItemsSourceExpression);
+
+      _export('isOneTime', isOneTime);
+
+      _export('updateOneTimeBinding', updateOneTimeBinding);
+
+      _export('viewsRequireLifecycle', viewsRequireLifecycle);
     }
   };
 });
