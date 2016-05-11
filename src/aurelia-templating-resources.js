@@ -32,7 +32,8 @@ import {
   updateOverrideContext,
   getItemsSourceExpression,
   isOneTime,
-  updateOneTimeBinding
+  updateOneTimeBinding,
+  unwrapExpression
 } from './repeat-utilities';
 import {viewsRequireLifecycle} from './analyze-view-factory';
 
@@ -106,5 +107,6 @@ export {
   getItemsSourceExpression,
   isOneTime,
   updateOneTimeBinding,
+  unwrapExpression,
   viewsRequireLifecycle
 };
