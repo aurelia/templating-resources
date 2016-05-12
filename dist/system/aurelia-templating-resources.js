@@ -1,7 +1,7 @@
 'use strict';
 
 System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './css-resource', 'aurelia-pal', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy', './repeat-utilities', './analyze-view-factory'], function (_export, _context) {
-  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, viewsRequireLifecycle;
+  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle;
 
   function configure(config) {
     if (FEATURE.shadowDOM) {
@@ -92,6 +92,7 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       getItemsSourceExpression = _repeatUtilities.getItemsSourceExpression;
       isOneTime = _repeatUtilities.isOneTime;
       updateOneTimeBinding = _repeatUtilities.updateOneTimeBinding;
+      unwrapExpression = _repeatUtilities.unwrapExpression;
     }, function (_analyzeViewFactory) {
       viewsRequireLifecycle = _analyzeViewFactory.viewsRequireLifecycle;
     }],
@@ -161,6 +162,8 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       _export('isOneTime', isOneTime);
 
       _export('updateOneTimeBinding', updateOneTimeBinding);
+
+      _export('unwrapExpression', unwrapExpression);
 
       _export('viewsRequireLifecycle', viewsRequireLifecycle);
     }

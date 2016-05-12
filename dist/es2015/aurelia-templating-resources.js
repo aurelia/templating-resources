@@ -27,7 +27,7 @@ import { ArrayRepeatStrategy } from './array-repeat-strategy';
 import { MapRepeatStrategy } from './map-repeat-strategy';
 import { SetRepeatStrategy } from './set-repeat-strategy';
 import { NumberRepeatStrategy } from './number-repeat-strategy';
-import { createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding } from './repeat-utilities';
+import { createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression } from './repeat-utilities';
 import { viewsRequireLifecycle } from './analyze-view-factory';
 
 function configure(config) {
@@ -49,4 +49,4 @@ function configure(config) {
   });
 }
 
-export { Compose, If, With, Repeat, Show, Hide, HTMLSanitizer, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, configure, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, viewsRequireLifecycle };
+export { Compose, If, With, Repeat, Show, Hide, HTMLSanitizer, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, configure, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle };
