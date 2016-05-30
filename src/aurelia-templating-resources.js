@@ -7,8 +7,6 @@ import {Hide} from './hide';
 import {SanitizeHTMLValueConverter} from './sanitize-html';
 import {Replaceable} from './replaceable';
 import {Focus} from './focus';
-import {CompileSpy} from './compile-spy';
-import {ViewSpy} from './view-spy';
 import {ViewEngine} from 'aurelia-templating';
 import {_createCSSResource} from './css-resource';
 import {FEATURE, DOM} from 'aurelia-pal';
@@ -54,8 +52,6 @@ function configure(config) {
     './replaceable',
     './sanitize-html',
     './focus',
-    './compile-spy',
-    './view-spy',
     './binding-mode-behaviors',
     './throttle-binding-behavior',
     './debounce-binding-behavior',
@@ -84,8 +80,6 @@ export {
   SanitizeHTMLValueConverter,
   Replaceable,
   Focus,
-  CompileSpy,
-  ViewSpy,
   configure,
   OneTimeBindingBehavior,
   OneWayBindingBehavior,
