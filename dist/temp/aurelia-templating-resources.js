@@ -3,9 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Repeat = exports.RepeatStrategyLocator = exports.SignalBindingBehavior = exports.SanitizeHTMLValueConverter = exports.SetRepeatStrategy = exports.NumberRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.AbstractRepeater = exports.lifecycleOptionalBehaviors = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.BindingSignaler = exports.CompileSpy = exports.Compose = exports.DebounceBindingBehavior = exports.Focus = exports.Hide = exports.HTMLSanitizer = exports.If = exports.NullRepeatStrategy = exports.Replaceable = exports.Show = exports.ThrottleBindingBehavior = exports.UpdateTriggerBindingBehavior = exports.ViewSpy = exports.With = undefined;
+exports.Repeat = exports.RepeatStrategyLocator = exports.SignalBindingBehavior = exports.SanitizeHTMLValueConverter = exports.SetRepeatStrategy = exports.NumberRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.AbstractRepeater = exports.lifecycleOptionalBehaviors = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.BindingSignaler = exports.Compose = exports.DebounceBindingBehavior = exports.Focus = exports.Hide = exports.HTMLSanitizer = exports.If = exports.NullRepeatStrategy = exports.Show = exports.ThrottleBindingBehavior = exports.UpdateTriggerBindingBehavior = exports.With = undefined;
 
-var _dec, _dec2, _class, _dec3, _class2, _class3, _temp, _dec4, _dec5, _class4, _dec6, _dec7, _class5, _dec8, _dec9, _class6, _dec10, _dec11, _class7, _dec12, _dec13, _class8, _dec17, _dec18, _class11, _desc, _value, _class12, _descriptor, _descriptor2, _descriptor3, _dec19, _dec20, _class14, _dec21, _class16, _dec22, _class17, _dec23, _class18, _dec24, _dec25, _class19, _dec26, _dec27, _class21, _desc2, _value2, _class22, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
+var _dec, _dec2, _class, _class2, _temp, _dec3, _dec4, _class3, _dec5, _dec6, _class4, _dec7, _dec8, _class5, _dec9, _dec10, _class6, _dec14, _dec15, _class9, _desc, _value, _class10, _descriptor, _descriptor2, _descriptor3, _dec16, _class13, _dec17, _class14, _dec18, _class15, _dec19, _dec20, _class16, _dec21, _dec22, _class18, _desc2, _value2, _class19, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
 
 exports.updateOverrideContexts = updateOverrideContexts;
 exports.createFullOverrideContext = createFullOverrideContext;
@@ -20,10 +20,6 @@ exports._createCSSResource = _createCSSResource;
 exports.viewsRequireLifecycle = viewsRequireLifecycle;
 exports.getElementName = getElementName;
 exports.configure = configure;
-
-var _aureliaLogging = require('aurelia-logging');
-
-var LogManager = _interopRequireWildcard(_aureliaLogging);
 
 var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
@@ -40,8 +36,6 @@ var _aureliaLoader = require('aurelia-loader');
 var _aureliaPath = require('aurelia-path');
 
 var _aureliaMetadata = require('aurelia-metadata');
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -128,50 +122,12 @@ var With = exports.With = (_dec = (0, _aureliaTemplating.customAttribute)('with'
 
   return With;
 }()) || _class) || _class) || _class);
-var ViewSpy = exports.ViewSpy = (_dec3 = (0, _aureliaTemplating.customAttribute)('view-spy'), _dec3(_class2 = function () {
-  function ViewSpy() {
-    _classCallCheck(this, ViewSpy);
-
-    this.logger = LogManager.getLogger('view-spy');
-  }
-
-  ViewSpy.prototype._log = function _log(lifecycleName, context) {
-    if (!this.value && lifecycleName === 'created') {
-      this.logger.info(lifecycleName, this.view);
-    } else if (this.value && this.value.indexOf(lifecycleName) !== -1) {
-      this.logger.info(lifecycleName, this.view, context);
-    }
-  };
-
-  ViewSpy.prototype.created = function created(view) {
-    this.view = view;
-    this._log('created');
-  };
-
-  ViewSpy.prototype.bind = function bind(bindingContext) {
-    this._log('bind', bindingContext);
-  };
-
-  ViewSpy.prototype.attached = function attached() {
-    this._log('attached');
-  };
-
-  ViewSpy.prototype.detached = function detached() {
-    this._log('detached');
-  };
-
-  ViewSpy.prototype.unbind = function unbind() {
-    this._log('unbind');
-  };
-
-  return ViewSpy;
-}()) || _class2);
 
 
 var eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
 var notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way bindings on input/select elements.';
 
-var UpdateTriggerBindingBehavior = exports.UpdateTriggerBindingBehavior = (_temp = _class3 = function () {
+var UpdateTriggerBindingBehavior = exports.UpdateTriggerBindingBehavior = (_temp = _class2 = function () {
   function UpdateTriggerBindingBehavior(eventManager) {
     _classCallCheck(this, UpdateTriggerBindingBehavior);
 
@@ -208,7 +164,7 @@ var UpdateTriggerBindingBehavior = exports.UpdateTriggerBindingBehavior = (_temp
   };
 
   return UpdateTriggerBindingBehavior;
-}(), _class3.inject = [_aureliaBinding.EventManager], _temp);
+}(), _class2.inject = [_aureliaBinding.EventManager], _temp);
 
 
 function throttle(newValue) {
@@ -271,7 +227,7 @@ var ThrottleBindingBehavior = exports.ThrottleBindingBehavior = function () {
   return ThrottleBindingBehavior;
 }();
 
-var Show = exports.Show = (_dec4 = (0, _aureliaTemplating.customAttribute)('show'), _dec5 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator), _dec4(_class4 = _dec5(_class4 = function () {
+var Show = exports.Show = (_dec3 = (0, _aureliaTemplating.customAttribute)('show'), _dec4 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator), _dec3(_class3 = _dec4(_class3 = function () {
   function Show(element, animator) {
     _classCallCheck(this, Show);
 
@@ -292,31 +248,7 @@ var Show = exports.Show = (_dec4 = (0, _aureliaTemplating.customAttribute)('show
   };
 
   return Show;
-}()) || _class4) || _class4);
-var Replaceable = exports.Replaceable = (_dec6 = (0, _aureliaTemplating.customAttribute)('replaceable'), _dec7 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec6(_class5 = (0, _aureliaTemplating.templateController)(_class5 = _dec7(_class5 = function () {
-  function Replaceable(viewFactory, viewSlot) {
-    _classCallCheck(this, Replaceable);
-
-    this.viewFactory = viewFactory;
-    this.viewSlot = viewSlot;
-    this.view = null;
-  }
-
-  Replaceable.prototype.bind = function bind(bindingContext, overrideContext) {
-    if (this.view === null) {
-      this.view = this.viewFactory.create();
-      this.viewSlot.add(this.view);
-    }
-
-    this.view.bind(bindingContext, overrideContext);
-  };
-
-  Replaceable.prototype.unbind = function unbind() {
-    this.view.unbind();
-  };
-
-  return Replaceable;
-}()) || _class5) || _class5) || _class5);
+}()) || _class3) || _class3);
 
 
 var oneTime = _aureliaBinding.bindingMode.oneTime;
@@ -423,7 +355,7 @@ var NullRepeatStrategy = exports.NullRepeatStrategy = function () {
   return NullRepeatStrategy;
 }();
 
-var If = exports.If = (_dec8 = (0, _aureliaTemplating.customAttribute)('if'), _dec9 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec8(_class6 = (0, _aureliaTemplating.templateController)(_class6 = _dec9(_class6 = function () {
+var If = exports.If = (_dec5 = (0, _aureliaTemplating.customAttribute)('if'), _dec6 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec5(_class4 = (0, _aureliaTemplating.templateController)(_class4 = _dec6(_class4 = function () {
   function If(viewFactory, viewSlot) {
     _classCallCheck(this, If);
 
@@ -523,7 +455,7 @@ var If = exports.If = (_dec8 = (0, _aureliaTemplating.customAttribute)('if'), _d
   };
 
   return If;
-}()) || _class6) || _class6) || _class6);
+}()) || _class4) || _class4) || _class4);
 
 
 var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
@@ -540,7 +472,7 @@ var HTMLSanitizer = exports.HTMLSanitizer = function () {
   return HTMLSanitizer;
 }();
 
-var Hide = exports.Hide = (_dec10 = (0, _aureliaTemplating.customAttribute)('hide'), _dec11 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator), _dec10(_class7 = _dec11(_class7 = function () {
+var Hide = exports.Hide = (_dec7 = (0, _aureliaTemplating.customAttribute)('hide'), _dec8 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator), _dec7(_class5 = _dec8(_class5 = function () {
   function Hide(element, animator) {
     _classCallCheck(this, Hide);
 
@@ -561,8 +493,8 @@ var Hide = exports.Hide = (_dec10 = (0, _aureliaTemplating.customAttribute)('hid
   };
 
   return Hide;
-}()) || _class7) || _class7);
-var Focus = exports.Focus = (_dec12 = (0, _aureliaTemplating.customAttribute)('focus', _aureliaBinding.bindingMode.twoWay), _dec13 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTaskQueue.TaskQueue), _dec12(_class8 = _dec13(_class8 = function () {
+}()) || _class5) || _class5);
+var Focus = exports.Focus = (_dec9 = (0, _aureliaTemplating.customAttribute)('focus', _aureliaBinding.bindingMode.twoWay), _dec10 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTaskQueue.TaskQueue), _dec9(_class6 = _dec10(_class6 = function () {
   function Focus(element, taskQueue) {
     var _this4 = this;
 
@@ -622,11 +554,11 @@ var Focus = exports.Focus = (_dec12 = (0, _aureliaTemplating.customAttribute)('f
   };
 
   return Focus;
-}()) || _class8) || _class8);
+}()) || _class6) || _class6);
 function _createDynamicElement(name, viewUrl, bindableNames) {
-  var _dec14, _dec15, _class9;
+  var _dec11, _dec12, _class7;
 
-  var DynamicElement = (_dec14 = (0, _aureliaTemplating.customElement)(name), _dec15 = (0, _aureliaTemplating.useView)(viewUrl), _dec14(_class9 = _dec15(_class9 = function () {
+  var DynamicElement = (_dec11 = (0, _aureliaTemplating.customElement)(name), _dec12 = (0, _aureliaTemplating.useView)(viewUrl), _dec11(_class7 = _dec12(_class7 = function () {
     function DynamicElement() {
       _classCallCheck(this, DynamicElement);
     }
@@ -636,7 +568,7 @@ function _createDynamicElement(name, viewUrl, bindableNames) {
     };
 
     return DynamicElement;
-  }()) || _class9) || _class9);
+  }()) || _class7) || _class7);
 
   for (var i = 0, ii = bindableNames.length; i < ii; ++i) {
     (0, _aureliaTemplating.bindable)(bindableNames[i])(DynamicElement);
@@ -774,9 +706,9 @@ var CSSViewEngineHooks = function () {
 }();
 
 function _createCSSResource(address) {
-  var _dec16, _class10;
+  var _dec13, _class8;
 
-  var ViewCSS = (_dec16 = (0, _aureliaTemplating.resource)(new CSSResource(address)), _dec16(_class10 = function (_CSSViewEngineHooks) {
+  var ViewCSS = (_dec13 = (0, _aureliaTemplating.resource)(new CSSResource(address)), _dec13(_class8 = function (_CSSViewEngineHooks) {
     _inherits(ViewCSS, _CSSViewEngineHooks);
 
     function ViewCSS() {
@@ -786,12 +718,12 @@ function _createCSSResource(address) {
     }
 
     return ViewCSS;
-  }(CSSViewEngineHooks)) || _class10);
+  }(CSSViewEngineHooks)) || _class8);
 
   return ViewCSS;
 }
 
-var Compose = exports.Compose = (_dec17 = (0, _aureliaTemplating.customElement)('compose'), _dec18 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue), _dec17(_class11 = (0, _aureliaTemplating.noView)(_class11 = _dec18(_class11 = (_class12 = function () {
+var Compose = exports.Compose = (_dec14 = (0, _aureliaTemplating.customElement)('compose'), _dec15 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue), _dec14(_class9 = (0, _aureliaTemplating.noView)(_class9 = _dec15(_class9 = (_class10 = function () {
   function Compose(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
     _classCallCheck(this, Compose);
 
@@ -896,16 +828,16 @@ var Compose = exports.Compose = (_dec17 = (0, _aureliaTemplating.customElement)(
   };
 
   return Compose;
-}(), (_descriptor = _applyDecoratedDescriptor(_class12.prototype, 'model', [_aureliaTemplating.bindable], {
+}(), (_descriptor = _applyDecoratedDescriptor(_class10.prototype, 'model', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor2 = _applyDecoratedDescriptor(_class12.prototype, 'view', [_aureliaTemplating.bindable], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class10.prototype, 'view', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor3 = _applyDecoratedDescriptor(_class12.prototype, 'viewModel', [_aureliaTemplating.bindable], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class10.prototype, 'viewModel', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-})), _class12)) || _class11) || _class11) || _class11);
+})), _class10)) || _class9) || _class9) || _class9);
 
 
 function createInstruction(composer, instruction) {
@@ -928,12 +860,6 @@ function processInstruction(composer, instruction) {
     composer.currentViewModel = controller ? controller.viewModel : null;
   });
 }
-
-var CompileSpy = exports.CompileSpy = (_dec19 = (0, _aureliaTemplating.customAttribute)('compile-spy'), _dec20 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.TargetInstruction), _dec19(_class14 = _dec20(_class14 = function CompileSpy(element, instruction) {
-  _classCallCheck(this, CompileSpy);
-
-  LogManager.getLogger('compile-spy').info(element, instruction);
-}) || _class14) || _class14);
 
 var BindingSignaler = exports.BindingSignaler = function () {
   function BindingSignaler() {
@@ -967,21 +893,21 @@ var modeBindingBehavior = {
   }
 };
 
-var OneTimeBindingBehavior = exports.OneTimeBindingBehavior = (_dec21 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec21(_class16 = function OneTimeBindingBehavior() {
+var OneTimeBindingBehavior = exports.OneTimeBindingBehavior = (_dec16 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec16(_class13 = function OneTimeBindingBehavior() {
   _classCallCheck(this, OneTimeBindingBehavior);
 
   this.mode = _aureliaBinding.bindingMode.oneTime;
-}) || _class16);
-var OneWayBindingBehavior = exports.OneWayBindingBehavior = (_dec22 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec22(_class17 = function OneWayBindingBehavior() {
+}) || _class13);
+var OneWayBindingBehavior = exports.OneWayBindingBehavior = (_dec17 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec17(_class14 = function OneWayBindingBehavior() {
   _classCallCheck(this, OneWayBindingBehavior);
 
   this.mode = _aureliaBinding.bindingMode.oneWay;
-}) || _class17);
-var TwoWayBindingBehavior = exports.TwoWayBindingBehavior = (_dec23 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec23(_class18 = function TwoWayBindingBehavior() {
+}) || _class14);
+var TwoWayBindingBehavior = exports.TwoWayBindingBehavior = (_dec18 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec18(_class15 = function TwoWayBindingBehavior() {
   _classCallCheck(this, TwoWayBindingBehavior);
 
   this.mode = _aureliaBinding.bindingMode.twoWay;
-}) || _class18);
+}) || _class15);
 var lifecycleOptionalBehaviors = exports.lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'with'];
 
 function behaviorRequiresLifecycle(instruction) {
@@ -1577,7 +1503,7 @@ var SetRepeatStrategy = exports.SetRepeatStrategy = function () {
   return SetRepeatStrategy;
 }();
 
-var SanitizeHTMLValueConverter = exports.SanitizeHTMLValueConverter = (_dec24 = (0, _aureliaBinding.valueConverter)('sanitizeHTML'), _dec25 = (0, _aureliaDependencyInjection.inject)(HTMLSanitizer), _dec24(_class19 = _dec25(_class19 = function () {
+var SanitizeHTMLValueConverter = exports.SanitizeHTMLValueConverter = (_dec19 = (0, _aureliaBinding.valueConverter)('sanitizeHTML'), _dec20 = (0, _aureliaDependencyInjection.inject)(HTMLSanitizer), _dec19(_class16 = _dec20(_class16 = function () {
   function SanitizeHTMLValueConverter(sanitizer) {
     _classCallCheck(this, SanitizeHTMLValueConverter);
 
@@ -1593,7 +1519,7 @@ var SanitizeHTMLValueConverter = exports.SanitizeHTMLValueConverter = (_dec24 = 
   };
 
   return SanitizeHTMLValueConverter;
-}()) || _class19) || _class19);
+}()) || _class16) || _class16);
 function getElementName(address) {
   return (/([^\/^\?]+)\.html/i.exec(address)[1].toLowerCase()
   );
@@ -1724,7 +1650,7 @@ var RepeatStrategyLocator = exports.RepeatStrategyLocator = function () {
   return RepeatStrategyLocator;
 }();
 
-var Repeat = exports.Repeat = (_dec26 = (0, _aureliaTemplating.customAttribute)('repeat'), _dec27 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.TargetInstruction, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaBinding.ObserverLocator, RepeatStrategyLocator), _dec26(_class21 = (0, _aureliaTemplating.templateController)(_class21 = _dec27(_class21 = (_class22 = function (_AbstractRepeater) {
+var Repeat = exports.Repeat = (_dec21 = (0, _aureliaTemplating.customAttribute)('repeat'), _dec22 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.TargetInstruction, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaBinding.ObserverLocator, RepeatStrategyLocator), _dec21(_class18 = (0, _aureliaTemplating.templateController)(_class18 = _dec22(_class18 = (_class19 = function (_AbstractRepeater) {
   _inherits(Repeat, _AbstractRepeater);
 
   function Repeat(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
@@ -1944,16 +1870,16 @@ var Repeat = exports.Repeat = (_dec26 = (0, _aureliaTemplating.customAttribute)(
   };
 
   return Repeat;
-}(AbstractRepeater), (_descriptor4 = _applyDecoratedDescriptor(_class22.prototype, 'items', [_aureliaTemplating.bindable], {
+}(AbstractRepeater), (_descriptor4 = _applyDecoratedDescriptor(_class19.prototype, 'items', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor5 = _applyDecoratedDescriptor(_class22.prototype, 'local', [_aureliaTemplating.bindable], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class19.prototype, 'local', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor6 = _applyDecoratedDescriptor(_class22.prototype, 'key', [_aureliaTemplating.bindable], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class19.prototype, 'key', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor7 = _applyDecoratedDescriptor(_class22.prototype, 'value', [_aureliaTemplating.bindable], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class19.prototype, 'value', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-})), _class22)) || _class21) || _class21) || _class21);
+})), _class19)) || _class18) || _class18) || _class18);

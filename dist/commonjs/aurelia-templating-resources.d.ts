@@ -1,5 +1,4 @@
 declare module 'aurelia-templating-resources' {
-  import * as LogManager from 'aurelia-logging';
   import {
     inject,
     Container
@@ -19,8 +18,8 @@ declare module 'aurelia-templating-resources' {
     CompositionEngine,
     noView,
     View,
-    TargetInstruction,
-    ViewEngine
+    ViewEngine,
+    TargetInstruction
   } from 'aurelia-templating';
   import {
     createOverrideContext,
@@ -89,46 +88,6 @@ declare module 'aurelia-templating-resources' {
       */
     unbind(): any;
   }
-  
-  /**
-  * Attribute to be placed on any HTML element in a view to emit the View instance
-  * to the debug console, giving you insight into the live View instance, including
-  * all child views, live bindings, behaviors and more.
-  */
-  export class ViewSpy {
-    
-    /**
-      * Creates a new instance of ViewSpy.
-      */
-    constructor();
-    
-    /**
-      * Invoked when the target view is created.
-      * @param view The target view.
-      */
-    created(view: any): any;
-    
-    /**
-      * Invoked when the target view is bound.
-      * @param bindingContext The target view's binding context.
-      */
-    bind(bindingContext: any): any;
-    
-    /**
-      * Invoked when the target element is attached to the DOM.
-      */
-    attached(): any;
-    
-    /**
-      * Invoked when the target element is detached from the DOM.
-      */
-    detached(): any;
-    
-    /**
-      * Invoked when the target element is unbound.
-      */
-    unbind(): any;
-  }
   export class UpdateTriggerBindingBehavior {
     static inject: any;
     constructor(eventManager: any);
@@ -163,30 +122,6 @@ declare module 'aurelia-templating-resources' {
       * Binds the Show attribute.
       */
     bind(bindingContext: any): any;
-  }
-  
-  /**
-  * Marks any part of a view to be replacable by the consumer.
-  */
-  export class Replaceable {
-    
-    /**
-      * @param viewFactory target The factory generating the view.
-      * @param viewSlot viewSlot The slot the view is injected in to.
-      */
-    constructor(viewFactory: any, viewSlot: any);
-    
-    /**
-      * Binds the replaceable to the binding context and override context.
-      * @param bindingContext The binding context.
-      * @param overrideContext An override context for binding.
-      */
-    bind(bindingContext: any, overrideContext: any): any;
-    
-    /**
-      * Unbinds the replaceable.
-      */
-    unbind(): any;
   }
   
   /**
@@ -408,21 +343,6 @@ declare module 'aurelia-templating-resources' {
         * @param oldValue The old value.
         */
     viewModelChanged(newValue: any, oldValue: any): any;
-  }
-  
-  /**
-  * Attribute to be placed on any element to have it emit the View Compiler's
-  * TargetInstruction into the debug console, giving you insight into all the
-  * parsed bindings, behaviors and event handers for the targeted element.
-  */
-  export class CompileSpy {
-    
-    /**
-      * Creates and instanse of CompileSpy.
-      * @param element target element on where attribute is placed on.
-      * @param instruction instructions for how the target element should be enhanced.
-      */
-    constructor(element: any, instruction: any);
   }
   export class BindingSignaler {
     signals: any;

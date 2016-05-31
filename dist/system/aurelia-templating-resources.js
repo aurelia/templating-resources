@@ -1,7 +1,7 @@
 'use strict';
 
-System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './replaceable', './focus', './compile-spy', './view-spy', 'aurelia-templating', './css-resource', 'aurelia-pal', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy', './repeat-utilities', './analyze-view-factory'], function (_export, _context) {
-  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, CompileSpy, ViewSpy, ViewEngine, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle;
+System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './focus', 'aurelia-templating', './css-resource', 'aurelia-pal', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy', './repeat-utilities', './analyze-view-factory'], function (_export, _context) {
+  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Focus, ViewEngine, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle;
 
   function configure(config) {
     if (FEATURE.shadowDOM) {
@@ -10,7 +10,7 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       DOM.injectStyles('.aurelia-hide { display:none !important; }');
     }
 
-    config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './replaceable', './sanitize-html', './focus', './compile-spy', './view-spy', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
+    config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './focus', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
 
     configureHtmlResourcePlugin(config);
 
@@ -39,14 +39,8 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       Hide = _hide.Hide;
     }, function (_sanitizeHtml) {
       SanitizeHTMLValueConverter = _sanitizeHtml.SanitizeHTMLValueConverter;
-    }, function (_replaceable) {
-      Replaceable = _replaceable.Replaceable;
     }, function (_focus) {
       Focus = _focus.Focus;
-    }, function (_compileSpy) {
-      CompileSpy = _compileSpy.CompileSpy;
-    }, function (_viewSpy) {
-      ViewSpy = _viewSpy.ViewSpy;
     }, function (_aureliaTemplating) {
       ViewEngine = _aureliaTemplating.ViewEngine;
     }, function (_cssResource) {
@@ -113,13 +107,7 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
 
       _export('SanitizeHTMLValueConverter', SanitizeHTMLValueConverter);
 
-      _export('Replaceable', Replaceable);
-
       _export('Focus', Focus);
-
-      _export('CompileSpy', CompileSpy);
-
-      _export('ViewSpy', ViewSpy);
 
       _export('configure', configure);
 

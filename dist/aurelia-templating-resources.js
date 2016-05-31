@@ -1,6 +1,5 @@
-import * as LogManager from 'aurelia-logging';
 import {inject,Container} from 'aurelia-dependency-injection';
-import {BoundViewFactory,ViewSlot,customAttribute,templateController,Animator,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,noView,View,TargetInstruction,ViewEngine} from 'aurelia-templating';
+import {BoundViewFactory,ViewSlot,customAttribute,templateController,Animator,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,noView,View,ViewEngine,TargetInstruction} from 'aurelia-templating';
 import {createOverrideContext,bindingMode,EventManager,BindingBehavior,ValueConverter,sourceContext,mergeSplice,valueConverter,ObserverLocator} from 'aurelia-binding';
 import {DOM,FEATURE} from 'aurelia-pal';
 import {TaskQueue} from 'aurelia-task-queue';
@@ -61,67 +60,6 @@ export class With {
     if (this.view) {
       this.view.unbind();
     }
-  }
-}
-
-/**
-* Attribute to be placed on any HTML element in a view to emit the View instance
-* to the debug console, giving you insight into the live View instance, including
-* all child views, live bindings, behaviors and more.
-*/
-@customAttribute('view-spy')
-export class ViewSpy {
-  /**
-  * Creates a new instance of ViewSpy.
-  */
-  constructor() {
-    this.logger = LogManager.getLogger('view-spy');
-  }
-
-  _log(lifecycleName, context) {
-    if (!this.value && lifecycleName === 'created' ) {
-      this.logger.info(lifecycleName, this.view);
-    } else if (this.value && this.value.indexOf(lifecycleName) !== -1) {
-      this.logger.info(lifecycleName, this.view, context);
-    }
-  }
-
-  /**
-  * Invoked when the target view is created.
-  * @param view The target view.
-  */
-  created(view) {
-    this.view = view;
-    this._log('created');
-  }
-
-  /**
-  * Invoked when the target view is bound.
-  * @param bindingContext The target view's binding context.
-  */
-  bind(bindingContext) {
-    this._log('bind', bindingContext);
-  }
-
-  /**
-  * Invoked when the target element is attached to the DOM.
-  */
-  attached() {
-    this._log('attached');
-  }
-
-  /**
-  * Invoked when the target element is detached from the DOM.
-  */
-  detached() {
-    this._log('detached');
-  }
-
-  /**
-  * Invoked when the target element is unbound.
-  */
-  unbind() {
-    this._log('unbind');
   }
 }
 
@@ -258,46 +196,6 @@ export class Show {
   */
   bind(bindingContext) {
     this.valueChanged(this.value);
-  }
-}
-
-/**
-* Marks any part of a view to be replacable by the consumer.
-*/
-@customAttribute('replaceable')
-@templateController
-@inject(BoundViewFactory, ViewSlot)
-export class Replaceable {
-
-  /**
-  * @param viewFactory target The factory generating the view.
-  * @param viewSlot viewSlot The slot the view is injected in to.
-  */
-  constructor(viewFactory, viewSlot) {
-    this.viewFactory = viewFactory; //This is referenced internally in the Controller's bind method.
-    this.viewSlot = viewSlot;
-    this.view = null;
-  }
-
-  /**
-  * Binds the replaceable to the binding context and override context.
-  * @param bindingContext The binding context.
-  * @param overrideContext An override context for binding.
-  */
-  bind(bindingContext, overrideContext) {
-    if (this.view === null) {
-      this.view = this.viewFactory.create();
-      this.viewSlot.add(this.view);
-    }
-
-    this.view.bind(bindingContext, overrideContext);
-  }
-
-  /**
-  * Unbinds the replaceable.
-  */
-  unbind() {
-    this.view.unbind();
   }
 }
 
@@ -991,24 +889,6 @@ function processInstruction(composer, instruction) {
     composer.currentController = controller;
     composer.currentViewModel = controller ? controller.viewModel : null;
   });
-}
-
-/**
-* Attribute to be placed on any element to have it emit the View Compiler's
-* TargetInstruction into the debug console, giving you insight into all the
-* parsed bindings, behaviors and event handers for the targeted element.
-*/
-@customAttribute('compile-spy')
-@inject(DOM.Element, TargetInstruction)
-export class CompileSpy {
-  /**
-  * Creates and instanse of CompileSpy.
-  * @param element target element on where attribute is placed on.
-  * @param instruction instructions for how the target element should be enhanced.
-  */
-  constructor(element, instruction) {
-    LogManager.getLogger('compile-spy').info(element, instruction);
-  }
 }
 
 export class BindingSignaler {

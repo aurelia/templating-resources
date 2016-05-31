@@ -1,3 +1,27 @@
+### 1.0.0-beta.2.0.0 (2016-05-31)
+
+
+#### Bug Fixes
+
+* **replaceable:** removed replaceable ([6ac5731e](http://github.com/aurelia/templating-resources/commit/6ac5731e77099fb35606f1611d5e36073a64ee21))
+* **spies:** move compile-spy and view-spy ([72c4433f](http://github.com/aurelia/templating-resources/commit/72c4433f08b4c2bdbdb06e11a69856b719cadab8))
+
+
+#### Breaking Changes
+
+* This commit removes the replaceable custom attribute.
+Now that Shadow DOM v1 Slots are implemented there is no more need for
+this. Replaceable parts for template controllers are still supported
+for if, repeat, etc. via the part attribute.
+
+ ([6ac5731e](http://github.com/aurelia/templating-resources/commit/6ac5731e77099fb35606f1611d5e36073a64ee21))
+* The compile-spy and view-spy custom attributes have
+been removed from this library. They are now part of the
+aurelia-testing library.
+
+ ([72c4433f](http://github.com/aurelia/templating-resources/commit/72c4433f08b4c2bdbdb06e11a69856b719cadab8))
+
+
 ### 1.0.0-beta.1.2.6 (2016-05-12)
 
 
