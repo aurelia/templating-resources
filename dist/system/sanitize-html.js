@@ -1,13 +1,11 @@
 'use strict';
 
 System.register(['aurelia-binding', 'aurelia-dependency-injection', './html-sanitizer'], function (_export, _context) {
+  "use strict";
+
   var valueConverter, inject, HTMLSanitizer, _dec, _dec2, _class, SanitizeHTMLValueConverter;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   return {
     setters: [function (_aureliaBinding) {
@@ -20,7 +18,7 @@ System.register(['aurelia-binding', 'aurelia-dependency-injection', './html-sani
     execute: function () {
       _export('SanitizeHTMLValueConverter', SanitizeHTMLValueConverter = (_dec = valueConverter('sanitizeHTML'), _dec2 = inject(HTMLSanitizer), _dec(_class = _dec2(_class = function () {
         function SanitizeHTMLValueConverter(sanitizer) {
-          _classCallCheck(this, SanitizeHTMLValueConverter);
+          
 
           this.sanitizer = sanitizer;
         }

@@ -8,7 +8,6 @@ import { SanitizeHTMLValueConverter } from './sanitize-html';
 import { Focus } from './focus';
 import { ViewEngine } from 'aurelia-templating';
 import { _createCSSResource } from './css-resource';
-import { FEATURE, DOM } from 'aurelia-pal';
 import { HTMLSanitizer } from './html-sanitizer';
 import { OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior } from './binding-mode-behaviors';
 import { ThrottleBindingBehavior } from './throttle-binding-behavior';
@@ -26,13 +25,10 @@ import { SetRepeatStrategy } from './set-repeat-strategy';
 import { NumberRepeatStrategy } from './number-repeat-strategy';
 import { createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression } from './repeat-utilities';
 import { viewsRequireLifecycle } from './analyze-view-factory';
+import { injectAureliaHideStyleAtHead } from './aurelia-hide-style';
 
 function configure(config) {
-  if (FEATURE.shadowDOM) {
-    DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
-  } else {
-    DOM.injectStyles('.aurelia-hide { display:none !important; }');
-  }
+  injectAureliaHideStyleAtHead();
 
   config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './focus', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
 

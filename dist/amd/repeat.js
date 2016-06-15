@@ -16,11 +16,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
     });
   }
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   function _possibleConstructorReturn(self, call) {
     if (!self) {
@@ -85,7 +81,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
     _inherits(Repeat, _AbstractRepeater);
 
     function Repeat(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
-      _classCallCheck(this, Repeat);
+      
 
       var _this = _possibleConstructorReturn(this, _AbstractRepeater.call(this, {
         local: 'item',
@@ -239,6 +235,8 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-binding', 'aurelia-t
           }
         }
       }
+
+      return undefined;
     };
 
     Repeat.prototype.viewCount = function viewCount() {

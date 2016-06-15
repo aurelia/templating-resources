@@ -1,14 +1,12 @@
 'use strict';
 
-System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './focus', 'aurelia-templating', './css-resource', 'aurelia-pal', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy', './repeat-utilities', './analyze-view-factory'], function (_export, _context) {
-  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Focus, ViewEngine, _createCSSResource, FEATURE, DOM, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle;
+System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './focus', 'aurelia-templating', './css-resource', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy', './repeat-utilities', './analyze-view-factory', './aurelia-hide-style'], function (_export, _context) {
+  "use strict";
+
+  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Focus, ViewEngine, _createCSSResource, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle, injectAureliaHideStyleAtHead;
 
   function configure(config) {
-    if (FEATURE.shadowDOM) {
-      DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
-    } else {
-      DOM.injectStyles('.aurelia-hide { display:none !important; }');
-    }
+    injectAureliaHideStyleAtHead();
 
     config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './focus', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
 
@@ -45,9 +43,6 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       ViewEngine = _aureliaTemplating.ViewEngine;
     }, function (_cssResource) {
       _createCSSResource = _cssResource._createCSSResource;
-    }, function (_aureliaPal) {
-      FEATURE = _aureliaPal.FEATURE;
-      DOM = _aureliaPal.DOM;
     }, function (_htmlSanitizer) {
       HTMLSanitizer = _htmlSanitizer.HTMLSanitizer;
     }, function (_bindingModeBehaviors) {
@@ -89,6 +84,8 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       unwrapExpression = _repeatUtilities.unwrapExpression;
     }, function (_analyzeViewFactory) {
       viewsRequireLifecycle = _analyzeViewFactory.viewsRequireLifecycle;
+    }, function (_aureliaHideStyle) {
+      injectAureliaHideStyleAtHead = _aureliaHideStyle.injectAureliaHideStyleAtHead;
     }],
     execute: function () {
       _export('Compose', Compose);

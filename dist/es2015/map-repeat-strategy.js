@@ -90,5 +90,7 @@ export let MapRepeatStrategy = class MapRepeatStrategy {
         return i;
       }
     }
+
+    return undefined;
   }
 };

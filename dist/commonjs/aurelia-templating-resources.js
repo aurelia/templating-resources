@@ -25,8 +25,6 @@ var _aureliaTemplating = require('aurelia-templating');
 
 var _cssResource = require('./css-resource');
 
-var _aureliaPal = require('aurelia-pal');
-
 var _htmlSanitizer = require('./html-sanitizer');
 
 var _bindingModeBehaviors = require('./binding-mode-behaviors');
@@ -61,12 +59,10 @@ var _repeatUtilities = require('./repeat-utilities');
 
 var _analyzeViewFactory = require('./analyze-view-factory');
 
+var _aureliaHideStyle = require('./aurelia-hide-style');
+
 function configure(config) {
-  if (_aureliaPal.FEATURE.shadowDOM) {
-    _aureliaPal.DOM.injectStyles('body /deep/ .aurelia-hide { display:none !important; }');
-  } else {
-    _aureliaPal.DOM.injectStyles('.aurelia-hide { display:none !important; }');
-  }
+  (0, _aureliaHideStyle.injectAureliaHideStyleAtHead)();
 
   config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './focus', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
 

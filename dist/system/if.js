@@ -1,13 +1,11 @@
 'use strict';
 
 System.register(['aurelia-templating', 'aurelia-dependency-injection'], function (_export, _context) {
+  "use strict";
+
   var BoundViewFactory, ViewSlot, customAttribute, templateController, inject, _dec, _dec2, _class, If;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   return {
     setters: [function (_aureliaTemplating) {
@@ -21,7 +19,7 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection'], function
     execute: function () {
       _export('If', If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, ViewSlot), _dec(_class = templateController(_class = _dec2(_class = function () {
         function If(viewFactory, viewSlot) {
-          _classCallCheck(this, If);
+          
 
           this.viewFactory = viewFactory;
           this.viewSlot = viewSlot;
@@ -97,6 +95,8 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection'], function
             this.showing = true;
             return this.viewSlot.add(this.view);
           }
+
+          return undefined;
         };
 
         If.prototype.unbind = function unbind() {

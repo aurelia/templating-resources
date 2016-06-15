@@ -7,11 +7,11 @@ exports.MapRepeatStrategy = undefined;
 
 var _repeatUtilities = require('./repeat-utilities');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 var MapRepeatStrategy = exports.MapRepeatStrategy = function () {
   function MapRepeatStrategy() {
-    _classCallCheck(this, MapRepeatStrategy);
+    
   }
 
   MapRepeatStrategy.prototype.getCollectionObserver = function getCollectionObserver(observerLocator, items) {
@@ -107,6 +107,8 @@ var MapRepeatStrategy = exports.MapRepeatStrategy = function () {
         return i;
       }
     }
+
+    return undefined;
   };
 
   return MapRepeatStrategy;

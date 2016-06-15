@@ -1,13 +1,11 @@
 'use strict';
 
 System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-pal'], function (_export, _context) {
+  "use strict";
+
   var customAttribute, bindingMode, inject, TaskQueue, DOM, _dec, _dec2, _class, Focus;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   return {
     setters: [function (_aureliaTemplating) {
@@ -26,7 +24,7 @@ System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-in
         function Focus(element, taskQueue) {
           var _this = this;
 
-          _classCallCheck(this, Focus);
+          
 
           this.element = element;
           this.taskQueue = taskQueue;

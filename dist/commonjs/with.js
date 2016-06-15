@@ -13,11 +13,11 @@ var _aureliaTemplating = require('aurelia-templating');
 
 var _aureliaBinding = require('aurelia-binding');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 var With = exports.With = (_dec = (0, _aureliaTemplating.customAttribute)('with'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec(_class = (0, _aureliaTemplating.templateController)(_class = _dec2(_class = function () {
   function With(viewFactory, viewSlot) {
-    _classCallCheck(this, With);
+    
 
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;

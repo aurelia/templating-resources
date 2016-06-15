@@ -16,11 +16,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
     });
   }
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
     var desc = {};
@@ -59,7 +55,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aureli
 
   var Compose = exports.Compose = (_dec = (0, _aureliaTemplating.customElement)('compose'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue), _dec(_class = (0, _aureliaTemplating.noView)(_class = _dec2(_class = (_class2 = function () {
     function Compose(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
-      _classCallCheck(this, Compose);
+      
 
       _initDefineProp(this, 'model', _descriptor, this);
 

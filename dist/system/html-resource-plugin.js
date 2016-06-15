@@ -1,6 +1,8 @@
 'use strict';
 
 System.register(['aurelia-templating', './dynamic-element'], function (_export, _context) {
+  "use strict";
+
   var ViewEngine, _createDynamicElement;
 
   return {

@@ -9,14 +9,14 @@ var _class, _temp;
 
 var _aureliaBinding = require('aurelia-binding');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 var eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
 var notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way bindings on input/select elements.';
 
 var UpdateTriggerBindingBehavior = exports.UpdateTriggerBindingBehavior = (_temp = _class = function () {
   function UpdateTriggerBindingBehavior(eventManager) {
-    _classCallCheck(this, UpdateTriggerBindingBehavior);
+    
 
     this.eventManager = eventManager;
   }

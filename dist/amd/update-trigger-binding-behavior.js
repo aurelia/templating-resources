@@ -6,11 +6,7 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
   });
   exports.UpdateTriggerBindingBehavior = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   var _class, _temp;
 
@@ -19,7 +15,7 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
 
   var UpdateTriggerBindingBehavior = exports.UpdateTriggerBindingBehavior = (_temp = _class = function () {
     function UpdateTriggerBindingBehavior(eventManager) {
-      _classCallCheck(this, UpdateTriggerBindingBehavior);
+      
 
       this.eventManager = eventManager;
     }

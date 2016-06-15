@@ -78,5 +78,7 @@ export let SetRepeatStrategy = class SetRepeatStrategy {
         return i;
       }
     }
+
+    return undefined;
   }
 };

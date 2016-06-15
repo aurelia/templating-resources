@@ -30,11 +30,7 @@ define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-i
     if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
   }
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   var cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
@@ -53,7 +49,7 @@ define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-i
 
   var CSSResource = function () {
     function CSSResource(address) {
-      _classCallCheck(this, CSSResource);
+      
 
       this.address = address;
       this._global = null;
@@ -86,7 +82,7 @@ define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-i
 
   var CSSViewEngineHooks = function () {
     function CSSViewEngineHooks(mode) {
-      _classCallCheck(this, CSSViewEngineHooks);
+      
 
       this.mode = mode;
       this.css = null;
@@ -120,7 +116,7 @@ define(['exports', 'aurelia-templating', 'aurelia-loader', 'aurelia-dependency-i
       _inherits(ViewCSS, _CSSViewEngineHooks);
 
       function ViewCSS() {
-        _classCallCheck(this, ViewCSS);
+        
 
         return _possibleConstructorReturn(this, _CSSViewEngineHooks.apply(this, arguments));
       }

@@ -224,6 +224,8 @@ export class Repeat extends AbstractRepeater {
         }
       }
     }
+
+    return undefined;
   }
 
   // @override AbstractRepeater

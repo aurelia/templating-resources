@@ -71,6 +71,8 @@ export let If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
       this.showing = true;
       return this.viewSlot.add(this.view);
     }
+
+    return undefined;
   }
 
   unbind() {

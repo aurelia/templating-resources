@@ -6,15 +6,11 @@ define(['exports', './repeat-utilities', 'aurelia-binding'], function (exports, 
   });
   exports.ArrayRepeatStrategy = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   var ArrayRepeatStrategy = exports.ArrayRepeatStrategy = function () {
     function ArrayRepeatStrategy() {
-      _classCallCheck(this, ArrayRepeatStrategy);
+      
     }
 
     ArrayRepeatStrategy.prototype.getCollectionObserver = function getCollectionObserver(observerLocator, items) {
@@ -224,6 +220,8 @@ define(['exports', './repeat-utilities', 'aurelia-binding'], function (exports, 
 
       var spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
       (0, _repeatUtilities.updateOverrideContexts)(repeat.views(), spliceIndexLow);
+
+      return undefined;
     };
 
     ArrayRepeatStrategy.prototype._handleAddedSplices = function _handleAddedSplices(repeat, array, splices) {

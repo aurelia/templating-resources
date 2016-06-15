@@ -1,13 +1,11 @@
 'use strict';
 
 System.register([], function (_export, _context) {
+  "use strict";
+
   var SCRIPT_REGEX, HTMLSanitizer;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   return {
     setters: [],
@@ -16,7 +14,7 @@ System.register([], function (_export, _context) {
 
       _export('HTMLSanitizer', HTMLSanitizer = function () {
         function HTMLSanitizer() {
-          _classCallCheck(this, HTMLSanitizer);
+          
         }
 
         HTMLSanitizer.prototype.sanitize = function sanitize(input) {

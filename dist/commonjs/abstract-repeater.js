@@ -4,11 +4,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 var AbstractRepeater = exports.AbstractRepeater = function () {
   function AbstractRepeater(options) {
-    _classCallCheck(this, AbstractRepeater);
+    
 
     Object.assign(this, {
       local: 'items',

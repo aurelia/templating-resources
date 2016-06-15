@@ -6,11 +6,7 @@ define(['exports', './binding-signaler'], function (exports, _bindingSignaler) {
   });
   exports.SignalBindingBehavior = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   var SignalBindingBehavior = exports.SignalBindingBehavior = function () {
     SignalBindingBehavior.inject = function inject() {
@@ -18,7 +14,7 @@ define(['exports', './binding-signaler'], function (exports, _bindingSignaler) {
     };
 
     function SignalBindingBehavior(bindingSignaler) {
-      _classCallCheck(this, SignalBindingBehavior);
+      
 
       this.signals = bindingSignaler.signals;
     }

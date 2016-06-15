@@ -200,6 +200,8 @@ export let Repeat = (_dec = customAttribute('repeat'), _dec2 = inject(BoundViewF
         }
       }
     }
+
+    return undefined;
   }
 
   viewCount() {

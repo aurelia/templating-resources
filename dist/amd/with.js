@@ -6,17 +6,13 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
   });
   exports.With = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   var _dec, _dec2, _class;
 
   var With = exports.With = (_dec = (0, _aureliaTemplating.customAttribute)('with'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec(_class = (0, _aureliaTemplating.templateController)(_class = _dec2(_class = function () {
     function With(viewFactory, viewSlot) {
-      _classCallCheck(this, With);
+      
 
       this.viewFactory = viewFactory;
       this.viewSlot = viewSlot;

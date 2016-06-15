@@ -1,6 +1,8 @@
 'use strict';
 
 System.register(['aurelia-binding'], function (_export, _context) {
+  "use strict";
+
   var createOverrideContext, BindingBehavior, ValueConverter, sourceContext, bindingMode, oneTime;
   return {
     setters: [function (_aureliaBinding) {

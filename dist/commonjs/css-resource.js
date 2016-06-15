@@ -19,7 +19,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 var cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
@@ -38,7 +38,7 @@ function fixupCSSUrls(address, css) {
 
 var CSSResource = function () {
   function CSSResource(address) {
-    _classCallCheck(this, CSSResource);
+    
 
     this.address = address;
     this._global = null;
@@ -71,7 +71,7 @@ var CSSResource = function () {
 
 var CSSViewEngineHooks = function () {
   function CSSViewEngineHooks(mode) {
-    _classCallCheck(this, CSSViewEngineHooks);
+    
 
     this.mode = mode;
     this.css = null;
@@ -105,7 +105,7 @@ function _createCSSResource(address) {
     _inherits(ViewCSS, _CSSViewEngineHooks);
 
     function ViewCSS() {
-      _classCallCheck(this, ViewCSS);
+      
 
       return _possibleConstructorReturn(this, _CSSViewEngineHooks.apply(this, arguments));
     }

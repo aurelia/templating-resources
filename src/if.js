@@ -91,6 +91,8 @@ export class If {
       this.showing = true;
       return this.viewSlot.add(this.view);
     }
+
+    return undefined;
   }
 
   /**

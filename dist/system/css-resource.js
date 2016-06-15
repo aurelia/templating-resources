@@ -1,6 +1,8 @@
 'use strict';
 
 System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-injection', 'aurelia-path', 'aurelia-pal'], function (_export, _context) {
+  "use strict";
+
   var ViewResources, resource, ViewCompileInstruction, Loader, Container, relativeToFile, DOM, FEATURE, cssUrlMatcher, CSSResource, CSSViewEngineHooks;
 
   function _possibleConstructorReturn(self, call) {
@@ -27,11 +29,7 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
     if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
   }
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   function fixupCSSUrls(address, css) {
     if (typeof css !== 'string') {
@@ -66,7 +64,7 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
 
       CSSResource = function () {
         function CSSResource(address) {
-          _classCallCheck(this, CSSResource);
+          
 
           this.address = address;
           this._global = null;
@@ -99,7 +97,7 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
 
       CSSViewEngineHooks = function () {
         function CSSViewEngineHooks(mode) {
-          _classCallCheck(this, CSSViewEngineHooks);
+          
 
           this.mode = mode;
           this.css = null;
@@ -133,7 +131,7 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
           _inherits(ViewCSS, _CSSViewEngineHooks);
 
           function ViewCSS() {
-            _classCallCheck(this, ViewCSS);
+            
 
             return _possibleConstructorReturn(this, _CSSViewEngineHooks.apply(this, arguments));
           }

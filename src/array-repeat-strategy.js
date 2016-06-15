@@ -239,6 +239,8 @@ export class ArrayRepeatStrategy {
 
     let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
     updateOverrideContexts(repeat.views(), spliceIndexLow);
+
+    return undefined;
   }
 
   _handleAddedSplices(repeat, array, splices) {

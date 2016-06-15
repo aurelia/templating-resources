@@ -1,13 +1,11 @@
 'use strict';
 
 System.register(['./null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy'], function (_export, _context) {
+  "use strict";
+
   var NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, RepeatStrategyLocator;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   return {
     setters: [function (_nullRepeatStrategy) {
@@ -24,7 +22,7 @@ System.register(['./null-repeat-strategy', './array-repeat-strategy', './map-rep
     execute: function () {
       _export('RepeatStrategyLocator', RepeatStrategyLocator = function () {
         function RepeatStrategyLocator() {
-          _classCallCheck(this, RepeatStrategyLocator);
+          
 
           this.matchers = [];
           this.strategies = [];

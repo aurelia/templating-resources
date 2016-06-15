@@ -13,11 +13,11 @@ var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
 var _htmlSanitizer = require('./html-sanitizer');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 var SanitizeHTMLValueConverter = exports.SanitizeHTMLValueConverter = (_dec = (0, _aureliaBinding.valueConverter)('sanitizeHTML'), _dec2 = (0, _aureliaDependencyInjection.inject)(_htmlSanitizer.HTMLSanitizer), _dec(_class = _dec2(_class = function () {
   function SanitizeHTMLValueConverter(sanitizer) {
-    _classCallCheck(this, SanitizeHTMLValueConverter);
+    
 
     this.sanitizer = sanitizer;
   }

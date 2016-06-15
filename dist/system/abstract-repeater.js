@@ -1,20 +1,18 @@
 'use strict';
 
 System.register([], function (_export, _context) {
+  "use strict";
+
   var AbstractRepeater;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   return {
     setters: [],
     execute: function () {
       _export('AbstractRepeater', AbstractRepeater = function () {
         function AbstractRepeater(options) {
-          _classCallCheck(this, AbstractRepeater);
+          
 
           Object.assign(this, {
             local: 'items',

@@ -6,15 +6,11 @@ define(['exports', './repeat-utilities'], function (exports, _repeatUtilities) {
   });
   exports.NumberRepeatStrategy = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   var NumberRepeatStrategy = exports.NumberRepeatStrategy = function () {
     function NumberRepeatStrategy() {
-      _classCallCheck(this, NumberRepeatStrategy);
+      
     }
 
     NumberRepeatStrategy.prototype.getCollectionObserver = function getCollectionObserver() {

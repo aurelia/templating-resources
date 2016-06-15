@@ -1,13 +1,11 @@
 'use strict';
 
 System.register(['aurelia-binding'], function (_export, _context) {
+  "use strict";
+
   var sourceContext, BindingSignaler;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   return {
     setters: [function (_aureliaBinding) {
@@ -16,7 +14,7 @@ System.register(['aurelia-binding'], function (_export, _context) {
     execute: function () {
       _export('BindingSignaler', BindingSignaler = function () {
         function BindingSignaler() {
-          _classCallCheck(this, BindingSignaler);
+          
 
           this.signals = {};
         }

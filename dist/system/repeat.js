@@ -1,6 +1,8 @@
 'use strict';
 
 System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-templating', './repeat-strategy-locator', './repeat-utilities', './analyze-view-factory', './abstract-repeater'], function (_export, _context) {
+  "use strict";
+
   var inject, ObserverLocator, BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, customAttribute, bindable, templateController, RepeatStrategyLocator, getItemsSourceExpression, unwrapExpression, isOneTime, updateOneTimeBinding, viewsRequireLifecycle, AbstractRepeater, _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, Repeat;
 
   function _initDefineProp(target, property, descriptor, context) {
@@ -13,11 +15,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
     });
   }
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   function _possibleConstructorReturn(self, call) {
     if (!self) {
@@ -106,7 +104,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
         _inherits(Repeat, _AbstractRepeater);
 
         function Repeat(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
-          _classCallCheck(this, Repeat);
+          
 
           var _this = _possibleConstructorReturn(this, _AbstractRepeater.call(this, {
             local: 'item',
@@ -260,6 +258,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
               }
             }
           }
+
+          return undefined;
         };
 
         Repeat.prototype.viewCount = function viewCount() {

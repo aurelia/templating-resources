@@ -6,15 +6,11 @@ define(['exports', './null-repeat-strategy', './array-repeat-strategy', './map-r
   });
   exports.RepeatStrategyLocator = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   var RepeatStrategyLocator = exports.RepeatStrategyLocator = function () {
     function RepeatStrategyLocator() {
-      _classCallCheck(this, RepeatStrategyLocator);
+      
 
       this.matchers = [];
       this.strategies = [];

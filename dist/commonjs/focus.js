@@ -17,13 +17,13 @@ var _aureliaTaskQueue = require('aurelia-task-queue');
 
 var _aureliaPal = require('aurelia-pal');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 var Focus = exports.Focus = (_dec = (0, _aureliaTemplating.customAttribute)('focus', _aureliaBinding.bindingMode.twoWay), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTaskQueue.TaskQueue), _dec(_class = _dec2(_class = function () {
   function Focus(element, taskQueue) {
     var _this = this;
 
-    _classCallCheck(this, Focus);
+    
 
     this.element = element;
     this.taskQueue = taskQueue;

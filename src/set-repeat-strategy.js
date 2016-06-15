@@ -94,5 +94,7 @@ export class SetRepeatStrategy {
         return i;
       }
     }
+
+    return undefined;
   }
 }

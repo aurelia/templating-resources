@@ -6,11 +6,7 @@ define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-dependency-
   });
   exports.Focus = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   var _dec, _dec2, _class;
 
@@ -18,7 +14,7 @@ define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-dependency-
     function Focus(element, taskQueue) {
       var _this = this;
 
-      _classCallCheck(this, Focus);
+      
 
       this.element = element;
       this.taskQueue = taskQueue;

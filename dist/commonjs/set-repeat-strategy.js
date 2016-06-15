@@ -7,11 +7,11 @@ exports.SetRepeatStrategy = undefined;
 
 var _repeatUtilities = require('./repeat-utilities');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 var SetRepeatStrategy = exports.SetRepeatStrategy = function () {
   function SetRepeatStrategy() {
-    _classCallCheck(this, SetRepeatStrategy);
+    
   }
 
   SetRepeatStrategy.prototype.getCollectionObserver = function getCollectionObserver(observerLocator, items) {
@@ -95,6 +95,8 @@ var SetRepeatStrategy = exports.SetRepeatStrategy = function () {
         return i;
       }
     }
+
+    return undefined;
   };
 
   return SetRepeatStrategy;

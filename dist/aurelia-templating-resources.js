@@ -1,8 +1,8 @@
-import {inject,Container} from 'aurelia-dependency-injection';
-import {BoundViewFactory,ViewSlot,customAttribute,templateController,Animator,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,noView,View,ViewEngine,TargetInstruction} from 'aurelia-templating';
+import {inject,Container,Optional} from 'aurelia-dependency-injection';
+import {BoundViewFactory,ViewSlot,customAttribute,templateController,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,noView,View,ViewEngine,Animator,TargetInstruction} from 'aurelia-templating';
 import {createOverrideContext,bindingMode,EventManager,BindingBehavior,ValueConverter,sourceContext,mergeSplice,valueConverter,ObserverLocator} from 'aurelia-binding';
-import {DOM,FEATURE} from 'aurelia-pal';
 import {TaskQueue} from 'aurelia-task-queue';
+import {DOM,FEATURE} from 'aurelia-pal';
 import {Loader} from 'aurelia-loader';
 import {relativeToFile} from 'aurelia-path';
 import {mixin} from 'aurelia-metadata';
@@ -63,8 +63,8 @@ export class With {
   }
 }
 
-const eventNamesRequired = `The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:'blur'">`;
-const notApplicableMessage = `The updateTrigger binding behavior can only be applied to two-way bindings on input/select elements.`;
+const eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
+const notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way bindings on input/select elements.';
 
 export class UpdateTriggerBindingBehavior {
   static inject = [EventManager];
@@ -159,43 +159,6 @@ export class ThrottleBindingBehavior {
     binding.throttledMethod = null;
     clearTimeout(binding.throttleState.timeoutId);
     binding.throttleState = null;
-  }
-}
-
-/**
-* Binding to conditionally show markup in the DOM based on the value.
-* - different from "if" in that the markup is still added to the DOM, simply not shown.
-*/
-@customAttribute('show')
-@inject(DOM.Element, Animator)
-export class Show {
-  /**
-  * Creates a new instance of Show.
-  * @param element Target element to conditionally show.
-  * @param animator The animator that conditionally adds or removes the aurelia-hide css class.
-  */
-  constructor(element, animator) {
-    this.element = element;
-    this.animator = animator;
-  }
-
-  /**
-  * Invoked everytime the bound value changes.
-  * @param newValue The new value.
-  */
-  valueChanged(newValue) {
-    if (newValue) {
-      this.animator.removeClass(this.element, 'aurelia-hide');
-    } else {
-      this.animator.addClass(this.element, 'aurelia-hide');
-    }
-  }
-
-  /**
-  * Binds the Show attribute.
-  */
-  bind(bindingContext) {
-    this.valueChanged(this.value);
   }
 }
 
@@ -426,6 +389,8 @@ export class If {
       this.showing = true;
       return this.viewSlot.add(this.view);
     }
+
+    return undefined;
   }
 
   /**
@@ -463,43 +428,6 @@ export class HTMLSanitizer {
   */
   sanitize(input) {
     return input.replace(SCRIPT_REGEX, '');
-  }
-}
-
-/**
-* Binding to conditionally show markup in the DOM based on the value.
-* - different from "if" in that the markup is still added to the DOM, simply not shown.
-*/
-@customAttribute('hide')
-@inject(DOM.Element, Animator)
-export class Hide {
-  /**
-  * Creates a new instance of Hide.
-  * @param element Target element to conditionally hide.
-  * @param animator The animator that conditionally adds or removes the aurelia-hide css class.
-  */
-  constructor(element, animator) {
-    this.element = element;
-    this.animator = animator;
-  }
-
-  /**
-  * Invoked everytime the bound value changes.
-  * @param newValue The new value.
-  */
-  valueChanged(newValue) {
-    if (newValue) {
-      this.animator.addClass(this.element, 'aurelia-hide');
-    } else {
-      this.animator.removeClass(this.element, 'aurelia-hide');
-    }
-  }
-
-  /**
-  * Binds the Hide attribute.
-  */
-  bind(bindingContext) {
-    this.valueChanged(this.value);
   }
 }
 
@@ -939,6 +867,21 @@ export class TwoWayBindingBehavior {
   }
 }
 
+export const aureliaHideClassName = 'aurelia-hide';
+
+const aureliaHideClass = `.${aureliaHideClassName} { display:none !important; }`;
+
+export function injectAureliaHideStyleAtHead() {
+  DOM.injectStyles(aureliaHideClass);
+}
+
+export function injectAureliaHideStyleAtBoundary(domBoundary) {
+  if (FEATURE.shadowDOM && domBoundary && !domBoundary.hasAureliaHideStyle) {
+    domBoundary.hasAureliaHideStyle = true;
+    DOM.injectStyles(aureliaHideClass, domBoundary);
+  }
+}
+
 /**
 * Behaviors that do not require the composition lifecycle callbacks when replacing
 * their binding context.
@@ -1368,6 +1311,8 @@ export class ArrayRepeatStrategy {
 
     let spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
     updateOverrideContexts(repeat.views(), spliceIndexLow);
+
+    return undefined;
   }
 
   _handleAddedSplices(repeat, array, splices) {
@@ -1497,6 +1442,8 @@ export class MapRepeatStrategy {
         return i;
       }
     }
+
+    return undefined;
   }
 }
 
@@ -1649,6 +1596,8 @@ export class SetRepeatStrategy {
         return i;
       }
     }
+
+    return undefined;
   }
 }
 
@@ -1752,6 +1701,98 @@ export class SignalBindingBehavior {
       let bindings = this.signals[name];
       bindings.splice(bindings.indexOf(binding), 1);
     }
+  }
+}
+
+/**
+* Binding to conditionally show markup in the DOM based on the value.
+* - different from "if" in that the markup is still added to the DOM, simply not shown.
+*/
+@customAttribute('hide')
+@inject(DOM.Element, Animator, Optional.of(DOM.boundary, true))
+export class Hide {
+  /**
+  * Creates a new instance of Hide.
+  * @param element Target element to conditionally hide.
+  * @param animator The animator that conditionally adds or removes the aurelia-hide css class.
+  * @param domBoundary The DOM boundary. Used when the behavior appears within a component that utilizes the shadow DOM.
+  */
+  constructor(element, animator, domBoundary) {
+    this.element = element;
+    this.animator = animator;
+    this.domBoundary = domBoundary;
+  }
+
+  /**
+  * Invoked when the behavior is created.
+  */
+  created() {
+    injectAureliaHideStyleAtBoundary(this.domBoundary);
+  }
+
+  /**
+  * Invoked everytime the bound value changes.
+  * @param newValue The new value.
+  */
+  valueChanged(newValue) {
+    if (newValue) {
+      this.animator.addClass(this.element, aureliaHideClassName);
+    } else {
+      this.animator.removeClass(this.element, aureliaHideClassName);
+    }
+  }
+
+  /**
+  * Binds the Hide attribute.
+  */
+  bind(bindingContext) {
+    this.valueChanged(this.value);
+  }
+}
+
+/**
+* Binding to conditionally show markup in the DOM based on the value.
+* - different from "if" in that the markup is still added to the DOM, simply not shown.
+*/
+@customAttribute('show')
+@inject(DOM.Element, Animator, Optional.of(DOM.boundary, true))
+export class Show {
+  /**
+  * Creates a new instance of Show.
+  * @param element Target element to conditionally show.
+  * @param animator The animator that conditionally adds or removes the aurelia-hide css class.
+  * @param domBoundary The DOM boundary. Used when the behavior appears within a component that utilizes the shadow DOM.
+  */
+  constructor(element, animator, domBoundary) {
+    this.element = element;
+    this.animator = animator;
+    this.domBoundary = domBoundary;
+  }
+
+  /**
+  * Invoked when the behavior is created.
+  */
+  created() {
+    injectAureliaHideStyleAtBoundary(this.domBoundary);
+  }
+
+  /**
+  * Invoked everytime the bound value changes.
+  * @param newValue The new value.
+  */
+  valueChanged(newValue) {
+    if (newValue) {
+      this.animator.removeClass(this.element, aureliaHideClassName);
+    } else {
+      this.animator.addClass(this.element, aureliaHideClassName);
+    }
+  }
+
+  /**
+  * Binds the Show attribute.
+  */
+  bind(bindingContext) {
+    this.valueChanged(this.value);
   }
 }
 
@@ -2013,6 +2054,8 @@ export class Repeat extends AbstractRepeater {
         }
       }
     }
+
+    return undefined;
   }
 
   // @override AbstractRepeater

@@ -1,13 +1,11 @@
 'use strict';
 
 System.register(['./repeat-utilities', 'aurelia-binding'], function (_export, _context) {
+  "use strict";
+
   var createFullOverrideContext, updateOverrideContexts, updateOverrideContext, indexOf, mergeSplice, ArrayRepeatStrategy;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   return {
     setters: [function (_repeatUtilities) {
@@ -21,7 +19,7 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export, _c
     execute: function () {
       _export('ArrayRepeatStrategy', ArrayRepeatStrategy = function () {
         function ArrayRepeatStrategy() {
-          _classCallCheck(this, ArrayRepeatStrategy);
+          
         }
 
         ArrayRepeatStrategy.prototype.getCollectionObserver = function getCollectionObserver(observerLocator, items) {
@@ -231,6 +229,8 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export, _c
 
           var spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
           updateOverrideContexts(repeat.views(), spliceIndexLow);
+
+          return undefined;
         };
 
         ArrayRepeatStrategy.prototype._handleAddedSplices = function _handleAddedSplices(repeat, array, splices) {

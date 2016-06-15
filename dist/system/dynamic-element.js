@@ -1,13 +1,11 @@
 'use strict';
 
 System.register(['aurelia-templating'], function (_export, _context) {
+  "use strict";
+
   var useView, customElement, bindable;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   return {
     setters: [function (_aureliaTemplating) {
@@ -21,7 +19,7 @@ System.register(['aurelia-templating'], function (_export, _context) {
 
         var DynamicElement = (_dec = customElement(name), _dec2 = useView(viewUrl), _dec(_class = _dec2(_class = function () {
           function DynamicElement() {
-            _classCallCheck(this, DynamicElement);
+            
           }
 
           DynamicElement.prototype.bind = function bind(bindingContext) {

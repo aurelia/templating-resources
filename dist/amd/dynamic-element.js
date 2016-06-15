@@ -6,18 +6,14 @@ define(['exports', 'aurelia-templating'], function (exports, _aureliaTemplating)
   });
   exports._createDynamicElement = _createDynamicElement;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   function _createDynamicElement(name, viewUrl, bindableNames) {
     var _dec, _dec2, _class;
 
     var DynamicElement = (_dec = (0, _aureliaTemplating.customElement)(name), _dec2 = (0, _aureliaTemplating.useView)(viewUrl), _dec(_class = _dec2(_class = function () {
       function DynamicElement() {
-        _classCallCheck(this, DynamicElement);
+        
       }
 
       DynamicElement.prototype.bind = function bind(bindingContext) {

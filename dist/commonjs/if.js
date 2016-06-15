@@ -11,11 +11,11 @@ var _aureliaTemplating = require('aurelia-templating');
 
 var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 var If = exports.If = (_dec = (0, _aureliaTemplating.customAttribute)('if'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec(_class = (0, _aureliaTemplating.templateController)(_class = _dec2(_class = function () {
   function If(viewFactory, viewSlot) {
-    _classCallCheck(this, If);
+    
 
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
@@ -91,6 +91,8 @@ var If = exports.If = (_dec = (0, _aureliaTemplating.customAttribute)('if'), _de
       this.showing = true;
       return this.viewSlot.add(this.view);
     }
+
+    return undefined;
   };
 
   If.prototype.unbind = function unbind() {

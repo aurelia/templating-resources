@@ -7,7 +7,7 @@ exports.DebounceBindingBehavior = undefined;
 
 var _aureliaBinding = require('aurelia-binding');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 function debounce(newValue) {
   var _this = this;
@@ -26,7 +26,7 @@ function debounce(newValue) {
 
 var DebounceBindingBehavior = exports.DebounceBindingBehavior = function () {
   function DebounceBindingBehavior() {
-    _classCallCheck(this, DebounceBindingBehavior);
+    
   }
 
   DebounceBindingBehavior.prototype.bind = function bind(binding, source) {

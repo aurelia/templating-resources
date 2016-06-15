@@ -7,11 +7,11 @@ exports.NumberRepeatStrategy = undefined;
 
 var _repeatUtilities = require('./repeat-utilities');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 var NumberRepeatStrategy = exports.NumberRepeatStrategy = function () {
   function NumberRepeatStrategy() {
-    _classCallCheck(this, NumberRepeatStrategy);
+    
   }
 
   NumberRepeatStrategy.prototype.getCollectionObserver = function getCollectionObserver() {

@@ -104,5 +104,7 @@ export class MapRepeatStrategy {
         return i;
       }
     }
+
+    return undefined;
   }
 }

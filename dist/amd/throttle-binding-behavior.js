@@ -6,11 +6,7 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
   });
   exports.ThrottleBindingBehavior = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   function throttle(newValue) {
     var _this = this;
@@ -36,7 +32,7 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
 
   var ThrottleBindingBehavior = exports.ThrottleBindingBehavior = function () {
     function ThrottleBindingBehavior() {
-      _classCallCheck(this, ThrottleBindingBehavior);
+      
     }
 
     ThrottleBindingBehavior.prototype.bind = function bind(binding, source) {

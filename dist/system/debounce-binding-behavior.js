@@ -1,13 +1,11 @@
 'use strict';
 
 System.register(['aurelia-binding'], function (_export, _context) {
+  "use strict";
+
   var bindingMode, DebounceBindingBehavior;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   function debounce(newValue) {
     var _this = this;
@@ -31,7 +29,7 @@ System.register(['aurelia-binding'], function (_export, _context) {
     execute: function () {
       _export('DebounceBindingBehavior', DebounceBindingBehavior = function () {
         function DebounceBindingBehavior() {
-          _classCallCheck(this, DebounceBindingBehavior);
+          
         }
 
         DebounceBindingBehavior.prototype.bind = function bind(binding, source) {

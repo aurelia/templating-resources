@@ -6,11 +6,7 @@ define(['exports', 'aurelia-binding', 'aurelia-metadata'], function (exports, _a
   });
   exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   var _dec, _class, _dec2, _class2, _dec3, _class3;
 
@@ -26,17 +22,17 @@ define(['exports', 'aurelia-binding', 'aurelia-metadata'], function (exports, _a
   };
 
   var OneTimeBindingBehavior = exports.OneTimeBindingBehavior = (_dec = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec(_class = function OneTimeBindingBehavior() {
-    _classCallCheck(this, OneTimeBindingBehavior);
+    
 
     this.mode = _aureliaBinding.bindingMode.oneTime;
   }) || _class);
   var OneWayBindingBehavior = exports.OneWayBindingBehavior = (_dec2 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec2(_class2 = function OneWayBindingBehavior() {
-    _classCallCheck(this, OneWayBindingBehavior);
+    
 
     this.mode = _aureliaBinding.bindingMode.oneWay;
   }) || _class2);
   var TwoWayBindingBehavior = exports.TwoWayBindingBehavior = (_dec3 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec3(_class3 = function TwoWayBindingBehavior() {
-    _classCallCheck(this, TwoWayBindingBehavior);
+    
 
     this.mode = _aureliaBinding.bindingMode.twoWay;
   }) || _class3);

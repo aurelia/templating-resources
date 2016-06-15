@@ -6,15 +6,11 @@ define(['exports', './repeat-utilities'], function (exports, _repeatUtilities) {
   });
   exports.MapRepeatStrategy = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   var MapRepeatStrategy = exports.MapRepeatStrategy = function () {
     function MapRepeatStrategy() {
-      _classCallCheck(this, MapRepeatStrategy);
+      
     }
 
     MapRepeatStrategy.prototype.getCollectionObserver = function getCollectionObserver(observerLocator, items) {
@@ -110,6 +106,8 @@ define(['exports', './repeat-utilities'], function (exports, _repeatUtilities) {
           return i;
         }
       }
+
+      return undefined;
     };
 
     return MapRepeatStrategy;

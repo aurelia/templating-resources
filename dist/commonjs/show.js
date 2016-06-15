@@ -13,21 +13,28 @@ var _aureliaTemplating = require('aurelia-templating');
 
 var _aureliaPal = require('aurelia-pal');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _aureliaHideStyle = require('./aurelia-hide-style');
 
-var Show = exports.Show = (_dec = (0, _aureliaTemplating.customAttribute)('show'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator), _dec(_class = _dec2(_class = function () {
-  function Show(element, animator) {
-    _classCallCheck(this, Show);
+
+
+var Show = exports.Show = (_dec = (0, _aureliaTemplating.customAttribute)('show'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)), _dec(_class = _dec2(_class = function () {
+  function Show(element, animator, domBoundary) {
+    
 
     this.element = element;
     this.animator = animator;
+    this.domBoundary = domBoundary;
   }
+
+  Show.prototype.created = function created() {
+    (0, _aureliaHideStyle.injectAureliaHideStyleAtBoundary)(this.domBoundary);
+  };
 
   Show.prototype.valueChanged = function valueChanged(newValue) {
     if (newValue) {
-      this.animator.removeClass(this.element, 'aurelia-hide');
+      this.animator.removeClass(this.element, _aureliaHideStyle.aureliaHideClassName);
     } else {
-      this.animator.addClass(this.element, 'aurelia-hide');
+      this.animator.addClass(this.element, _aureliaHideStyle.aureliaHideClassName);
     }
   };
 

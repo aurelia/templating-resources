@@ -1,13 +1,11 @@
 'use strict';
 
 System.register(['./binding-signaler'], function (_export, _context) {
+  "use strict";
+
   var BindingSignaler, SignalBindingBehavior;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   return {
     setters: [function (_bindingSignaler) {
@@ -20,7 +18,7 @@ System.register(['./binding-signaler'], function (_export, _context) {
         };
 
         function SignalBindingBehavior(bindingSignaler) {
-          _classCallCheck(this, SignalBindingBehavior);
+          
 
           this.signals = bindingSignaler.signals;
         }

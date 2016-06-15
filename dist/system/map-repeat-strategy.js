@@ -1,13 +1,11 @@
 'use strict';
 
 System.register(['./repeat-utilities'], function (_export, _context) {
+  "use strict";
+
   var createFullOverrideContext, updateOverrideContexts, MapRepeatStrategy;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   return {
     setters: [function (_repeatUtilities) {
@@ -17,7 +15,7 @@ System.register(['./repeat-utilities'], function (_export, _context) {
     execute: function () {
       _export('MapRepeatStrategy', MapRepeatStrategy = function () {
         function MapRepeatStrategy() {
-          _classCallCheck(this, MapRepeatStrategy);
+          
         }
 
         MapRepeatStrategy.prototype.getCollectionObserver = function getCollectionObserver(observerLocator, items) {
@@ -113,6 +111,8 @@ System.register(['./repeat-utilities'], function (_export, _context) {
               return i;
             }
           }
+
+          return undefined;
         };
 
         return MapRepeatStrategy;

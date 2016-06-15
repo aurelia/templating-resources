@@ -6,11 +6,7 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
   });
   exports.DebounceBindingBehavior = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   function debounce(newValue) {
     var _this = this;
@@ -29,7 +25,7 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
 
   var DebounceBindingBehavior = exports.DebounceBindingBehavior = function () {
     function DebounceBindingBehavior() {
-      _classCallCheck(this, DebounceBindingBehavior);
+      
     }
 
     DebounceBindingBehavior.prototype.bind = function bind(binding, source) {

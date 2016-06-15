@@ -31,7 +31,7 @@ function _initDefineProp(target, property, descriptor, context) {
   });
 }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
@@ -74,7 +74,7 @@ var Repeat = exports.Repeat = (_dec = (0, _aureliaTemplating.customAttribute)('r
   _inherits(Repeat, _AbstractRepeater);
 
   function Repeat(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
-    _classCallCheck(this, Repeat);
+    
 
     var _this = _possibleConstructorReturn(this, _AbstractRepeater.call(this, {
       local: 'item',
@@ -228,6 +228,8 @@ var Repeat = exports.Repeat = (_dec = (0, _aureliaTemplating.customAttribute)('r
         }
       }
     }
+
+    return undefined;
   };
 
   Repeat.prototype.viewCount = function viewCount() {

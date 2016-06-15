@@ -3,9 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Repeat = exports.RepeatStrategyLocator = exports.SignalBindingBehavior = exports.SanitizeHTMLValueConverter = exports.SetRepeatStrategy = exports.NumberRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.AbstractRepeater = exports.lifecycleOptionalBehaviors = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.BindingSignaler = exports.Compose = exports.DebounceBindingBehavior = exports.Focus = exports.Hide = exports.HTMLSanitizer = exports.If = exports.NullRepeatStrategy = exports.Show = exports.ThrottleBindingBehavior = exports.UpdateTriggerBindingBehavior = exports.With = undefined;
+exports.Repeat = exports.RepeatStrategyLocator = exports.Show = exports.Hide = exports.SignalBindingBehavior = exports.SanitizeHTMLValueConverter = exports.SetRepeatStrategy = exports.NumberRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.AbstractRepeater = exports.lifecycleOptionalBehaviors = exports.aureliaHideClassName = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.BindingSignaler = exports.Compose = exports.DebounceBindingBehavior = exports.Focus = exports.HTMLSanitizer = exports.If = exports.NullRepeatStrategy = exports.ThrottleBindingBehavior = exports.UpdateTriggerBindingBehavior = exports.With = undefined;
 
-var _dec, _dec2, _class, _class2, _temp, _dec3, _dec4, _class3, _dec5, _dec6, _class4, _dec7, _dec8, _class5, _dec9, _dec10, _class6, _dec14, _dec15, _class9, _desc, _value, _class10, _descriptor, _descriptor2, _descriptor3, _dec16, _class13, _dec17, _class14, _dec18, _class15, _dec19, _dec20, _class16, _dec21, _dec22, _class18, _desc2, _value2, _class19, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
+var _dec, _dec2, _class, _class2, _temp, _dec3, _dec4, _class3, _dec5, _dec6, _class4, _dec10, _dec11, _class7, _desc, _value, _class8, _descriptor, _descriptor2, _descriptor3, _dec12, _class11, _dec13, _class12, _dec14, _class13, _dec15, _dec16, _class14, _dec17, _dec18, _class16, _dec19, _dec20, _class17, _dec21, _dec22, _class18, _desc2, _value2, _class19, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
 
 exports.updateOverrideContexts = updateOverrideContexts;
 exports.createFullOverrideContext = createFullOverrideContext;
@@ -17,6 +17,8 @@ exports.updateOneTimeBinding = updateOneTimeBinding;
 exports.indexOf = indexOf;
 exports._createDynamicElement = _createDynamicElement;
 exports._createCSSResource = _createCSSResource;
+exports.injectAureliaHideStyleAtHead = injectAureliaHideStyleAtHead;
+exports.injectAureliaHideStyleAtBoundary = injectAureliaHideStyleAtBoundary;
 exports.viewsRequireLifecycle = viewsRequireLifecycle;
 exports.getElementName = getElementName;
 exports.configure = configure;
@@ -27,9 +29,9 @@ var _aureliaTemplating = require('aurelia-templating');
 
 var _aureliaBinding = require('aurelia-binding');
 
-var _aureliaPal = require('aurelia-pal');
-
 var _aureliaTaskQueue = require('aurelia-task-queue');
+
+var _aureliaPal = require('aurelia-pal');
 
 var _aureliaLoader = require('aurelia-loader');
 
@@ -227,30 +229,6 @@ var ThrottleBindingBehavior = exports.ThrottleBindingBehavior = function () {
   return ThrottleBindingBehavior;
 }();
 
-var Show = exports.Show = (_dec3 = (0, _aureliaTemplating.customAttribute)('show'), _dec4 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator), _dec3(_class3 = _dec4(_class3 = function () {
-  function Show(element, animator) {
-    _classCallCheck(this, Show);
-
-    this.element = element;
-    this.animator = animator;
-  }
-
-  Show.prototype.valueChanged = function valueChanged(newValue) {
-    if (newValue) {
-      this.animator.removeClass(this.element, 'aurelia-hide');
-    } else {
-      this.animator.addClass(this.element, 'aurelia-hide');
-    }
-  };
-
-  Show.prototype.bind = function bind(bindingContext) {
-    this.valueChanged(this.value);
-  };
-
-  return Show;
-}()) || _class3) || _class3);
-
-
 var oneTime = _aureliaBinding.bindingMode.oneTime;
 
 function updateOverrideContexts(views, startIndex) {
@@ -355,7 +333,7 @@ var NullRepeatStrategy = exports.NullRepeatStrategy = function () {
   return NullRepeatStrategy;
 }();
 
-var If = exports.If = (_dec5 = (0, _aureliaTemplating.customAttribute)('if'), _dec6 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec5(_class4 = (0, _aureliaTemplating.templateController)(_class4 = _dec6(_class4 = function () {
+var If = exports.If = (_dec3 = (0, _aureliaTemplating.customAttribute)('if'), _dec4 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec3(_class3 = (0, _aureliaTemplating.templateController)(_class3 = _dec4(_class3 = function () {
   function If(viewFactory, viewSlot) {
     _classCallCheck(this, If);
 
@@ -433,6 +411,8 @@ var If = exports.If = (_dec5 = (0, _aureliaTemplating.customAttribute)('if'), _d
       this.showing = true;
       return this.viewSlot.add(this.view);
     }
+
+    return undefined;
   };
 
   If.prototype.unbind = function unbind() {
@@ -455,7 +435,7 @@ var If = exports.If = (_dec5 = (0, _aureliaTemplating.customAttribute)('if'), _d
   };
 
   return If;
-}()) || _class4) || _class4) || _class4);
+}()) || _class3) || _class3) || _class3);
 
 
 var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
@@ -472,29 +452,7 @@ var HTMLSanitizer = exports.HTMLSanitizer = function () {
   return HTMLSanitizer;
 }();
 
-var Hide = exports.Hide = (_dec7 = (0, _aureliaTemplating.customAttribute)('hide'), _dec8 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator), _dec7(_class5 = _dec8(_class5 = function () {
-  function Hide(element, animator) {
-    _classCallCheck(this, Hide);
-
-    this.element = element;
-    this.animator = animator;
-  }
-
-  Hide.prototype.valueChanged = function valueChanged(newValue) {
-    if (newValue) {
-      this.animator.addClass(this.element, 'aurelia-hide');
-    } else {
-      this.animator.removeClass(this.element, 'aurelia-hide');
-    }
-  };
-
-  Hide.prototype.bind = function bind(bindingContext) {
-    this.valueChanged(this.value);
-  };
-
-  return Hide;
-}()) || _class5) || _class5);
-var Focus = exports.Focus = (_dec9 = (0, _aureliaTemplating.customAttribute)('focus', _aureliaBinding.bindingMode.twoWay), _dec10 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTaskQueue.TaskQueue), _dec9(_class6 = _dec10(_class6 = function () {
+var Focus = exports.Focus = (_dec5 = (0, _aureliaTemplating.customAttribute)('focus', _aureliaBinding.bindingMode.twoWay), _dec6 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTaskQueue.TaskQueue), _dec5(_class4 = _dec6(_class4 = function () {
   function Focus(element, taskQueue) {
     var _this4 = this;
 
@@ -554,11 +512,11 @@ var Focus = exports.Focus = (_dec9 = (0, _aureliaTemplating.customAttribute)('fo
   };
 
   return Focus;
-}()) || _class6) || _class6);
+}()) || _class4) || _class4);
 function _createDynamicElement(name, viewUrl, bindableNames) {
-  var _dec11, _dec12, _class7;
+  var _dec7, _dec8, _class5;
 
-  var DynamicElement = (_dec11 = (0, _aureliaTemplating.customElement)(name), _dec12 = (0, _aureliaTemplating.useView)(viewUrl), _dec11(_class7 = _dec12(_class7 = function () {
+  var DynamicElement = (_dec7 = (0, _aureliaTemplating.customElement)(name), _dec8 = (0, _aureliaTemplating.useView)(viewUrl), _dec7(_class5 = _dec8(_class5 = function () {
     function DynamicElement() {
       _classCallCheck(this, DynamicElement);
     }
@@ -568,7 +526,7 @@ function _createDynamicElement(name, viewUrl, bindableNames) {
     };
 
     return DynamicElement;
-  }()) || _class7) || _class7);
+  }()) || _class5) || _class5);
 
   for (var i = 0, ii = bindableNames.length; i < ii; ++i) {
     (0, _aureliaTemplating.bindable)(bindableNames[i])(DynamicElement);
@@ -706,9 +664,9 @@ var CSSViewEngineHooks = function () {
 }();
 
 function _createCSSResource(address) {
-  var _dec13, _class8;
+  var _dec9, _class6;
 
-  var ViewCSS = (_dec13 = (0, _aureliaTemplating.resource)(new CSSResource(address)), _dec13(_class8 = function (_CSSViewEngineHooks) {
+  var ViewCSS = (_dec9 = (0, _aureliaTemplating.resource)(new CSSResource(address)), _dec9(_class6 = function (_CSSViewEngineHooks) {
     _inherits(ViewCSS, _CSSViewEngineHooks);
 
     function ViewCSS() {
@@ -718,12 +676,12 @@ function _createCSSResource(address) {
     }
 
     return ViewCSS;
-  }(CSSViewEngineHooks)) || _class8);
+  }(CSSViewEngineHooks)) || _class6);
 
   return ViewCSS;
 }
 
-var Compose = exports.Compose = (_dec14 = (0, _aureliaTemplating.customElement)('compose'), _dec15 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue), _dec14(_class9 = (0, _aureliaTemplating.noView)(_class9 = _dec15(_class9 = (_class10 = function () {
+var Compose = exports.Compose = (_dec10 = (0, _aureliaTemplating.customElement)('compose'), _dec11 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue), _dec10(_class7 = (0, _aureliaTemplating.noView)(_class7 = _dec11(_class7 = (_class8 = function () {
   function Compose(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
     _classCallCheck(this, Compose);
 
@@ -828,16 +786,16 @@ var Compose = exports.Compose = (_dec14 = (0, _aureliaTemplating.customElement)(
   };
 
   return Compose;
-}(), (_descriptor = _applyDecoratedDescriptor(_class10.prototype, 'model', [_aureliaTemplating.bindable], {
+}(), (_descriptor = _applyDecoratedDescriptor(_class8.prototype, 'model', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor2 = _applyDecoratedDescriptor(_class10.prototype, 'view', [_aureliaTemplating.bindable], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class8.prototype, 'view', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor3 = _applyDecoratedDescriptor(_class10.prototype, 'viewModel', [_aureliaTemplating.bindable], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class8.prototype, 'viewModel', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-})), _class10)) || _class9) || _class9) || _class9);
+})), _class8)) || _class7) || _class7) || _class7);
 
 
 function createInstruction(composer, instruction) {
@@ -893,21 +851,36 @@ var modeBindingBehavior = {
   }
 };
 
-var OneTimeBindingBehavior = exports.OneTimeBindingBehavior = (_dec16 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec16(_class13 = function OneTimeBindingBehavior() {
+var OneTimeBindingBehavior = exports.OneTimeBindingBehavior = (_dec12 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec12(_class11 = function OneTimeBindingBehavior() {
   _classCallCheck(this, OneTimeBindingBehavior);
 
   this.mode = _aureliaBinding.bindingMode.oneTime;
-}) || _class13);
-var OneWayBindingBehavior = exports.OneWayBindingBehavior = (_dec17 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec17(_class14 = function OneWayBindingBehavior() {
+}) || _class11);
+var OneWayBindingBehavior = exports.OneWayBindingBehavior = (_dec13 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec13(_class12 = function OneWayBindingBehavior() {
   _classCallCheck(this, OneWayBindingBehavior);
 
   this.mode = _aureliaBinding.bindingMode.oneWay;
-}) || _class14);
-var TwoWayBindingBehavior = exports.TwoWayBindingBehavior = (_dec18 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec18(_class15 = function TwoWayBindingBehavior() {
+}) || _class12);
+var TwoWayBindingBehavior = exports.TwoWayBindingBehavior = (_dec14 = (0, _aureliaMetadata.mixin)(modeBindingBehavior), _dec14(_class13 = function TwoWayBindingBehavior() {
   _classCallCheck(this, TwoWayBindingBehavior);
 
   this.mode = _aureliaBinding.bindingMode.twoWay;
-}) || _class15);
+}) || _class13);
+var aureliaHideClassName = exports.aureliaHideClassName = 'aurelia-hide';
+
+var aureliaHideClass = '.' + aureliaHideClassName + ' { display:none !important; }';
+
+function injectAureliaHideStyleAtHead() {
+  _aureliaPal.DOM.injectStyles(aureliaHideClass);
+}
+
+function injectAureliaHideStyleAtBoundary(domBoundary) {
+  if (_aureliaPal.FEATURE.shadowDOM && domBoundary && !domBoundary.hasAureliaHideStyle) {
+    domBoundary.hasAureliaHideStyle = true;
+    _aureliaPal.DOM.injectStyles(aureliaHideClass, domBoundary);
+  }
+}
+
 var lifecycleOptionalBehaviors = exports.lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'with'];
 
 function behaviorRequiresLifecycle(instruction) {
@@ -1227,6 +1200,8 @@ var ArrayRepeatStrategy = exports.ArrayRepeatStrategy = function () {
 
     var spliceIndexLow = this._handleAddedSplices(repeat, array, splices);
     updateOverrideContexts(repeat.views(), spliceIndexLow);
+
+    return undefined;
   };
 
   ArrayRepeatStrategy.prototype._handleAddedSplices = function _handleAddedSplices(repeat, array, splices) {
@@ -1352,6 +1327,8 @@ var MapRepeatStrategy = exports.MapRepeatStrategy = function () {
         return i;
       }
     }
+
+    return undefined;
   };
 
   return MapRepeatStrategy;
@@ -1498,12 +1475,14 @@ var SetRepeatStrategy = exports.SetRepeatStrategy = function () {
         return i;
       }
     }
+
+    return undefined;
   };
 
   return SetRepeatStrategy;
 }();
 
-var SanitizeHTMLValueConverter = exports.SanitizeHTMLValueConverter = (_dec19 = (0, _aureliaBinding.valueConverter)('sanitizeHTML'), _dec20 = (0, _aureliaDependencyInjection.inject)(HTMLSanitizer), _dec19(_class16 = _dec20(_class16 = function () {
+var SanitizeHTMLValueConverter = exports.SanitizeHTMLValueConverter = (_dec15 = (0, _aureliaBinding.valueConverter)('sanitizeHTML'), _dec16 = (0, _aureliaDependencyInjection.inject)(HTMLSanitizer), _dec15(_class14 = _dec16(_class14 = function () {
   function SanitizeHTMLValueConverter(sanitizer) {
     _classCallCheck(this, SanitizeHTMLValueConverter);
 
@@ -1519,7 +1498,7 @@ var SanitizeHTMLValueConverter = exports.SanitizeHTMLValueConverter = (_dec19 = 
   };
 
   return SanitizeHTMLValueConverter;
-}()) || _class16) || _class16);
+}()) || _class14) || _class14);
 function getElementName(address) {
   return (/([^\/^\?]+)\.html/i.exec(address)[1].toLowerCase()
   );
@@ -1605,6 +1584,61 @@ var SignalBindingBehavior = exports.SignalBindingBehavior = function () {
 
   return SignalBindingBehavior;
 }();
+
+var Hide = exports.Hide = (_dec17 = (0, _aureliaTemplating.customAttribute)('hide'), _dec18 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)), _dec17(_class16 = _dec18(_class16 = function () {
+  function Hide(element, animator, domBoundary) {
+    _classCallCheck(this, Hide);
+
+    this.element = element;
+    this.animator = animator;
+    this.domBoundary = domBoundary;
+  }
+
+  Hide.prototype.created = function created() {
+    injectAureliaHideStyleAtBoundary(this.domBoundary);
+  };
+
+  Hide.prototype.valueChanged = function valueChanged(newValue) {
+    if (newValue) {
+      this.animator.addClass(this.element, aureliaHideClassName);
+    } else {
+      this.animator.removeClass(this.element, aureliaHideClassName);
+    }
+  };
+
+  Hide.prototype.bind = function bind(bindingContext) {
+    this.valueChanged(this.value);
+  };
+
+  return Hide;
+}()) || _class16) || _class16);
+var Show = exports.Show = (_dec19 = (0, _aureliaTemplating.customAttribute)('show'), _dec20 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)), _dec19(_class17 = _dec20(_class17 = function () {
+  function Show(element, animator, domBoundary) {
+    _classCallCheck(this, Show);
+
+    this.element = element;
+    this.animator = animator;
+    this.domBoundary = domBoundary;
+  }
+
+  Show.prototype.created = function created() {
+    injectAureliaHideStyleAtBoundary(this.domBoundary);
+  };
+
+  Show.prototype.valueChanged = function valueChanged(newValue) {
+    if (newValue) {
+      this.animator.removeClass(this.element, aureliaHideClassName);
+    } else {
+      this.animator.addClass(this.element, aureliaHideClassName);
+    }
+  };
+
+  Show.prototype.bind = function bind(bindingContext) {
+    this.valueChanged(this.value);
+  };
+
+  return Show;
+}()) || _class17) || _class17);
 
 var RepeatStrategyLocator = exports.RepeatStrategyLocator = function () {
   function RepeatStrategyLocator() {
@@ -1808,6 +1842,8 @@ var Repeat = exports.Repeat = (_dec21 = (0, _aureliaTemplating.customAttribute)(
         }
       }
     }
+
+    return undefined;
   };
 
   Repeat.prototype.viewCount = function viewCount() {

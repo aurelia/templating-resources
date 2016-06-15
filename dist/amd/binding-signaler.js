@@ -6,15 +6,11 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
   });
   exports.BindingSignaler = undefined;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+  
 
   var BindingSignaler = exports.BindingSignaler = function () {
     function BindingSignaler() {
-      _classCallCheck(this, BindingSignaler);
+      
 
       this.signals = {};
     }

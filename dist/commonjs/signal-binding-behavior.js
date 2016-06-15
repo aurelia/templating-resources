@@ -7,7 +7,7 @@ exports.SignalBindingBehavior = undefined;
 
 var _bindingSignaler = require('./binding-signaler');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 var SignalBindingBehavior = exports.SignalBindingBehavior = function () {
   SignalBindingBehavior.inject = function inject() {
@@ -15,7 +15,7 @@ var SignalBindingBehavior = exports.SignalBindingBehavior = function () {
   };
 
   function SignalBindingBehavior(bindingSignaler) {
-    _classCallCheck(this, SignalBindingBehavior);
+    
 
     this.signals = bindingSignaler.signals;
   }
