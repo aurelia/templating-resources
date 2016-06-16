@@ -5,6 +5,7 @@ import {Repeat} from './repeat';
 import {Show} from './show';
 import {Hide} from './hide';
 import {SanitizeHTMLValueConverter} from './sanitize-html';
+import {Replaceable} from './replaceable';
 import {Focus} from './focus';
 import {ViewEngine} from 'aurelia-templating';
 import {_createCSSResource} from './css-resource';
@@ -44,6 +45,7 @@ function configure(config) {
     './repeat',
     './show',
     './hide',
+    './replaceable',
     './sanitize-html',
     './focus',
     './binding-mode-behaviors',

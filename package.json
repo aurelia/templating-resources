@@ -130,6 +130,7 @@
         "aurelia-templating-resources/repeat",
         "aurelia-templating-resources/show",
         "aurelia-templating-resources/hide",
+        "aurelia-templating-resources/replaceable",
         "aurelia-templating-resources/sanitize-html",
         "aurelia-templating-resources/focus",
         "aurelia-templating-resources/binding-mode-behaviors",
