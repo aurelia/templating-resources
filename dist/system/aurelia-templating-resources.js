@@ -1,14 +1,14 @@
 'use strict';
 
-System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './focus', 'aurelia-templating', './css-resource', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy', './repeat-utilities', './analyze-view-factory', './aurelia-hide-style'], function (_export, _context) {
+System.register(['./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './replaceable', './focus', 'aurelia-templating', './css-resource', './html-sanitizer', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy', './repeat-utilities', './analyze-view-factory', './aurelia-hide-style'], function (_export, _context) {
   "use strict";
 
-  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Focus, ViewEngine, _createCSSResource, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle, injectAureliaHideStyleAtHead;
+  var Compose, If, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, ViewEngine, _createCSSResource, HTMLSanitizer, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle, injectAureliaHideStyleAtHead;
 
   function configure(config) {
     injectAureliaHideStyleAtHead();
 
-    config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './sanitize-html', './focus', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
+    config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './replaceable', './sanitize-html', './focus', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
 
     configureHtmlResourcePlugin(config);
 
@@ -37,6 +37,8 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       Hide = _hide.Hide;
     }, function (_sanitizeHtml) {
       SanitizeHTMLValueConverter = _sanitizeHtml.SanitizeHTMLValueConverter;
+    }, function (_replaceable) {
+      Replaceable = _replaceable.Replaceable;
     }, function (_focus) {
       Focus = _focus.Focus;
     }, function (_aureliaTemplating) {
@@ -103,6 +105,8 @@ System.register(['./compose', './if', './with', './repeat', './show', './hide', 
       _export('HTMLSanitizer', HTMLSanitizer);
 
       _export('SanitizeHTMLValueConverter', SanitizeHTMLValueConverter);
+
+      _export('Replaceable', Replaceable);
 
       _export('Focus', Focus);
 

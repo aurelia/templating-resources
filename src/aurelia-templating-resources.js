@@ -74,6 +74,7 @@ export {
   Hide,
   HTMLSanitizer,
   SanitizeHTMLValueConverter,
+  Replaceable,
   Focus,
   configure,
   OneTimeBindingBehavior,
