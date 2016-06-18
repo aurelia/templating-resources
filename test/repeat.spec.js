@@ -1,15 +1,16 @@
 import './setup';
 import {ObserverLocator} from 'aurelia-binding';
-import {BoundViewFactory, TemplatingEngine, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
+import {BoundViewFactory, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
 import {Container} from 'aurelia-dependency-injection';
+import {StageComponent} from 'aurelia-testing';
 import {Repeat} from '../src/repeat';
 import {RepeatStrategyLocator} from '../src/repeat-strategy-locator';
 import {ViewSlotMock, BoundViewFactoryMock, RepeatStrategyMock, ViewMock, ArrayObserverMock, instructionMock, viewResourcesMock} from './mocks';
 
 describe('repeat', () => {
-  let repeat, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, repeatStrategyMock;
+  let repeat, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, repeatStrategyMock, component;
 
-  beforeEach(() => {
+  beforeEach(done => {
     let container = new Container();
     viewSlot = new ViewSlotMock();
     viewFactory = new BoundViewFactoryMock();
@@ -20,8 +21,19 @@ describe('repeat', () => {
     container.registerInstance(ViewResources, viewResourcesMock);
     container.registerInstance(ViewSlot, viewSlot);
     container.registerInstance(BoundViewFactory, viewFactory);
-    let templatingEngine = container.get(TemplatingEngine);
-    repeat = templatingEngine.createViewModelForUnitTest(Repeat);
+
+    component = StageComponent.withResources().inView('<div repeat.for="item of items"></div>').boundTo({ items: [] });
+
+    component.create().then(() => {
+      repeat = component.viewModel;
+      repeat.viewSlot = viewSlot;
+      repeat.instruction = instructionMock;
+      repeat.viewFactory = viewFactory;
+      repeat.observerLocator = observerLocator;
+      repeat.strategyLocator = repeatStrategyLocator;
+      done();
+    });
+
   });
 
   describe('bind', () => {

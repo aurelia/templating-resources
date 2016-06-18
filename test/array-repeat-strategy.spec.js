@@ -1,31 +1,33 @@
 import './setup';
 import {ObserverLocator, createOverrideContext} from 'aurelia-binding';
-import {BoundViewFactory, TemplatingEngine, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
+import {BoundViewFactory, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
+import {StageComponent} from 'aurelia-testing';
 import {Container} from 'aurelia-dependency-injection';
 import {Repeat} from '../src/repeat';
 import {RepeatStrategyLocator} from '../src/repeat-strategy-locator';
 import {ArrayRepeatStrategy} from '../src/array-repeat-strategy';
-import {ViewSlotMock, BoundViewFactoryMock, RepeatStrategyMock, ViewMock, ArrayObserverMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
+import {ViewSlotMock, BoundViewFactoryMock, ViewMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
 
 describe('ArrayRepeatStrategy', () => {
-  let repeat, strategy, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, repeatStrategyMock;
+  let repeat, strategy, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, repeatStrategyMock, component;
 
-  beforeEach(() => {
+  beforeEach(done => {
+    let aurelia;
     let container = new Container();
     viewSlot = new ViewSlotMock();
     viewFactory = new BoundViewFactoryMock();
-    observerLocator = new ObserverLocator();
-    repeatStrategyLocator = new RepeatStrategyLocator();
-    repeatStrategyMock = new RepeatStrategyMock();
     strategy = new ArrayRepeatStrategy();
-    container.registerInstance(TargetInstruction, instructionMock);
-    container.registerInstance(ViewResources, viewResourcesMock);
-    container.registerInstance(ViewSlot, viewSlot);
-    container.registerInstance(BoundViewFactory, viewFactory);
-    container.registerInstance(ObserverLocator, observerLocator);
-    container.registerInstance(RepeatStrategyLocator, repeatStrategyLocator);
-    let templatingEngine = new TemplatingEngine(container, new ModuleAnalyzer());
-    repeat = templatingEngine.createViewModelForUnitTest(Repeat);
+
+    component = StageComponent.withResources().inView('<div repeat.for="item of items"></div>').boundTo({ items: [] });
+
+    component.create().then(() => {
+      repeat = component.viewModel;
+      repeat.viewSlot = viewSlot;
+      repeat.instruction = instructionMock;
+      repeat.viewFactory = viewFactory;
+      repeat.viewsRequireLifecycle = true;
+      done();
+    });
   });
 
   describe('instanceMutated', () => {
