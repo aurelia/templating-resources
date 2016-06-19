@@ -100,6 +100,30 @@ export declare class ThrottleBindingBehavior {
 }
 
 /**
+* Marks any part of a view to be replacable by the consumer.
+*/
+export declare class Replaceable {
+  
+  /**
+    * @param viewFactory target The factory generating the view.
+    * @param viewSlot viewSlot The slot the view is injected in to.
+    */
+  constructor(viewFactory?: any, viewSlot?: any);
+  
+  /**
+    * Binds the replaceable to the binding context and override context.
+    * @param bindingContext The binding context.
+    * @param overrideContext An override context for binding.
+    */
+  bind(bindingContext?: any, overrideContext?: any): any;
+  
+  /**
+    * Unbinds the replaceable.
+    */
+  unbind(): any;
+}
+
+/**
 * Update the override context.
 * @param startIndex index in collection where to start updating.
 */

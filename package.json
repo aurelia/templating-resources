@@ -1,6 +1,6 @@
 {
   "name": "aurelia-templating-resources",
-  "version": "1.0.0-beta.3.0.0",
+  "version": "1.0.0-beta.3.0.4",
   "description": "A standard set of behaviors, converters and other resources for use with the Aurelia templating library.",
   "keywords": [
     "aurelia",
@@ -128,6 +128,24 @@
   "aurelia": {
     "documentation": {
       "articles": []
+    },
+    "build": {
+      "resources": [
+        "aurelia-templating-resources/compose",
+        "aurelia-templating-resources/if",
+        "aurelia-templating-resources/with",
+        "aurelia-templating-resources/repeat",
+        "aurelia-templating-resources/show",
+        "aurelia-templating-resources/hide",
+        "aurelia-templating-resources/replaceable",
+        "aurelia-templating-resources/sanitize-html",
+        "aurelia-templating-resources/focus",
+        "aurelia-templating-resources/binding-mode-behaviors",
+        "aurelia-templating-resources/throttle-binding-behavior",
+        "aurelia-templating-resources/debounce-binding-behavior",
+        "aurelia-templating-resources/signal-binding-behavior",
+        "aurelia-templating-resources/update-trigger-binding-behavior"
+      ]
     }
   }
 }
