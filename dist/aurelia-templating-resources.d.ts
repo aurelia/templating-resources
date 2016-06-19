@@ -204,7 +204,6 @@ export declare class If {
     * @param newValue The new value
     */
   valueChanged(newValue?: any): any;
-  _runValueChanged(newValue?: any): any;
   
   /**
     * Unbinds the if
@@ -241,7 +240,6 @@ export declare class Focus {
     * @param newValue The new value.
     */
   valueChanged(newValue?: any): any;
-  _apply(): any;
   
   /**
     * Invoked when the attribute is attached to the DOM.
@@ -253,16 +251,12 @@ export declare class Focus {
     */
   detached(): any;
 }
-
-/*eslint padded-blocks:0*/
-export declare function _createDynamicElement(name: string, viewUrl: string, bindableNames: string[]): Function;
 export declare class DebounceBindingBehavior {
   bind(binding?: any, source?: any, delay?: any): any;
   
   // should not delay initial target update that occurs during bind.
   unbind(binding?: any, source?: any): any;
 }
-export declare function _createCSSResource(address: string): Function;
 
 /**
 * Used to compose a new view / view-model template or bind to an existing instance.
@@ -466,8 +460,6 @@ export declare class ArrayRepeatStrategy {
     * @param items The new array instance.
     */
   instanceChanged(repeat?: any, items?: any): any;
-  _standardProcessInstanceChanged(repeat?: any, items?: any): any;
-  _inPlaceProcessItems(repeat?: any, items?: any): any;
   
   /**
     * Handle the repeat's collection instance mutating.
@@ -476,20 +468,6 @@ export declare class ArrayRepeatStrategy {
     * @param splices Records of array changes.
     */
   instanceMutated(repeat?: any, array?: any, splices?: any): any;
-  _standardProcessInstanceMutated(repeat?: any, array?: any, splices?: any): any;
-  
-  /**
-    * Run a normalised set of splices against the viewSlot children.
-    * @param repeat The repeat instance.
-    * @param array The modified array.
-    * @param splices Records of array changes.
-    * @return {Promise|undefined} A promise if animations have to be run.
-    * @pre The splices must be normalised so as:
-    *  * Any item added may not be later removed.
-    *  * Removals are ordered by asending index
-    */
-  _runSplices(repeat?: any, array?: any, splices?: any): any;
-  _handleAddedSplices(repeat?: any, array?: any, splices?: any): any;
 }
 
 /**
@@ -508,7 +486,6 @@ export declare class MapRepeatStrategy {
     * @param items The entries to process.
     */
   instanceChanged(repeat?: any, items?: any): any;
-  _standardProcessItems(repeat?: any, items?: any): any;
   
   /**
     * Handle changes in a Map collection.
@@ -516,7 +493,6 @@ export declare class MapRepeatStrategy {
     * @param records The change records.
     */
   instanceMutated(repeat?: any, map?: any, records?: any): any;
-  _getViewIndexByKey(repeat?: any, key?: any): any;
 }
 
 /**
@@ -534,7 +510,6 @@ export declare class NumberRepeatStrategy {
     * @param value The Number of how many time to iterate.
     */
   instanceChanged(repeat?: any, value?: any): any;
-  _standardProcessItems(repeat?: any, value?: any): any;
 }
 
 /**
@@ -553,7 +528,6 @@ export declare class SetRepeatStrategy {
     * @param items The entries to process.
     */
   instanceChanged(repeat?: any, items?: any): any;
-  _standardProcessItems(repeat?: any, items?: any): any;
   
   /**
     * Handle changes in a Set collection.
@@ -561,7 +535,6 @@ export declare class SetRepeatStrategy {
     * @param records The change records.
     */
   instanceMutated(repeat?: any, set?: any, records?: any): any;
-  _getViewIndexByValue(repeat?: any, value?: any): any;
 }
 
 /**
@@ -713,13 +686,11 @@ export declare class Repeat extends AbstractRepeater {
     * Unbinds the repeat
     */
   unbind(): any;
-  _unsubscribeCollection(): any;
   
   /**
     * Invoked everytime the item property changes.
     */
   itemsChanged(): any;
-  _getInnerCollection(): any;
   
   /**
     * Invoked when the underlying collection changes.
@@ -730,9 +701,6 @@ export declare class Repeat extends AbstractRepeater {
     * Invoked when the underlying inner collection changes.
     */
   handleInnerCollectionMutated(collection?: any, changes?: any): any;
-  _observeInnerCollection(): any;
-  _observeCollection(): any;
-  _captureAndRemoveMatcherBinding(): any;
   
   // @override AbstractRepeater
   viewCount(): any;
