@@ -7,6 +7,7 @@ import {Repeat} from '../src/repeat';
 import {RepeatStrategyLocator} from '../src/repeat-strategy-locator';
 import {ArrayRepeatStrategy} from '../src/array-repeat-strategy';
 import {ViewSlotMock, BoundViewFactoryMock, ViewMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
+import {bootstrap} from 'aurelia-bootstrapper';
 
 describe('ArrayRepeatStrategy', () => {
   let repeat, strategy, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, repeatStrategyMock, component;
@@ -20,7 +21,7 @@ describe('ArrayRepeatStrategy', () => {
 
     component = StageComponent.withResources().inView('<div repeat.for="item of items"></div>').boundTo({ items: [] });
 
-    component.create().then(() => {
+    component.create(bootstrap).then(() => {
       repeat = component.viewModel;
       repeat.viewSlot = viewSlot;
       repeat.instruction = instructionMock;
