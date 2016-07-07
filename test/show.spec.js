@@ -1,6 +1,7 @@
 import './setup';
 import {Show} from '../src/show';
 import {aureliaHideClassName} from '../src/aurelia-hide-style';
+import {FEATURE} from 'aurelia-pal';
 
 describe('show', () => {
   let sut, animator;
@@ -34,11 +35,14 @@ describe('show', () => {
   });
 
   it('should inject aurelia-hide style in DOM boundary when created', () => {
+    let shadowDOM = FEATURE.shadowDOM;
+    FEATURE.shadowDOM = true;
     let target = document.createElement('input');
     let boundary = document.createElement('div');
     sut = new Show(target, animator, boundary);
     sut.created();
     expect(boundary.hasAureliaHideStyle).toBe(true);
+    FEATURE.shadowDOM = shadowDOM;
   });
 });
 
