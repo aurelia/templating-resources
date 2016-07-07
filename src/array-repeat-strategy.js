@@ -163,14 +163,6 @@ export class ArrayRepeatStrategy {
   * @param splices Records of array changes.
   */
   instanceMutated(repeat, array, splices) {
-    if (repeat.viewsRequireLifecycle) {
-      this._standardProcessInstanceMutated(repeat, array, splices);
-      return;
-    }
-    this._inPlaceProcessItems(repeat, array);
-  }
-
-  _standardProcessInstanceMutated(repeat, array, splices) {
     if (repeat.__queuedSplices) {
       for (let i = 0, ii = splices.length; i < ii; ++i) {
         let {index, removed, addedCount} = splices[i];
