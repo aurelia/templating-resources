@@ -17,7 +17,7 @@ export class MapRepeatStrategy {
   * @param items The entries to process.
   */
   instanceChanged(repeat, items) {
-    let removePromise = repeat.removeAllViews(true);
+    let removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
       removePromise.then(() => this._standardProcessItems(repeat, items));
       return;
@@ -57,7 +57,7 @@ export class MapRepeatStrategy {
       switch (record.type) {
       case 'update':
         removeIndex = this._getViewIndexByKey(repeat, key);
-        viewOrPromise = repeat.removeView(removeIndex, true);
+        viewOrPromise = repeat.removeView(removeIndex, true, !repeat.viewsRequireLifecycle);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
@@ -71,13 +71,13 @@ export class MapRepeatStrategy {
       case 'delete':
         if (record.oldValue === undefined) { return; }
         removeIndex = this._getViewIndexByKey(repeat, key);
-        viewOrPromise = repeat.removeView(removeIndex, true);
+        viewOrPromise = repeat.removeView(removeIndex, true, !repeat.viewsRequireLifecycle);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
         break;
       case 'clear':
-        repeat.removeAllViews(true);
+        repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
         break;
       default:
         continue;

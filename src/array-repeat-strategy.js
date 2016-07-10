@@ -25,7 +25,7 @@ export class ArrayRepeatStrategy {
     // if the new instance does not contain any items,
     // just remove all views and don't do any further processing
     if (!items || itemsLength === 0) {
-      repeat.removeAllViews(true);
+      repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
       return;
     }
 
@@ -65,7 +65,7 @@ export class ArrayRepeatStrategy {
       let removePromise;
 
       if (itemsPreviouslyInViews.length > 0) {
-        removePromise = repeat.removeViews(viewsToRemove, true);
+        removePromise = repeat.removeViews(viewsToRemove, true, !repeat.viewsRequireLifecycle);
         updateViews = () => {
           // update views (create new and move existing)
           for (let index = 0; index < itemsLength; index++) {
@@ -99,7 +99,7 @@ export class ArrayRepeatStrategy {
         };
       } else {
         // if all of the items are different, remove all and add all from scratch
-        removePromise = repeat.removeAllViews(true);
+        removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
         updateViews = () => this._standardProcessInstanceChanged(repeat, items);
       }
 
@@ -127,7 +127,7 @@ export class ArrayRepeatStrategy {
     // remove unneeded views.
     while (viewsLength > itemsLength) {
       viewsLength--;
-      repeat.removeView(viewsLength, true);
+      repeat.removeView(viewsLength, true, !repeat.viewsRequireLifecycle);
     }
     // avoid repeated evaluating the property-getter for the "local" property.
     let local = repeat.local;

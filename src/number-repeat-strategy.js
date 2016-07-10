@@ -16,7 +16,7 @@ export class NumberRepeatStrategy {
   * @param value The Number of how many time to iterate.
   */
   instanceChanged(repeat, value) {
-    let removePromise = repeat.removeAllViews(true);
+    let removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
       removePromise.then(() => this._standardProcessItems(repeat, value));
       return;
@@ -40,7 +40,7 @@ export class NumberRepeatStrategy {
       }
 
       for (i = 0, ii = viewsToRemove; i < ii; ++i) {
-        repeat.removeView(childrenLength - (i + 1), true);
+        repeat.removeView(childrenLength - (i + 1), true, !repeat.viewsRequireLifecycle);
       }
 
       return;
