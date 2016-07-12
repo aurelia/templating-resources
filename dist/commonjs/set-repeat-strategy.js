@@ -21,7 +21,7 @@ var SetRepeatStrategy = exports.SetRepeatStrategy = function () {
   SetRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, items) {
     var _this = this;
 
-    var removePromise = repeat.removeAllViews(true);
+    var removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
       removePromise.then(function () {
         return _this._standardProcessItems(repeat, items);
@@ -62,13 +62,13 @@ var SetRepeatStrategy = exports.SetRepeatStrategy = function () {
           break;
         case 'delete':
           removeIndex = this._getViewIndexByValue(repeat, value);
-          viewOrPromise = repeat.removeView(removeIndex, true);
+          viewOrPromise = repeat.removeView(removeIndex, true, !repeat.viewsRequireLifecycle);
           if (viewOrPromise instanceof Promise) {
             rmPromises.push(viewOrPromise);
           }
           break;
         case 'clear':
-          repeat.removeAllViews(true);
+          repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
           break;
         default:
           continue;

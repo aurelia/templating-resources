@@ -23,7 +23,7 @@ define(['exports', './repeat-utilities', 'aurelia-binding'], function (exports, 
       var itemsLength = items.length;
 
       if (!items || itemsLength === 0) {
-        repeat.removeAllViews(true);
+        repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
         return;
       }
 
@@ -59,7 +59,7 @@ define(['exports', './repeat-utilities', 'aurelia-binding'], function (exports, 
           var removePromise = void 0;
 
           if (itemsPreviouslyInViews.length > 0) {
-            removePromise = repeat.removeViews(viewsToRemove, true);
+            removePromise = repeat.removeViews(viewsToRemove, true, !repeat.viewsRequireLifecycle);
             updateViews = function updateViews() {
               for (var _index = 0; _index < itemsLength; _index++) {
                 var item = items[_index];
@@ -89,7 +89,7 @@ define(['exports', './repeat-utilities', 'aurelia-binding'], function (exports, 
               _this._inPlaceProcessItems(repeat, items);
             };
           } else {
-            removePromise = repeat.removeAllViews(true);
+            removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
             updateViews = function updateViews() {
               return _this._standardProcessInstanceChanged(repeat, items);
             };
@@ -119,7 +119,7 @@ define(['exports', './repeat-utilities', 'aurelia-binding'], function (exports, 
 
       while (viewsLength > itemsLength) {
         viewsLength--;
-        repeat.removeView(viewsLength, true);
+        repeat.removeView(viewsLength, true, !repeat.viewsRequireLifecycle);
       }
 
       var local = repeat.local;
@@ -146,14 +146,6 @@ define(['exports', './repeat-utilities', 'aurelia-binding'], function (exports, 
     };
 
     ArrayRepeatStrategy.prototype.instanceMutated = function instanceMutated(repeat, array, splices) {
-      if (repeat.viewsRequireLifecycle) {
-        this._standardProcessInstanceMutated(repeat, array, splices);
-        return;
-      }
-      this._inPlaceProcessItems(repeat, array);
-    };
-
-    ArrayRepeatStrategy.prototype._standardProcessInstanceMutated = function _standardProcessInstanceMutated(repeat, array, splices) {
       var _this2 = this;
 
       if (repeat.__queuedSplices) {

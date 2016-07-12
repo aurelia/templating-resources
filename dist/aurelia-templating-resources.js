@@ -1137,7 +1137,7 @@ export class ArrayRepeatStrategy {
     // if the new instance does not contain any items,
     // just remove all views and don't do any further processing
     if (!items || itemsLength === 0) {
-      repeat.removeAllViews(true);
+      repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
       return;
     }
 
@@ -1177,7 +1177,7 @@ export class ArrayRepeatStrategy {
       let removePromise;
 
       if (itemsPreviouslyInViews.length > 0) {
-        removePromise = repeat.removeViews(viewsToRemove, true);
+        removePromise = repeat.removeViews(viewsToRemove, true, !repeat.viewsRequireLifecycle);
         updateViews = () => {
           // update views (create new and move existing)
           for (let index = 0; index < itemsLength; index++) {
@@ -1211,7 +1211,7 @@ export class ArrayRepeatStrategy {
         };
       } else {
         // if all of the items are different, remove all and add all from scratch
-        removePromise = repeat.removeAllViews(true);
+        removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
         updateViews = () => this._standardProcessInstanceChanged(repeat, items);
       }
 
@@ -1239,7 +1239,7 @@ export class ArrayRepeatStrategy {
     // remove unneeded views.
     while (viewsLength > itemsLength) {
       viewsLength--;
-      repeat.removeView(viewsLength, true);
+      repeat.removeView(viewsLength, true, !repeat.viewsRequireLifecycle);
     }
     // avoid repeated evaluating the property-getter for the "local" property.
     let local = repeat.local;
@@ -1275,14 +1275,6 @@ export class ArrayRepeatStrategy {
   * @param splices Records of array changes.
   */
   instanceMutated(repeat, array, splices) {
-    if (repeat.viewsRequireLifecycle) {
-      this._standardProcessInstanceMutated(repeat, array, splices);
-      return;
-    }
-    this._inPlaceProcessItems(repeat, array);
-  }
-
-  _standardProcessInstanceMutated(repeat, array, splices) {
     if (repeat.__queuedSplices) {
       for (let i = 0, ii = splices.length; i < ii; ++i) {
         let {index, removed, addedCount} = splices[i];
@@ -1395,7 +1387,7 @@ export class MapRepeatStrategy {
   * @param items The entries to process.
   */
   instanceChanged(repeat, items) {
-    let removePromise = repeat.removeAllViews(true);
+    let removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
       removePromise.then(() => this._standardProcessItems(repeat, items));
       return;
@@ -1435,7 +1427,7 @@ export class MapRepeatStrategy {
       switch (record.type) {
       case 'update':
         removeIndex = this._getViewIndexByKey(repeat, key);
-        viewOrPromise = repeat.removeView(removeIndex, true);
+        viewOrPromise = repeat.removeView(removeIndex, true, !repeat.viewsRequireLifecycle);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
@@ -1449,13 +1441,13 @@ export class MapRepeatStrategy {
       case 'delete':
         if (record.oldValue === undefined) { return; }
         removeIndex = this._getViewIndexByKey(repeat, key);
-        viewOrPromise = repeat.removeView(removeIndex, true);
+        viewOrPromise = repeat.removeView(removeIndex, true, !repeat.viewsRequireLifecycle);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
         break;
       case 'clear':
-        repeat.removeAllViews(true);
+        repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
         break;
       default:
         continue;
@@ -1503,7 +1495,7 @@ export class NumberRepeatStrategy {
   * @param value The Number of how many time to iterate.
   */
   instanceChanged(repeat, value) {
-    let removePromise = repeat.removeAllViews(true);
+    let removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
       removePromise.then(() => this._standardProcessItems(repeat, value));
       return;
@@ -1527,7 +1519,7 @@ export class NumberRepeatStrategy {
       }
 
       for (i = 0, ii = viewsToRemove; i < ii; ++i) {
-        repeat.removeView(childrenLength - (i + 1), true);
+        repeat.removeView(childrenLength - (i + 1), true, !repeat.viewsRequireLifecycle);
       }
 
       return;
@@ -1559,7 +1551,7 @@ export class SetRepeatStrategy {
   * @param items The entries to process.
   */
   instanceChanged(repeat, items) {
-    let removePromise = repeat.removeAllViews(true);
+    let removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
       removePromise.then(() => this._standardProcessItems(repeat, items));
       return;
@@ -1603,13 +1595,13 @@ export class SetRepeatStrategy {
         break;
       case 'delete':
         removeIndex = this._getViewIndexByValue(repeat, value);
-        viewOrPromise = repeat.removeView(removeIndex, true);
+        viewOrPromise = repeat.removeView(removeIndex, true, !repeat.viewsRequireLifecycle);
         if (viewOrPromise instanceof Promise) {
           rmPromises.push(viewOrPromise);
         }
         break;
       case 'clear':
-        repeat.removeAllViews(true);
+        repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
         break;
       default:
         continue;

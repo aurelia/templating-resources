@@ -1029,7 +1029,7 @@ var ArrayRepeatStrategy = exports.ArrayRepeatStrategy = function () {
     var itemsLength = items.length;
 
     if (!items || itemsLength === 0) {
-      repeat.removeAllViews(true);
+      repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
       return;
     }
 
@@ -1065,7 +1065,7 @@ var ArrayRepeatStrategy = exports.ArrayRepeatStrategy = function () {
         var removePromise = void 0;
 
         if (itemsPreviouslyInViews.length > 0) {
-          removePromise = repeat.removeViews(viewsToRemove, true);
+          removePromise = repeat.removeViews(viewsToRemove, true, !repeat.viewsRequireLifecycle);
           updateViews = function updateViews() {
             for (var _index = 0; _index < itemsLength; _index++) {
               var item = items[_index];
@@ -1095,7 +1095,7 @@ var ArrayRepeatStrategy = exports.ArrayRepeatStrategy = function () {
             _this12._inPlaceProcessItems(repeat, items);
           };
         } else {
-          removePromise = repeat.removeAllViews(true);
+          removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
           updateViews = function updateViews() {
             return _this12._standardProcessInstanceChanged(repeat, items);
           };
@@ -1125,7 +1125,7 @@ var ArrayRepeatStrategy = exports.ArrayRepeatStrategy = function () {
 
     while (viewsLength > itemsLength) {
       viewsLength--;
-      repeat.removeView(viewsLength, true);
+      repeat.removeView(viewsLength, true, !repeat.viewsRequireLifecycle);
     }
 
     var local = repeat.local;
@@ -1152,14 +1152,6 @@ var ArrayRepeatStrategy = exports.ArrayRepeatStrategy = function () {
   };
 
   ArrayRepeatStrategy.prototype.instanceMutated = function instanceMutated(repeat, array, splices) {
-    if (repeat.viewsRequireLifecycle) {
-      this._standardProcessInstanceMutated(repeat, array, splices);
-      return;
-    }
-    this._inPlaceProcessItems(repeat, array);
-  };
-
-  ArrayRepeatStrategy.prototype._standardProcessInstanceMutated = function _standardProcessInstanceMutated(repeat, array, splices) {
     var _this13 = this;
 
     if (repeat.__queuedSplices) {
@@ -1267,7 +1259,7 @@ var MapRepeatStrategy = exports.MapRepeatStrategy = function () {
   MapRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, items) {
     var _this15 = this;
 
-    var removePromise = repeat.removeAllViews(true);
+    var removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
       removePromise.then(function () {
         return _this15._standardProcessItems(repeat, items);
@@ -1304,7 +1296,7 @@ var MapRepeatStrategy = exports.MapRepeatStrategy = function () {
       switch (record.type) {
         case 'update':
           removeIndex = this._getViewIndexByKey(repeat, key);
-          viewOrPromise = repeat.removeView(removeIndex, true);
+          viewOrPromise = repeat.removeView(removeIndex, true, !repeat.viewsRequireLifecycle);
           if (viewOrPromise instanceof Promise) {
             rmPromises.push(viewOrPromise);
           }
@@ -1320,13 +1312,13 @@ var MapRepeatStrategy = exports.MapRepeatStrategy = function () {
             return;
           }
           removeIndex = this._getViewIndexByKey(repeat, key);
-          viewOrPromise = repeat.removeView(removeIndex, true);
+          viewOrPromise = repeat.removeView(removeIndex, true, !repeat.viewsRequireLifecycle);
           if (viewOrPromise instanceof Promise) {
             rmPromises.push(viewOrPromise);
           }
           break;
         case 'clear':
-          repeat.removeAllViews(true);
+          repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
           break;
         default:
           continue;
@@ -1372,7 +1364,7 @@ var NumberRepeatStrategy = exports.NumberRepeatStrategy = function () {
   NumberRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, value) {
     var _this16 = this;
 
-    var removePromise = repeat.removeAllViews(true);
+    var removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
       removePromise.then(function () {
         return _this16._standardProcessItems(repeat, value);
@@ -1398,7 +1390,7 @@ var NumberRepeatStrategy = exports.NumberRepeatStrategy = function () {
       }
 
       for (i = 0, ii = viewsToRemove; i < ii; ++i) {
-        repeat.removeView(childrenLength - (i + 1), true);
+        repeat.removeView(childrenLength - (i + 1), true, !repeat.viewsRequireLifecycle);
       }
 
       return;
@@ -1427,7 +1419,7 @@ var SetRepeatStrategy = exports.SetRepeatStrategy = function () {
   SetRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, items) {
     var _this17 = this;
 
-    var removePromise = repeat.removeAllViews(true);
+    var removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
       removePromise.then(function () {
         return _this17._standardProcessItems(repeat, items);
@@ -1468,13 +1460,13 @@ var SetRepeatStrategy = exports.SetRepeatStrategy = function () {
           break;
         case 'delete':
           removeIndex = this._getViewIndexByValue(repeat, value);
-          viewOrPromise = repeat.removeView(removeIndex, true);
+          viewOrPromise = repeat.removeView(removeIndex, true, !repeat.viewsRequireLifecycle);
           if (viewOrPromise instanceof Promise) {
             rmPromises.push(viewOrPromise);
           }
           break;
         case 'clear':
-          repeat.removeAllViews(true);
+          repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
           break;
         default:
           continue;

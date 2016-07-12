@@ -1,3 +1,18 @@
+<a name="1.0.0-rc.1.0.1"></a>
+# [1.0.0-rc.1.0.1](https://github.com/aurelia/templating-resources/compare/1.0.0-rc.1.0.0...v1.0.0-rc.1.0.1) (2016-07-12)
+
+
+### Bug Fixes
+
+* **ArrayRepeatStrategy:** standard mutation processing ([34111cd](https://github.com/aurelia/templating-resources/commit/34111cd)), closes [aurelia/framework#408](https://github.com/aurelia/framework/issues/408) [aurelia/templating#349](https://github.com/aurelia/templating/issues/349)
+
+
+### Performance Improvements
+
+* **repeat:** provide skipAnimation hint to ViewSlot ([48dbc02](https://github.com/aurelia/templating-resources/commit/48dbc02))
+
+
+
 <a name="1.0.0-rc.1.0.0"></a>
 # [1.0.0-rc.1.0.0](https://github.com/aurelia/templating-resources/compare/1.0.0-beta.3.0.4...v1.0.0-rc.1.0.0) (2016-06-22)
 

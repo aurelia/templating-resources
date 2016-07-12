@@ -21,7 +21,7 @@ var MapRepeatStrategy = exports.MapRepeatStrategy = function () {
   MapRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, items) {
     var _this = this;
 
-    var removePromise = repeat.removeAllViews(true);
+    var removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
       removePromise.then(function () {
         return _this._standardProcessItems(repeat, items);
@@ -58,7 +58,7 @@ var MapRepeatStrategy = exports.MapRepeatStrategy = function () {
       switch (record.type) {
         case 'update':
           removeIndex = this._getViewIndexByKey(repeat, key);
-          viewOrPromise = repeat.removeView(removeIndex, true);
+          viewOrPromise = repeat.removeView(removeIndex, true, !repeat.viewsRequireLifecycle);
           if (viewOrPromise instanceof Promise) {
             rmPromises.push(viewOrPromise);
           }
@@ -74,13 +74,13 @@ var MapRepeatStrategy = exports.MapRepeatStrategy = function () {
             return;
           }
           removeIndex = this._getViewIndexByKey(repeat, key);
-          viewOrPromise = repeat.removeView(removeIndex, true);
+          viewOrPromise = repeat.removeView(removeIndex, true, !repeat.viewsRequireLifecycle);
           if (viewOrPromise instanceof Promise) {
             rmPromises.push(viewOrPromise);
           }
           break;
         case 'clear':
-          repeat.removeAllViews(true);
+          repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
           break;
         default:
           continue;

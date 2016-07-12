@@ -10,7 +10,7 @@ export let ArrayRepeatStrategy = class ArrayRepeatStrategy {
     const itemsLength = items.length;
 
     if (!items || itemsLength === 0) {
-      repeat.removeAllViews(true);
+      repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
       return;
     }
 
@@ -45,7 +45,7 @@ export let ArrayRepeatStrategy = class ArrayRepeatStrategy {
       let removePromise;
 
       if (itemsPreviouslyInViews.length > 0) {
-        removePromise = repeat.removeViews(viewsToRemove, true);
+        removePromise = repeat.removeViews(viewsToRemove, true, !repeat.viewsRequireLifecycle);
         updateViews = () => {
           for (let index = 0; index < itemsLength; index++) {
             const item = items[index];
@@ -75,7 +75,7 @@ export let ArrayRepeatStrategy = class ArrayRepeatStrategy {
           this._inPlaceProcessItems(repeat, items);
         };
       } else {
-        removePromise = repeat.removeAllViews(true);
+        removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
         updateViews = () => this._standardProcessInstanceChanged(repeat, items);
       }
 
@@ -102,7 +102,7 @@ export let ArrayRepeatStrategy = class ArrayRepeatStrategy {
 
     while (viewsLength > itemsLength) {
       viewsLength--;
-      repeat.removeView(viewsLength, true);
+      repeat.removeView(viewsLength, true, !repeat.viewsRequireLifecycle);
     }
 
     let local = repeat.local;
@@ -129,14 +129,6 @@ export let ArrayRepeatStrategy = class ArrayRepeatStrategy {
   }
 
   instanceMutated(repeat, array, splices) {
-    if (repeat.viewsRequireLifecycle) {
-      this._standardProcessInstanceMutated(repeat, array, splices);
-      return;
-    }
-    this._inPlaceProcessItems(repeat, array);
-  }
-
-  _standardProcessInstanceMutated(repeat, array, splices) {
     if (repeat.__queuedSplices) {
       for (let i = 0, ii = splices.length; i < ii; ++i) {
         let { index, removed, addedCount } = splices[i];

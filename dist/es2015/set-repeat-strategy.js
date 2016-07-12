@@ -6,7 +6,7 @@ export let SetRepeatStrategy = class SetRepeatStrategy {
   }
 
   instanceChanged(repeat, items) {
-    let removePromise = repeat.removeAllViews(true);
+    let removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
       removePromise.then(() => this._standardProcessItems(repeat, items));
       return;
@@ -45,13 +45,13 @@ export let SetRepeatStrategy = class SetRepeatStrategy {
           break;
         case 'delete':
           removeIndex = this._getViewIndexByValue(repeat, value);
-          viewOrPromise = repeat.removeView(removeIndex, true);
+          viewOrPromise = repeat.removeView(removeIndex, true, !repeat.viewsRequireLifecycle);
           if (viewOrPromise instanceof Promise) {
             rmPromises.push(viewOrPromise);
           }
           break;
         case 'clear':
-          repeat.removeAllViews(true);
+          repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
           break;
         default:
           continue;

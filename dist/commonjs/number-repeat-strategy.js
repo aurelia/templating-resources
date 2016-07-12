@@ -21,7 +21,7 @@ var NumberRepeatStrategy = exports.NumberRepeatStrategy = function () {
   NumberRepeatStrategy.prototype.instanceChanged = function instanceChanged(repeat, value) {
     var _this = this;
 
-    var removePromise = repeat.removeAllViews(true);
+    var removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
       removePromise.then(function () {
         return _this._standardProcessItems(repeat, value);
@@ -47,7 +47,7 @@ var NumberRepeatStrategy = exports.NumberRepeatStrategy = function () {
       }
 
       for (i = 0, ii = viewsToRemove; i < ii; ++i) {
-        repeat.removeView(childrenLength - (i + 1), true);
+        repeat.removeView(childrenLength - (i + 1), true, !repeat.viewsRequireLifecycle);
       }
 
       return;
