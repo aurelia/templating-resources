@@ -56,8 +56,8 @@ class CSSResource {
 }
 
 class CSSViewEngineHooks {
-  constructor(resource: CSSResource) {
-    this.resource = resource;
+  constructor(owner: CSSResource) {
+    this.owner = owner;
     this.css = null;
   }
 
@@ -67,9 +67,9 @@ class CSSViewEngineHooks {
     } else if (FEATURE.scopedCSS) {
       let styleNode = DOM.injectStyles(this.css, content, true);
       styleNode.setAttribute('scoped', 'scoped');
-    } else if (!this.resource._alreadyGloballyInjected) {
+    } else if (!this.owner._alreadyGloballyInjected) {
       DOM.injectStyles(this.css);
-      this.resource._alreadyGloballyInjected = true;
+      this.owner._alreadyGloballyInjected = true;
     }
   }
 }

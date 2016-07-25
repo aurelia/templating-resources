@@ -632,17 +632,21 @@ var CSSResource = function () {
     _classCallCheck(this, CSSResource);
 
     this.address = address;
-    this._global = null;
     this._scoped = null;
+    this._global = false;
+    this._alreadyGloballyInjected = false;
   }
 
   CSSResource.prototype.initialize = function initialize(container, target) {
-    this._global = new target('global');
-    this._scoped = new target('scoped');
+    this._scoped = new target(this);
   };
 
   CSSResource.prototype.register = function register(registry, name) {
-    registry.registerViewEngineHooks(name === 'scoped' ? this._scoped : this._global);
+    if (name === 'scoped') {
+      registry.registerViewEngineHooks(this._scoped);
+    } else {
+      this._global = true;
+    }
   };
 
   CSSResource.prototype.load = function load(container) {
@@ -652,8 +656,11 @@ var CSSResource = function () {
       return null;
     }).then(function (text) {
       text = fixupCSSUrls(_this7.address, text);
-      _this7._global.css = text;
       _this7._scoped.css = text;
+      if (_this7._global) {
+        _this7._alreadyGloballyInjected = true;
+        _aureliaPal.DOM.injectStyles(text);
+      }
     });
   };
 
@@ -661,28 +668,22 @@ var CSSResource = function () {
 }();
 
 var CSSViewEngineHooks = function () {
-  function CSSViewEngineHooks(mode) {
+  function CSSViewEngineHooks(owner) {
     _classCallCheck(this, CSSViewEngineHooks);
 
-    this.mode = mode;
+    this.owner = owner;
     this.css = null;
-    this._alreadyGloballyInjected = false;
   }
 
   CSSViewEngineHooks.prototype.beforeCompile = function beforeCompile(content, resources, instruction) {
-    if (this.mode === 'scoped') {
-      if (instruction.targetShadowDOM) {
-        _aureliaPal.DOM.injectStyles(this.css, content, true);
-      } else if (_aureliaPal.FEATURE.scopedCSS) {
-        var styleNode = _aureliaPal.DOM.injectStyles(this.css, content, true);
-        styleNode.setAttribute('scoped', 'scoped');
-      } else if (!this._alreadyGloballyInjected) {
-        _aureliaPal.DOM.injectStyles(this.css);
-        this._alreadyGloballyInjected = true;
-      }
-    } else if (!this._alreadyGloballyInjected) {
+    if (instruction.targetShadowDOM) {
+      _aureliaPal.DOM.injectStyles(this.css, content, true);
+    } else if (_aureliaPal.FEATURE.scopedCSS) {
+      var styleNode = _aureliaPal.DOM.injectStyles(this.css, content, true);
+      styleNode.setAttribute('scoped', 'scoped');
+    } else if (!this.owner._alreadyGloballyInjected) {
       _aureliaPal.DOM.injectStyles(this.css);
-      this._alreadyGloballyInjected = true;
+      this.owner._alreadyGloballyInjected = true;
     }
   };
 
