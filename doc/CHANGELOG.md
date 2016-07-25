@@ -1,3 +1,13 @@
+<a name="1.0.0-rc.1.0.2"></a>
+# [1.0.0-rc.1.0.2](https://github.com/aurelia/templating-resources/compare/1.0.0-rc.1.0.1...v1.0.0-rc.1.0.2) (2016-07-25)
+
+
+### Features
+
+* **css-resource:** enable styles for no view components ([b2876a3](https://github.com/aurelia/templating-resources/commit/b2876a3))
+
+
+
 <a name="1.0.0-rc.1.0.1"></a>
 # [1.0.0-rc.1.0.1](https://github.com/aurelia/templating-resources/compare/1.0.0-rc.1.0.0...v1.0.0-rc.1.0.1) (2016-07-12)
 
