@@ -23,17 +23,21 @@ function fixupCSSUrls(address, css) {
 class CSSResource {
   constructor(address: string) {
     this.address = address;
-    this._global = null;
     this._scoped = null;
+    this._global = false;
+    this._alreadyGloballyInjected = false;
   }
 
   initialize(container: Container, target: Function): void {
-    this._global = new target('global');
-    this._scoped = new target('scoped');
+    this._scoped = new target(this);
   }
 
   register(registry: ViewResources, name?: string): void {
-    registry.registerViewEngineHooks(name === 'scoped' ? this._scoped : this._global);
+    if (name === 'scoped') {
+      registry.registerViewEngineHooks(this._scoped);
+    } else {
+      this._global = true;
+    }
   }
 
   load(container: Container): Promise<CSSResource> {
@@ -42,33 +46,30 @@ class CSSResource {
       .catch(err => null)
       .then(text => {
         text = fixupCSSUrls(this.address, text);
-        this._global.css = text;
         this._scoped.css = text;
+        if (this._global) {
+          this._alreadyGloballyInjected = true;
+          DOM.injectStyles(text);
+        }
       });
   }
 }
 
 class CSSViewEngineHooks {
-  constructor(mode: string) {
-    this.mode = mode;
+  constructor(resource: CSSResource) {
+    this.resource = resource;
     this.css = null;
-    this._alreadyGloballyInjected = false;
   }
 
   beforeCompile(content: DocumentFragment, resources: ViewResources, instruction: ViewCompileInstruction): void {
-    if (this.mode === 'scoped') {
-      if (instruction.targetShadowDOM) {
-        DOM.injectStyles(this.css, content, true);
-      } else if (FEATURE.scopedCSS) {
-        let styleNode = DOM.injectStyles(this.css, content, true);
-        styleNode.setAttribute('scoped', 'scoped');
-      } else if (!this._alreadyGloballyInjected) {
-        DOM.injectStyles(this.css);
-        this._alreadyGloballyInjected = true;
-      }
-    } else if (!this._alreadyGloballyInjected) {
+    if (instruction.targetShadowDOM) {
+      DOM.injectStyles(this.css, content, true);
+    } else if (FEATURE.scopedCSS) {
+      let styleNode = DOM.injectStyles(this.css, content, true);
+      styleNode.setAttribute('scoped', 'scoped');
+    } else if (!this.resource._alreadyGloballyInjected) {
       DOM.injectStyles(this.css);
-      this._alreadyGloballyInjected = true;
+      this.resource._alreadyGloballyInjected = true;
     }
   }
 }
