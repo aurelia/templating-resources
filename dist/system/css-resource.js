@@ -44,6 +44,26 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
     });
   }
 
+  function _createCSSResource(address) {
+    var _dec, _class;
+
+    var ViewCSS = (_dec = resource(new CSSResource(address)), _dec(_class = function (_CSSViewEngineHooks) {
+      _inherits(ViewCSS, _CSSViewEngineHooks);
+
+      function ViewCSS() {
+        
+
+        return _possibleConstructorReturn(this, _CSSViewEngineHooks.apply(this, arguments));
+      }
+
+      return ViewCSS;
+    }(CSSViewEngineHooks)) || _class);
+
+    return ViewCSS;
+  }
+
+  _export('_createCSSResource', _createCSSResource);
+
   return {
     setters: [function (_aureliaTemplating) {
       ViewResources = _aureliaTemplating.ViewResources;
@@ -124,26 +144,6 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
 
         return CSSViewEngineHooks;
       }();
-
-      function _createCSSResource(address) {
-        var _dec, _class;
-
-        var ViewCSS = (_dec = resource(new CSSResource(address)), _dec(_class = function (_CSSViewEngineHooks) {
-          _inherits(ViewCSS, _CSSViewEngineHooks);
-
-          function ViewCSS() {
-            
-
-            return _possibleConstructorReturn(this, _CSSViewEngineHooks.apply(this, arguments));
-          }
-
-          return ViewCSS;
-        }(CSSViewEngineHooks)) || _class);
-
-        return ViewCSS;
-      }
-
-      _export('_createCSSResource', _createCSSResource);
     }
   };
 });
