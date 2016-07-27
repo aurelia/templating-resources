@@ -1,3 +1,8 @@
+<a name="1.0.0"></a>
+# [1.0.0](https://github.com/aurelia/templating-resources/compare/1.0.0-rc.1.0.2...v1.0.0) (2016-07-27)
+
+
+
 <a name="1.0.0-rc.1.0.2"></a>
 # [1.0.0-rc.1.0.2](https://github.com/aurelia/templating-resources/compare/1.0.0-rc.1.0.1...v1.0.0-rc.1.0.2) (2016-07-25)
 
