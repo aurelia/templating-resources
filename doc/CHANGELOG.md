@@ -1,3 +1,13 @@
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/aurelia/templating-resources/compare/1.0.0...v1.1.0) (2016-10-05)
+
+
+### Features
+
+* **AttrBindingBehavior:** add behavior to target HTML attributes ([7a9caa1](https://github.com/aurelia/templating-resources/commit/7a9caa1)), closes [aurelia/templating-binding#94](https://github.com/aurelia/templating-binding/issues/94)
+
+
+
 <a name="1.0.0"></a>
 # [1.0.0](https://github.com/aurelia/templating-resources/compare/1.0.0-rc.1.0.2...v1.0.0) (2016-07-27)
 

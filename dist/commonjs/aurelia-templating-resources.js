@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.viewsRequireLifecycle = exports.unwrapExpression = exports.updateOneTimeBinding = exports.isOneTime = exports.getItemsSourceExpression = exports.updateOverrideContext = exports.createFullOverrideContext = exports.NumberRepeatStrategy = exports.SetRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.NullRepeatStrategy = exports.RepeatStrategyLocator = exports.AbstractRepeater = exports.UpdateTriggerBindingBehavior = exports.BindingSignaler = exports.SignalBindingBehavior = exports.DebounceBindingBehavior = exports.ThrottleBindingBehavior = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.configure = exports.Focus = exports.Replaceable = exports.SanitizeHTMLValueConverter = exports.HTMLSanitizer = exports.Hide = exports.Show = exports.Repeat = exports.With = exports.If = exports.Compose = undefined;
+exports.viewsRequireLifecycle = exports.unwrapExpression = exports.updateOneTimeBinding = exports.isOneTime = exports.getItemsSourceExpression = exports.updateOverrideContext = exports.createFullOverrideContext = exports.NumberRepeatStrategy = exports.SetRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.NullRepeatStrategy = exports.RepeatStrategyLocator = exports.AbstractRepeater = exports.UpdateTriggerBindingBehavior = exports.BindingSignaler = exports.SignalBindingBehavior = exports.DebounceBindingBehavior = exports.ThrottleBindingBehavior = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.AttrBindingBehavior = exports.configure = exports.Focus = exports.Replaceable = exports.SanitizeHTMLValueConverter = exports.HTMLSanitizer = exports.Hide = exports.Show = exports.Repeat = exports.With = exports.If = exports.Compose = undefined;
 
 var _compose = require('./compose');
 
@@ -28,6 +28,8 @@ var _aureliaTemplating = require('aurelia-templating');
 var _cssResource = require('./css-resource');
 
 var _htmlSanitizer = require('./html-sanitizer');
+
+var _attrBindingBehavior = require('./attr-binding-behavior');
 
 var _bindingModeBehaviors = require('./binding-mode-behaviors');
 
@@ -66,7 +68,7 @@ var _aureliaHideStyle = require('./aurelia-hide-style');
 function configure(config) {
   (0, _aureliaHideStyle.injectAureliaHideStyleAtHead)();
 
-  config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './replaceable', './sanitize-html', './focus', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
+  config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './replaceable', './sanitize-html', './focus', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior', './attr-binding-behavior');
 
   (0, _htmlResourcePlugin.configure)(config);
 
@@ -91,6 +93,7 @@ exports.SanitizeHTMLValueConverter = _sanitizeHtml.SanitizeHTMLValueConverter;
 exports.Replaceable = _replaceable.Replaceable;
 exports.Focus = _focus.Focus;
 exports.configure = configure;
+exports.AttrBindingBehavior = _attrBindingBehavior.AttrBindingBehavior;
 exports.OneTimeBindingBehavior = _bindingModeBehaviors.OneTimeBindingBehavior;
 exports.OneWayBindingBehavior = _bindingModeBehaviors.OneWayBindingBehavior;
 exports.TwoWayBindingBehavior = _bindingModeBehaviors.TwoWayBindingBehavior;

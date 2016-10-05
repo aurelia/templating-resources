@@ -28,6 +28,7 @@ import {
   BindingBehavior,
   ValueConverter,
   sourceContext,
+  DataAttributeObserver,
   mergeSplice,
   valueConverter,
   ObserverLocator
@@ -334,6 +335,10 @@ export declare class TwoWayBindingBehavior {
 export declare const aureliaHideClassName: any;
 export declare function injectAureliaHideStyleAtHead(): any;
 export declare function injectAureliaHideStyleAtBoundary(domBoundary?: any): any;
+export declare class AttrBindingBehavior {
+  bind(binding?: any, source?: any): any;
+  unbind(binding?: any, source?: any): any;
+}
 
 /**
 * Behaviors that do not require the composition lifecycle callbacks when replacing

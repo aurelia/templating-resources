@@ -1,6 +1,6 @@
 import {inject,Container,Optional} from 'aurelia-dependency-injection';
 import {BoundViewFactory,ViewSlot,customAttribute,templateController,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,noView,View,ViewEngine,Animator,TargetInstruction} from 'aurelia-templating';
-import {createOverrideContext,bindingMode,EventManager,BindingBehavior,ValueConverter,sourceContext,mergeSplice,valueConverter,ObserverLocator} from 'aurelia-binding';
+import {createOverrideContext,bindingMode,EventManager,BindingBehavior,ValueConverter,sourceContext,DataAttributeObserver,mergeSplice,valueConverter,ObserverLocator} from 'aurelia-binding';
 import {TaskQueue} from 'aurelia-task-queue';
 import {DOM,FEATURE} from 'aurelia-pal';
 import {Loader} from 'aurelia-loader';
@@ -921,6 +921,14 @@ export function injectAureliaHideStyleAtBoundary(domBoundary) {
     domBoundary.hasAureliaHideStyle = true;
     DOM.injectStyles(aureliaHideClass, domBoundary);
   }
+}
+
+export class AttrBindingBehavior {
+  bind(binding, source) {
+    binding.targetObserver = new DataAttributeObserver(binding.target, binding.targetProperty);
+  }
+
+  unbind(binding, source) {}
 }
 
 /**

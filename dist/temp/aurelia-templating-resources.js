@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Repeat = exports.RepeatStrategyLocator = exports.Show = exports.Hide = exports.SignalBindingBehavior = exports.SanitizeHTMLValueConverter = exports.SetRepeatStrategy = exports.NumberRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.AbstractRepeater = exports.lifecycleOptionalBehaviors = exports.aureliaHideClassName = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.BindingSignaler = exports.Compose = exports.DebounceBindingBehavior = exports.Focus = exports.HTMLSanitizer = exports.If = exports.NullRepeatStrategy = exports.Replaceable = exports.ThrottleBindingBehavior = exports.UpdateTriggerBindingBehavior = exports.With = undefined;
+exports.Repeat = exports.RepeatStrategyLocator = exports.Show = exports.Hide = exports.SignalBindingBehavior = exports.SanitizeHTMLValueConverter = exports.SetRepeatStrategy = exports.NumberRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.AbstractRepeater = exports.lifecycleOptionalBehaviors = exports.AttrBindingBehavior = exports.aureliaHideClassName = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.BindingSignaler = exports.Compose = exports.DebounceBindingBehavior = exports.Focus = exports.HTMLSanitizer = exports.If = exports.NullRepeatStrategy = exports.Replaceable = exports.ThrottleBindingBehavior = exports.UpdateTriggerBindingBehavior = exports.With = undefined;
 
 var _dec, _dec2, _class, _class2, _temp, _dec3, _dec4, _class3, _dec5, _dec6, _class4, _dec7, _dec8, _class5, _dec12, _dec13, _class8, _desc, _value, _class9, _descriptor, _descriptor2, _descriptor3, _dec14, _class12, _dec15, _class13, _dec16, _class14, _dec17, _dec18, _class15, _dec19, _dec20, _class17, _dec21, _dec22, _class18, _dec23, _dec24, _class19, _desc2, _value2, _class20, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
 
@@ -907,6 +907,20 @@ function injectAureliaHideStyleAtBoundary(domBoundary) {
     _aureliaPal.DOM.injectStyles(aureliaHideClass, domBoundary);
   }
 }
+
+var AttrBindingBehavior = exports.AttrBindingBehavior = function () {
+  function AttrBindingBehavior() {
+    _classCallCheck(this, AttrBindingBehavior);
+  }
+
+  AttrBindingBehavior.prototype.bind = function bind(binding, source) {
+    binding.targetObserver = new _aureliaBinding.DataAttributeObserver(binding.target, binding.targetProperty);
+  };
+
+  AttrBindingBehavior.prototype.unbind = function unbind(binding, source) {};
+
+  return AttrBindingBehavior;
+}();
 
 var lifecycleOptionalBehaviors = exports.lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'with'];
 

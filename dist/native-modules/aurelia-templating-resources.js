@@ -10,6 +10,7 @@ import { Focus } from './focus';
 import { ViewEngine } from 'aurelia-templating';
 import { _createCSSResource } from './css-resource';
 import { HTMLSanitizer } from './html-sanitizer';
+import { AttrBindingBehavior } from './attr-binding-behavior';
 import { OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior } from './binding-mode-behaviors';
 import { ThrottleBindingBehavior } from './throttle-binding-behavior';
 import { DebounceBindingBehavior } from './debounce-binding-behavior';
@@ -31,7 +32,7 @@ import { injectAureliaHideStyleAtHead } from './aurelia-hide-style';
 function configure(config) {
   injectAureliaHideStyleAtHead();
 
-  config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './replaceable', './sanitize-html', './focus', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior');
+  config.globalResources('./compose', './if', './with', './repeat', './show', './hide', './replaceable', './sanitize-html', './focus', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './signal-binding-behavior', './update-trigger-binding-behavior', './attr-binding-behavior');
 
   configureHtmlResourcePlugin(config);
 
@@ -45,4 +46,4 @@ function configure(config) {
   });
 }
 
-export { Compose, If, With, Repeat, Show, Hide, HTMLSanitizer, SanitizeHTMLValueConverter, Replaceable, Focus, configure, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle };
+export { Compose, If, With, Repeat, Show, Hide, HTMLSanitizer, SanitizeHTMLValueConverter, Replaceable, Focus, configure, AttrBindingBehavior, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle };
