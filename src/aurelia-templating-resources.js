@@ -10,6 +10,7 @@ import {Focus} from './focus';
 import {ViewEngine} from 'aurelia-templating';
 import {_createCSSResource} from './css-resource';
 import {HTMLSanitizer} from './html-sanitizer';
+import {AttrBindingBehavior} from './attr-binding-behavior';
 import {OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior} from './binding-mode-behaviors';
 import {ThrottleBindingBehavior} from './throttle-binding-behavior';
 import {DebounceBindingBehavior} from './debounce-binding-behavior';
@@ -52,7 +53,8 @@ function configure(config) {
     './throttle-binding-behavior',
     './debounce-binding-behavior',
     './signal-binding-behavior',
-    './update-trigger-binding-behavior'
+    './update-trigger-binding-behavior',
+    './attr-binding-behavior'
   );
 
   configureHtmlResourcePlugin(config);
@@ -77,6 +79,7 @@ export {
   Replaceable,
   Focus,
   configure,
+  AttrBindingBehavior,
   OneTimeBindingBehavior,
   OneWayBindingBehavior,
   TwoWayBindingBehavior,
