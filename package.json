@@ -145,7 +145,8 @@
         "aurelia-templating-resources/throttle-binding-behavior",
         "aurelia-templating-resources/debounce-binding-behavior",
         "aurelia-templating-resources/signal-binding-behavior",
-        "aurelia-templating-resources/update-trigger-binding-behavior"
+        "aurelia-templating-resources/update-trigger-binding-behavior",
+        "aurelia-templating-resources/attr-binding-behavior"
       ]
     }
   }
