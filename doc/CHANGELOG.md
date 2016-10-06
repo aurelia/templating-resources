@@ -1,3 +1,13 @@
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/aurelia/templating-resources/compare/1.1.0...v1.1.1) (2016-10-06)
+
+
+### Bug Fixes
+
+* **package:** add attr-binding-behavior to the list of resources ([f059b8b](https://github.com/aurelia/templating-resources/commit/f059b8b))
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/aurelia/templating-resources/compare/1.0.0...v1.1.0) (2016-10-05)
 
