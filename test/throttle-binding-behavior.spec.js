@@ -4,6 +4,7 @@ import {
   bindingMode,
   BindingEngine,
   ListenerExpression,
+  delegationStrategy,
   ValueAttributeObserver,
   createScopeForTest
 } from 'aurelia-binding';
@@ -143,7 +144,7 @@ describe('ThrottleBindingBehavior', () => {
       bindingEngine.observerLocator.eventManager,
       'mousemove',
       bindingEngine.parseExpression(`handleMouseMove($event) & throttle:${delay}`),
-      false,
+      delegationStrategy.none,
       false,
       lookupFunctions
     );
