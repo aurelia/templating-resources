@@ -159,10 +159,10 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export, _c
 
           if (repeat.__queuedSplices) {
             for (var i = 0, ii = splices.length; i < ii; ++i) {
-              var _splices$i = splices[i];
-              var index = _splices$i.index;
-              var removed = _splices$i.removed;
-              var addedCount = _splices$i.addedCount;
+              var _splices$i = splices[i],
+                  index = _splices$i.index,
+                  removed = _splices$i.removed,
+                  addedCount = _splices$i.addedCount;
 
               mergeSplice(repeat.__queuedSplices, index, removed, addedCount);
             }
