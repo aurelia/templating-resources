@@ -4,6 +4,7 @@ import {
   bindingMode,
   BindingEngine,
   ListenerExpression,
+  delegationStrategy,
   ValueAttributeObserver,
   createScopeForTest
 } from 'aurelia-binding';
@@ -168,7 +169,7 @@ describe('DebounceBindingBehavior', () => {
       bindingEngine.observerLocator.eventManager,
       'mousemove',
       bindingEngine.parseExpression(`handleMouseMove($event) & debounce:${delay}`),
-      false,
+      delegationStrategy.none,
       false,
       lookupFunctions
     );
