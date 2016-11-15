@@ -14,6 +14,7 @@ import {AttrBindingBehavior} from './attr-binding-behavior';
 import {OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior} from './binding-mode-behaviors';
 import {ThrottleBindingBehavior} from './throttle-binding-behavior';
 import {DebounceBindingBehavior} from './debounce-binding-behavior';
+import {SelfBindingBehavior} from './self-binding-behavior';
 import {SignalBindingBehavior} from './signal-binding-behavior';
 import {BindingSignaler} from './binding-signaler';
 import {UpdateTriggerBindingBehavior} from './update-trigger-binding-behavior';
@@ -50,6 +51,7 @@ function configure(config) {
     './sanitize-html',
     './focus',
     './binding-mode-behaviors',
+    './self-binding-behavior',
     './throttle-binding-behavior',
     './debounce-binding-behavior',
     './signal-binding-behavior',
@@ -85,6 +87,7 @@ export {
   TwoWayBindingBehavior,
   ThrottleBindingBehavior,
   DebounceBindingBehavior,
+  SelfBindingBehavior,
   SignalBindingBehavior,
   BindingSignaler,
   UpdateTriggerBindingBehavior,
