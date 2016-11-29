@@ -36,7 +36,7 @@ describe('SelfBindingBehavior', () => {
     );
 
     let binding = bindingExpression.createBinding(target);
-    let originalMethod = binding.callSource;
+    let originalCallSource = binding.callSource;
 
     function exerciseBehavior(callback) {
       let sourceCalls = 0;
@@ -50,7 +50,7 @@ describe('SelfBindingBehavior', () => {
 
       // overrides updateSource
       binding.bind(scope);
-      expect(binding.callSource === originalMethod).not.toBe(true);
+      expect(binding.callSource === originalCallSource).not.toBe(true);
 
       for (let i = 0, ii = 50; i < ii; i++) {
         button.dispatchEvent(DOM.createCustomEvent('click', { bubbles: true }));
@@ -61,7 +61,7 @@ describe('SelfBindingBehavior', () => {
       function endTest() {
         binding.unbind();
         expect(sourceCalls).toEqual(0);
-        expect(binding.callSource === originalMethod).toBe(true);
+        expect(binding.callSource === originalCallSource).toBe(true);
         callback();
       }
       setTimeout(endTest, testDuration);
