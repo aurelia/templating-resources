@@ -54,12 +54,6 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2",
       "util": "npm:util@0.10.3"
     },
-    "npm:aurelia-binding@1.0.0": {
-      "aurelia-logging": "npm:aurelia-logging@1.2.0",
-      "aurelia-metadata": "npm:aurelia-metadata@1.0.2",
-      "aurelia-pal": "npm:aurelia-pal@1.1.1",
-      "aurelia-task-queue": "npm:aurelia-task-queue@1.1.0"
-    },
     "npm:aurelia-binding@1.1.0": {
       "aurelia-logging": "npm:aurelia-logging@1.2.0",
       "aurelia-metadata": "npm:aurelia-metadata@1.0.2",
