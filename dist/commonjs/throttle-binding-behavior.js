@@ -37,14 +37,14 @@ var ThrottleBindingBehavior = exports.ThrottleBindingBehavior = function () {
   }
 
   ThrottleBindingBehavior.prototype.bind = function bind(binding, source) {
-    var delay = arguments.length <= 2 || arguments[2] === undefined ? 200 : arguments[2];
+    var delay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 200;
 
     var methodToThrottle = 'updateTarget';
     if (binding.callSource) {
       methodToThrottle = 'callSource';
     } else if (binding.updateSource && binding.mode === _aureliaBinding.bindingMode.twoWay) {
-        methodToThrottle = 'updateSource';
-      }
+      methodToThrottle = 'updateSource';
+    }
 
     binding.throttledMethod = binding[methodToThrottle];
     binding.throttledMethod.originalName = methodToThrottle;

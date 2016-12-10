@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Repeat = exports.RepeatStrategyLocator = exports.Show = exports.Hide = exports.SignalBindingBehavior = exports.SanitizeHTMLValueConverter = exports.SetRepeatStrategy = exports.NumberRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.AbstractRepeater = exports.lifecycleOptionalBehaviors = exports.AttrBindingBehavior = exports.aureliaHideClassName = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.BindingSignaler = exports.Compose = exports.DebounceBindingBehavior = exports.Focus = exports.HTMLSanitizer = exports.If = exports.NullRepeatStrategy = exports.Replaceable = exports.ThrottleBindingBehavior = exports.UpdateTriggerBindingBehavior = exports.With = undefined;
 
-var _dec, _dec2, _class, _class2, _temp, _dec3, _dec4, _class3, _dec5, _dec6, _class4, _dec7, _dec8, _class5, _dec12, _dec13, _class8, _desc, _value, _class9, _descriptor, _descriptor2, _descriptor3, _dec14, _class12, _dec15, _class13, _dec16, _class14, _dec17, _dec18, _class15, _dec19, _dec20, _class17, _dec21, _dec22, _class18, _dec23, _dec24, _class19, _desc2, _value2, _class20, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
+var _dec, _dec2, _class, _class2, _temp, _dec3, _dec4, _class3, _dec5, _dec6, _class4, _dec7, _dec8, _class5, _dec12, _dec13, _class8, _desc, _value, _class9, _descriptor, _descriptor2, _descriptor3, _dec14, _class12, _dec15, _class13, _dec16, _class14, _dec17, _dec18, _class15, _dec19, _dec20, _class16, _dec21, _dec22, _class17, _dec23, _dec24, _class18, _desc2, _value2, _class19, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
 
 exports.updateOverrideContexts = updateOverrideContexts;
 exports.createFullOverrideContext = createFullOverrideContext;
@@ -197,14 +197,14 @@ var ThrottleBindingBehavior = exports.ThrottleBindingBehavior = function () {
   }
 
   ThrottleBindingBehavior.prototype.bind = function bind(binding, source) {
-    var delay = arguments.length <= 2 || arguments[2] === undefined ? 200 : arguments[2];
+    var delay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 200;
 
     var methodToThrottle = 'updateTarget';
     if (binding.callSource) {
       methodToThrottle = 'callSource';
     } else if (binding.updateSource && binding.mode === _aureliaBinding.bindingMode.twoWay) {
-        methodToThrottle = 'updateSource';
-      }
+      methodToThrottle = 'updateSource';
+    }
 
     binding.throttledMethod = binding[methodToThrottle];
     binding.throttledMethod.originalName = methodToThrottle;
@@ -581,14 +581,14 @@ var DebounceBindingBehavior = exports.DebounceBindingBehavior = function () {
   }
 
   DebounceBindingBehavior.prototype.bind = function bind(binding, source) {
-    var delay = arguments.length <= 2 || arguments[2] === undefined ? 200 : arguments[2];
+    var delay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 200;
 
     var methodToDebounce = 'updateTarget';
     if (binding.callSource) {
       methodToDebounce = 'callSource';
     } else if (binding.updateSource && binding.mode === _aureliaBinding.bindingMode.twoWay) {
-        methodToDebounce = 'updateSource';
-      }
+      methodToDebounce = 'updateSource';
+    }
 
     binding.debouncedMethod = binding[methodToDebounce];
     binding.debouncedMethod.originalName = methodToDebounce;
@@ -1171,10 +1171,10 @@ var ArrayRepeatStrategy = exports.ArrayRepeatStrategy = function () {
 
     if (repeat.__queuedSplices) {
       for (var i = 0, ii = splices.length; i < ii; ++i) {
-        var _splices$i = splices[i];
-        var index = _splices$i.index;
-        var removed = _splices$i.removed;
-        var addedCount = _splices$i.addedCount;
+        var _splices$i = splices[i],
+            index = _splices$i.index,
+            removed = _splices$i.removed,
+            addedCount = _splices$i.addedCount;
 
         (0, _aureliaBinding.mergeSplice)(repeat.__queuedSplices, index, removed, addedCount);
       }
@@ -1618,7 +1618,7 @@ var SignalBindingBehavior = exports.SignalBindingBehavior = function () {
   return SignalBindingBehavior;
 }();
 
-var Hide = exports.Hide = (_dec19 = (0, _aureliaTemplating.customAttribute)('hide'), _dec20 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)), _dec19(_class17 = _dec20(_class17 = function () {
+var Hide = exports.Hide = (_dec19 = (0, _aureliaTemplating.customAttribute)('hide'), _dec20 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)), _dec19(_class16 = _dec20(_class16 = function () {
   function Hide(element, animator, domBoundary) {
     _classCallCheck(this, Hide);
 
@@ -1644,8 +1644,8 @@ var Hide = exports.Hide = (_dec19 = (0, _aureliaTemplating.customAttribute)('hid
   };
 
   return Hide;
-}()) || _class17) || _class17);
-var Show = exports.Show = (_dec21 = (0, _aureliaTemplating.customAttribute)('show'), _dec22 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)), _dec21(_class18 = _dec22(_class18 = function () {
+}()) || _class16) || _class16);
+var Show = exports.Show = (_dec21 = (0, _aureliaTemplating.customAttribute)('show'), _dec22 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)), _dec21(_class17 = _dec22(_class17 = function () {
   function Show(element, animator, domBoundary) {
     _classCallCheck(this, Show);
 
@@ -1671,7 +1671,7 @@ var Show = exports.Show = (_dec21 = (0, _aureliaTemplating.customAttribute)('sho
   };
 
   return Show;
-}()) || _class18) || _class18);
+}()) || _class17) || _class17);
 
 var RepeatStrategyLocator = exports.RepeatStrategyLocator = function () {
   function RepeatStrategyLocator() {
@@ -1717,7 +1717,7 @@ var RepeatStrategyLocator = exports.RepeatStrategyLocator = function () {
   return RepeatStrategyLocator;
 }();
 
-var Repeat = exports.Repeat = (_dec23 = (0, _aureliaTemplating.customAttribute)('repeat'), _dec24 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.TargetInstruction, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaBinding.ObserverLocator, RepeatStrategyLocator), _dec23(_class19 = (0, _aureliaTemplating.templateController)(_class19 = _dec24(_class19 = (_class20 = function (_AbstractRepeater) {
+var Repeat = exports.Repeat = (_dec23 = (0, _aureliaTemplating.customAttribute)('repeat'), _dec24 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.TargetInstruction, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaBinding.ObserverLocator, RepeatStrategyLocator), _dec23(_class18 = (0, _aureliaTemplating.templateController)(_class18 = _dec24(_class18 = (_class19 = function (_AbstractRepeater) {
   _inherits(Repeat, _AbstractRepeater);
 
   function Repeat(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
@@ -1939,16 +1939,16 @@ var Repeat = exports.Repeat = (_dec23 = (0, _aureliaTemplating.customAttribute)(
   };
 
   return Repeat;
-}(AbstractRepeater), (_descriptor4 = _applyDecoratedDescriptor(_class20.prototype, 'items', [_aureliaTemplating.bindable], {
+}(AbstractRepeater), (_descriptor4 = _applyDecoratedDescriptor(_class19.prototype, 'items', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor5 = _applyDecoratedDescriptor(_class20.prototype, 'local', [_aureliaTemplating.bindable], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class19.prototype, 'local', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor6 = _applyDecoratedDescriptor(_class20.prototype, 'key', [_aureliaTemplating.bindable], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class19.prototype, 'key', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor7 = _applyDecoratedDescriptor(_class20.prototype, 'value', [_aureliaTemplating.bindable], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class19.prototype, 'value', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-})), _class20)) || _class19) || _class19) || _class19);
+})), _class19)) || _class18) || _class18) || _class18);
