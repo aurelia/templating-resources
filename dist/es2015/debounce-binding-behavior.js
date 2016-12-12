@@ -17,8 +17,8 @@ export let DebounceBindingBehavior = class DebounceBindingBehavior {
     if (binding.callSource) {
       methodToDebounce = 'callSource';
     } else if (binding.updateSource && binding.mode === bindingMode.twoWay) {
-        methodToDebounce = 'updateSource';
-      }
+      methodToDebounce = 'updateSource';
+    }
 
     binding.debouncedMethod = binding[methodToDebounce];
     binding.debouncedMethod.originalName = methodToDebounce;

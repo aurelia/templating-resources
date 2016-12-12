@@ -26,8 +26,8 @@ export let ThrottleBindingBehavior = class ThrottleBindingBehavior {
     if (binding.callSource) {
       methodToThrottle = 'callSource';
     } else if (binding.updateSource && binding.mode === bindingMode.twoWay) {
-        methodToThrottle = 'updateSource';
-      }
+      methodToThrottle = 'updateSource';
+    }
 
     binding.throttledMethod = binding[methodToThrottle];
     binding.throttledMethod.originalName = methodToThrottle;
