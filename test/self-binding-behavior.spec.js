@@ -12,7 +12,7 @@ import {SelfBindingBehavior} from '../src/self-binding-behavior';
 import {DOM} from 'aurelia-pal';
 
 describe('SelfBindingBehavior', () => {
-  // let bindingEngine, lookupFunctions;
+  let bindingEngine, lookupFunctions;
 
   beforeAll(() => {
     bindingEngine = new Container().get(BindingEngine);

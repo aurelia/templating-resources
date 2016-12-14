@@ -5,18 +5,18 @@ function findOriginalEventTarget(event) {
 function handleSelfEvent(event) {
   let target = findOriginalEventTarget(event);
   if (this.target !== target) return;
-  this.selfCallSource(event);
+  this.selfEventCallSource(event);
 }
 
 export class SelfBindingBehavior {
   bind(binding, source) {
     if (!binding.callSource || !binding.targetEvent) throw new Error('Self binding behavior only supports event.');
-    binding.selfCallSource = binding.callSource;
+    binding.selfEventCallSource = binding.callSource;
     binding.callSource = handleSelfEvent;
   }
 
   unbind(binding, source) {
-    binding.callSource = binding.selfCallSource;
-    binding.selfCallSource = null;
+    binding.callSource = binding.selfEventCallSource;
+    binding.selfEventCallSource = null;
   }
 }
