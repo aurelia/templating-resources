@@ -67,6 +67,12 @@ function configure(config) {
       return { [address]: _createCSSResource(address) };
     }
   });
+  
+  viewEngine.addResourcePlugin('.scss', {
+    'fetch': function(address) {
+      return { [address]: _createCSSResource(address) };
+    }
+  });
 }
 
 export {

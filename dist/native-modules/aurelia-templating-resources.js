@@ -44,6 +44,14 @@ function configure(config) {
       return _ref = {}, _ref[address] = _createCSSResource(address), _ref;
     }
   });
+
+  viewEngine.addResourcePlugin('.scss', {
+    'fetch': function fetch(address) {
+      var _ref2;
+
+      return _ref2 = {}, _ref2[address] = _createCSSResource(address), _ref2;
+    }
+  });
 }
 
 export { Compose, If, With, Repeat, Show, Hide, HTMLSanitizer, SanitizeHTMLValueConverter, Replaceable, Focus, configure, AttrBindingBehavior, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle };
