@@ -1,3 +1,4 @@
+import {PLATFORM} from 'aurelia-pal';
 import {Compose} from './compose';
 import {If} from './if';
 import {With} from './with';
@@ -41,22 +42,22 @@ function configure(config) {
   injectAureliaHideStyleAtHead();
 
   config.globalResources(
-    './compose',
-    './if',
-    './with',
-    './repeat',
-    './show',
-    './hide',
-    './replaceable',
-    './sanitize-html',
-    './focus',
-    './binding-mode-behaviors',
-    './self-binding-behavior',
-    './throttle-binding-behavior',
-    './debounce-binding-behavior',
-    './signal-binding-behavior',
-    './update-trigger-binding-behavior',
-    './attr-binding-behavior'
+    PLATFORM.moduleName('./compose'),
+    PLATFORM.moduleName('./if'),
+    PLATFORM.moduleName('./with'),
+    PLATFORM.moduleName('./repeat'),
+    PLATFORM.moduleName('./show'),
+    PLATFORM.moduleName('./hide'),
+    PLATFORM.moduleName('./replaceable'),
+    PLATFORM.moduleName('./sanitize-html'),
+    PLATFORM.moduleName('./focus'),
+    PLATFORM.moduleName('./binding-mode-behaviors'),
+    PLATFORM.moduleName('./self-binding-behavior'),
+    PLATFORM.moduleName('./throttle-binding-behavior'),
+    PLATFORM.moduleName('./debounce-binding-behavior'),
+    PLATFORM.moduleName('./signal-binding-behavior'),
+    PLATFORM.moduleName('./update-trigger-binding-behavior'),
+    PLATFORM.moduleName('./attr-binding-behavior')
   );
 
   configureHtmlResourcePlugin(config);
