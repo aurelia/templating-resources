@@ -37,7 +37,7 @@ export class Compose {
 
   /**
    * SwapOrder to control the swaping order of the custom element's view.
-   * 
+   *
    * @property view
    * @type {String}
    */
