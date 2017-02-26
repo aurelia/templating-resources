@@ -1,3 +1,15 @@
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/aurelia/templating-resources/compare/1.2.0...v1.3.0) (2017-02-26)
+
+
+### Features
+
+* **SelfBindingBehavior:** add SelfBindingBehavior ([6dee0cb](https://github.com/aurelia/templating-resources/commit/6dee0cb))
+* **swapOrder:** add swaporder property for concurrent enter/leave transitions ([68b52e5](https://github.com/aurelia/templating-resources/commit/68b52e5))
+* Updated dependencies
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/aurelia/templating-resources/compare/1.1.1...v1.2.0) (2016-12-10)
 

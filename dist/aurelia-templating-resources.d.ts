@@ -99,6 +99,10 @@ export declare class ThrottleBindingBehavior {
   bind(binding?: any, source?: any, delay?: any): any;
   unbind(binding?: any, source?: any): any;
 }
+export declare class SelfBindingBehavior {
+  bind(binding?: any, source?: any): any;
+  unbind(binding?: any, source?: any): any;
+}
 
 /**
 * Marks any part of a view to be replacable by the consumer.
@@ -264,6 +268,7 @@ export declare class Compose {
   model: any;
   view: any;
   viewModel: any;
+  swapOrder: any;
   
   /**
     * Creates an instance of Compose.

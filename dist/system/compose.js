@@ -3,7 +3,7 @@
 System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-templating', 'aurelia-pal'], function (_export, _context) {
   "use strict";
 
-  var Container, inject, TaskQueue, CompositionEngine, ViewSlot, ViewResources, customElement, bindable, noView, View, DOM, _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, Compose;
+  var Container, inject, TaskQueue, CompositionEngine, ViewSlot, ViewResources, customElement, bindable, noView, View, DOM, _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, Compose;
 
   function _initDefineProp(target, property, descriptor, context) {
     if (!descriptor) return;
@@ -59,7 +59,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
       viewSlot: composer.viewSlot,
       viewResources: composer.viewResources,
       currentController: composer.currentController,
-      host: composer.element
+      host: composer.element,
+      swapOrder: composer.swapOrder
     });
   }
 
@@ -97,6 +98,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
           _initDefineProp(this, 'view', _descriptor2, this);
 
           _initDefineProp(this, 'viewModel', _descriptor3, this);
+
+          _initDefineProp(this, 'swapOrder', _descriptor4, this);
 
           this.element = element;
           this.container = container;
@@ -200,6 +203,9 @@ System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-
         enumerable: true,
         initializer: null
       }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, 'viewModel', [bindable], {
+        enumerable: true,
+        initializer: null
+      }), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, 'swapOrder', [bindable], {
         enumerable: true,
         initializer: null
       })), _class2)) || _class) || _class) || _class));

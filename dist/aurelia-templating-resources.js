@@ -162,6 +162,29 @@ export class ThrottleBindingBehavior {
   }
 }
 
+function findOriginalEventTarget(event) {
+  return (event.path && event.path[0]) || (event.deepPath && event.deepPath[0]) || event.target;
+}
+
+function handleSelfEvent(event) {
+  let target = findOriginalEventTarget(event);
+  if (this.target !== target) return;
+  this.selfEventCallSource(event);
+}
+
+export class SelfBindingBehavior {
+  bind(binding, source) {
+    if (!binding.callSource || !binding.targetEvent) throw new Error('Self binding behavior only supports event.');
+    binding.selfEventCallSource = binding.callSource;
+    binding.callSource = handleSelfEvent;
+  }
+
+  unbind(binding, source) {
+    binding.callSource = binding.selfEventCallSource;
+    binding.selfEventCallSource = null;
+  }
+}
+
 /**
 * Marks any part of a view to be replacable by the consumer.
 */
@@ -716,6 +739,14 @@ export class Compose {
   @bindable viewModel
 
   /**
+   * SwapOrder to control the swaping order of the custom element's view.
+   *
+   * @property view
+   * @type {String}
+   */
+  @bindable swapOrder;
+
+  /**
   * Creates an instance of Compose.
   * @param element The Compose element.
   * @param container The dependency injection container instance.
@@ -848,7 +879,8 @@ function createInstruction(composer, instruction) {
     viewSlot: composer.viewSlot,
     viewResources: composer.viewResources,
     currentController: composer.currentController,
-    host: composer.element
+    host: composer.element,
+    swapOrder: composer.swapOrder
   });
 }
 

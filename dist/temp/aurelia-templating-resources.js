@@ -3,9 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Repeat = exports.RepeatStrategyLocator = exports.Show = exports.Hide = exports.SignalBindingBehavior = exports.SanitizeHTMLValueConverter = exports.SetRepeatStrategy = exports.NumberRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.AbstractRepeater = exports.lifecycleOptionalBehaviors = exports.AttrBindingBehavior = exports.aureliaHideClassName = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.BindingSignaler = exports.Compose = exports.DebounceBindingBehavior = exports.Focus = exports.HTMLSanitizer = exports.If = exports.NullRepeatStrategy = exports.Replaceable = exports.ThrottleBindingBehavior = exports.UpdateTriggerBindingBehavior = exports.With = undefined;
+exports.Repeat = exports.RepeatStrategyLocator = exports.Show = exports.Hide = exports.SignalBindingBehavior = exports.SanitizeHTMLValueConverter = exports.SetRepeatStrategy = exports.NumberRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.AbstractRepeater = exports.lifecycleOptionalBehaviors = exports.AttrBindingBehavior = exports.aureliaHideClassName = exports.TwoWayBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.BindingSignaler = exports.Compose = exports.DebounceBindingBehavior = exports.Focus = exports.HTMLSanitizer = exports.If = exports.NullRepeatStrategy = exports.Replaceable = exports.SelfBindingBehavior = exports.ThrottleBindingBehavior = exports.UpdateTriggerBindingBehavior = exports.With = undefined;
 
-var _dec, _dec2, _class, _class2, _temp, _dec3, _dec4, _class3, _dec5, _dec6, _class4, _dec7, _dec8, _class5, _dec12, _dec13, _class8, _desc, _value, _class9, _descriptor, _descriptor2, _descriptor3, _dec14, _class12, _dec15, _class13, _dec16, _class14, _dec17, _dec18, _class15, _dec19, _dec20, _class16, _dec21, _dec22, _class17, _dec23, _dec24, _class18, _desc2, _value2, _class19, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
+var _dec, _dec2, _class, _class2, _temp, _dec3, _dec4, _class3, _dec5, _dec6, _class4, _dec7, _dec8, _class5, _dec12, _dec13, _class8, _desc, _value, _class9, _descriptor, _descriptor2, _descriptor3, _descriptor4, _dec14, _class12, _dec15, _class13, _dec16, _class14, _dec17, _dec18, _class15, _dec19, _dec20, _class16, _dec21, _dec22, _class17, _dec23, _dec24, _class18, _desc2, _value2, _class19, _descriptor5, _descriptor6, _descriptor7, _descriptor8;
 
 exports.updateOverrideContexts = updateOverrideContexts;
 exports.createFullOverrideContext = createFullOverrideContext;
@@ -227,6 +227,35 @@ var ThrottleBindingBehavior = exports.ThrottleBindingBehavior = function () {
   };
 
   return ThrottleBindingBehavior;
+}();
+
+function findOriginalEventTarget(event) {
+  return event.path && event.path[0] || event.deepPath && event.deepPath[0] || event.target;
+}
+
+function handleSelfEvent(event) {
+  var target = findOriginalEventTarget(event);
+  if (this.target !== target) return;
+  this.selfEventCallSource(event);
+}
+
+var SelfBindingBehavior = exports.SelfBindingBehavior = function () {
+  function SelfBindingBehavior() {
+    _classCallCheck(this, SelfBindingBehavior);
+  }
+
+  SelfBindingBehavior.prototype.bind = function bind(binding, source) {
+    if (!binding.callSource || !binding.targetEvent) throw new Error('Self binding behavior only supports event.');
+    binding.selfEventCallSource = binding.callSource;
+    binding.callSource = handleSelfEvent;
+  };
+
+  SelfBindingBehavior.prototype.unbind = function unbind(binding, source) {
+    binding.callSource = binding.selfEventCallSource;
+    binding.selfEventCallSource = null;
+  };
+
+  return SelfBindingBehavior;
 }();
 
 var Replaceable = exports.Replaceable = (_dec3 = (0, _aureliaTemplating.customAttribute)('replaceable'), _dec4 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec3(_class3 = (0, _aureliaTemplating.templateController)(_class3 = _dec4(_class3 = function () {
@@ -718,6 +747,8 @@ var Compose = exports.Compose = (_dec12 = (0, _aureliaTemplating.customElement)(
 
     _initDefineProp(this, 'viewModel', _descriptor3, this);
 
+    _initDefineProp(this, 'swapOrder', _descriptor4, this);
+
     this.element = element;
     this.container = container;
     this.compositionEngine = compositionEngine;
@@ -822,6 +853,9 @@ var Compose = exports.Compose = (_dec12 = (0, _aureliaTemplating.customElement)(
 }), _descriptor3 = _applyDecoratedDescriptor(_class9.prototype, 'viewModel', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
+}), _descriptor4 = _applyDecoratedDescriptor(_class9.prototype, 'swapOrder', [_aureliaTemplating.bindable], {
+  enumerable: true,
+  initializer: null
 })), _class9)) || _class8) || _class8) || _class8);
 
 
@@ -834,7 +868,8 @@ function createInstruction(composer, instruction) {
     viewSlot: composer.viewSlot,
     viewResources: composer.viewResources,
     currentController: composer.currentController,
-    host: composer.element
+    host: composer.element,
+    swapOrder: composer.swapOrder
   });
 }
 
@@ -1728,13 +1763,13 @@ var Repeat = exports.Repeat = (_dec23 = (0, _aureliaTemplating.customAttribute)(
       viewsRequireLifecycle: viewsRequireLifecycle(viewFactory)
     }));
 
-    _initDefineProp(_this18, 'items', _descriptor4, _this18);
+    _initDefineProp(_this18, 'items', _descriptor5, _this18);
 
-    _initDefineProp(_this18, 'local', _descriptor5, _this18);
+    _initDefineProp(_this18, 'local', _descriptor6, _this18);
 
-    _initDefineProp(_this18, 'key', _descriptor6, _this18);
+    _initDefineProp(_this18, 'key', _descriptor7, _this18);
 
-    _initDefineProp(_this18, 'value', _descriptor7, _this18);
+    _initDefineProp(_this18, 'value', _descriptor8, _this18);
 
     _this18.viewFactory = viewFactory;
     _this18.instruction = instruction;
@@ -1939,16 +1974,16 @@ var Repeat = exports.Repeat = (_dec23 = (0, _aureliaTemplating.customAttribute)(
   };
 
   return Repeat;
-}(AbstractRepeater), (_descriptor4 = _applyDecoratedDescriptor(_class19.prototype, 'items', [_aureliaTemplating.bindable], {
+}(AbstractRepeater), (_descriptor5 = _applyDecoratedDescriptor(_class19.prototype, 'items', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor5 = _applyDecoratedDescriptor(_class19.prototype, 'local', [_aureliaTemplating.bindable], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class19.prototype, 'local', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor6 = _applyDecoratedDescriptor(_class19.prototype, 'key', [_aureliaTemplating.bindable], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class19.prototype, 'key', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor7 = _applyDecoratedDescriptor(_class19.prototype, 'value', [_aureliaTemplating.bindable], {
+}), _descriptor8 = _applyDecoratedDescriptor(_class19.prototype, 'value', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
 })), _class19)) || _class18) || _class18) || _class18);

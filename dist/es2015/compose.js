@@ -1,4 +1,4 @@
-var _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3;
+var _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4;
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -55,6 +55,8 @@ export let Compose = (_dec = customElement('compose'), _dec2 = inject(DOM.Elemen
     _initDefineProp(this, 'view', _descriptor2, this);
 
     _initDefineProp(this, 'viewModel', _descriptor3, this);
+
+    _initDefineProp(this, 'swapOrder', _descriptor4, this);
 
     this.element = element;
     this.container = container;
@@ -148,6 +150,9 @@ export let Compose = (_dec = customElement('compose'), _dec2 = inject(DOM.Elemen
 }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, 'viewModel', [bindable], {
   enumerable: true,
   initializer: null
+}), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, 'swapOrder', [bindable], {
+  enumerable: true,
+  initializer: null
 })), _class2)) || _class) || _class) || _class);
 
 function createInstruction(composer, instruction) {
@@ -159,7 +164,8 @@ function createInstruction(composer, instruction) {
     viewSlot: composer.viewSlot,
     viewResources: composer.viewResources,
     currentController: composer.currentController,
-    host: composer.element
+    host: composer.element,
+    swapOrder: composer.swapOrder
   });
 }
 
