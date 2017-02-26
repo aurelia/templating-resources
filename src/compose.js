@@ -36,6 +36,14 @@ export class Compose {
   @bindable viewModel
 
   /**
+   * SwapOrder to control the swaping order of the custom element's view.
+   * 
+   * @property view
+   * @type {String}
+   */
+  @bindable swapOrder;
+
+  /**
   * Creates an instance of Compose.
   * @param element The Compose element.
   * @param container The dependency injection container instance.
@@ -168,7 +176,8 @@ function createInstruction(composer, instruction) {
     viewSlot: composer.viewSlot,
     viewResources: composer.viewResources,
     currentController: composer.currentController,
-    host: composer.element
+    host: composer.element,
+    swapOrder: composer.swapOrder
   });
 }
 
