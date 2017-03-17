@@ -63,11 +63,12 @@ function configure(config) {
   configureHtmlResourcePlugin(config);
 
   let viewEngine = config.container.get(ViewEngine);
-  viewEngine.addResourcePlugin('.css', {
-    'fetch': function(address) {
+  let styleResourcePlugin = {
+    fetch(address) {
       return { [address]: _createCSSResource(address) };
     }
-  });
+  };
+  ['.css', '.less', '.sass', '.scss'].forEach(ext => viewEngine.addResourcePlugin(ext, styleResourcePlugin));
 }
 
 export {
