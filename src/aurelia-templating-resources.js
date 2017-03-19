@@ -68,7 +68,7 @@ function configure(config) {
       return { [address]: _createCSSResource(address) };
     }
   };
-  ['.css', '.less', '.sass', '.scss'].forEach(ext => viewEngine.addResourcePlugin(ext, styleResourcePlugin));
+  ['.css', '.less', '.sass', '.scss', '.styl'].forEach(ext => viewEngine.addResourcePlugin(ext, styleResourcePlugin));
 }
 
 export {
