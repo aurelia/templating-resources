@@ -87,7 +87,7 @@ class IfCore {
 @inject(BoundViewFactory, ViewSlot)
 export class If extends IfCore {
   @bindable({ primaryProperty: true }) condition: any;
-  @bindable swap: "before"|"with"|"after";
+  @bindable swapOrder: "before"|"with"|"after";
 
   /**
   * Binds the if to the binding context and override context
@@ -132,7 +132,7 @@ export class If extends IfCore {
   }
 
   _swap(remove, add) {
-    switch (this.swap) {
+    switch (this.swapOrder) {
       case "before":
         return Promise.resolve(add._show()).then(() => remove._hide());
       case "with":
