@@ -39,11 +39,12 @@ function configure(config) {
   configureHtmlResourcePlugin(config);
 
   let viewEngine = config.container.get(ViewEngine);
-  viewEngine.addResourcePlugin('.css', {
-    'fetch': function (address) {
+  let styleResourcePlugin = {
+    fetch(address) {
       return { [address]: _createCSSResource(address) };
     }
-  });
+  };
+  ['.css', '.less', '.sass', '.scss', '.styl'].forEach(ext => viewEngine.addResourcePlugin(ext, styleResourcePlugin));
 }
 
 export { Compose, If, With, Repeat, Show, Hide, HTMLSanitizer, SanitizeHTMLValueConverter, Replaceable, Focus, configure, AttrBindingBehavior, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SelfBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle };

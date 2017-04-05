@@ -77,12 +77,15 @@ function configure(config) {
   (0, _htmlResourcePlugin.configure)(config);
 
   var viewEngine = config.container.get(_aureliaTemplating.ViewEngine);
-  viewEngine.addResourcePlugin('.css', {
-    'fetch': function fetch(address) {
+  var styleResourcePlugin = {
+    fetch: function fetch(address) {
       var _ref;
 
       return _ref = {}, _ref[address] = (0, _cssResource._createCSSResource)(address), _ref;
     }
+  };
+  ['.css', '.less', '.sass', '.scss', '.styl'].forEach(function (ext) {
+    return viewEngine.addResourcePlugin(ext, styleResourcePlugin);
   });
 }
 

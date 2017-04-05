@@ -39,12 +39,15 @@ function configure(config) {
   configureHtmlResourcePlugin(config);
 
   var viewEngine = config.container.get(ViewEngine);
-  viewEngine.addResourcePlugin('.css', {
-    'fetch': function fetch(address) {
+  var styleResourcePlugin = {
+    fetch: function fetch(address) {
       var _ref;
 
       return _ref = {}, _ref[address] = _createCSSResource(address), _ref;
     }
+  };
+  ['.css', '.less', '.sass', '.scss', '.styl'].forEach(function (ext) {
+    return viewEngine.addResourcePlugin(ext, styleResourcePlugin);
   });
 }
 
