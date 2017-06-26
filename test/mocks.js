@@ -2,7 +2,9 @@ export class ViewSlotMock {
   constructor() {
     this.children = [];
   }
-  removeAll(){}
+  removeAll(){
+    this.children.splice(0, this.children.length);
+  }
   add(view){
     this.children.push(view);
   }

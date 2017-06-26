@@ -38,7 +38,8 @@ export class SetRepeatStrategy {
 
   /**
   * Handle changes in a Set collection.
-  * @param map The underlying Set collection.
+  * @param repeat The repeat instance.
+  * @param set The underlying Set collection.
   * @param records The change records.
   */
   instanceMutated(repeat, set, records) {
