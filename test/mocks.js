@@ -9,6 +9,9 @@ export class ViewSlotMock {
     this.children.push(view);
   }
   insert(index, view){
+    if(index < 0) {
+      throw "negative index";
+    }
     this.children.splice(index, 0, view);
   }
   removeAt(index){

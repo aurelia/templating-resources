@@ -110,5 +110,39 @@ describe('SetRepeatStrategy', () => {
 
       expect(viewSlotMock.children.length).toBe(0);
     });
+
+    it('should correctly delete and add items in the same mutation (issue 284)', () => {
+        let view4 = new ViewMock();
+        view4.bindingContext = { item: 'norf' };
+        view4.overrideContext = {};
+        let viewSlotMock = new ViewSlotMock();
+        viewSlotMock.children = [view1, view2, view3, view4];
+        repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator());
+        let bindingContext = {};
+        repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
+        records = [{
+          type: 'delete',
+          value: 'foo'
+        }, {
+          type: 'delete',
+          value: 'qux'
+        }, {
+          type: 'delete',
+          value: 'bar'
+        }, {
+          type: 'delete',
+          value: 'norf'
+        }, {
+          type: 'add',
+          value: 'baz'
+        }, {
+          type: 'delete',
+          value: 'baz'
+        }];
+        items = new Set();
+        strategy.instanceMutated(repeat, items, records);
+
+        expect(viewSlotMock.children.length).toBe(0);
+    });
   });
 });
