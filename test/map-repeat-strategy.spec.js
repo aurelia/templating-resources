@@ -1,6 +1,5 @@
 import './setup';
 import {ObserverLocator, createOverrideContext} from 'aurelia-binding';
-import {BoundViewFactory, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
 import {StageComponent} from 'aurelia-testing';
 import {Container} from 'aurelia-dependency-injection';
 import {Repeat} from '../src/repeat';
@@ -85,7 +84,7 @@ describe('MapRepeatStrategy', () => {
       expect(viewSlotMock.children.length).toBe(0);
     });
   
-    it('should correctly handle adding items after clear (issue 184)', () => {
+    it('should correctly handle adding items after clear (issue 287)', () => {
       viewSlot.children = [view1, view2, view3];
       repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlot, viewResourcesMock, new ObserverLocator());
       let bindingContext = {};
