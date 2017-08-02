@@ -1,10 +1,14 @@
 import {Container, inject} from 'aurelia-dependency-injection';
+import * as LogManager from 'aurelia-logging';
 import {TaskQueue} from 'aurelia-task-queue';
 import {
-  CompositionEngine, ViewSlot, ViewResources,
-  customElement, bindable, noView, View
+  CompositionEngine, CompositionContext,
+  ViewSlot, ViewResources, customElement,
+  bindable, noView, View
 } from 'aurelia-templating';
 import {DOM} from 'aurelia-pal';
+
+const logger = LogManager.getLogger('templating-resources');
 
 /**
 * Used to compose a new view / view-model template or bind to an existing instance.
@@ -19,21 +23,21 @@ export class Compose {
   * @property model
   * @type {CustomElement}
   */
-  @bindable model
+  @bindable model;
   /**
   * View to bind the custom element to.
   *
   * @property view
   * @type {HtmlElement}
   */
-  @bindable view
+  @bindable view;
   /**
   * View-model to bind the custom element's template to.
   *
   * @property viewModel
   * @type {Class}
   */
-  @bindable viewModel
+  @bindable viewModel;
 
   /**
    * SwapOrder to control the swapping order of the custom element's view.
@@ -61,6 +65,7 @@ export class Compose {
     this.taskQueue = taskQueue;
     this.currentController = null;
     this.currentViewModel = null;
+    this.changes = Object.create(null);
   }
 
   /**
@@ -81,17 +86,18 @@ export class Compose {
   bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;
-    processInstruction(this, createInstruction(this, {
-      view: this.view,
-      viewModel: this.viewModel,
-      model: this.model
-    }));
+    this.changes['view'] = this.view;
+    this.changes['viewModel'] = this.viewModel;
+    this.changes['model'] = this.model;
+    processChanges(this);
   }
 
   /**
   * Unbinds the Compose.
   */
-  unbind(bindingContext, overrideContext) {
+  unbind() {
+    this.changes = Object.create(null);
+    this.pendingTask = null;
     this.bindingContext = null;
     this.overrideContext = null;
     let returnToCache = true;
@@ -105,23 +111,8 @@ export class Compose {
   * @param oldValue The old value.
   */
   modelChanged(newValue, oldValue) {
-    if (this.currentInstruction) {
-      this.currentInstruction.model = newValue;
-      return;
-    }
-
-    this.taskQueue.queueMicroTask(() => {
-      if (this.currentInstruction) {
-        this.currentInstruction.model = newValue;
-        return;
-      }
-
-      let vm = this.currentViewModel;
-
-      if (vm && typeof vm.activate === 'function') {
-        vm.activate(newValue);
-      }
-    });
+    this.changes['model'] = newValue;
+    requestUpdate(this);
   }
 
   /**
@@ -130,19 +121,8 @@ export class Compose {
   * @param oldValue The old value.
   */
   viewChanged(newValue, oldValue) {
-    let instruction = createInstruction(this, {
-      view: newValue,
-      viewModel: this.currentViewModel || this.viewModel,
-      model: this.model
-    });
-
-    if (this.currentInstruction) {
-      this.currentInstruction = instruction;
-      return;
-    }
-
-    this.currentInstruction = instruction;
-    this.taskQueue.queueMicroTask(() => processInstruction(this, this.currentInstruction));
+    this.changes['view'] = newValue;
+    requestUpdate(this);
   }
 
   /**
@@ -151,23 +131,25 @@ export class Compose {
     * @param oldValue The old value.
     */
   viewModelChanged(newValue, oldValue) {
-    let instruction = createInstruction(this, {
-      viewModel: newValue,
-      view: this.view,
-      model: this.model
-    });
-
-    if (this.currentInstruction) {
-      this.currentInstruction = instruction;
-      return;
-    }
-
-    this.currentInstruction = instruction;
-    this.taskQueue.queueMicroTask(() => processInstruction(this, this.currentInstruction));
+    this.changes['viewModel'] = newValue;
+    requestUpdate(this);
   }
 }
 
-function createInstruction(composer, instruction) {
+function isEmpty(obj) {
+  for (const key in obj) {
+    return false;
+  }
+  return true;
+}
+
+function tryActivateViewModel(vm, model) {
+  if (vm && typeof vm.activate === 'function') {
+    return Promise.resolve(vm.activate(model));
+  }
+}
+
+function createInstruction(composer: Compose, instruction: CompositionContext): CompositionContext {
   return Object.assign(instruction, {
     bindingContext: composer.bindingContext,
     overrideContext: composer.overrideContext,
@@ -181,10 +163,53 @@ function createInstruction(composer, instruction) {
   });
 }
 
-function processInstruction(composer, instruction) {
-  composer.currentInstruction = null;
-  composer.compositionEngine.compose(instruction).then(controller => {
-    composer.currentController = controller;
-    composer.currentViewModel = controller ? controller.viewModel : null;
+function processChanges(composer: Compose) {
+  const changes = composer.changes;
+  composer.changes = Object.create(null);
+
+  if (!('view' in changes) && !('viewModel' in changes) && ('model' in changes)) {
+    // just try to activate the current view model
+    composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes['model']);
+    if (!composer.pendingTask) { return; }
+  } else {
+    // init context
+    let instruction = {
+      view: composer.view,
+      viewModel: composer.currentViewModel || composer.viewModel,
+      model: composer.model
+    };
+
+    // apply changes
+    instruction = Object.assign(instruction, changes);
+
+    // create context
+    instruction = createInstruction(composer, instruction);
+    composer.pendingTask = composer.compositionEngine.compose(instruction).then(controller => {
+      composer.currentController = controller;
+      composer.currentViewModel = controller ? controller.viewModel : null;
+    });
+  }
+
+  composer.pendingTask = composer.pendingTask.catch(e => {
+    logger.error(e);
+  }).then(() => {
+    if (!composer.pendingTask) {
+      // the element has been unbound
+      return;
+    }
+
+    composer.pendingTask = null;
+    if (!isEmpty(composer.changes)) {
+      processChanges(composer);
+    }
+  });
+}
+
+function requestUpdate(composer: Compose) {
+  if (composer.pendingTask || composer.updateRequested) { return; }
+  composer.updateRequested = true;
+  composer.taskQueue.queueMicroTask(() => {
+    composer.updateRequested = false;
+    processChanges(composer);
   });
 }
