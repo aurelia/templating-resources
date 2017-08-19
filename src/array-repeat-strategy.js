@@ -50,7 +50,7 @@ export class ArrayRepeatStrategy {
 
       for (let index = 0; index < viewsLength; index++) {
         const view = childrenSnapshot[index];
-        const oldItem = view.bindingContext[itemNameInBindingContext];
+        const oldItem = view.bindingContext ? view.bindingContext[itemNameInBindingContext] : null;
 
         if (indexOf(items, oldItem, matcher) === -1) {
           // remove the item if no longer in the new instance of items
