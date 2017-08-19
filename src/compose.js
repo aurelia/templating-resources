@@ -36,7 +36,7 @@ export class Compose {
   @bindable viewModel
 
   /**
-   * SwapOrder to control the swaping order of the custom element's view.
+   * SwapOrder to control the swapping order of the custom element's view.
    *
    * @property view
    * @type {String}
