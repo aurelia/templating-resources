@@ -69,19 +69,9 @@ export class Focus {
   }
 
   handleEvent(e) {
-    switch (e.type) {
-    case 'focus': this.handleFocus(e); break;
-    case 'blur': this.handleBlur(e); break;
-    default: break;
-    }
-  }
-
-  handleFocus(e) {
-    this.value = true;
-  }
-
-  handleBlur(e) {
-    if (DOM.activeElement !== this.element) {
+    if (e.type === 'focus') {
+      this.value = true;
+    } else if (DOM.activeElement !== this.element) {
       this.value = false;
     }
   }
