@@ -116,11 +116,11 @@ function createAssertionQueue() {
   let next;
   next = () => {
     if (queue.length) {
-      let func = queue.pop();
       setTimeout(() => {
+        let func = queue.shift();
         func();
         next();
-      })
+      });
     }
   };
 
@@ -160,7 +160,7 @@ function describeArrayTests(viewsRequireLifecycle) {
         expect(views[i].bindingContext.item.id).toBe(viewModel.items[i].id);
         expect(views[i].bindingContext.item.text).toBe(viewModel.items[i].text);
       }
-      
+
       let overrideContext = views[i].overrideContext;
       expect(overrideContext.parentOverrideContext.bindingContext).toBe(viewModel);
       expect(overrideContext.bindingContext).toBe(views[i].bindingContext);
@@ -184,7 +184,7 @@ function describeArrayTests(viewsRequireLifecycle) {
     // validate contextual data
     validateContextualData();
   }
-  
+
   function validateObjectState() {
     // validate DOM
     let expectedContent = viewModel.items.map(x => x === null || x === undefined ? '' : x.text.toString());
@@ -351,7 +351,7 @@ function describeArrayTests(viewsRequireLifecycle) {
       nq(() => done());
     });
   });
-  
+
   describe('reuse elements', () => {
     beforeEach(() => {
       let template = `<template><div repeat.for="item of items">\${item}</div></template>`;
@@ -736,7 +736,7 @@ function describeArrayTests(viewsRequireLifecycle) {
       nq(() => done());
     });
   });
-  
+
   describe('reuse elements with a matcher', () => {
     beforeEach(() => {
       let template = `<template><div repeat.for="item of items" matcher.bind="matcher">\${item.text}</div></template>`;
@@ -753,7 +753,7 @@ function describeArrayTests(viewsRequireLifecycle) {
       expect(hasSubscribers(viewModel, 'items')).toBe(false);
       expect(hasArraySubscribers(viewModel.items)).toBe(false);
     });
-    
+
     it('handles new items, same content', done => {
       let observer = observerLocator.getArrayObserver(viewModel.items);
       let divs;
@@ -866,7 +866,7 @@ function describeArrayTests(viewsRequireLifecycle) {
       nq(() => done());
     });
   });
-  
+
   describe('with converter that returns original instance', () => {
     beforeEach(() => {
       let template = `<template><div repeat.for="item of items | noopValueConverter">\${item}</div></template>`;
