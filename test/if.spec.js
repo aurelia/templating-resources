@@ -20,7 +20,7 @@ describe('if', () => {
     spyOn(viewSlot, 'remove');
     spyOn(view, 'unbind');
 
-    sut.valueChanged(false);
+    sut.conditionChanged(false);
     taskQueue.flushMicroTaskQueue();
 
     expect(viewSlot.remove).toHaveBeenCalledWith(view);
@@ -35,22 +35,7 @@ describe('if', () => {
     spyOn(viewSlot, 'remove');
     spyOn(view, 'unbind');
 
-    sut.valueChanged(false);
-    taskQueue.flushMicroTaskQueue();
-
-    expect(viewSlot.remove).not.toHaveBeenCalled();
-    expect(view.unbind).not.toHaveBeenCalled();
-    expect(sut.showing).toBe(false);
-  });
-
-  it('should do nothing when showing, provided value is falsy and has no view', () => {
-    let view = new ViewMock();
-    sut.view = null;
-    sut.showing = true;
-    spyOn(viewSlot, 'remove');
-    spyOn(view, 'unbind');
-
-    sut.valueChanged(false);
+    sut.conditionChanged(false);
     taskQueue.flushMicroTaskQueue();
 
     expect(viewSlot.remove).not.toHaveBeenCalled();
@@ -61,13 +46,13 @@ describe('if', () => {
   it('should create the view when provided value is truthy and has no view', () => {
     sut.view = null;
 
-    sut.valueChanged(true);
+    sut.conditionChanged(true);
 
     expect(sut.view).toEqual(jasmine.any(ViewMock));
   });
 
   it('should create the view', () => {
-    sut.value = true;
+    sut.condition = true;
     sut.view = null;
     let newView = new ViewMock();
     spyOn(viewFactory, 'create').and.callFake(() => {
@@ -88,7 +73,7 @@ describe('if', () => {
     sut.view = new ViewMock();
     spyOn(viewSlot, 'add');
 
-    sut.valueChanged(true);
+    sut.conditionChanged(true);
 
     expect(sut.showing).toBe(true);
     expect(viewSlot.add).toHaveBeenCalledWith(sut.view);
@@ -100,7 +85,7 @@ describe('if', () => {
     sut.view = view;
     spyOn(view, 'bind');
 
-    sut.valueChanged(true);
+    sut.conditionChanged(true);
 
     expect(view.bind).toHaveBeenCalled();
   });
@@ -134,13 +119,13 @@ describe('if', () => {
       sut.view = new ViewMock();  
       sut.view.isBound = true;        
       sut.viewSlot.children = [];
-      sut.valueChanged(true);        
+      sut.conditionChanged(true);        
    
       delay(200).then(() => {          
-        sut.valueChanged(false);
+        sut.conditionChanged(false);
         return delay(400);
       }).then(() => {
-        sut.valueChanged(true);
+        sut.conditionChanged(true);
         return delay(600);          
       }).then(() => {  
         expect(viewSlot.children.length).toEqual(1);
