@@ -1,4 +1,4 @@
-import {BoundViewFactory, ViewSlot, bindable, customAttribute, templateController} from 'aurelia-templating';
+import {BoundViewFactory, ViewSlot, customAttribute, templateController} from 'aurelia-templating';
 import {inject} from 'aurelia-dependency-injection';
 import {IfCore} from './if-core';
 

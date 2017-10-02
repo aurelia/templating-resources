@@ -134,6 +134,7 @@
       "resources": [
         "aurelia-templating-resources/compose",
         "aurelia-templating-resources/if",
+        "aurelia-templating-resources/else",
         "aurelia-templating-resources/with",
         "aurelia-templating-resources/repeat",
         "aurelia-templating-resources/show",
