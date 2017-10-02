@@ -1,6 +1,8 @@
 import './setup';
 import {TaskQueue} from 'aurelia-task-queue';
 import {Compose} from '../src/compose';
+import * as LogManager from 'aurelia-logging';
+const logger = LogManager.getLogger('templating-resources');
 
 describe('Compose', () => {
   let elementMock;
@@ -44,7 +46,7 @@ describe('Compose', () => {
   });
 
   describe('when bound', () => {
-    it('caches the binding and overridex contexts', () => {
+    it('caches the binding and override contexts', () => {
       const bindingContext = {};
       const overrideContext = {};
       sut.bind(bindingContext, overrideContext);
@@ -55,9 +57,8 @@ describe('Compose', () => {
 
   describe('when unbound', () => {
     it('clears the cached binding and override contexts', () => {
-      const bindingContext = {};
-      const overrideContext = {};
-      sut.bind(bindingContext, overrideContext);
+      const bindingContext = sut.bindingContext = {};
+      const overrideContext = sut.overrideContext = {};
       sut.unbind();
       expect(sut.bindingContext).not.toBe(bindingContext);
       expect(sut.overrideContext).not.toBe(overrideContext);
@@ -235,34 +236,117 @@ describe('Compose', () => {
     });
   });
 
+  it('awaits the current composition/activation before applying next set of changes', done => {
+    compositionEngineMock.compose.and.stub();
+    compositionEngineMock.compose.and.callFake(() => new Promise(resolve => setTimeout(resolve, 600)));
+    updateBindable('viewModel', './some-vm');
+
+    taskQueue.queueMicroTask(() => setTimeout(() => {
+      expect(compositionEngineMock.compose).toHaveBeenCalledTimes(1);
+
+      const setOne = {
+        model: 2,
+        view: './view.html'
+      };
+      const setTwo = {
+        model: 42,
+        viewModel: './truth'
+      };
+      const endSet = Object.assign({}, setOne, setTwo);
+
+      sut.pendingTask.then(() => {
+        expect(Object.keys(sut.changes).length).toBe(0);
+        expect(compositionEngineMock.compose).toHaveBeenCalledTimes(2);
+        expect(compositionEngineMock.compose).toHaveBeenCalledWith(jasmine.objectContaining(endSet));
+        done();
+      });
+
+      updateBindable('model', setOne.model);
+      updateBindable('view', setOne.view);
+
+      setTimeout(() => {
+        expect(sut.changes).toEqual(jasmine.objectContaining(setOne));
+        expect(compositionEngineMock.compose).toHaveBeenCalledTimes(1);
+        updateBindable('model', setTwo.model);
+        updateBindable('viewModel', setTwo.viewModel);
+      }, 100);
+      setTimeout(() => {
+        expect(sut.changes).toEqual(jasmine.objectContaining(endSet));
+        expect(compositionEngineMock.compose).toHaveBeenCalledTimes(1);
+      }, 300);
+    }, 0));
+  });
+
   describe('after successul composition', () => {
     const controller = {
       viewModel: createMock()
     };
-    let result;
 
     beforeEach(done => {
       compositionEngineMock.compose.and.stub;
-      compositionEngineMock.compose.and.callFake(() => {
-        result = Promise.resolve(controller);
-        return result;
-      });
+      compositionEngineMock.compose.and.callFake(() => new Promise(resolve => setTimeout(() => resolve(controller), 20)));
       updateBindable('viewModel', './some-vm');
       taskQueue.queueMicroTask(done);
     });
 
     it('sets the current controller', done => {
-      result.then(() => {
+      sut.pendingTask.then(() => {
         expect(sut.currentController).toBe(controller);
         done()
       }, done.fail);
     });
 
     it('sets the current active view model', done => {
-      result.then(() => {
+      sut.pendingTask.then(() => {
         expect(sut.currentViewModel).toBe(controller.viewModel);
         done()
       }, done.fail);
+    });
+
+    it('processes pending changes', done => {
+      expect(sut.pendingTask).toBeTruthy();
+      expect(sut.changes['viewModel']).not.toBeDefined();
+      setTimeout(() => {
+        const vm = './some-other-vm';
+        updateBindable('viewModel', vm);
+        expect(sut.changes['viewModel']).toBeDefined();
+        sut.pendingTask.then(() => {
+          expect(sut.changes['viewModel']).not.toBeDefined();
+          return sut.pendingTask;
+        }).then(done).catch(done.fail);
+      }, 0);
+    });
+
+    it('clears pending composition', done => {
+      sut.pendingTask.then(() => {
+        expect(sut.pendingTask).not.toBeTruthy();
+        done();
+      }).catch(done.fail);
+    });
+  });
+
+  describe('after failing a composition', () => {
+    let error;
+    beforeEach(done => {
+      spyOn(logger, 'error');
+      compositionEngineMock.compose.and.stub;
+      compositionEngineMock.compose.and.callFake(() => Promise.reject(error = new Error('".compose" test error')));
+      updateBindable('viewModel', './some-vm');
+      taskQueue.queueMicroTask(done);
+    });
+
+    it('logs the error', done => {
+      sut.pendingTask.then(() => {
+        expect(logger.error).toHaveBeenCalledWith(error);
+        done();
+      }).catch(done.fail);
+    });
+
+    it('clears pending composition', done => {
+      sut.pendingTask.then(() => {
+        expect(sut.pendingTask).not.toBeTruthy();
+        done();
+      }).catch(done.fail);
     });
   });
 });
