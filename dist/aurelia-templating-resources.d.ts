@@ -9,9 +9,9 @@ import {
   ViewSlot,
   customAttribute,
   templateController,
-  bindable,
   useView,
   customElement,
+  bindable,
   ViewResources,
   resource,
   ViewCompileInstruction,
@@ -193,31 +193,6 @@ export declare class IfCore {
   constructor(viewFactory?: any, viewSlot?: any);
   bind(bindingContext?: any, overrideContext?: any): any;
   unbind(): any;
-}
-
-/**
-* Binding to conditionally include or not include template logic depending on returned result
-* - value should be Boolean or will be treated as such (truthy / falsey)
-*/
-export declare class If extends IfCore {
-  condition: any;
-  swapOrder: 'before' | 'with' | 'after';
-  
-  /**
-    * Binds the if to the binding context and override context
-    * @param bindingContext The binding context
-    * @param overrideContext An override context for binding.
-    */
-  bind(bindingContext?: any, overrideContext?: any): any;
-  
-  /**
-    * Invoked everytime value property changes.
-    * @param newValue The new value
-    */
-  conditionChanged(newValue?: any): any;
-}
-export declare class Else extends IfCore {
-  constructor(viewFactory?: any, viewSlot?: any);
 }
 
 /**
@@ -549,6 +524,31 @@ export declare class SetRepeatStrategy {
     * @param records The change records.
     */
   instanceMutated(repeat?: any, set?: any, records?: any): any;
+}
+export declare class Else extends IfCore {
+  constructor(viewFactory?: any, viewSlot?: any);
+}
+
+/**
+* Binding to conditionally include or not include template logic depending on returned result
+* - value should be Boolean or will be treated as such (truthy / falsey)
+*/
+export declare class If extends IfCore {
+  condition: any;
+  swapOrder: 'before' | 'with' | 'after';
+  
+  /**
+    * Binds the if to the binding context and override context
+    * @param bindingContext The binding context
+    * @param overrideContext An override context for binding.
+    */
+  bind(bindingContext?: any, overrideContext?: any): any;
+  
+  /**
+    * Invoked everytime value property changes.
+    * @param newValue The new value
+    */
+  conditionChanged(newValue?: any): any;
 }
 
 /**

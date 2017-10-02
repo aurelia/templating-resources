@@ -1,3 +1,13 @@
+<a name="1.5.1"></a>
+## [1.5.1](https://github.com/aurelia/templating-resources/compare/1.5.0...1.5.1) (2017-10-02)
+
+
+### Bug Fixes
+
+* **if:** resolve if.html error ([63e8d47](https://github.com/aurelia/templating-resources/commit/63e8d47))
+
+
+
 <a name="1.5.0"></a>
 # [1.5.0](https://github.com/aurelia/templating-resources/compare/1.4.0...1.5.0) (2017-10-02)
 

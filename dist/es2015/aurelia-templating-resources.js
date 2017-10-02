@@ -1,6 +1,7 @@
 import { PLATFORM } from 'aurelia-pal';
 import { Compose } from './compose';
 import { If } from './if';
+import { Else } from './else';
 import { With } from './with';
 import { Repeat } from './repeat';
 import { Show } from './show';
@@ -34,7 +35,7 @@ import { injectAureliaHideStyleAtHead } from './aurelia-hide-style';
 function configure(config) {
   injectAureliaHideStyleAtHead();
 
-  config.globalResources(PLATFORM.moduleName('./compose'), PLATFORM.moduleName('./if'), PLATFORM.moduleName('./with'), PLATFORM.moduleName('./repeat'), PLATFORM.moduleName('./show'), PLATFORM.moduleName('./hide'), PLATFORM.moduleName('./replaceable'), PLATFORM.moduleName('./sanitize-html'), PLATFORM.moduleName('./focus'), PLATFORM.moduleName('./binding-mode-behaviors'), PLATFORM.moduleName('./self-binding-behavior'), PLATFORM.moduleName('./throttle-binding-behavior'), PLATFORM.moduleName('./debounce-binding-behavior'), PLATFORM.moduleName('./signal-binding-behavior'), PLATFORM.moduleName('./update-trigger-binding-behavior'), PLATFORM.moduleName('./attr-binding-behavior'));
+  config.globalResources(PLATFORM.moduleName('./compose'), PLATFORM.moduleName('./if'), PLATFORM.moduleName('./else'), PLATFORM.moduleName('./with'), PLATFORM.moduleName('./repeat'), PLATFORM.moduleName('./show'), PLATFORM.moduleName('./hide'), PLATFORM.moduleName('./replaceable'), PLATFORM.moduleName('./sanitize-html'), PLATFORM.moduleName('./focus'), PLATFORM.moduleName('./binding-mode-behaviors'), PLATFORM.moduleName('./self-binding-behavior'), PLATFORM.moduleName('./throttle-binding-behavior'), PLATFORM.moduleName('./debounce-binding-behavior'), PLATFORM.moduleName('./signal-binding-behavior'), PLATFORM.moduleName('./update-trigger-binding-behavior'), PLATFORM.moduleName('./attr-binding-behavior'));
 
   configureHtmlResourcePlugin(config);
 
@@ -47,4 +48,4 @@ function configure(config) {
   ['.css', '.less', '.sass', '.scss', '.styl'].forEach(ext => viewEngine.addResourcePlugin(ext, styleResourcePlugin));
 }
 
-export { Compose, If, With, Repeat, Show, Hide, HTMLSanitizer, SanitizeHTMLValueConverter, Replaceable, Focus, configure, AttrBindingBehavior, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SelfBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle };
+export { Compose, If, Else, With, Repeat, Show, Hide, HTMLSanitizer, SanitizeHTMLValueConverter, Replaceable, Focus, configure, AttrBindingBehavior, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SelfBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle };

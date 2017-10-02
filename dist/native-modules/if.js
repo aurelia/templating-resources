@@ -1,4 +1,4 @@
-var _dec, _dec2, _dec3, _class, _desc, _value, _class2, _descriptor, _descriptor2, _dec4, _dec5, _class4;
+var _dec, _dec2, _dec3, _class, _desc, _value, _class2, _descriptor, _descriptor2;
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -9,6 +9,8 @@ function _initDefineProp(target, property, descriptor, context) {
     value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
   });
 }
+
+
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
@@ -47,94 +49,15 @@ function _initializerWarningHelper(descriptor, context) {
   throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
-
-
 import { BoundViewFactory, ViewSlot, bindable, customAttribute, templateController } from 'aurelia-templating';
 import { inject } from 'aurelia-dependency-injection';
-
-export var IfCore = function () {
-  function IfCore(viewFactory, viewSlot) {
-    
-
-    this.viewFactory = viewFactory;
-    this.viewSlot = viewSlot;
-    this.view = null;
-    this.bindingContext = null;
-    this.overrideContext = null;
-
-    this.showing = false;
-  }
-
-  IfCore.prototype.bind = function bind(bindingContext, overrideContext) {
-    this.bindingContext = bindingContext;
-    this.overrideContext = overrideContext;
-  };
-
-  IfCore.prototype.unbind = function unbind() {
-    if (this.view === null) {
-      return;
-    }
-
-    this.view.unbind();
-
-    if (!this.viewFactory.isCaching) {
-      return;
-    }
-
-    if (this.showing) {
-      this.showing = false;
-      this.viewSlot.remove(this.view, true, true);
-    } else {
-      this.view.returnToCache();
-    }
-
-    this.view = null;
-  };
-
-  IfCore.prototype._show = function _show() {
-    if (this.showing) {
-      return;
-    }
-
-    if (this.view === null) {
-      this.view = this.viewFactory.create();
-    }
-
-    if (!this.view.isBound) {
-      this.view.bind(this.bindingContext, this.overrideContext);
-    }
-
-    this.showing = true;
-    return this.viewSlot.add(this.view);
-  };
-
-  IfCore.prototype._hide = function _hide() {
-    var _this = this;
-
-    if (!this.showing) {
-      return;
-    }
-
-    this.showing = false;
-    var removed = this.viewSlot.remove(this.view);
-
-    if (removed instanceof Promise) {
-      return removed.then(function () {
-        return _this.view.unbind();
-      });
-    }
-
-    this.view.unbind();
-  };
-
-  return IfCore;
-}();
+import { IfCore } from './if-core';
 
 export var If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, ViewSlot), _dec3 = bindable({ primaryProperty: true }), _dec(_class = templateController(_class = _dec2(_class = (_class2 = function (_IfCore) {
   _inherits(If, _IfCore);
 
   function If() {
-    var _temp, _this2, _ret;
+    var _temp, _this, _ret;
 
     
 
@@ -142,7 +65,7 @@ export var If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this2 = _possibleConstructorReturn(this, _IfCore.call.apply(_IfCore, [this].concat(args))), _this2), _initDefineProp(_this2, 'condition', _descriptor, _this2), _initDefineProp(_this2, 'swapOrder', _descriptor2, _this2), _temp), _possibleConstructorReturn(_this2, _ret);
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _IfCore.call.apply(_IfCore, [this].concat(args))), _this), _initDefineProp(_this, 'condition', _descriptor, _this), _initDefineProp(_this, 'swapOrder', _descriptor2, _this), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   If.prototype.bind = function bind(bindingContext, overrideContext) {
@@ -155,7 +78,7 @@ export var If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
   };
 
   If.prototype._update = function _update(show) {
-    var _this3 = this;
+    var _this2 = this;
 
     if (this.animating) {
       return;
@@ -171,9 +94,9 @@ export var If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
     if (promise) {
       this.animating = true;
       promise.then(function () {
-        _this3.animating = false;
-        if (_this3.condition !== _this3.showing) {
-          _this3._update(_this3.condition);
+        _this2.animating = false;
+        if (_this2.condition !== _this2.showing) {
+          _this2._update(_this2.condition);
         }
       });
     }
@@ -203,30 +126,3 @@ export var If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
   enumerable: true,
   initializer: null
 })), _class2)) || _class) || _class) || _class);
-
-export var Else = (_dec4 = customAttribute('else'), _dec5 = inject(BoundViewFactory, ViewSlot), _dec4(_class4 = templateController(_class4 = _dec5(_class4 = function (_IfCore2) {
-  _inherits(Else, _IfCore2);
-
-  function Else(viewFactory, viewSlot) {
-    
-
-    var _this4 = _possibleConstructorReturn(this, _IfCore2.call(this, viewFactory, viewSlot));
-
-    _this4._registerInIf();
-    return _this4;
-  }
-
-  Else.prototype._registerInIf = function _registerInIf() {
-    var previous = this.viewSlot.anchor.previousSibling;
-    while (previous && !previous.au) {
-      previous = previous.previousSibling;
-    }
-    if (!previous || !previous.au.if) {
-      throw new Error("Can't find matching If for Else custom attribute.");
-    }
-    var ifVm = previous.au.if.viewModel;
-    ifVm.else = this;
-  };
-
-  return Else;
-}(IfCore)) || _class4) || _class4) || _class4);
