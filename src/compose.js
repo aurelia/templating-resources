@@ -86,9 +86,9 @@ export class Compose {
   bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;
-    this.changes['view'] = this.view;
-    this.changes['viewModel'] = this.viewModel;
-    this.changes['model'] = this.model;
+    this.changes.view = this.view;
+    this.changes.viewModel = this.viewModel;
+    this.changes.model = this.model;
     processChanges(this);
   }
 
@@ -111,7 +111,7 @@ export class Compose {
   * @param oldValue The old value.
   */
   modelChanged(newValue, oldValue) {
-    this.changes['model'] = newValue;
+    this.changes.model = newValue;
     requestUpdate(this);
   }
 
@@ -121,7 +121,7 @@ export class Compose {
   * @param oldValue The old value.
   */
   viewChanged(newValue, oldValue) {
-    this.changes['view'] = newValue;
+    this.changes.view = newValue;
     requestUpdate(this);
   }
 
@@ -131,7 +131,7 @@ export class Compose {
     * @param oldValue The old value.
     */
   viewModelChanged(newValue, oldValue) {
-    this.changes['viewModel'] = newValue;
+    this.changes.viewModel = newValue;
     requestUpdate(this);
   }
 }
@@ -169,7 +169,7 @@ function processChanges(composer: Compose) {
 
   if (!('view' in changes) && !('viewModel' in changes) && ('model' in changes)) {
     // just try to activate the current view model
-    composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes['model']);
+    composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
     if (!composer.pendingTask) { return; }
   } else {
     // init context

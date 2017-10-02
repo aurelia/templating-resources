@@ -1,6 +1,5 @@
 import {BoundViewFactory, ViewSlot, bindable, customAttribute, templateController} from 'aurelia-templating';
 import {inject} from 'aurelia-dependency-injection';
-import {DOM} from 'aurelia-pal';
 
 class IfCore {
   constructor(viewFactory, viewSlot) {
@@ -9,8 +8,8 @@ class IfCore {
     this.view = null;
     this.bindingContext = null;
     this.overrideContext = null;
-    // If the child view is animated, `value` might not reflect the internal 
-    // state anymore, so we use `showing` for that. 
+    // If the child view is animated, `value` might not reflect the internal
+    // state anymore, so we use `showing` for that.
     // Eventually, `showing` and `value` should be consistent.
     this.showing = false;
   }
@@ -34,14 +33,14 @@ class IfCore {
     if (!this.viewFactory.isCaching) {
       return;
     }
-    
+
     if (this.showing) {
       this.showing = false;
       this.viewSlot.remove(this.view, /*returnToCache:*/true, /*skipAnimation:*/true);
-    }
-    else {
+    } else {
       this.view.returnToCache();
     }
+
     this.view = null;
   }
 
@@ -69,12 +68,12 @@ class IfCore {
 
     this.showing = false;
     let removed = this.viewSlot.remove(this.view); // Promise or View
+
     if (removed instanceof Promise) {
       return removed.then(() => this.view.unbind());
-    } 
-    else {
-      this.view.unbind();
-    }                
+    }
+
+    this.view.unbind();
   }
 }
 
@@ -106,17 +105,16 @@ export class If extends IfCore {
   conditionChanged(newValue) {
     this._update(newValue);
   }
-  
+
   _update(show) {
     if (this.animating) {
-      return;      
+      return;
     }
 
     let promise;
     if (this.else) {
       promise = show ? this._swap(this.else, this) : this._swap(this, this.else);
-    }
-    else {
+    } else {
       promise = show ? this._show() : this._hide();
     }
 
@@ -133,13 +131,13 @@ export class If extends IfCore {
 
   _swap(remove, add) {
     switch (this.swapOrder) {
-      case "before":
-        return Promise.resolve(add._show()).then(() => remove._hide());
-      case "with":
-        return Promise.all([ remove._hide(), add._show() ]);
-      default:  // "after", default and unknown values
-        let promise = remove._hide();
-        return promise ? promise.then(() => add._show()) : add._show();
+    case 'before':
+      return Promise.resolve(add._show()).then(() => remove._hide());
+    case 'with':
+      return Promise.all([ remove._hide(), add._show() ]);
+    default:  // "after", default and unknown values
+      let promise = remove._hide();
+      return promise ? promise.then(() => add._show()) : add._show();
     }
   }
 }
@@ -147,7 +145,7 @@ export class If extends IfCore {
 @customAttribute('else')
 @templateController
 @inject(BoundViewFactory, ViewSlot)
-export class Else extends IfCore {  
+export class Else extends IfCore {
   constructor(viewFactory, viewSlot) {
     super(viewFactory, viewSlot);
     this._registerInIf();
