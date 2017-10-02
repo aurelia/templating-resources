@@ -5,7 +5,7 @@ import {TaskQueue} from 'aurelia-task-queue';
 
 describe('if', () => {
   let viewSlot, taskQueue, sut, viewFactory;
-  
+
   beforeEach(() => {
     viewSlot = new ViewSlotMock();
     taskQueue = new TaskQueue();
@@ -89,45 +89,49 @@ describe('if', () => {
 
     expect(view.bind).toHaveBeenCalled();
   });
-  
+
   describe('during animation', () => {
     let delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     let removeWithAnimation = animationDuration => {
       return function(view) {
-        return delay(animationDuration).then(() => {            
+        return delay(animationDuration).then(() => {
           this.children = [];
         });
       };
     };
-      
+
     let addWithAnimation = animationDuration => {
       return function(view) {
-        return delay(animationDuration).then(() => {          
+        return delay(animationDuration).then(() => {
           this.children.push(view);
         });
       };
     };
 
-    beforeEach(() => {   
+    beforeEach(() => {
       spyOn(viewSlot, 'remove').and.callFake(removeWithAnimation(600));
       spyOn(viewSlot, 'add').and.callFake(addWithAnimation(0));
     });
 
-    it('should correctly handle value changes during remove animation', done => {  
+    it('should correctly handle value changes during remove animation', done => {
       sut.showing = false;
-      sut.view = new ViewMock();  
-      sut.view.isBound = true;        
+      sut.view = new ViewMock();
+      sut.view.isBound = true;
       sut.viewSlot.children = [];
-      sut.conditionChanged(true);        
-   
-      delay(200).then(() => {          
+
+      sut.condition = true;
+      sut.conditionChanged(true);
+
+      delay(200).then(() => {
+        sut.condition = false;
         sut.conditionChanged(false);
         return delay(400);
       }).then(() => {
+        sut.condition = true;
         sut.conditionChanged(true);
-        return delay(600);          
-      }).then(() => {  
+        return delay(600);
+      }).then(() => {
         expect(viewSlot.children.length).toEqual(1);
       })
       .then(() => done())

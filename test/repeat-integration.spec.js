@@ -118,7 +118,11 @@ function createAssertionQueue() {
     if (queue.length) {
       setTimeout(() => {
         let func = queue.shift();
-        func();
+
+        if (func) {
+          func();
+        }
+
         next();
       });
     }
