@@ -1,6 +1,7 @@
 import {PLATFORM} from 'aurelia-pal';
 import {Compose} from './compose';
 import {If} from './if';
+import {Else} from './else';
 import {With} from './with';
 import {Repeat} from './repeat';
 import {Show} from './show';
@@ -44,6 +45,7 @@ function configure(config) {
   config.globalResources(
     PLATFORM.moduleName('./compose'),
     PLATFORM.moduleName('./if'),
+    PLATFORM.moduleName('./else'),
     PLATFORM.moduleName('./with'),
     PLATFORM.moduleName('./repeat'),
     PLATFORM.moduleName('./show'),
@@ -74,6 +76,7 @@ function configure(config) {
 export {
   Compose,
   If,
+  Else,
   With,
   Repeat,
   Show,
