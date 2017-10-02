@@ -148,7 +148,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           this.scope = null;
           this.items = null;
           this.matcherBinding = null;
-          this.viewSlot.removeAll(true);
+          this.viewSlot.removeAll(true, true);
           this._unsubscribeCollection();
         };
 

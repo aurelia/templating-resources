@@ -40,8 +40,9 @@ export let SetRepeatStrategy = class SetRepeatStrategy {
       value = record.value;
       switch (record.type) {
         case 'add':
-          overrideContext = createFullOverrideContext(repeat, value, set.size - 1, set.size);
-          repeat.insertView(set.size - 1, overrideContext.bindingContext, overrideContext);
+          let size = Math.max(set.size - 1, 0);
+          overrideContext = createFullOverrideContext(repeat, value, size, set.size);
+          repeat.insertView(size, overrideContext.bindingContext, overrideContext);
           break;
         case 'delete':
           removeIndex = this._getViewIndexByValue(repeat, value);

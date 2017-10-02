@@ -9,11 +9,17 @@ var _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _des
 
 var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
+var _aureliaLogging = require('aurelia-logging');
+
+var LogManager = _interopRequireWildcard(_aureliaLogging);
+
 var _aureliaTaskQueue = require('aurelia-task-queue');
 
 var _aureliaTemplating = require('aurelia-templating');
 
 var _aureliaPal = require('aurelia-pal');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -60,6 +66,8 @@ function _initializerWarningHelper(descriptor, context) {
   throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
+var logger = LogManager.getLogger('templating-resources');
+
 var Compose = exports.Compose = (_dec = (0, _aureliaTemplating.customElement)('compose'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue), _dec(_class = (0, _aureliaTemplating.noView)(_class = _dec2(_class = (_class2 = function () {
   function Compose(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
     
@@ -80,6 +88,7 @@ var Compose = exports.Compose = (_dec = (0, _aureliaTemplating.customElement)('c
     this.taskQueue = taskQueue;
     this.currentController = null;
     this.currentViewModel = null;
+    this.changes = Object.create(null);
   }
 
   Compose.prototype.created = function created(owningView) {
@@ -89,14 +98,15 @@ var Compose = exports.Compose = (_dec = (0, _aureliaTemplating.customElement)('c
   Compose.prototype.bind = function bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;
-    processInstruction(this, createInstruction(this, {
-      view: this.view,
-      viewModel: this.viewModel,
-      model: this.model
-    }));
+    this.changes.view = this.view;
+    this.changes.viewModel = this.viewModel;
+    this.changes.model = this.model;
+    processChanges(this);
   };
 
-  Compose.prototype.unbind = function unbind(bindingContext, overrideContext) {
+  Compose.prototype.unbind = function unbind() {
+    this.changes = Object.create(null);
+    this.pendingTask = null;
     this.bindingContext = null;
     this.overrideContext = null;
     var returnToCache = true;
@@ -105,65 +115,18 @@ var Compose = exports.Compose = (_dec = (0, _aureliaTemplating.customElement)('c
   };
 
   Compose.prototype.modelChanged = function modelChanged(newValue, oldValue) {
-    var _this = this;
-
-    if (this.currentInstruction) {
-      this.currentInstruction.model = newValue;
-      return;
-    }
-
-    this.taskQueue.queueMicroTask(function () {
-      if (_this.currentInstruction) {
-        _this.currentInstruction.model = newValue;
-        return;
-      }
-
-      var vm = _this.currentViewModel;
-
-      if (vm && typeof vm.activate === 'function') {
-        vm.activate(newValue);
-      }
-    });
+    this.changes.model = newValue;
+    requestUpdate(this);
   };
 
   Compose.prototype.viewChanged = function viewChanged(newValue, oldValue) {
-    var _this2 = this;
-
-    var instruction = createInstruction(this, {
-      view: newValue,
-      viewModel: this.currentViewModel || this.viewModel,
-      model: this.model
-    });
-
-    if (this.currentInstruction) {
-      this.currentInstruction = instruction;
-      return;
-    }
-
-    this.currentInstruction = instruction;
-    this.taskQueue.queueMicroTask(function () {
-      return processInstruction(_this2, _this2.currentInstruction);
-    });
+    this.changes.view = newValue;
+    requestUpdate(this);
   };
 
   Compose.prototype.viewModelChanged = function viewModelChanged(newValue, oldValue) {
-    var _this3 = this;
-
-    var instruction = createInstruction(this, {
-      viewModel: newValue,
-      view: this.view,
-      model: this.model
-    });
-
-    if (this.currentInstruction) {
-      this.currentInstruction = instruction;
-      return;
-    }
-
-    this.currentInstruction = instruction;
-    this.taskQueue.queueMicroTask(function () {
-      return processInstruction(_this3, _this3.currentInstruction);
-    });
+    this.changes.viewModel = newValue;
+    requestUpdate(this);
   };
 
   return Compose;
@@ -182,6 +145,19 @@ var Compose = exports.Compose = (_dec = (0, _aureliaTemplating.customElement)('c
 })), _class2)) || _class) || _class) || _class);
 
 
+function isEmpty(obj) {
+  for (var key in obj) {
+    return false;
+  }
+  return true;
+}
+
+function tryActivateViewModel(vm, model) {
+  if (vm && typeof vm.activate === 'function') {
+    return Promise.resolve(vm.activate(model));
+  }
+}
+
 function createInstruction(composer, instruction) {
   return Object.assign(instruction, {
     bindingContext: composer.bindingContext,
@@ -196,10 +172,52 @@ function createInstruction(composer, instruction) {
   });
 }
 
-function processInstruction(composer, instruction) {
-  composer.currentInstruction = null;
-  composer.compositionEngine.compose(instruction).then(function (controller) {
-    composer.currentController = controller;
-    composer.currentViewModel = controller ? controller.viewModel : null;
+function processChanges(composer) {
+  var changes = composer.changes;
+  composer.changes = Object.create(null);
+
+  if (!('view' in changes) && !('viewModel' in changes) && 'model' in changes) {
+    composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
+    if (!composer.pendingTask) {
+      return;
+    }
+  } else {
+    var instruction = {
+      view: composer.view,
+      viewModel: composer.currentViewModel || composer.viewModel,
+      model: composer.model
+    };
+
+    instruction = Object.assign(instruction, changes);
+
+    instruction = createInstruction(composer, instruction);
+    composer.pendingTask = composer.compositionEngine.compose(instruction).then(function (controller) {
+      composer.currentController = controller;
+      composer.currentViewModel = controller ? controller.viewModel : null;
+    });
+  }
+
+  composer.pendingTask = composer.pendingTask.catch(function (e) {
+    logger.error(e);
+  }).then(function () {
+    if (!composer.pendingTask) {
+      return;
+    }
+
+    composer.pendingTask = null;
+    if (!isEmpty(composer.changes)) {
+      processChanges(composer);
+    }
+  });
+}
+
+function requestUpdate(composer) {
+  if (composer.pendingTask || composer.updateRequested) {
+    return;
+  }
+  composer.updateRequested = true;
+  composer.taskQueue.queueMicroTask(function () {
+    composer.updateRequested = false;
+    processChanges(composer);
   });
 }

@@ -136,7 +136,7 @@ System.register(['aurelia-templating', 'aurelia-loader', 'aurelia-dependency-inj
           } else if (FEATURE.scopedCSS) {
             var styleNode = DOM.injectStyles(this.css, content, true);
             styleNode.setAttribute('scoped', 'scoped');
-          } else if (!this.owner._alreadyGloballyInjected) {
+          } else if (this._global && !this.owner._alreadyGloballyInjected) {
             DOM.injectStyles(this.css);
             this.owner._alreadyGloballyInjected = true;
           }

@@ -44,9 +44,12 @@ function _initializerWarningHelper(descriptor, context) {
 }
 
 import { Container, inject } from 'aurelia-dependency-injection';
+import * as LogManager from 'aurelia-logging';
 import { TaskQueue } from 'aurelia-task-queue';
-import { CompositionEngine, ViewSlot, ViewResources, customElement, bindable, noView, View } from 'aurelia-templating';
+import { CompositionEngine, CompositionContext, ViewSlot, ViewResources, customElement, bindable, noView, View } from 'aurelia-templating';
 import { DOM } from 'aurelia-pal';
+
+const logger = LogManager.getLogger('templating-resources');
 
 export let Compose = (_dec = customElement('compose'), _dec2 = inject(DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue), _dec(_class = noView(_class = _dec2(_class = (_class2 = class Compose {
   constructor(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
@@ -66,6 +69,7 @@ export let Compose = (_dec = customElement('compose'), _dec2 = inject(DOM.Elemen
     this.taskQueue = taskQueue;
     this.currentController = null;
     this.currentViewModel = null;
+    this.changes = Object.create(null);
   }
 
   created(owningView) {
@@ -75,14 +79,15 @@ export let Compose = (_dec = customElement('compose'), _dec2 = inject(DOM.Elemen
   bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;
-    processInstruction(this, createInstruction(this, {
-      view: this.view,
-      viewModel: this.viewModel,
-      model: this.model
-    }));
+    this.changes.view = this.view;
+    this.changes.viewModel = this.viewModel;
+    this.changes.model = this.model;
+    processChanges(this);
   }
 
-  unbind(bindingContext, overrideContext) {
+  unbind() {
+    this.changes = Object.create(null);
+    this.pendingTask = null;
     this.bindingContext = null;
     this.overrideContext = null;
     let returnToCache = true;
@@ -91,55 +96,18 @@ export let Compose = (_dec = customElement('compose'), _dec2 = inject(DOM.Elemen
   }
 
   modelChanged(newValue, oldValue) {
-    if (this.currentInstruction) {
-      this.currentInstruction.model = newValue;
-      return;
-    }
-
-    this.taskQueue.queueMicroTask(() => {
-      if (this.currentInstruction) {
-        this.currentInstruction.model = newValue;
-        return;
-      }
-
-      let vm = this.currentViewModel;
-
-      if (vm && typeof vm.activate === 'function') {
-        vm.activate(newValue);
-      }
-    });
+    this.changes.model = newValue;
+    requestUpdate(this);
   }
 
   viewChanged(newValue, oldValue) {
-    let instruction = createInstruction(this, {
-      view: newValue,
-      viewModel: this.currentViewModel || this.viewModel,
-      model: this.model
-    });
-
-    if (this.currentInstruction) {
-      this.currentInstruction = instruction;
-      return;
-    }
-
-    this.currentInstruction = instruction;
-    this.taskQueue.queueMicroTask(() => processInstruction(this, this.currentInstruction));
+    this.changes.view = newValue;
+    requestUpdate(this);
   }
 
   viewModelChanged(newValue, oldValue) {
-    let instruction = createInstruction(this, {
-      viewModel: newValue,
-      view: this.view,
-      model: this.model
-    });
-
-    if (this.currentInstruction) {
-      this.currentInstruction = instruction;
-      return;
-    }
-
-    this.currentInstruction = instruction;
-    this.taskQueue.queueMicroTask(() => processInstruction(this, this.currentInstruction));
+    this.changes.viewModel = newValue;
+    requestUpdate(this);
   }
 }, (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'model', [bindable], {
   enumerable: true,
@@ -155,6 +123,19 @@ export let Compose = (_dec = customElement('compose'), _dec2 = inject(DOM.Elemen
   initializer: null
 })), _class2)) || _class) || _class) || _class);
 
+function isEmpty(obj) {
+  for (const key in obj) {
+    return false;
+  }
+  return true;
+}
+
+function tryActivateViewModel(vm, model) {
+  if (vm && typeof vm.activate === 'function') {
+    return Promise.resolve(vm.activate(model));
+  }
+}
+
 function createInstruction(composer, instruction) {
   return Object.assign(instruction, {
     bindingContext: composer.bindingContext,
@@ -169,10 +150,52 @@ function createInstruction(composer, instruction) {
   });
 }
 
-function processInstruction(composer, instruction) {
-  composer.currentInstruction = null;
-  composer.compositionEngine.compose(instruction).then(controller => {
-    composer.currentController = controller;
-    composer.currentViewModel = controller ? controller.viewModel : null;
+function processChanges(composer) {
+  const changes = composer.changes;
+  composer.changes = Object.create(null);
+
+  if (!('view' in changes) && !('viewModel' in changes) && 'model' in changes) {
+    composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
+    if (!composer.pendingTask) {
+      return;
+    }
+  } else {
+    let instruction = {
+      view: composer.view,
+      viewModel: composer.currentViewModel || composer.viewModel,
+      model: composer.model
+    };
+
+    instruction = Object.assign(instruction, changes);
+
+    instruction = createInstruction(composer, instruction);
+    composer.pendingTask = composer.compositionEngine.compose(instruction).then(controller => {
+      composer.currentController = controller;
+      composer.currentViewModel = controller ? controller.viewModel : null;
+    });
+  }
+
+  composer.pendingTask = composer.pendingTask.catch(e => {
+    logger.error(e);
+  }).then(() => {
+    if (!composer.pendingTask) {
+      return;
+    }
+
+    composer.pendingTask = null;
+    if (!isEmpty(composer.changes)) {
+      processChanges(composer);
+    }
+  });
+}
+
+function requestUpdate(composer) {
+  if (composer.pendingTask || composer.updateRequested) {
+    return;
+  }
+  composer.updateRequested = true;
+  composer.taskQueue.queueMicroTask(() => {
+    composer.updateRequested = false;
+    processChanges(composer);
   });
 }

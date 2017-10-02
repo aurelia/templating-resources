@@ -41,6 +41,7 @@ export var MapRepeatStrategy = function () {
     var ii = void 0;
     var overrideContext = void 0;
     var removeIndex = void 0;
+    var addIndex = void 0;
     var record = void 0;
     var rmPromises = [];
     var viewOrPromise = void 0;
@@ -59,7 +60,8 @@ export var MapRepeatStrategy = function () {
           repeat.insertView(removeIndex, overrideContext.bindingContext, overrideContext);
           break;
         case 'add':
-          overrideContext = createFullOverrideContext(repeat, map.get(key), map.size - 1, map.size, key);
+          addIndex = repeat.viewCount() <= map.size - 1 ? repeat.viewCount() : map.size - 1;
+          overrideContext = createFullOverrideContext(repeat, map.get(key), addIndex, map.size, key);
           repeat.insertView(map.size - 1, overrideContext.bindingContext, overrideContext);
           break;
         case 'delete':

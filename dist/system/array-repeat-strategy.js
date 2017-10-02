@@ -45,71 +45,69 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export, _c
           }
 
           if (repeat.viewsRequireLifecycle) {
-            (function () {
-              var childrenSnapshot = children.slice(0);
-              var itemNameInBindingContext = repeat.local;
-              var matcher = repeat.matcher();
+            var childrenSnapshot = children.slice(0);
+            var itemNameInBindingContext = repeat.local;
+            var matcher = repeat.matcher();
 
-              var itemsPreviouslyInViews = [];
-              var viewsToRemove = [];
+            var itemsPreviouslyInViews = [];
+            var viewsToRemove = [];
 
-              for (var index = 0; index < viewsLength; index++) {
-                var view = childrenSnapshot[index];
-                var oldItem = view.bindingContext[itemNameInBindingContext];
+            for (var index = 0; index < viewsLength; index++) {
+              var view = childrenSnapshot[index];
+              var oldItem = view.bindingContext[itemNameInBindingContext];
 
-                if (indexOf(items, oldItem, matcher) === -1) {
-                  viewsToRemove.push(view);
-                } else {
-                  itemsPreviouslyInViews.push(oldItem);
-                }
+              if (indexOf(items, oldItem, matcher) === -1) {
+                viewsToRemove.push(view);
+              } else {
+                itemsPreviouslyInViews.push(oldItem);
               }
+            }
 
-              var updateViews = void 0;
-              var removePromise = void 0;
+            var updateViews = void 0;
+            var removePromise = void 0;
 
-              if (itemsPreviouslyInViews.length > 0) {
-                removePromise = repeat.removeViews(viewsToRemove, true, !repeat.viewsRequireLifecycle);
-                updateViews = function updateViews() {
-                  for (var _index = 0; _index < itemsLength; _index++) {
-                    var item = items[_index];
-                    var indexOfView = indexOf(itemsPreviouslyInViews, item, matcher, _index);
-                    var _view = void 0;
+            if (itemsPreviouslyInViews.length > 0) {
+              removePromise = repeat.removeViews(viewsToRemove, true, !repeat.viewsRequireLifecycle);
+              updateViews = function updateViews() {
+                for (var _index = 0; _index < itemsLength; _index++) {
+                  var item = items[_index];
+                  var indexOfView = indexOf(itemsPreviouslyInViews, item, matcher, _index);
+                  var _view = void 0;
 
-                    if (indexOfView === -1) {
-                      var overrideContext = createFullOverrideContext(repeat, items[_index], _index, itemsLength);
-                      repeat.insertView(_index, overrideContext.bindingContext, overrideContext);
+                  if (indexOfView === -1) {
+                    var overrideContext = createFullOverrideContext(repeat, items[_index], _index, itemsLength);
+                    repeat.insertView(_index, overrideContext.bindingContext, overrideContext);
 
-                      itemsPreviouslyInViews.splice(_index, 0, undefined);
-                    } else if (indexOfView === _index) {
-                      _view = children[indexOfView];
-                      itemsPreviouslyInViews[indexOfView] = undefined;
-                    } else {
-                      _view = children[indexOfView];
-                      repeat.moveView(indexOfView, _index);
-                      itemsPreviouslyInViews.splice(indexOfView, 1);
-                      itemsPreviouslyInViews.splice(_index, 0, undefined);
-                    }
-
-                    if (_view) {
-                      updateOverrideContext(_view.overrideContext, _index, itemsLength);
-                    }
+                    itemsPreviouslyInViews.splice(_index, 0, undefined);
+                  } else if (indexOfView === _index) {
+                    _view = children[indexOfView];
+                    itemsPreviouslyInViews[indexOfView] = undefined;
+                  } else {
+                    _view = children[indexOfView];
+                    repeat.moveView(indexOfView, _index);
+                    itemsPreviouslyInViews.splice(indexOfView, 1);
+                    itemsPreviouslyInViews.splice(_index, 0, undefined);
                   }
 
-                  _this._inPlaceProcessItems(repeat, items);
-                };
-              } else {
-                removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
-                updateViews = function updateViews() {
-                  return _this._standardProcessInstanceChanged(repeat, items);
-                };
-              }
+                  if (_view) {
+                    updateOverrideContext(_view.overrideContext, _index, itemsLength);
+                  }
+                }
 
-              if (removePromise instanceof Promise) {
-                removePromise.then(updateViews);
-              } else {
-                updateViews();
-              }
-            })();
+                _this._inPlaceProcessItems(repeat, items);
+              };
+            } else {
+              removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
+              updateViews = function updateViews() {
+                return _this._standardProcessInstanceChanged(repeat, items);
+              };
+            }
+
+            if (removePromise instanceof Promise) {
+              removePromise.then(updateViews);
+            } else {
+              updateViews();
+            }
           } else {
             this._inPlaceProcessItems(repeat, items);
           }
@@ -173,23 +171,21 @@ System.register(['./repeat-utilities', 'aurelia-binding'], function (_export, _c
 
           var maybePromise = this._runSplices(repeat, array.slice(0), splices);
           if (maybePromise instanceof Promise) {
-            (function () {
-              var queuedSplices = repeat.__queuedSplices = [];
+            var queuedSplices = repeat.__queuedSplices = [];
 
-              var runQueuedSplices = function runQueuedSplices() {
-                if (!queuedSplices.length) {
-                  repeat.__queuedSplices = undefined;
-                  repeat.__array = undefined;
-                  return;
-                }
+            var runQueuedSplices = function runQueuedSplices() {
+              if (!queuedSplices.length) {
+                repeat.__queuedSplices = undefined;
+                repeat.__array = undefined;
+                return;
+              }
 
-                var nextPromise = _this2._runSplices(repeat, repeat.__array, queuedSplices) || Promise.resolve();
-                queuedSplices = repeat.__queuedSplices = [];
-                nextPromise.then(runQueuedSplices);
-              };
+              var nextPromise = _this2._runSplices(repeat, repeat.__array, queuedSplices) || Promise.resolve();
+              queuedSplices = repeat.__queuedSplices = [];
+              nextPromise.then(runQueuedSplices);
+            };
 
-              maybePromise.then(runQueuedSplices);
-            })();
+            maybePromise.then(runQueuedSplices);
           }
         };
 

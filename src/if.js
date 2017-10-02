@@ -1,7 +1,10 @@
 import {BoundViewFactory, ViewSlot, bindable, customAttribute, templateController} from 'aurelia-templating';
 import {inject} from 'aurelia-dependency-injection';
 
-class IfCore {
+/**
+* For internal use only. May change without warning.
+*/
+export class IfCore {
   constructor(viewFactory, viewSlot) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;

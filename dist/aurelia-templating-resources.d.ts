@@ -1,3 +1,4 @@
+import * as LogManager from 'aurelia-logging';
 import {
   inject,
   Container,
@@ -8,13 +9,14 @@ import {
   ViewSlot,
   customAttribute,
   templateController,
+  bindable,
   useView,
   customElement,
-  bindable,
   ViewResources,
   resource,
   ViewCompileInstruction,
   CompositionEngine,
+  CompositionContext,
   noView,
   View,
   ViewEngine,
@@ -185,17 +187,21 @@ export declare class NullRepeatStrategy {
 }
 
 /**
+* For internal use only. May change without warning.
+*/
+export declare class IfCore {
+  constructor(viewFactory?: any, viewSlot?: any);
+  bind(bindingContext?: any, overrideContext?: any): any;
+  unbind(): any;
+}
+
+/**
 * Binding to conditionally include or not include template logic depending on returned result
 * - value should be Boolean or will be treated as such (truthy / falsey)
 */
-export declare class If {
-  
-  /**
-    * Creates an instance of If.
-    * @param {BoundViewFactory} viewFactory The factory generating the view
-    * @param {ViewSlot} viewSlot The slot the view is injected in to
-    */
-  constructor(viewFactory?: any, viewSlot?: any);
+export declare class If extends IfCore {
+  condition: any;
+  swapOrder: 'before' | 'with' | 'after';
   
   /**
     * Binds the if to the binding context and override context
@@ -208,12 +214,10 @@ export declare class If {
     * Invoked everytime value property changes.
     * @param newValue The new value
     */
-  valueChanged(newValue?: any): any;
-  
-  /**
-    * Unbinds the if
-    */
-  unbind(): any;
+  conditionChanged(newValue?: any): any;
+}
+export declare class Else extends IfCore {
+  constructor(viewFactory?: any, viewSlot?: any);
 }
 
 /**
@@ -255,6 +259,7 @@ export declare class Focus {
     * Invoked when the attribute is detached from the DOM.
     */
   detached(): any;
+  handleEvent(e?: any): any;
 }
 export declare class DebounceBindingBehavior {
   bind(binding?: any, source?: any, delay?: any): any;
@@ -299,7 +304,7 @@ export declare class Compose {
   /**
     * Unbinds the Compose.
     */
-  unbind(bindingContext?: any, overrideContext?: any): any;
+  unbind(): any;
   
   /**
     * Invoked everytime the bound model changes.
@@ -539,7 +544,8 @@ export declare class SetRepeatStrategy {
   
   /**
     * Handle changes in a Set collection.
-    * @param map The underlying Set collection.
+    * @param repeat The repeat instance.
+    * @param set The underlying Set collection.
     * @param records The change records.
     */
   instanceMutated(repeat?: any, set?: any, records?: any): any;

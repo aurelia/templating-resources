@@ -1,5 +1,6 @@
+import * as LogManager from 'aurelia-logging';
 import {inject,Container,Optional} from 'aurelia-dependency-injection';
-import {BoundViewFactory,ViewSlot,customAttribute,templateController,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,noView,View,ViewEngine,Animator,TargetInstruction} from 'aurelia-templating';
+import {BoundViewFactory,ViewSlot,customAttribute,templateController,bindable,useView,customElement,ViewResources,resource,ViewCompileInstruction,CompositionEngine,CompositionContext,noView,View,ViewEngine,Animator,TargetInstruction} from 'aurelia-templating';
 import {createOverrideContext,bindingMode,EventManager,BindingBehavior,ValueConverter,sourceContext,DataAttributeObserver,mergeSplice,valueConverter,ObserverLocator} from 'aurelia-binding';
 import {TaskQueue} from 'aurelia-task-queue';
 import {DOM,FEATURE} from 'aurelia-pal';
@@ -363,81 +364,54 @@ export class NullRepeatStrategy {
 }
 
 /**
-* Binding to conditionally include or not include template logic depending on returned result
-* - value should be Boolean or will be treated as such (truthy / falsey)
+* For internal use only. May change without warning.
 */
-@customAttribute('if')
-@templateController
-@inject(BoundViewFactory, ViewSlot)
-export class If {
-  /**
-  * Creates an instance of If.
-  * @param {BoundViewFactory} viewFactory The factory generating the view
-  * @param {ViewSlot} viewSlot The slot the view is injected in to
-  */
+export class IfCore {
   constructor(viewFactory, viewSlot) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
-    this.showing = false;
     this.view = null;
     this.bindingContext = null;
     this.overrideContext = null;
+    // If the child view is animated, `value` might not reflect the internal
+    // state anymore, so we use `showing` for that.
+    // Eventually, `showing` and `value` should be consistent.
+    this.showing = false;
   }
 
-  /**
-  * Binds the if to the binding context and override context
-  * @param bindingContext The binding context
-  * @param overrideContext An override context for binding.
-  */
   bind(bindingContext, overrideContext) {
     // Store parent bindingContext, so we can pass it down
     this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;
-    this.valueChanged(this.value);
   }
 
-  /**
-  * Invoked everytime value property changes.
-  * @param newValue The new value
-  */
-  valueChanged(newValue) {
-    if (this.__queuedChanges) {
-      this.__queuedChanges.push(newValue);
+  unbind() {
+    if (this.view === null) {
       return;
     }
 
-    let maybePromise = this._runValueChanged(newValue);
-    if (maybePromise instanceof Promise) {
-      let queuedChanges = this.__queuedChanges = [];
+    this.view.unbind();
 
-      let runQueuedChanges = () => {
-        if (!queuedChanges.length) {
-          this.__queuedChanges = undefined;
-          return;
-        }
-
-        let nextPromise = this._runValueChanged(queuedChanges.shift()) || Promise.resolve();
-        nextPromise.then(runQueuedChanges);
-      };
-
-      maybePromise.then(runQueuedChanges);
+    // It seems to me that this code is subject to race conditions when animating.
+    // For example a view could be returned to the cache and reused while it's still
+    // attached to the DOM and animated.
+    if (!this.viewFactory.isCaching) {
+      return;
     }
+
+    if (this.showing) {
+      this.showing = false;
+      this.viewSlot.remove(this.view, /*returnToCache:*/true, /*skipAnimation:*/true);
+    } else {
+      this.view.returnToCache();
+    }
+
+    this.view = null;
   }
 
-  _runValueChanged(newValue) {
-    if (!newValue) {
-      let viewOrPromise;
-      if (this.view !== null && this.showing) {
-        viewOrPromise = this.viewSlot.remove(this.view);
-        if (viewOrPromise instanceof Promise) {
-          viewOrPromise.then(() => this.view.unbind());
-        } else {
-          this.view.unbind();
-        }
-      }
-
-      this.showing = false;
-      return viewOrPromise;
+  _show() {
+    if (this.showing) {
+      return;
     }
 
     if (this.view === null) {
@@ -448,34 +422,115 @@ export class If {
       this.view.bind(this.bindingContext, this.overrideContext);
     }
 
-    if (!this.showing) {
-      this.showing = true;
-      return this.viewSlot.add(this.view);
-    }
-
-    return undefined;
+    this.showing = true;
+    return this.viewSlot.add(this.view); // Promise or void
   }
 
-  /**
-  * Unbinds the if
-  */
-  unbind() {
-    if (this.view === null) {
+  _hide() {
+    if (!this.showing) {
       return;
+    }
+
+    this.showing = false;
+    let removed = this.viewSlot.remove(this.view); // Promise or View
+
+    if (removed instanceof Promise) {
+      return removed.then(() => this.view.unbind());
     }
 
     this.view.unbind();
+  }
+}
 
-    if (!this.viewFactory.isCaching) {
+/**
+* Binding to conditionally include or not include template logic depending on returned result
+* - value should be Boolean or will be treated as such (truthy / falsey)
+*/
+@customAttribute('if')
+@templateController
+@inject(BoundViewFactory, ViewSlot)
+export class If extends IfCore {
+  @bindable({ primaryProperty: true }) condition: any;
+  @bindable swapOrder: "before"|"with"|"after";
+
+  /**
+  * Binds the if to the binding context and override context
+  * @param bindingContext The binding context
+  * @param overrideContext An override context for binding.
+  */
+  bind(bindingContext, overrideContext) {
+    super.bind(bindingContext, overrideContext);
+    this.conditionChanged(this.condition);
+  }
+
+  /**
+  * Invoked everytime value property changes.
+  * @param newValue The new value
+  */
+  conditionChanged(newValue) {
+    this._update(newValue);
+  }
+
+  _update(show) {
+    if (this.animating) {
       return;
     }
 
-    if (this.showing) {
-      this.showing = false;
-      this.viewSlot.remove(this.view, true, true);
+    let promise;
+    if (this.else) {
+      promise = show ? this._swap(this.else, this) : this._swap(this, this.else);
+    } else {
+      promise = show ? this._show() : this._hide();
     }
-    this.view.returnToCache();
-    this.view = null;
+
+    if (promise) {
+      this.animating = true;
+      promise.then(() => {
+        this.animating = false;
+        if (this.condition !== this.showing) {
+          this._update(this.condition);
+        }
+      });
+    }
+  }
+
+  _swap(remove, add) {
+    switch (this.swapOrder) {
+    case 'before':
+      return Promise.resolve(add._show()).then(() => remove._hide());
+    case 'with':
+      return Promise.all([ remove._hide(), add._show() ]);
+    default:  // "after", default and unknown values
+      let promise = remove._hide();
+      return promise ? promise.then(() => add._show()) : add._show();
+    }
+  }
+}
+
+@customAttribute('else')
+@templateController
+@inject(BoundViewFactory, ViewSlot)
+export class Else extends IfCore {
+  constructor(viewFactory, viewSlot) {
+    super(viewFactory, viewSlot);
+    this._registerInIf();
+  }
+
+  _registerInIf() {
+    // We support the pattern <div if.bind="x"></div><div else></div>.
+    // Obvisouly between the two, we must accepts text (spaces) and comments.
+    // The `if` node is expected to be a comment anchor, because of `@templateController`.
+    // To simplify the code we basically walk up to the first Aurelia predecessor,
+    // so having static tags in between (no binding) would work but is not intended to be supported.
+    let previous = this.viewSlot.anchor.previousSibling;
+    while (previous && !previous.au) {
+      previous = previous.previousSibling;
+    }
+    if (!previous || !previous.au.if) {
+      throw new Error("Can't find matching If for Else custom attribute.");
+    }
+    let ifVm = previous.au.if.viewModel;
+    ifVm.else = this;
   }
 }
 
@@ -510,15 +565,6 @@ export class Focus {
     this.taskQueue = taskQueue;
     this.isAttached = false;
     this.needsApply = false;
-
-    this.focusListener = e => {
-      this.value = true;
-    };
-    this.blurListener = e => {
-      if (DOM.activeElement !== this.element) {
-        this.value = false;
-      }
-    };
   }
 
   /**
@@ -554,8 +600,8 @@ export class Focus {
       this.needsApply = false;
       this._apply();
     }
-    this.element.addEventListener('focus', this.focusListener);
-    this.element.addEventListener('blur', this.blurListener);
+    this.element.addEventListener('focus', this);
+    this.element.addEventListener('blur', this);
   }
 
   /**
@@ -563,8 +609,16 @@ export class Focus {
   */
   detached() {
     this.isAttached = false;
-    this.element.removeEventListener('focus', this.focusListener);
-    this.element.removeEventListener('blur', this.blurListener);
+    this.element.removeEventListener('focus', this);
+    this.element.removeEventListener('blur', this);
+  }
+
+  handleEvent(e) {
+    if (e.type === 'focus') {
+      this.value = true;
+    } else if (DOM.activeElement !== this.element) {
+      this.value = false;
+    }
   }
 }
 
@@ -696,7 +750,7 @@ class CSSViewEngineHooks {
     } else if (FEATURE.scopedCSS) {
       let styleNode = DOM.injectStyles(this.css, content, true);
       styleNode.setAttribute('scoped', 'scoped');
-    } else if (!this.owner._alreadyGloballyInjected) {
+    } else if (this._global && !this.owner._alreadyGloballyInjected) {
       DOM.injectStyles(this.css);
       this.owner._alreadyGloballyInjected = true;
     }
@@ -708,6 +762,8 @@ export function _createCSSResource(address: string): Function {
   class ViewCSS extends CSSViewEngineHooks {}
   return ViewCSS;
 }
+
+const logger = LogManager.getLogger('templating-resources');
 
 /**
 * Used to compose a new view / view-model template or bind to an existing instance.
@@ -722,24 +778,24 @@ export class Compose {
   * @property model
   * @type {CustomElement}
   */
-  @bindable model
+  @bindable model;
   /**
   * View to bind the custom element to.
   *
   * @property view
   * @type {HtmlElement}
   */
-  @bindable view
+  @bindable view;
   /**
   * View-model to bind the custom element's template to.
   *
   * @property viewModel
   * @type {Class}
   */
-  @bindable viewModel
+  @bindable viewModel;
 
   /**
-   * SwapOrder to control the swaping order of the custom element's view.
+   * SwapOrder to control the swapping order of the custom element's view.
    *
    * @property view
    * @type {String}
@@ -764,6 +820,7 @@ export class Compose {
     this.taskQueue = taskQueue;
     this.currentController = null;
     this.currentViewModel = null;
+    this.changes = Object.create(null);
   }
 
   /**
@@ -784,17 +841,18 @@ export class Compose {
   bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;
-    processInstruction(this, createInstruction(this, {
-      view: this.view,
-      viewModel: this.viewModel,
-      model: this.model
-    }));
+    this.changes.view = this.view;
+    this.changes.viewModel = this.viewModel;
+    this.changes.model = this.model;
+    processChanges(this);
   }
 
   /**
   * Unbinds the Compose.
   */
-  unbind(bindingContext, overrideContext) {
+  unbind() {
+    this.changes = Object.create(null);
+    this.pendingTask = null;
     this.bindingContext = null;
     this.overrideContext = null;
     let returnToCache = true;
@@ -808,23 +866,8 @@ export class Compose {
   * @param oldValue The old value.
   */
   modelChanged(newValue, oldValue) {
-    if (this.currentInstruction) {
-      this.currentInstruction.model = newValue;
-      return;
-    }
-
-    this.taskQueue.queueMicroTask(() => {
-      if (this.currentInstruction) {
-        this.currentInstruction.model = newValue;
-        return;
-      }
-
-      let vm = this.currentViewModel;
-
-      if (vm && typeof vm.activate === 'function') {
-        vm.activate(newValue);
-      }
-    });
+    this.changes.model = newValue;
+    requestUpdate(this);
   }
 
   /**
@@ -833,19 +876,8 @@ export class Compose {
   * @param oldValue The old value.
   */
   viewChanged(newValue, oldValue) {
-    let instruction = createInstruction(this, {
-      view: newValue,
-      viewModel: this.currentViewModel || this.viewModel,
-      model: this.model
-    });
-
-    if (this.currentInstruction) {
-      this.currentInstruction = instruction;
-      return;
-    }
-
-    this.currentInstruction = instruction;
-    this.taskQueue.queueMicroTask(() => processInstruction(this, this.currentInstruction));
+    this.changes.view = newValue;
+    requestUpdate(this);
   }
 
   /**
@@ -854,23 +886,25 @@ export class Compose {
     * @param oldValue The old value.
     */
   viewModelChanged(newValue, oldValue) {
-    let instruction = createInstruction(this, {
-      viewModel: newValue,
-      view: this.view,
-      model: this.model
-    });
-
-    if (this.currentInstruction) {
-      this.currentInstruction = instruction;
-      return;
-    }
-
-    this.currentInstruction = instruction;
-    this.taskQueue.queueMicroTask(() => processInstruction(this, this.currentInstruction));
+    this.changes.viewModel = newValue;
+    requestUpdate(this);
   }
 }
 
-function createInstruction(composer, instruction) {
+function isEmpty(obj) {
+  for (const key in obj) {
+    return false;
+  }
+  return true;
+}
+
+function tryActivateViewModel(vm, model) {
+  if (vm && typeof vm.activate === 'function') {
+    return Promise.resolve(vm.activate(model));
+  }
+}
+
+function createInstruction(composer: Compose, instruction: CompositionContext): CompositionContext {
   return Object.assign(instruction, {
     bindingContext: composer.bindingContext,
     overrideContext: composer.overrideContext,
@@ -884,11 +918,54 @@ function createInstruction(composer, instruction) {
   });
 }
 
-function processInstruction(composer, instruction) {
-  composer.currentInstruction = null;
-  composer.compositionEngine.compose(instruction).then(controller => {
-    composer.currentController = controller;
-    composer.currentViewModel = controller ? controller.viewModel : null;
+function processChanges(composer: Compose) {
+  const changes = composer.changes;
+  composer.changes = Object.create(null);
+
+  if (!('view' in changes) && !('viewModel' in changes) && ('model' in changes)) {
+    // just try to activate the current view model
+    composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
+    if (!composer.pendingTask) { return; }
+  } else {
+    // init context
+    let instruction = {
+      view: composer.view,
+      viewModel: composer.currentViewModel || composer.viewModel,
+      model: composer.model
+    };
+
+    // apply changes
+    instruction = Object.assign(instruction, changes);
+
+    // create context
+    instruction = createInstruction(composer, instruction);
+    composer.pendingTask = composer.compositionEngine.compose(instruction).then(controller => {
+      composer.currentController = controller;
+      composer.currentViewModel = controller ? controller.viewModel : null;
+    });
+  }
+
+  composer.pendingTask = composer.pendingTask.catch(e => {
+    logger.error(e);
+  }).then(() => {
+    if (!composer.pendingTask) {
+      // the element has been unbound
+      return;
+    }
+
+    composer.pendingTask = null;
+    if (!isEmpty(composer.changes)) {
+      processChanges(composer);
+    }
+  });
+}
+
+function requestUpdate(composer: Compose) {
+  if (composer.pendingTask || composer.updateRequested) { return; }
+  composer.updateRequested = true;
+  composer.taskQueue.queueMicroTask(() => {
+    composer.updateRequested = false;
+    processChanges(composer);
   });
 }
 
@@ -1458,6 +1535,7 @@ export class MapRepeatStrategy {
     let ii;
     let overrideContext;
     let removeIndex;
+    let addIndex;
     let record;
     let rmPromises = [];
     let viewOrPromise;
@@ -1476,7 +1554,8 @@ export class MapRepeatStrategy {
         repeat.insertView(removeIndex, overrideContext.bindingContext, overrideContext);
         break;
       case 'add':
-        overrideContext = createFullOverrideContext(repeat, map.get(key), map.size - 1, map.size, key);
+        addIndex = repeat.viewCount() <= map.size - 1 ? repeat.viewCount() : map.size - 1;
+        overrideContext = createFullOverrideContext(repeat, map.get(key), addIndex, map.size, key);
         repeat.insertView(map.size - 1, overrideContext.bindingContext, overrideContext);
         break;
       case 'delete':
@@ -1613,7 +1692,8 @@ export class SetRepeatStrategy {
 
   /**
   * Handle changes in a Set collection.
-  * @param map The underlying Set collection.
+  * @param repeat The repeat instance.
+  * @param set The underlying Set collection.
   * @param records The change records.
   */
   instanceMutated(repeat, set, records) {
@@ -1631,8 +1711,9 @@ export class SetRepeatStrategy {
       value = record.value;
       switch (record.type) {
       case 'add':
-        overrideContext = createFullOverrideContext(repeat, value, set.size - 1, set.size);
-        repeat.insertView(set.size - 1, overrideContext.bindingContext, overrideContext);
+        let size = Math.max(set.size - 1, 0);
+        overrideContext = createFullOverrideContext(repeat, value, size, set.size);
+        repeat.insertView(size, overrideContext.bindingContext, overrideContext);
         break;
       case 'delete':
         removeIndex = this._getViewIndexByValue(repeat, value);
@@ -2006,7 +2087,7 @@ export class Repeat extends AbstractRepeater {
     this.scope = null;
     this.items = null;
     this.matcherBinding = null;
-    this.viewSlot.removeAll(true);
+    this.viewSlot.removeAll(true, true);
     this._unsubscribeCollection();
   }
 

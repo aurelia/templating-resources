@@ -105,7 +105,7 @@ export var Repeat = (_dec = customAttribute('repeat'), _dec2 = inject(BoundViewF
     this.scope = null;
     this.items = null;
     this.matcherBinding = null;
-    this.viewSlot.removeAll(true);
+    this.viewSlot.removeAll(true, true);
     this._unsubscribeCollection();
   };
 

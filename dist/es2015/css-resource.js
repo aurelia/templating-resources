@@ -9,7 +9,7 @@ let cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
 function fixupCSSUrls(address, css) {
   if (typeof css !== 'string') {
-    throw new Error(`Failed loading required CSS file: ${ address }`);
+    throw new Error(`Failed loading required CSS file: ${address}`);
   }
   return css.replace(cssUrlMatcher, (match, p1) => {
     let quote = p1.charAt(0);
@@ -63,7 +63,7 @@ let CSSViewEngineHooks = class CSSViewEngineHooks {
     } else if (FEATURE.scopedCSS) {
       let styleNode = DOM.injectStyles(this.css, content, true);
       styleNode.setAttribute('scoped', 'scoped');
-    } else if (!this.owner._alreadyGloballyInjected) {
+    } else if (this._global && !this.owner._alreadyGloballyInjected) {
       DOM.injectStyles(this.css);
       this.owner._alreadyGloballyInjected = true;
     }

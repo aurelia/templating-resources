@@ -1,3 +1,23 @@
+<a name="1.5.0"></a>
+# [1.5.0](https://github.com/aurelia/templating-resources/compare/1.4.0...1.5.0) (2017-10-02)
+
+
+### Bug Fixes
+
+* **build:** build is not compatible with Node 8 ([a5cbd4d](https://github.com/aurelia/templating-resources/commit/a5cbd4d))
+* **compose:** await composition/activation ([685344e](https://github.com/aurelia/templating-resources/commit/685344e)), closes [#299](https://github.com/aurelia/templating-resources/issues/299) [#240](https://github.com/aurelia/templating-resources/issues/240)
+* **css-resource:** ensure only global styles get injected globally ([5513a36](https://github.com/aurelia/templating-resources/commit/5513a36)), closes [#304](https://github.com/aurelia/templating-resources/issues/304)
+* **repeat:** bug when "if.bind", "repeat.for" and animations are used in ([251a319](https://github.com/aurelia/templating-resources/commit/251a319))
+* **set-repeat-strategy:** fix negative index error with empty set ([5d6a464](https://github.com/aurelia/templating-resources/commit/5d6a464)), closes [#284](https://github.com/aurelia/templating-resources/issues/284)
+* **test:** failing tests after IfCustomAttribute refactoring ([c3c0990](https://github.com/aurelia/templating-resources/commit/c3c0990)), closes [#307](https://github.com/aurelia/templating-resources/issues/307)
+
+
+### Features
+
+* **templating:** else custom attribute ([8b0131a](https://github.com/aurelia/templating-resources/commit/8b0131a))
+
+
+
 <a name="1.4.0"></a>
 # [1.4.0](https://github.com/aurelia/templating-resources/compare/1.3.1...v1.4.0) (2017-04-05)
 

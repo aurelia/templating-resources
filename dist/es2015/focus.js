@@ -12,15 +12,6 @@ export let Focus = (_dec = customAttribute('focus', bindingMode.twoWay), _dec2 =
     this.taskQueue = taskQueue;
     this.isAttached = false;
     this.needsApply = false;
-
-    this.focusListener = e => {
-      this.value = true;
-    };
-    this.blurListener = e => {
-      if (DOM.activeElement !== this.element) {
-        this.value = false;
-      }
-    };
   }
 
   valueChanged(newValue) {
@@ -49,13 +40,21 @@ export let Focus = (_dec = customAttribute('focus', bindingMode.twoWay), _dec2 =
       this.needsApply = false;
       this._apply();
     }
-    this.element.addEventListener('focus', this.focusListener);
-    this.element.addEventListener('blur', this.blurListener);
+    this.element.addEventListener('focus', this);
+    this.element.addEventListener('blur', this);
   }
 
   detached() {
     this.isAttached = false;
-    this.element.removeEventListener('focus', this.focusListener);
-    this.element.removeEventListener('blur', this.blurListener);
+    this.element.removeEventListener('focus', this);
+    this.element.removeEventListener('blur', this);
+  }
+
+  handleEvent(e) {
+    if (e.type === 'focus') {
+      this.value = true;
+    } else if (DOM.activeElement !== this.element) {
+      this.value = false;
+    }
   }
 }) || _class) || _class);

@@ -94,7 +94,7 @@ export let Repeat = (_dec = customAttribute('repeat'), _dec2 = inject(BoundViewF
     this.scope = null;
     this.items = null;
     this.matcherBinding = null;
-    this.viewSlot.removeAll(true);
+    this.viewSlot.removeAll(true, true);
     this._unsubscribeCollection();
   }
 
@@ -116,7 +116,7 @@ export let Repeat = (_dec = customAttribute('repeat'), _dec2 = inject(BoundViewF
     let items = this.items;
     this.strategy = this.strategyLocator.getStrategy(items);
     if (!this.strategy) {
-      throw new Error(`Value for '${ this.sourceExpression }' is non-repeatable`);
+      throw new Error(`Value for '${this.sourceExpression}' is non-repeatable`);
     }
 
     if (!this.isOneTime && !this._observeInnerCollection()) {

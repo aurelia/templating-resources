@@ -31,6 +31,7 @@ export let MapRepeatStrategy = class MapRepeatStrategy {
     let ii;
     let overrideContext;
     let removeIndex;
+    let addIndex;
     let record;
     let rmPromises = [];
     let viewOrPromise;
@@ -49,7 +50,8 @@ export let MapRepeatStrategy = class MapRepeatStrategy {
           repeat.insertView(removeIndex, overrideContext.bindingContext, overrideContext);
           break;
         case 'add':
-          overrideContext = createFullOverrideContext(repeat, map.get(key), map.size - 1, map.size, key);
+          addIndex = repeat.viewCount() <= map.size - 1 ? repeat.viewCount() : map.size - 1;
+          overrideContext = createFullOverrideContext(repeat, map.get(key), addIndex, map.size, key);
           repeat.insertView(map.size - 1, overrideContext.bindingContext, overrideContext);
           break;
         case 'delete':

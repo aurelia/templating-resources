@@ -2,7 +2,7 @@ import { FEATURE, DOM } from 'aurelia-pal';
 
 export const aureliaHideClassName = 'aurelia-hide';
 
-const aureliaHideClass = `.${ aureliaHideClassName } { display:none !important; }`;
+const aureliaHideClass = `.${aureliaHideClassName} { display:none !important; }`;
 
 export function injectAureliaHideStyleAtHead() {
   DOM.injectStyles(aureliaHideClass);
