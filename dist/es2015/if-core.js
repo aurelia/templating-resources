@@ -23,6 +23,7 @@ export let IfCore = class IfCore {
     this.view.unbind();
 
     if (!this.viewFactory.isCaching) {
+      this.showing = false;
       return;
     }
 
