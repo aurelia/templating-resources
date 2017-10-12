@@ -27,7 +27,7 @@ describe('else', () => {
     elseVm.view = new ViewMock();
   });
 
-  fit('should render when initial condition is false', () => {
+  it('should render when initial condition is false', () => {
     ifVm.showing = false;
     elseVm.showing = false;
 
@@ -55,7 +55,7 @@ describe('else', () => {
     expect(elseVm.view.bind).toHaveBeenCalled();
   });
 
-  fit('should not render when initial condition is true', () => {
+  it('should not render when initial condition is true', () => {
     ifVm.showing = false;
     elseVm.showing = false;
 
@@ -83,7 +83,7 @@ describe('else', () => {
     expect(ifVm.view.bind).toHaveBeenCalled();
   });
 
-  fit('should render when condition changes to false', () => {
+  it('should render when condition changes to false', () => {
     ifVm.showing = false;
     elseVm.showing = false;
 
@@ -118,7 +118,7 @@ describe('else', () => {
     expect(elseVm.view.bind).toHaveBeenCalled();
   });
 
-  fit('should render when condition changes to true', () => {
+  it('should render when condition changes to true', () => {
     ifVm.showing = false;
     elseVm.showing = false;
 
