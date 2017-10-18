@@ -13,11 +13,6 @@ export class Else extends IfCore {
 
   bind(bindingContext, overrideContext) {
     super.bind(bindingContext, overrideContext);
-
-    if (!this.ifVm) {
-      throw new Error('There must be a node with an if attribute before the else attribute');
-    }
-
     this.ifVm.conditionChanged(this.ifVm.condition);
   }
 
@@ -35,6 +30,6 @@ export class Else extends IfCore {
       throw new Error("Can't find matching If for Else custom attribute.");
     }
     this.ifVm = previous.au.if.viewModel;
-    this.ifVm.else = this;
+    this.ifVm.elseVm = this;
   }
 }

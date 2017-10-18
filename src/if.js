@@ -21,7 +21,7 @@ export class If extends IfCore {
   bind(bindingContext, overrideContext) {
     super.bind(bindingContext, overrideContext);
     // Else attribute will trigger change when it's bound
-    if (!this.else || this.else.isBound) {
+    if (!this.elseVm || this.elseVm.isBound) {
       this.conditionChanged(this.condition);
     }
   }
@@ -40,8 +40,8 @@ export class If extends IfCore {
     }
 
     let promise;
-    if (this.else) {
-      promise = show ? this._swap(this.else, this) : this._swap(this, this.else);
+    if (this.elseVm) {
+      promise = show ? this._swap(this.elseVm, this) : this._swap(this, this.elseVm);
     } else {
       promise = show ? this._show() : this._hide();
     }
