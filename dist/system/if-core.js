@@ -36,7 +36,6 @@ System.register([], function (_export, _context) {
           this.view.unbind();
 
           if (!this.viewFactory.isCaching) {
-            this.showing = false;
             return;
           }
 

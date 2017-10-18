@@ -33,7 +33,6 @@ define(["exports"], function (exports) {
       this.view.unbind();
 
       if (!this.viewFactory.isCaching) {
-        this.showing = false;
         return;
       }
 
