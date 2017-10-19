@@ -28,6 +28,60 @@ describe('if', () => {
     expect(sut.showing).toBe(false);
   });
 
+  it('should correctly unbind and remove view when showing and being unbound itself', () => {
+    let view = new ViewMock();
+    sut.view = view;
+    sut.showing = true;
+    viewFactory.isCaching = true;
+    spyOn(viewSlot, 'remove');
+    spyOn(view, 'unbind');
+
+    sut.unbind();
+    taskQueue.flushMicroTaskQueue();
+
+    expect(view.unbind).toHaveBeenCalled();
+    expect(viewSlot.remove).toHaveBeenCalledWith(view, true, true);
+    expect(sut.showing).toBe(false);
+    expect(sut.view).toBeNull();
+  });
+
+  it('should correctly unbind view and return it to cache when not showing and being unbound itself', () => {
+    let view = new ViewMock();
+    sut.view = view;
+    sut.showing = false;
+    viewFactory.isCaching = true;
+    spyOn(viewSlot, 'remove');
+    spyOn(view, 'unbind');
+    spyOn(view, 'returnToCache');
+
+    sut.unbind();
+    taskQueue.flushMicroTaskQueue();
+
+    expect(view.unbind).toHaveBeenCalled();
+    expect(viewSlot.remove).not.toHaveBeenCalled();
+    expect(view.returnToCache).toHaveBeenCalled();
+    expect(sut.view).toBeNull();
+  });
+
+  it('should correctly unbind view without removing it when viewFactory is caching and being unbound itself', () => {
+    let view = new ViewMock();
+    sut.view = view;
+    sut.showing = true;
+    viewFactory.isCaching = false;
+    spyOn(viewSlot, 'remove');
+    spyOn(view, 'unbind');
+    spyOn(view, 'returnToCache');
+
+    sut.unbind();
+    taskQueue.flushMicroTaskQueue();
+
+    expect(sut.showing).toBeFalsy();
+    expect(view.unbind).toHaveBeenCalled();
+    expect(viewSlot.remove).not.toHaveBeenCalled();
+    expect(view.returnToCache).not.toHaveBeenCalled();
+    expect(sut.view).not.toBeNull();
+  });
+
   it('should do nothing when not showing and provided value is falsy', () => {
     let view = new ViewMock();
     sut.view = view;
@@ -147,6 +201,7 @@ class ViewSlotMock {
 class ViewMock {
   bind() {}
   unbind() {}
+  returnToCache() {}
 }
 
 class BoundViewFactoryMock {
