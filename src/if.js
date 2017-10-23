@@ -20,9 +20,8 @@ export class If extends IfCore {
   */
   bind(bindingContext, overrideContext) {
     super.bind(bindingContext, overrideContext);
-    // Else attribute will trigger change when it's bound
-    if (!this.elseVm || this.elseVm.isBound) {
-      this.conditionChanged(this.condition);
+    if (this.condition) {
+      this._show();
     }
   }
 

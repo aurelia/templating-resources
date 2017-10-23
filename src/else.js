@@ -13,7 +13,10 @@ export class Else extends IfCore {
 
   bind(bindingContext, overrideContext) {
     super.bind(bindingContext, overrideContext);
-    this.ifVm.conditionChanged(this.ifVm.condition);
+    // Render on initial
+    if (!this.ifVm.condition) {
+      this._show();
+    }
   }
 
   _registerInIf() {

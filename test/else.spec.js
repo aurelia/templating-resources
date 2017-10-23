@@ -38,21 +38,14 @@ describe('else', () => {
 
     ifVm.condition = false;
     ifVm.bind();
-    // Nothing should happen yet since else is not bound yet
-    expect(ifViewSlot.add).not.toHaveBeenCalled();
-    expect(ifVm.view.bind).not.toHaveBeenCalled();
-    expect(elseViewSlot.add).not.toHaveBeenCalled();
-    expect(elseVm.view.bind).not.toHaveBeenCalled();
-
-    elseVm.isBound = true;
     elseVm.bind();
     // Else should be shown now
     expect(ifVm.showing).toBeFalsy();
     expect(ifViewSlot.add).not.toHaveBeenCalled();
     expect(ifVm.view.bind).not.toHaveBeenCalled();
     expect(elseVm.showing).toBeTruthy();
-    expect(elseViewSlot.add).toHaveBeenCalled();
-    expect(elseVm.view.bind).toHaveBeenCalled();
+    expect(elseViewSlot.add).toHaveBeenCalledTimes(1);
+    expect(elseVm.view.bind).toHaveBeenCalledTimes(1);
   });
 
   it('should not render when initial condition is true', () => {
@@ -66,21 +59,14 @@ describe('else', () => {
 
     ifVm.condition = true;
     ifVm.bind();
-    // Nothing should happen yet since else is not bound yet
-    expect(elseViewSlot.add).not.toHaveBeenCalled();
-    expect(elseVm.view.bind).not.toHaveBeenCalled();
-    expect(ifViewSlot.add).not.toHaveBeenCalled();
-    expect(ifVm.view.bind).not.toHaveBeenCalled();
-
-    elseVm.isBound = true;
     elseVm.bind();
     // If should be shown now
     expect(elseVm.showing).toBeFalsy();
     expect(elseViewSlot.add).not.toHaveBeenCalled(); // Was not added yet
     expect(elseVm.view.bind).not.toHaveBeenCalled(); // Was not added yet
     expect(ifVm.showing).toBeTruthy();
-    expect(ifViewSlot.add).toHaveBeenCalled();
-    expect(ifVm.view.bind).toHaveBeenCalled();
+    expect(ifViewSlot.add).toHaveBeenCalledTimes(1);
+    expect(ifVm.view.bind).toHaveBeenCalledTimes(1);
   });
 
   it('should render when condition changes to false', () => {
@@ -96,26 +82,25 @@ describe('else', () => {
 
     ifVm.condition = true;
     ifVm.bind();
-    elseVm.isBound = true;
     elseVm.bind();
     // Nothing should happen yet since else is not bound yet
     expect(ifVm.showing).toBeTruthy();
-    expect(ifViewSlot.add).toHaveBeenCalled();
-    expect(ifVm.view.bind).toHaveBeenCalled();
+    expect(ifViewSlot.add).toHaveBeenCalledTimes(1);
+    expect(ifVm.view.bind).toHaveBeenCalledTimes(1);
     expect(elseVm.showing).toBeFalsy();
     expect(elseViewSlot.add).not.toHaveBeenCalled();
     expect(elseVm.view.bind).not.toHaveBeenCalled();
 
     ifVm.condition = false;
-    ifVm.bind();
+    ifVm.conditionChanged(false);
 
     // Else should be shown now and if should be removed
     expect(ifVm.showing).toBeFalsy();
-    expect(ifViewSlot.remove).toHaveBeenCalled(); // Was not added yet
-    expect(ifVm.view.unbind).toHaveBeenCalled(); // Was not added yet
+    expect(ifViewSlot.remove).toHaveBeenCalledTimes(1);
+    expect(ifVm.view.unbind).toHaveBeenCalledTimes(1);
     expect(elseVm.showing).toBeTruthy();
-    expect(elseViewSlot.add).toHaveBeenCalled();
-    expect(elseVm.view.bind).toHaveBeenCalled();
+    expect(elseViewSlot.add).toHaveBeenCalledTimes(1);
+    expect(elseVm.view.bind).toHaveBeenCalledTimes(1);
   });
 
   it('should render when condition changes to true', () => {
@@ -131,25 +116,24 @@ describe('else', () => {
 
     ifVm.condition = false;
     ifVm.bind();
-    elseVm.isBound = true;
     elseVm.bind();
     // Nothing should happen yet since else is not bound yet
     expect(ifVm.showing).toBeFalsy();
     expect(ifViewSlot.add).not.toHaveBeenCalled();
     expect(ifVm.view.bind).not.toHaveBeenCalled();
     expect(elseVm.showing).toBeTruthy();
-    expect(elseViewSlot.add).toHaveBeenCalled();
-    expect(elseVm.view.bind).toHaveBeenCalled();
+    expect(elseViewSlot.add).toHaveBeenCalledTimes(1);
+    expect(elseVm.view.bind).toHaveBeenCalledTimes(1);
 
     ifVm.condition = true;
-    ifVm.bind();
+    ifVm.conditionChanged(true);
 
     // Else should be shown now and if should be removed
     expect(ifVm.showing).toBeTruthy();
-    expect(ifViewSlot.add).toHaveBeenCalled(); // Was not added yet
-    expect(ifVm.view.bind).toHaveBeenCalled(); // Was not added yet
+    expect(ifViewSlot.add).toHaveBeenCalledTimes(1);
+    expect(ifVm.view.bind).toHaveBeenCalledTimes(1);
     expect(elseVm.showing).toBeFalsy();
-    expect(elseViewSlot.remove).toHaveBeenCalled();
-    expect(elseVm.view.unbind).toHaveBeenCalled();
+    expect(elseViewSlot.remove).toHaveBeenCalledTimes(1);
+    expect(elseVm.view.unbind).toHaveBeenCalledTimes(1);
   });
 });
