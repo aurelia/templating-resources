@@ -1,3 +1,14 @@
+<a name="1.5.2"></a>
+## [1.5.2](https://github.com/aurelia/templating-resources/compare/1.5.1...1.5.2) (2017-10-23)
+
+
+### Bug Fixes
+
+* **if-core.js:** child view re-binding issue ([82cb331](https://github.com/aurelia/templating-resources/commit/82cb331))
+* **if-core.js:** child view re-binding issue ([1c107ac](https://github.com/aurelia/templating-resources/commit/1c107ac))
+
+
+
 <a name="1.5.1"></a>
 ## [1.5.1](https://github.com/aurelia/templating-resources/compare/1.5.0...1.5.1) (2017-10-02)
 

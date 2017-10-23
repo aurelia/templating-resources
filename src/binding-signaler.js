@@ -3,7 +3,7 @@ import {sourceContext} from 'aurelia-binding';
 export class BindingSignaler {
   signals = {};
 
-  signal(name) {
+  signal(name: string): void {
     let bindings = this.signals[name];
     if (!bindings) {
       return;

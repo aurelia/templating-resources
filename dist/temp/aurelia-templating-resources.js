@@ -420,6 +420,7 @@ var IfCore = exports.IfCore = function () {
     this.view.unbind();
 
     if (!this.viewFactory.isCaching) {
+      this.showing = false;
       return;
     }
 
