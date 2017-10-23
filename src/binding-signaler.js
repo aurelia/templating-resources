@@ -1,13 +1,16 @@
-import {signalBindings} from 'aurelia-binding';
-import * as LogManager from 'aurelia-logging';
+import {sourceContext} from 'aurelia-binding';
 
 export class BindingSignaler {
-  constructor() {
-    LogManager.getLogger('binding-signaler')
-      .warn('Binding signaler signal has been deprecated. Please use \"import {signalBindings} from \'aurelia-binding\'\" instead.');
-  }
+  signals = {};
 
-  signal(name: string): void {
-    signalBindings(name);
+  signal(name) {
+    let bindings = this.signals[name];
+    if (!bindings) {
+      return;
+    }
+    let i = bindings.length;
+    while (i--) {
+      bindings[i].call(sourceContext);
+    }
   }
 }
