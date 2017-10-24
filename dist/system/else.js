@@ -55,6 +55,14 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', './if-cor
           return _this;
         }
 
+        Else.prototype.bind = function bind(bindingContext, overrideContext) {
+          _IfCore.prototype.bind.call(this, bindingContext, overrideContext);
+
+          if (!this.ifVm.condition) {
+            this._show();
+          }
+        };
+
         Else.prototype._registerInIf = function _registerInIf() {
           var previous = this.viewSlot.anchor.previousSibling;
           while (previous && !previous.au) {
@@ -63,8 +71,8 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', './if-cor
           if (!previous || !previous.au.if) {
             throw new Error("Can't find matching If for Else custom attribute.");
           }
-          var ifVm = previous.au.if.viewModel;
-          ifVm.else = this;
+          this.ifVm = previous.au.if.viewModel;
+          this.ifVm.elseVm = this;
         };
 
         return Else;

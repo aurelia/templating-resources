@@ -527,6 +527,7 @@ export declare class SetRepeatStrategy {
 }
 export declare class Else extends IfCore {
   constructor(viewFactory?: any, viewSlot?: any);
+  bind(bindingContext?: any, overrideContext?: any): any;
 }
 
 /**

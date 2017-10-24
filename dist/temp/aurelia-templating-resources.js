@@ -1550,6 +1550,14 @@ var Else = exports.Else = (_dec15 = (0, _aureliaTemplating.customAttribute)('els
     return _this13;
   }
 
+  Else.prototype.bind = function bind(bindingContext, overrideContext) {
+    _IfCore.prototype.bind.call(this, bindingContext, overrideContext);
+
+    if (!this.ifVm.condition) {
+      this._show();
+    }
+  };
+
   Else.prototype._registerInIf = function _registerInIf() {
     var previous = this.viewSlot.anchor.previousSibling;
     while (previous && !previous.au) {
@@ -1558,8 +1566,8 @@ var Else = exports.Else = (_dec15 = (0, _aureliaTemplating.customAttribute)('els
     if (!previous || !previous.au.if) {
       throw new Error("Can't find matching If for Else custom attribute.");
     }
-    var ifVm = previous.au.if.viewModel;
-    ifVm.else = this;
+    this.ifVm = previous.au.if.viewModel;
+    this.ifVm.elseVm = this;
   };
 
   return Else;
@@ -1581,7 +1589,9 @@ var If = exports.If = (_dec17 = (0, _aureliaTemplating.customAttribute)('if'), _
 
   If.prototype.bind = function bind(bindingContext, overrideContext) {
     _IfCore2.prototype.bind.call(this, bindingContext, overrideContext);
-    this.conditionChanged(this.condition);
+    if (this.condition) {
+      this._show();
+    }
   };
 
   If.prototype.conditionChanged = function conditionChanged(newValue) {
@@ -1596,8 +1606,8 @@ var If = exports.If = (_dec17 = (0, _aureliaTemplating.customAttribute)('if'), _
     }
 
     var promise = void 0;
-    if (this.else) {
-      promise = show ? this._swap(this.else, this) : this._swap(this, this.else);
+    if (this.elseVm) {
+      promise = show ? this._swap(this.elseVm, this) : this._swap(this, this.elseVm);
     } else {
       promise = show ? this._show() : this._hide();
     }

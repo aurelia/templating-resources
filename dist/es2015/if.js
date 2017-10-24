@@ -56,7 +56,9 @@ export let If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
 
   bind(bindingContext, overrideContext) {
     super.bind(bindingContext, overrideContext);
-    this.conditionChanged(this.condition);
+    if (this.condition) {
+      this._show();
+    }
   }
 
   conditionChanged(newValue) {
@@ -69,8 +71,8 @@ export let If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
     }
 
     let promise;
-    if (this.else) {
-      promise = show ? this._swap(this.else, this) : this._swap(this, this.else);
+    if (this.elseVm) {
+      promise = show ? this._swap(this.elseVm, this) : this._swap(this, this.elseVm);
     } else {
       promise = show ? this._show() : this._hide();
     }

@@ -1,3 +1,16 @@
+<a name="1.5.3"></a>
+## [1.5.3](https://github.com/aurelia/templating-resources/compare/1.5.2...1.5.3) (2017-10-24)
+
+
+### Bug Fixes
+
+* **if-else:** Fixed missing binding context when rendering else block ([e55fdf9](https://github.com/aurelia/templating-resources/commit/e55fdf9))
+* **if-else:** Fixed typo and removed obsolete error ([18a4e7e](https://github.com/aurelia/templating-resources/commit/18a4e7e))
+* **if-else:** Removed fit in tests ([39fb831](https://github.com/aurelia/templating-resources/commit/39fb831))
+* **if-else:** Simplified initial condition check ([2103aca](https://github.com/aurelia/templating-resources/commit/2103aca))
+
+
+
 <a name="1.5.2"></a>
 ## [1.5.2](https://github.com/aurelia/templating-resources/compare/1.5.1...1.5.2) (2017-10-23)
 

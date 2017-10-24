@@ -10,6 +10,14 @@ export let Else = (_dec = customAttribute('else'), _dec2 = inject(BoundViewFacto
     this._registerInIf();
   }
 
+  bind(bindingContext, overrideContext) {
+    super.bind(bindingContext, overrideContext);
+
+    if (!this.ifVm.condition) {
+      this._show();
+    }
+  }
+
   _registerInIf() {
     let previous = this.viewSlot.anchor.previousSibling;
     while (previous && !previous.au) {
@@ -18,7 +26,7 @@ export let Else = (_dec = customAttribute('else'), _dec2 = inject(BoundViewFacto
     if (!previous || !previous.au.if) {
       throw new Error("Can't find matching If for Else custom attribute.");
     }
-    let ifVm = previous.au.if.viewModel;
-    ifVm.else = this;
+    this.ifVm = previous.au.if.viewModel;
+    this.ifVm.elseVm = this;
   }
 }) || _class) || _class) || _class);

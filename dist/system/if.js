@@ -104,7 +104,9 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', './if-cor
 
         If.prototype.bind = function bind(bindingContext, overrideContext) {
           _IfCore.prototype.bind.call(this, bindingContext, overrideContext);
-          this.conditionChanged(this.condition);
+          if (this.condition) {
+            this._show();
+          }
         };
 
         If.prototype.conditionChanged = function conditionChanged(newValue) {
@@ -119,8 +121,8 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', './if-cor
           }
 
           var promise = void 0;
-          if (this.else) {
-            promise = show ? this._swap(this.else, this) : this._swap(this, this.else);
+          if (this.elseVm) {
+            promise = show ? this._swap(this.elseVm, this) : this._swap(this, this.elseVm);
           } else {
             promise = show ? this._show() : this._hide();
           }
