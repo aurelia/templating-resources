@@ -11,6 +11,14 @@ export class Else extends IfCore {
     this._registerInIf();
   }
 
+  bind(bindingContext, overrideContext) {
+    super.bind(bindingContext, overrideContext);
+    // Render on initial
+    if (!this.ifVm.condition) {
+      this._show();
+    }
+  }
+
   _registerInIf() {
     // We support the pattern <div if.bind="x"></div><div else></div>.
     // Obvisouly between the two, we must accepts text (spaces) and comments.
@@ -24,7 +32,7 @@ export class Else extends IfCore {
     if (!previous || !previous.au.if) {
       throw new Error("Can't find matching If for Else custom attribute.");
     }
-    let ifVm = previous.au.if.viewModel;
-    ifVm.else = this;
+    this.ifVm = previous.au.if.viewModel;
+    this.ifVm.elseVm = this;
   }
 }
