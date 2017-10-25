@@ -31,7 +31,6 @@ export class IfCore {
     // For example a view could be returned to the cache and reused while it's still
     // attached to the DOM and animated.
     if (!this.viewFactory.isCaching) {
-	    this.showing = false;
       return;
     }
 
@@ -45,8 +44,8 @@ export class IfCore {
     this.view = null;
   }
 
-  _show() {
-    if (this.showing) {
+  _show(force) {
+    if (this.showing && !force) {
       return;
     }
 

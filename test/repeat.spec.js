@@ -69,7 +69,7 @@ describe('repeat', () => {
       spyOn(viewSlot, 'removeAll');
       repeat.unbind();
 
-      expect(viewSlot.removeAll).toHaveBeenCalledWith(true);
+      expect(viewSlot.removeAll).toHaveBeenCalledWith(true, true);
     });
 
     it('should unsubscribe collection', () => {
