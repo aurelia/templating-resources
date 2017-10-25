@@ -63,25 +63,6 @@ describe('if', () => {
     expect(sut.view).toBeNull();
   });
 
-  it('should correctly unbind view without removing it when viewFactory is caching and being unbound itself', () => {
-    let view = new ViewMock();
-    sut.view = view;
-    sut.showing = true;
-    viewFactory.isCaching = false;
-    spyOn(viewSlot, 'remove');
-    spyOn(view, 'unbind');
-    spyOn(view, 'returnToCache');
-
-    sut.unbind();
-    taskQueue.flushMicroTaskQueue();
-
-    expect(sut.showing).toBeFalsy();
-    expect(view.unbind).toHaveBeenCalled();
-    expect(viewSlot.remove).not.toHaveBeenCalled();
-    expect(view.returnToCache).not.toHaveBeenCalled();
-    expect(sut.view).not.toBeNull();
-  });
-
   it('should do nothing when not showing and provided value is falsy', () => {
     let view = new ViewMock();
     sut.view = view;
@@ -120,6 +101,21 @@ describe('if', () => {
 
     expect(viewFactory.create).toHaveBeenCalled();
     expect(newView.bind).toHaveBeenCalledWith(42, 24);
+  });
+
+  it('should rebind view if it\'s not bound when being bound itself', () => {
+    sut.condition = true;
+    sut.showing = true;
+    sut.view = {isBound: false, bind: jasmine.createSpy('bind')};
+    let bindingContext = 42;
+    let overrideContext = 24;
+
+    spyOn(sut, '_show').and.callThrough();
+
+    sut.bind(bindingContext, overrideContext);
+
+    expect(sut._show).toHaveBeenCalledWith(true);
+    expect(sut.view.bind).toHaveBeenCalledWith(42, 24);
   });
 
   it('should show the view when provided value is truthy and currently not showing', () => {
