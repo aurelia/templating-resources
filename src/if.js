@@ -23,6 +23,9 @@ export class If extends IfCore {
     if (this.condition) {
       this._show();
     }
+    else {
+      this._hide();
+    }
   }
 
   /**

@@ -75,7 +75,7 @@ describe('if', () => {
     sut.unbind();
     taskQueue.flushMicroTaskQueue();
 
-    expect(sut.showing).toBeFalsy();
+    expect(sut.showing).toBeTruthy();
     expect(view.unbind).toHaveBeenCalled();
     expect(viewSlot.remove).not.toHaveBeenCalled();
     expect(view.returnToCache).not.toHaveBeenCalled();
@@ -189,7 +189,7 @@ describe('if', () => {
         expect(viewSlot.children.length).toEqual(1);
       })
       .then(() => done())
-    })
+    });
   });
 });
 
