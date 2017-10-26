@@ -224,7 +224,7 @@ describe('if', () => {
     });
   });
 
-  describe('in a nested situation', () => {
+  xdescribe('in a nested situation', () => {
     let component;
     let model;
 
