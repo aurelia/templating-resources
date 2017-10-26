@@ -122,6 +122,36 @@ describe('if', () => {
     expect(newView.bind).toHaveBeenCalledWith(42, 24);
   });
 
+  it('should rebind child-view if needed when being bound itself and condition is truthy', () => {
+    sut.condition = true;
+    sut.showing = true;
+    sut.view = {isBound: false, bind: jasmine.createSpy('bind')};
+    let bindingContext = 42;
+    let overrideContext = 24;
+
+    spyOn(sut, '_show').and.callThrough();
+
+    sut.bind(bindingContext, overrideContext);
+
+    expect(sut._show).toHaveBeenCalled();
+    expect(sut.view.bind).toHaveBeenCalledWith(42, 24);
+  });
+
+  it('should unbind the child-view when being bound itself and condition is falsy', () => {
+    sut.condition = false;
+    sut.showing = true;
+    sut.view = {isBound: false, unbind: jasmine.createSpy('unbind')};
+    let bindingContext = 42;
+    let overrideContext = 24;
+
+    spyOn(sut, '_hide').and.callThrough();
+
+    sut.bind(bindingContext, overrideContext);
+
+    expect(sut._hide).toHaveBeenCalled();
+    expect(sut.view.unbind).toHaveBeenCalled();
+  });
+
   it('should show the view when provided value is truthy and currently not showing', () => {
     sut.showing = false;
     sut.view = new ViewMock();

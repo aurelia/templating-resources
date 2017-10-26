@@ -46,12 +46,12 @@ export class IfCore {
 
   _show() {
     if (this.showing) {
-      // Ensures the view is bound. 
+      // Ensures the view is bound.
       // It might not be the case when the if was unbound but not detached, then rebound.
       // Typical case where this happens is nested ifs
       if (!this.view.isBound) {
         this.view.bind(this.bindingContext, this.overrideContext);
-      }      
+      }
       return;
     }
 

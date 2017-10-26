@@ -16,8 +16,7 @@ export class Else extends IfCore {
     // Render on initial
     if (this.ifVm.condition) {
       this._hide();
-    }
-    else {
+    } else {
       this._show();
     }
   }
