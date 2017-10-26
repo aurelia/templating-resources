@@ -2,6 +2,8 @@ import './setup';
 import {If} from '../src/if';
 import {BoundViewFactory, ViewSlot, View} from 'aurelia-templating';
 import {TaskQueue} from 'aurelia-task-queue';
+import {bootstrap} from 'aurelia-bootstrapper';
+import {ComponentTester} from 'aurelia-testing';
 
 describe('if', () => {
   let viewSlot, taskQueue, sut, viewFactory;
@@ -122,6 +124,36 @@ describe('if', () => {
     expect(newView.bind).toHaveBeenCalledWith(42, 24);
   });
 
+  it('should rebind child-view if needed when being bound itself and condition is truthy', () => {
+    sut.condition = true;
+    sut.showing = true;
+    sut.view = {isBound: false, bind: jasmine.createSpy('bind')};
+    let bindingContext = 42;
+    let overrideContext = 24;
+
+    spyOn(sut, '_show').and.callThrough();
+
+    sut.bind(bindingContext, overrideContext);
+
+    expect(sut._show).toHaveBeenCalled();
+    expect(sut.view.bind).toHaveBeenCalledWith(42, 24);
+  });
+
+  it('should unbind the child-view when being bound itself and condition is falsy', () => {
+    sut.condition = false;
+    sut.showing = true;
+    sut.view = {isBound: false, unbind: jasmine.createSpy('unbind')};
+    let bindingContext = 42;
+    let overrideContext = 24;
+
+    spyOn(sut, '_hide').and.callThrough();
+
+    sut.bind(bindingContext, overrideContext);
+
+    expect(sut._hide).toHaveBeenCalled();
+    expect(sut.view.unbind).toHaveBeenCalled();
+  });
+
   it('should show the view when provided value is truthy and currently not showing', () => {
     sut.showing = false;
     sut.view = new ViewMock();
@@ -188,14 +220,85 @@ describe('if', () => {
       }).then(() => {
         expect(viewSlot.children.length).toEqual(1);
       })
-      .then(() => done())
+      .then(() => done());
+    });
+  });
+
+  describe('in a nested situation', () => {
+    let component;
+    let model;
+
+    beforeEach(() => {
+      model = { a: true, b: true, clicked() { } };
+      component = new ComponentTester();
+      component.bootstrap(aurelia => {
+        aurelia.use.standardConfiguration();
+        taskQueue = aurelia.container.get(TaskQueue);
+      });
+      component
+        .withResources('test/if-test')
+        .inView(`<div ift.bind="a" id="a">
+                  <div ift.bind="b" id="b" click.delegate="clicked()">
+                  </div>
+                </div>`)
+        .boundTo(model);
+    });
+
+    afterEach(() => component.dispose());
+
+    it('should rebind even if the view is visible; issue #317', done => {
+      let spy;
+      component.create(bootstrap)
+        .then(_ => {
+          spy = spyOn(model, 'clicked');
+          model.a = false;
+          taskQueue.flushMicroTaskQueue();
+
+          // This is horrible, but the only way I found to get things working
+          return new Promise(r => setTimeout(r, 1));
+        }).then(() => {
+          model.a = true;
+          taskQueue.flushMicroTaskQueue();
+          return new Promise(r => setTimeout(r, 1));
+        }).then(() => {
+          document.getElementById('b').click();
+
+          expect(spy).toHaveBeenCalled();
+          done();
+        })
+        .catch(e => {
+          fail(e);
+          done();
+        });
+    });
+
+    it('should update view when rebound; issue #328', done => {
+      component.create(bootstrap)
+        .then(_ => {
+          model.a = false;
+          taskQueue.flushMicroTaskQueue();
+          return new Promise(r => setTimeout(r, 1));
+        }).then(() => {
+          model.b = false;
+          model.a = true;
+          taskQueue.flushMicroTaskQueue();
+          return new Promise(r => setTimeout(r, 1));
+        }).then(() => {
+          expect(document.getElementById('a')).not.toBeNull();
+          expect(document.getElementById('b')).toBeNull();
+          done();
+        })
+        .catch(e => {
+          fail(e);
+          done();
+        });
     });
   });
 });
 
 class ViewSlotMock {
   remove() {}
-  add () {}
+  add() {}
 }
 
 class ViewMock {
