@@ -25,7 +25,9 @@ export var Else = (_dec = customAttribute('else'), _dec2 = inject(BoundViewFacto
   Else.prototype.bind = function bind(bindingContext, overrideContext) {
     _IfCore.prototype.bind.call(this, bindingContext, overrideContext);
 
-    if (!this.ifVm.condition) {
+    if (this.ifVm.condition) {
+      this._hide();
+    } else {
       this._show();
     }
   };

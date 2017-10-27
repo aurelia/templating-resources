@@ -36,7 +36,6 @@ System.register([], function (_export, _context) {
           this.view.unbind();
 
           if (!this.viewFactory.isCaching) {
-            this.showing = false;
             return;
           }
 
@@ -52,6 +51,9 @@ System.register([], function (_export, _context) {
 
         IfCore.prototype._show = function _show() {
           if (this.showing) {
+            if (!this.view.isBound) {
+              this.view.bind(this.bindingContext, this.overrideContext);
+            }
             return;
           }
 

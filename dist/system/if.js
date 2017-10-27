@@ -106,6 +106,8 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', './if-cor
           _IfCore.prototype.bind.call(this, bindingContext, overrideContext);
           if (this.condition) {
             this._show();
+          } else {
+            this._hide();
           }
         };
 

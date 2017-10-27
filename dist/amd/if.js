@@ -96,6 +96,8 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', './if-c
       _IfCore.prototype.bind.call(this, bindingContext, overrideContext);
       if (this.condition) {
         this._show();
+      } else {
+        this._hide();
       }
     };
 

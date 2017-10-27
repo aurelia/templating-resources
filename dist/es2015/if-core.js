@@ -23,7 +23,6 @@ export let IfCore = class IfCore {
     this.view.unbind();
 
     if (!this.viewFactory.isCaching) {
-      this.showing = false;
       return;
     }
 
@@ -39,6 +38,9 @@ export let IfCore = class IfCore {
 
   _show() {
     if (this.showing) {
+      if (!this.view.isBound) {
+        this.view.bind(this.bindingContext, this.overrideContext);
+      }
       return;
     }
 

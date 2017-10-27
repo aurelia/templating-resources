@@ -58,6 +58,8 @@ export let If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
     super.bind(bindingContext, overrideContext);
     if (this.condition) {
       this._show();
+    } else {
+      this._hide();
     }
   }
 

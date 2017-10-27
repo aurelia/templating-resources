@@ -33,7 +33,6 @@ define(["exports"], function (exports) {
       this.view.unbind();
 
       if (!this.viewFactory.isCaching) {
-        this.showing = false;
         return;
       }
 
@@ -49,6 +48,9 @@ define(["exports"], function (exports) {
 
     IfCore.prototype._show = function _show() {
       if (this.showing) {
+        if (!this.view.isBound) {
+          this.view.bind(this.bindingContext, this.overrideContext);
+        }
         return;
       }
 

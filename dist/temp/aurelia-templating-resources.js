@@ -420,7 +420,6 @@ var IfCore = exports.IfCore = function () {
     this.view.unbind();
 
     if (!this.viewFactory.isCaching) {
-      this.showing = false;
       return;
     }
 
@@ -436,6 +435,9 @@ var IfCore = exports.IfCore = function () {
 
   IfCore.prototype._show = function _show() {
     if (this.showing) {
+      if (!this.view.isBound) {
+        this.view.bind(this.bindingContext, this.overrideContext);
+      }
       return;
     }
 
@@ -1553,7 +1555,9 @@ var Else = exports.Else = (_dec15 = (0, _aureliaTemplating.customAttribute)('els
   Else.prototype.bind = function bind(bindingContext, overrideContext) {
     _IfCore.prototype.bind.call(this, bindingContext, overrideContext);
 
-    if (!this.ifVm.condition) {
+    if (this.ifVm.condition) {
+      this._hide();
+    } else {
       this._show();
     }
   };
@@ -1591,6 +1595,8 @@ var If = exports.If = (_dec17 = (0, _aureliaTemplating.customAttribute)('if'), _
     _IfCore2.prototype.bind.call(this, bindingContext, overrideContext);
     if (this.condition) {
       this._show();
+    } else {
+      this._hide();
     }
   };
 

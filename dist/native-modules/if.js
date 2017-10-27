@@ -72,6 +72,8 @@ export var If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
     _IfCore.prototype.bind.call(this, bindingContext, overrideContext);
     if (this.condition) {
       this._show();
+    } else {
+      this._hide();
     }
   };
 

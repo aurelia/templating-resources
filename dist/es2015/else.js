@@ -13,7 +13,9 @@ export let Else = (_dec = customAttribute('else'), _dec2 = inject(BoundViewFacto
   bind(bindingContext, overrideContext) {
     super.bind(bindingContext, overrideContext);
 
-    if (!this.ifVm.condition) {
+    if (this.ifVm.condition) {
+      this._hide();
+    } else {
       this._show();
     }
   }

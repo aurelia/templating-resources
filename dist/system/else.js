@@ -58,7 +58,9 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', './if-cor
         Else.prototype.bind = function bind(bindingContext, overrideContext) {
           _IfCore.prototype.bind.call(this, bindingContext, overrideContext);
 
-          if (!this.ifVm.condition) {
+          if (this.ifVm.condition) {
+            this._hide();
+          } else {
             this._show();
           }
         };

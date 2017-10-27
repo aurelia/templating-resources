@@ -34,7 +34,9 @@ var Else = exports.Else = (_dec = (0, _aureliaTemplating.customAttribute)('else'
   Else.prototype.bind = function bind(bindingContext, overrideContext) {
     _IfCore.prototype.bind.call(this, bindingContext, overrideContext);
 
-    if (!this.ifVm.condition) {
+    if (this.ifVm.condition) {
+      this._hide();
+    } else {
       this._show();
     }
   };

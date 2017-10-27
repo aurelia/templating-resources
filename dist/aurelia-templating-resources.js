@@ -396,7 +396,6 @@ export class IfCore {
     // For example a view could be returned to the cache and reused while it's still
     // attached to the DOM and animated.
     if (!this.viewFactory.isCaching) {
-	    this.showing = false;
       return;
     }
 
@@ -412,6 +411,12 @@ export class IfCore {
 
   _show() {
     if (this.showing) {
+      // Ensures the view is bound.
+      // It might not be the case when the if was unbound but not detached, then rebound.
+      // Typical case where this happens is nested ifs
+      if (!this.view.isBound) {
+        this.view.bind(this.bindingContext, this.overrideContext);
+      }
       return;
     }
 
@@ -1676,7 +1681,9 @@ export class Else extends IfCore {
   bind(bindingContext, overrideContext) {
     super.bind(bindingContext, overrideContext);
     // Render on initial
-    if (!this.ifVm.condition) {
+    if (this.ifVm.condition) {
+      this._hide();
+    } else {
       this._show();
     }
   }
@@ -1719,6 +1726,8 @@ export class If extends IfCore {
     super.bind(bindingContext, overrideContext);
     if (this.condition) {
       this._show();
+    } else {
+      this._hide();
     }
   }
 

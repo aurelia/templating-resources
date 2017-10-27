@@ -1,3 +1,13 @@
+<a name="1.5.4"></a>
+## [1.5.4](https://github.com/aurelia/templating-resources/compare/1.5.3...1.5.4) (2017-10-27)
+
+
+### Bug Fixes
+
+* **if:** nested ifs don't work properly ([9548e16](https://github.com/aurelia/templating-resources/commit/9548e16)), closes [#328](https://github.com/aurelia/templating-resources/issues/328) [#327](https://github.com/aurelia/templating-resources/issues/327) [#326](https://github.com/aurelia/templating-resources/issues/326) [#322](https://github.com/aurelia/templating-resources/issues/322) [#317](https://github.com/aurelia/templating-resources/issues/317) [#315](https://github.com/aurelia/templating-resources/issues/315)
+
+
+
 <a name="1.5.3"></a>
 ## [1.5.3](https://github.com/aurelia/templating-resources/compare/1.5.2...1.5.3) (2017-10-24)
 
