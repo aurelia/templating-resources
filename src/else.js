@@ -14,7 +14,9 @@ export class Else extends IfCore {
   bind(bindingContext, overrideContext) {
     super.bind(bindingContext, overrideContext);
     // Render on initial
-    if (!this.ifVm.condition) {
+    if (this.ifVm.condition) {
+      this._hide();
+    } else {
       this._show();
     }
   }

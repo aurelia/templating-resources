@@ -22,6 +22,8 @@ export class If extends IfCore {
     super.bind(bindingContext, overrideContext);
     if (this.condition) {
       this._show();
+    } else {
+      this._hide();
     }
   }
 

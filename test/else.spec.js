@@ -136,4 +136,22 @@ describe('else', () => {
     expect(elseViewSlot.remove).toHaveBeenCalledTimes(1);
     expect(elseVm.view.unbind).toHaveBeenCalledTimes(1);
   });
+
+  it('should re-bind the child-view when being bound itself and condition is falsy', () => {
+    ifVm.condition = false;
+    elseVm.showing = true;
+    elseVm.view = new ViewMock();
+
+    spyOn(elseVm.view, 'bind');
+
+    let bindingContext = 42;
+    let overrideContext = 24;
+
+    spyOn(elseVm, '_show').and.callThrough();
+
+    elseVm.bind(bindingContext, overrideContext);
+
+    expect(elseVm._show).toHaveBeenCalled();
+    expect(elseVm.view.bind).toHaveBeenCalled();
+  });
 });
