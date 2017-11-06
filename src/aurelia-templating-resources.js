@@ -18,6 +18,7 @@ import {ThrottleBindingBehavior} from './throttle-binding-behavior';
 import {DebounceBindingBehavior} from './debounce-binding-behavior';
 import {SelfBindingBehavior} from './self-binding-behavior';
 import {SignalBindingBehavior} from './signal-binding-behavior';
+import {DirtyBindingBehavior} from './dirty-binding-behavior';
 import {BindingSignaler} from './binding-signaler';
 import {UpdateTriggerBindingBehavior} from './update-trigger-binding-behavior';
 import {AbstractRepeater} from './abstract-repeater';
@@ -58,6 +59,7 @@ function configure(config) {
     PLATFORM.moduleName('./throttle-binding-behavior'),
     PLATFORM.moduleName('./debounce-binding-behavior'),
     PLATFORM.moduleName('./signal-binding-behavior'),
+    PLATFORM.moduleName('./dirty-binding-behavior'),
     PLATFORM.moduleName('./update-trigger-binding-behavior'),
     PLATFORM.moduleName('./attr-binding-behavior')
   );
@@ -94,6 +96,7 @@ export {
   DebounceBindingBehavior,
   SelfBindingBehavior,
   SignalBindingBehavior,
+  DirtyBindingBehavior,
   BindingSignaler,
   UpdateTriggerBindingBehavior,
   AbstractRepeater,
