@@ -2,7 +2,7 @@
 * Behaviors that do not require the composition lifecycle callbacks when replacing
 * their binding context.
 */
-export const lifecycleOptionalBehaviors = ['focus', 'if', 'else', 'repeat', 'show', 'with'];
+export const lifecycleOptionalBehaviors = ['focus', 'if', 'else', 'repeat', 'show', 'hide', 'with'];
 
 function behaviorRequiresLifecycle(instruction) {
   let t = instruction.type;
