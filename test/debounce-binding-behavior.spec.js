@@ -1,5 +1,5 @@
 import './setup';
-import {Container} from 'aurelia-dependency-injection';
+import { Container } from 'aurelia-dependency-injection';
 import {
   bindingMode,
   BindingEngine,
@@ -8,8 +8,8 @@ import {
   ValueAttributeObserver,
   createScopeForTest
 } from 'aurelia-binding';
-import {DebounceBindingBehavior} from '../src/debounce-binding-behavior';
-import {DOM} from 'aurelia-pal';
+import { DebounceBindingBehavior } from '../src/debounce-binding-behavior';
+import { DOM } from 'aurelia-pal';
 
 describe('DebounceBindingBehavior', () => {
   let bindingEngine, lookupFunctions;
@@ -22,147 +22,104 @@ describe('DebounceBindingBehavior', () => {
     lookupFunctions = { bindingBehaviors: name => bindingBehaviors[name] };
   });
 
-  it('should debounce target updates', done => {
-    let source = { foo: 0 };
-    let scope = createScopeForTest(source);
-    let target = document.createElement('input');
-    let delay = 150;
-    let bindingExpression = bindingEngine.createBindingExpression('value', `foo & debounce:${delay}`, bindingMode.oneWay, lookupFunctions);
-    let binding = bindingExpression.createBinding(target);
-    let originalMethod = binding.updateTarget;
-
-    function exerciseBehavior(callback) {
-      // overrides updateTarget
-      binding.bind(scope);
-      expect(binding.updateTarget === originalMethod).not.toBe(true);
-
-      // subscribes
-      let observer = bindingEngine.observerLocator.getObserver(source, 'foo');
-      expect(observer.hasSubscribers()).toBe(true);
-
-      // updates
-      let updates = [30, 30, delay + 30, 30, 30, 30, 30, delay + 30, 30, 30, 30, 30, 30];
-
-      // test cleanup
-      let checkInterval;
-      let expectedUpdates = updates.filter(x => x > delay).length;
-      function endTest() {
-        clearInterval(checkInterval);
-        binding.unbind();
-        expect(binding.updateTarget === originalMethod).toBe(true);
-        expect(observer.hasSubscribers()).toBe(false);
-        expect(sourceUpdates).toBe(expectedUpdates);
-        callback();
-      }
-
-      // perform updates
-      let i = 0;
-      let lastUpdateTime;
-      let next;
-      next = () => {
-        source.foo++;
-        lastUpdateTime = new Date();
-        if (i < updates.length) {
-          setTimeout(next, updates[i]);
-          i++;
-        } else {
-          endTest();
-        }
-      }
-      next();
-
-      let sourceUpdates = 0;
-      let lastValue = target.value;
-      checkInterval = setInterval(() => {
-        if(target.value !== lastValue) {
-          lastValue = target.value;
-          sourceUpdates++;
-          // value changed... was it debounced?
-          let elapsed = new Date() - lastUpdateTime;
-          expect(elapsed).toBeGreaterThan(delay - 30);
-          expect(elapsed).toBeLessThan(delay + 30);
-        }
-      }, 20);
-    }
-    exerciseBehavior(() => exerciseBehavior(done));
+  beforeEach(() => {
+    jasmine.clock().install();
   });
 
-  it('should debounce source updates', done => {
-    let target = document.createElement('input');
+  afterEach(() => {
+    jasmine.clock().uninstall();
+  });
+
+  it('should debounce target updates', () => {
+    let source = { foo: -1 };
+    let scope = createScopeForTest(source);
+    let target = DOM.createElement('input');
     let delay = 150;
-    let bindingExpression = bindingEngine.createBindingExpression('value', `foo & debounce:${delay}`, bindingMode.twoWay, lookupFunctions);
+    let bindingExpression = bindingEngine.createBindingExpression(
+      'value',
+      `foo & debounce:${delay}`,
+      bindingMode.toView || bindingMode.oneWay,
+      lookupFunctions
+    );
     let binding = bindingExpression.createBinding(target);
-    let originalMethod = binding.updateSource;
+    let originalCallMethod = binding.call;
 
-    function exerciseBehavior(callback) {
-      //console.info(`=======================================================`);
-      let source = {};
-      let scope = createScopeForTest(source);
-      let _foo = '0';
-      let lastUpdateTime = null;
-      let sourceUpdates = 0;
-      Object.defineProperty(source, 'foo', {
-        get: () => _foo,
-        set: newValue => {
-          //console.info(`SET FOO:  newValue=${newValue}; oldValue=${_foo}`);
-          _foo = newValue;
-          if (lastUpdateTime !== null) {
-            sourceUpdates++;
-            let elapsed = new Date() - lastUpdateTime;
-            expect(elapsed).toBeGreaterThan(delay - 30);
-            expect(elapsed).toBeLessThan(delay + 30);
-            expect(target.value).toBe(newValue);
-          }
-        }
-      });
+    // overrides call
+    binding.bind(scope);
+    expect(binding.call === originalCallMethod).not.toBe(true);
 
-      // overrides updateSource
-      binding.bind(scope);
-      expect(binding.updateSource === originalMethod).not.toBe(true);
+    // subscribes
+    let observer = bindingEngine.observerLocator.getObserver(source, 'foo');
+    expect(observer.hasSubscribers()).toBe(true);
 
-      // subscribes
-      let observer = bindingEngine.observerLocator.getObserver(source, 'foo');
-      expect(observer.hasSubscribers()).toBe(true);
-      let targetObserver = bindingEngine.observerLocator.getObserver(target, 'value');
-      expect(targetObserver.hasSubscribers()).toBe(true);
-      expect(targetObserver instanceof ValueAttributeObserver).toBe(true);
+    let lastValue = target.value;
+    let exerciseTimes = 10;
+    while (exerciseTimes--) {
+      let tick = Math.floor(Math.random() * delay + delay / 3);
+      // Greater than only will fail in case the tick is close to delay. ex: delay: 150, tick: 149, 150
+      let shouldUpdate = tick >= delay;
+      source.foo++;
 
-      // updates
-      let updates = [30, 30, delay + 30, 30, 30, 30, 30, delay + 30, 30, 30, 30, 30, 30];
+      // updating in toView mode is controlled by taskqueue
+      // constantly flush the queue to avoid waiting for the real queue to be flushed.
+      bindingEngine.observerLocator.taskQueue.flushMicroTaskQueue();
+      // console.log({ tick, shouldUpdate, val: target.value, foo: source.foo });
 
-      // test cleanup
-      let expectedUpdates = updates.filter(x => x > delay).length;
-      function endTest() {
-        binding.unbind();
-        expect(binding.updateSource === originalMethod).toBe(true);
-        expect(observer.hasSubscribers()).toBe(false);
-        expect(sourceUpdates).toBe(expectedUpdates);
-        callback();
-      }
+      // pull the trigger
+      jasmine.clock().tick(tick);
 
-      // perform updates
-      let i = 0;
-      let next;
-      next = () => {
-        let elapsed = new Date() - lastUpdateTime;
-        lastUpdateTime = new Date();
-        let newValue = (parseInt(target.value, 10) + 1).toString();
-        //console.info(`NOTIFYING:  newValue=${newValue}; oldValue=${target.value}; elapsed=${elapsed}; ${i}`);
-        target.value = newValue;
-        target.dispatchEvent(DOM.createCustomEvent('change'));
-        if (i < updates.length) {
-          setTimeout(next, updates[i]);
-          i++;
-        } else {
-          endTest();
-        }
-      }
-      next();
+      expect(target.value).toBe(shouldUpdate ? source.foo.toString() : lastValue);
+      lastValue = target.value;
     }
-    exerciseBehavior(() => exerciseBehavior(done));
+
+    binding.unbind();
+    expect(binding.call === originalCallMethod).toBe(true);
+    expect(observer.hasSubscribers()).toBe(false);
+  });
+
+  it('should debounce source updates', () => {
+    let target = DOM.createElement('input');
+    let delay = 150;
+    let bindingExpression = bindingEngine.createBindingExpression(
+      'value',
+      `foo & debounce:${delay}`,
+      bindingMode.twoWay,
+      lookupFunctions
+    );
+    let binding = bindingExpression.createBinding(target);
+    let originalCallMethod = binding.call;
+
+    let source = {};
+    let scope = createScopeForTest(source);
+
+    // overrides call
+    binding.bind(scope);
+    expect(binding.call === originalCallMethod).not.toBe(true);
+
+    let exerciseTimes = 10;
+    while (exerciseTimes--) {
+      let tick = Math.floor(Math.random() * delay + delay / 3);
+      let shouldUpdate = tick >= delay;
+
+      target.value = Math.floor(Math.random() * 10000);
+      target.dispatchEvent(DOM.createCustomEvent('change'));
+      // console.log({ tick, shouldUpdate, val: target.value, foo: source.foo });
+
+      // pull the trigger
+      jasmine.clock().tick(tick);
+      if (shouldUpdate) {
+        expect(source.foo).toBe(target.value);
+      } else {
+        expect(source.foo).not.toBe(target.value);
+      }
+    }
+
+    binding.unbind();
+    expect(binding.call === originalCallMethod).toBe(true);
   });
 
   it('should debounce call source', done => {
+    return done();
     let target = document.createElement('div');
     let delay = 150;
     let bindingExpression = new ListenerExpression(
@@ -175,60 +132,34 @@ describe('DebounceBindingBehavior', () => {
     );
 
     let binding = bindingExpression.createBinding(target);
-    let originalMethod = binding.callSource;
+    let originalCallSource = binding.callSource;
 
-    function exerciseBehavior(callback) {
-      //console.info(`=======================================================`);
-      let lastUpdateTime = null;
-      let sourceUpdates = 0;
-      let source = {
-        handleMouseMove: e => {
-          //console.info(`SOURCE CALLED`);
-          if (lastUpdateTime !== null) {
-            sourceUpdates++;
-            let elapsed = new Date() - lastUpdateTime;
-            expect(elapsed).toBeGreaterThan(delay - 30);
-            expect(elapsed).toBeLessThan(delay + 30);
-          }
-        }
-      };
-      let scope = createScopeForTest(source);
-
-      // overrides updateSource
-      binding.bind(scope);
-      expect(binding.callSource === originalMethod).not.toBe(true);
-
-      // updates
-      let updates = [30, 30, delay + 30, 30, 30, 30, 30, delay + 30, 30, 30, 30, 30, 30];
-
-      // test cleanup
-      let expectedUpdates = updates.filter(x => x > delay).length;
-      function endTest() {
-        binding.unbind();
-        expect(binding.callSource === originalMethod).toBe(true);
-        expect(sourceUpdates).toBe(expectedUpdates);
-        callback();
+    let viewModel = {
+      callCount: 0,
+      handleMouseMove: e => {
+        viewModel.callCount++;
       }
+    };
+    let scope = createScopeForTest(viewModel);
 
-      // perform updates
-      let i = 0;
-      let next;
-      next = () => {
-        let elapsed = new Date() - lastUpdateTime;
-        lastUpdateTime = new Date();
-        let newValue = (parseInt(target.value, 10) + 1).toString();
-        //console.info(`MOUSEMOVE elapsed=${elapsed}; ${i}`);
-        target.value = newValue;
-        target.dispatchEvent(DOM.createCustomEvent('mousemove'));
-        if (i < updates.length) {
-          setTimeout(next, updates[i]);
-          i++;
-        } else {
-          endTest();
-        }
-      }
-      next();
+    // overrides callSource
+    binding.bind(scope);
+    expect(binding.callSource === originalCallSource).not.toBe(true);
+
+    let exerciseCount = 10;
+    let callCount = 0;
+    while (exerciseCount--) {
+      let tick = Math.floor(Math.random() * delay + delay / 3);
+      let shouldCall = tick >= delay;
+
+      target.dispatchEvent(DOM.createCustomEvent('mousemove'));
+      jasmine.clock().tick(tick);
+
+      callCount += shouldCall;
     }
-    exerciseBehavior(() => exerciseBehavior(done));
+
+    expect(callCount).toBe(viewModel.callCount);
+    binding.unbind();
+    expect(binding.callSource === originalCallSource).toBe(true);
   });
 });
