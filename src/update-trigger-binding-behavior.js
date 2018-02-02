@@ -1,7 +1,7 @@
-import {bindingMode, EventManager} from 'aurelia-binding';
+import { bindingMode, EventManager } from 'aurelia-binding';
 
 const eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
-const notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way bindings on input/select elements.';
+const notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way/ from-view bindings on input/select elements.';
 
 export class UpdateTriggerBindingBehavior {
   static inject = [EventManager];
@@ -14,7 +14,7 @@ export class UpdateTriggerBindingBehavior {
     if (events.length === 0) {
       throw new Error(eventNamesRequired);
     }
-    if (binding.mode !== bindingMode.twoWay) {
+    if (binding.mode !== bindingMode.twoWay && binding.mode !== bindingMode.fromView) {
       throw new Error(notApplicableMessage);
     }
 

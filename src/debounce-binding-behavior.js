@@ -1,27 +1,42 @@
-import {bindingMode} from 'aurelia-binding';
+import {
+  bindingMode,
+  sourceContext,
+  targetContext
+} from 'aurelia-binding';
 
-function debounce(newValue) {
-  let state = this.debounceState;
-  if (state.immediate) {
-    state.immediate = false;
-    this.debouncedMethod(newValue);
+const unset = {};
+
+function debounceCallSource(event) {
+  const state = this.debounceState;
+  clearTimeout(state.timeoutId);
+  state.timeoutId = setTimeout(() => this.debouncedMethod(event), state.delay);
+}
+
+function debounceCall(context, newValue, oldValue) {
+  const state = this.debounceState;
+  clearTimeout(state.timeoutId);
+  if (context !== state.callContextToDebounce) {
+    state.oldValue = unset;
+    this.debouncedMethod(context, newValue, oldValue);
     return;
   }
-  clearTimeout(state.timeoutId);
-  state.timeoutId = setTimeout(
-    () => this.debouncedMethod(newValue),
-    state.delay);
+  if (state.oldValue === unset) {
+    state.oldValue = oldValue;
+  }
+  state.timeoutId = setTimeout(() => {
+    const oldValue = state.oldValue;
+    state.oldValue = unset;
+    this.debouncedMethod(context, newValue, oldValue);
+  }, state.delay);
 }
 
 export class DebounceBindingBehavior {
   bind(binding, source, delay = 200) {
-    // determine which method to debounce.
-    let methodToDebounce = 'updateTarget'; // one-way bindings or interpolation bindings
-    if (binding.callSource) {
-      methodToDebounce = 'callSource';     // listener and call bindings
-    } else if (binding.updateSource && binding.mode === bindingMode.twoWay) {
-      methodToDebounce = 'updateSource';   // two-way bindings
-    }
+    const isCallSource = binding.callSource !== undefined;
+    const methodToDebounce = isCallSource ? 'callSource' : 'call';
+    const debouncer = isCallSource ? debounceCallSource : debounceCall;
+    const mode = binding.mode;
+    const callContextToDebounce = mode === bindingMode.twoWay || mode === bindingMode.fromView ? targetContext : sourceContext;
 
     // stash the original method and it's name.
     // note: a generic name like "originalMethod" is not used to avoid collisions
@@ -30,19 +45,20 @@ export class DebounceBindingBehavior {
     binding.debouncedMethod.originalName = methodToDebounce;
 
     // replace the original method with the debouncing version.
-    binding[methodToDebounce] = debounce;
+    binding[methodToDebounce] = debouncer;
 
     // create the debounce state.
     binding.debounceState = {
-      delay: delay,
-      timeoutId: null,
-      immediate: methodToDebounce === 'updateTarget' // should not delay initial target update that occurs during bind.
+      callContextToDebounce,
+      delay,
+      timeoutId: 0,
+      oldValue: unset
     };
   }
 
   unbind(binding, source) {
     // restore the state of the binding.
-    let methodToRestore = binding.debouncedMethod.originalName;
+    const methodToRestore = binding.debouncedMethod.originalName;
     binding[methodToRestore] = binding.debouncedMethod;
     binding.debouncedMethod = null;
     clearTimeout(binding.debounceState.timeoutId);
