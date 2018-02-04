@@ -118,8 +118,7 @@ describe('DebounceBindingBehavior', () => {
     expect(binding.call === originalCallMethod).toBe(true);
   });
 
-  it('should debounce call source', done => {
-    return done();
+  it('should debounce call source', () => {
     let target = document.createElement('div');
     let delay = 150;
     let bindingExpression = new ListenerExpression(
