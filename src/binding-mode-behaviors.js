@@ -1,4 +1,4 @@
-import {bindingMode} from 'aurelia-binding';
+import {bindingMode, bindingBehavior} from 'aurelia-binding';
 import {mixin} from 'aurelia-metadata';
 
 let modeBindingBehavior = {
@@ -14,6 +14,7 @@ let modeBindingBehavior = {
 };
 
 @mixin(modeBindingBehavior)
+@bindingBehavior('oneTime')
 export class OneTimeBindingBehavior {
   constructor() {
     this.mode = bindingMode.oneTime;
@@ -21,13 +22,31 @@ export class OneTimeBindingBehavior {
 }
 
 @mixin(modeBindingBehavior)
+@bindingBehavior('oneWay')
 export class OneWayBindingBehavior {
   constructor() {
-    this.mode = bindingMode.oneWay;
+    this.mode = bindingMode.toView;
   }
 }
 
 @mixin(modeBindingBehavior)
+@bindingBehavior('toView')
+export class ToViewBindingBehavior {
+  constructor() {
+    this.mode = bindingMode.toView;
+  }
+}
+
+@mixin(modeBindingBehavior)
+@bindingBehavior('fromView')
+export class FromViewBindingBehavior {
+  constructor() {
+    this.mode = bindingMode.fromView;
+  }
+}
+
+@mixin(modeBindingBehavior)
+@bindingBehavior('twoWay')
 export class TwoWayBindingBehavior {
   constructor() {
     this.mode = bindingMode.twoWay;

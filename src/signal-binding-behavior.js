@@ -1,5 +1,7 @@
+import {bindingBehavior} from 'aurelia-binding';
 import {BindingSignaler} from './binding-signaler';
 
+@bindingBehavior('signal')
 export class SignalBindingBehavior {
   static inject() { return [BindingSignaler]; }
   signals;

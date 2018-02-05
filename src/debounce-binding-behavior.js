@@ -1,7 +1,8 @@
 import {
   bindingMode,
   sourceContext,
-  targetContext
+  targetContext,
+  bindingBehavior
 } from 'aurelia-binding';
 
 const unset = {};
@@ -24,12 +25,13 @@ function debounceCall(context, newValue, oldValue) {
     state.oldValue = oldValue;
   }
   state.timeoutId = setTimeout(() => {
-    const oldValue = state.oldValue;
+    const _oldValue = state.oldValue;
     state.oldValue = unset;
-    this.debouncedMethod(context, newValue, oldValue);
+    this.debouncedMethod(context, newValue, _oldValue);
   }, state.delay);
 }
 
+@bindingBehavior('debounce')
 export class DebounceBindingBehavior {
   bind(binding, source, delay = 200) {
     const isCallSource = binding.callSource !== undefined;
