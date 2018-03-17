@@ -28,9 +28,9 @@ describe('UpdateTriggerBindingBehavior', () => {
     let target = document.createElement('input');
     let bindingExpression = bindingEngine.createBindingExpression('value', `foo & updateTrigger:'blur':'paste'`, bindingMode.twoWay, lookupFunctions);
     let binding = bindingExpression.createBinding(target);
-    let originalHandler = binding.targetProperty.handler;
 
     binding.bind(scope);
+    let targetHandler = binding.targetObserver.handler;
 
     target.value = 'baz';
     target.dispatchEvent(DOM.createCustomEvent('change'));
@@ -44,8 +44,16 @@ describe('UpdateTriggerBindingBehavior', () => {
     target.dispatchEvent(DOM.createCustomEvent('paste'));
     expect(source.foo).toBe('bang');
 
+
     binding.unbind();
 
-    expect(binding.targetProperty.handler).toBe(originalHandler);
+    target.value = 'target';
+    target.dispatchEvent(DOM.createCustomEvent('blur'));
+    expect(source.foo).toBe('bang');
+    target.dispatchEvent(DOM.createCustomEvent('paste'));
+    expect(source.foo).toBe('bang');
+
+    // also makes sure we disposed the listeners
+    expect(targetHandler.element).toBe(null);
   });
 });
