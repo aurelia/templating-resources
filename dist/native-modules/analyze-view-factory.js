@@ -1,5 +1,5 @@
 
-export var lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'with'];
+export var lifecycleOptionalBehaviors = ['focus', 'if', 'else', 'repeat', 'show', 'hide', 'with'];
 
 function behaviorRequiresLifecycle(instruction) {
   var t = instruction.type;

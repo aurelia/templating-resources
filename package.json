@@ -1,6 +1,6 @@
 {
   "name": "aurelia-templating-resources",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "description": "A standard set of behaviors, converters and other resources for use with the Aurelia templating library.",
   "keywords": [
     "aurelia",
@@ -120,7 +120,7 @@
     "require-dir": "^0.3.2",
     "run-sequence": "^1.2.2",
     "through2": "^2.0.1",
-    "typedoc": "^0.4.4",
+    "typedoc": "^0.11.1",
     "typescript": "^1.9.0-dev.20160622-1.0",
     "vinyl": "^1.1.1",
     "vinyl-paths": "^2.1.0",

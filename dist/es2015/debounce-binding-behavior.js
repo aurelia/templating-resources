@@ -1,38 +1,54 @@
-import { bindingMode } from 'aurelia-binding';
+import { bindingMode, sourceContext, targetContext } from 'aurelia-binding';
 
-function debounce(newValue) {
-  let state = this.debounceState;
-  if (state.immediate) {
-    state.immediate = false;
-    this.debouncedMethod(newValue);
+const unset = {};
+
+function debounceCallSource(event) {
+  const state = this.debounceState;
+  clearTimeout(state.timeoutId);
+  state.timeoutId = setTimeout(() => this.debouncedMethod(event), state.delay);
+}
+
+function debounceCall(context, newValue, oldValue) {
+  const state = this.debounceState;
+  clearTimeout(state.timeoutId);
+  if (context !== state.callContextToDebounce) {
+    state.oldValue = unset;
+    this.debouncedMethod(context, newValue, oldValue);
     return;
   }
-  clearTimeout(state.timeoutId);
-  state.timeoutId = setTimeout(() => this.debouncedMethod(newValue), state.delay);
+  if (state.oldValue === unset) {
+    state.oldValue = oldValue;
+  }
+  state.timeoutId = setTimeout(() => {
+    const ov = state.oldValue;
+    state.oldValue = unset;
+    this.debouncedMethod(context, newValue, ov);
+  }, state.delay);
 }
 
 export let DebounceBindingBehavior = class DebounceBindingBehavior {
   bind(binding, source, delay = 200) {
-    let methodToDebounce = 'updateTarget';
-    if (binding.callSource) {
-      methodToDebounce = 'callSource';
-    } else if (binding.updateSource && binding.mode === bindingMode.twoWay) {
-      methodToDebounce = 'updateSource';
-    }
+    const isCallSource = binding.callSource !== undefined;
+    const methodToDebounce = isCallSource ? 'callSource' : 'call';
+    const debouncer = isCallSource ? debounceCallSource : debounceCall;
+    const mode = binding.mode;
+    const callContextToDebounce = mode === bindingMode.twoWay || mode === bindingMode.fromView ? targetContext : sourceContext;
 
     binding.debouncedMethod = binding[methodToDebounce];
     binding.debouncedMethod.originalName = methodToDebounce;
 
-    binding[methodToDebounce] = debounce;
+    binding[methodToDebounce] = debouncer;
 
     binding.debounceState = {
-      delay: delay,
-      timeoutId: null,
-      immediate: methodToDebounce === 'updateTarget' };
+      callContextToDebounce,
+      delay,
+      timeoutId: 0,
+      oldValue: unset
+    };
   }
 
   unbind(binding, source) {
-    let methodToRestore = binding.debouncedMethod.originalName;
+    const methodToRestore = binding.debouncedMethod.originalName;
     binding[methodToRestore] = binding.debouncedMethod;
     binding.debouncedMethod = null;
     clearTimeout(binding.debounceState.timeoutId);
