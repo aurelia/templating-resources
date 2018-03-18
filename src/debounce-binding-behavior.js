@@ -24,9 +24,9 @@ function debounceCall(context, newValue, oldValue) {
     state.oldValue = oldValue;
   }
   state.timeoutId = setTimeout(() => {
-    const oldValue = state.oldValue;
+    const ov = state.oldValue;
     state.oldValue = unset;
-    this.debouncedMethod(context, newValue, oldValue);
+    this.debouncedMethod(context, newValue, ov);
   }, state.delay);
 }
 
