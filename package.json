@@ -39,7 +39,7 @@
       "aurelia-templating": "^1.5.0"
     },
     "dependencies": {
-      "aurelia-binding": "^1.5.0",
+      "aurelia-binding": "^1.7.1",
       "aurelia-dependency-injection": "^1.0.0",
       "aurelia-loader": "^1.0.0",
       "aurelia-logging": "^1.0.0",
