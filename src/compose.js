@@ -89,7 +89,9 @@ export class Compose {
     this.changes.view = this.view;
     this.changes.viewModel = this.viewModel;
     this.changes.model = this.model;
-    processChanges(this);
+    if (!this.pendingTask) {
+      processChanges(this);
+    }
   }
 
   /**
@@ -97,7 +99,6 @@ export class Compose {
   */
   unbind() {
     this.changes = Object.create(null);
-    this.pendingTask = null;
     this.bindingContext = null;
     this.overrideContext = null;
     let returnToCache = true;
@@ -193,11 +194,6 @@ function processChanges(composer: Compose) {
   composer.pendingTask = composer.pendingTask.catch(e => {
     logger.error(e);
   }).then(() => {
-    if (!composer.pendingTask) {
-      // the element has been unbound
-      return;
-    }
-
     composer.pendingTask = null;
     if (!isEmpty(composer.changes)) {
       processChanges(composer);

@@ -1,6 +1,6 @@
 import './setup';
-import {TaskQueue} from 'aurelia-task-queue';
-import {Compose} from '../src/compose';
+import { TaskQueue } from 'aurelia-task-queue';
+import { Compose } from '../src/compose';
 import * as LogManager from 'aurelia-logging';
 const logger = LogManager.getLogger('templating-resources');
 
@@ -53,6 +53,43 @@ describe('Compose', () => {
       expect(sut.bindingContext).toBe(bindingContext);
       expect(sut.overrideContext).toBe(overrideContext);
     });
+
+    it('awaits ongoing update from previous lifecycle', done => {
+      compositionEngineMock.compose.and.stub();
+      // makes updates longer
+      compositionEngineMock.compose.and.callFake(() => new Promise(resolve => setTimeout(resolve, 600)));
+      // make first bind
+      sut.viewModel = 'some-vm';
+      sut.bind({}, {});
+      expect(sut.pendingTask).toBeDefined();
+      const taskFromFirstBind = sut.pendingTask;
+
+      // await some time and unbind
+      setTimeout(() => {
+        sut.unbind();
+        // the work from the initial bind should still be ongoing
+        expect(sut.pendingTask).toBe(taskFromFirstBind);
+      }, 100);
+
+      // do a second bind after unbinding
+      setTimeout(() => {
+        // the work from the initial bind should still be ongoing
+        expect(sut.pendingTask).toBe(taskFromFirstBind);
+        sut.viewModel = 'new-vm';
+        sut.model = {};
+        sut.bind({}, {});
+        // the new bind should not modify ongoing work
+        expect(sut.pendingTask).toBe(taskFromFirstBind);
+        taskFromFirstBind.then(() => {
+          // the initial work is done
+          // the scheduled changes should be processed
+          // there should be new ongoing work - from the processed changes
+          expect(sut.pendingTask).toBeDefined();
+          expect(sut.pendingTask).not.toBe(taskFromFirstBind);
+          done();
+        });
+      }, 300);
+    });
   });
 
   describe('when unbound', () => {
@@ -68,6 +105,14 @@ describe('Compose', () => {
       sut.unbind();
       expect(viewSlotMock.removeAll).toHaveBeenCalledTimes(1);
     });
+
+    it('clears any scheduled changes', () => {
+      const expectedChanges = Object.create(null);
+      sut.changes = expectedChanges;
+      sut.unbind();
+      expect(sut.changes).toBeDefined();
+      expect(sut.changes).not.toBe(expectedChanges);
+    })
   });
 
   describe('triggers composition', () => {
