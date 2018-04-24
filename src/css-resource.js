@@ -21,8 +21,9 @@ function fixupCSSUrls(address, css) {
 }
 
 class CSSResource {
-  constructor(address: string) {
+  constructor(address: string, removeInjectedStyles: boolean) {
     this.address = address;
+    this.removeInjectedStyles = removeInjectedStyles;
     this._scoped = null;
     this._global = false;
     this._alreadyGloballyInjected = false;
@@ -37,6 +38,9 @@ class CSSResource {
       registry.registerViewEngineHooks(this._scoped);
     } else {
       this._global = true;
+      if (this.removeInjectedStyles === true) {
+        registry.registerViewEngineHooks(this._scoped);
+      }
     }
   }
 
@@ -49,7 +53,11 @@ class CSSResource {
         this._scoped.css = text;
         if (this._global) {
           this._alreadyGloballyInjected = true;
-          DOM.injectStyles(text);
+          if (this.removeInjectedStyles === true) {
+            this._scoped.styleNode = DOM.injectStyles(text);
+          } else {
+            DOM.injectStyles(text);
+          }
         }
       });
   }
@@ -59,6 +67,20 @@ class CSSViewEngineHooks {
   constructor(owner: CSSResource) {
     this.owner = owner;
     this.css = null;
+    if (owner.removeInjectedStyles === true) {
+      this.beforeUnbind = () => {
+        if (this.owner._global && this.owner._alreadyGloballyInjected) {
+          DOM.removeNode(this.styleNode);
+          this.owner._alreadyGloballyInjected = false;
+        }
+      }
+      this.beforeBind = () => {
+        if (this.owner._global && !this.owner._alreadyGloballyInjected && this.owner.removeInjectedStyles === true) {
+          this.styleNode = DOM.injectStyles(this.css);
+          this.owner._alreadyGloballyInjected = true;
+        }
+      }
+    }
   }
 
   beforeCompile(content: DocumentFragment, resources: ViewResources, instruction: ViewCompileInstruction): void {
@@ -67,15 +89,19 @@ class CSSViewEngineHooks {
     } else if (FEATURE.scopedCSS) {
       let styleNode = DOM.injectStyles(this.css, content, true);
       styleNode.setAttribute('scoped', 'scoped');
-    } else if (this._global && !this.owner._alreadyGloballyInjected) {
-      DOM.injectStyles(this.css);
+    } else if (this.owner._global && !this.owner._alreadyGloballyInjected) {
+      if (this.owner.removeInjectedStyles === true) {
+        this.styleNode = DOM.injectStyles(this.css);
+      } else {
+        DOM.injectStyles(this.css);
+      }
       this.owner._alreadyGloballyInjected = true;
     }
   }
 }
 
-export function _createCSSResource(address: string): Function {
-  @resource(new CSSResource(address))
+export function _createCSSResource(address: string, removeInjectedStyles: boolean): Function {
+  @resource(new CSSResource(address, removeInjectedStyles))
   class ViewCSS extends CSSViewEngineHooks {}
   return ViewCSS;
 }

@@ -39,7 +39,11 @@ import {
 import {viewsRequireLifecycle} from './analyze-view-factory';
 import {injectAureliaHideStyleAtHead} from './aurelia-hide-style';
 
-function configure(config) {
+function configure(config, configureOptions) {
+  const options = { removeInjectedStylesOnBeforeUnbind: false };
+  if (typeof configureOptions === 'function') {
+    configureOptions(options);
+  }
   injectAureliaHideStyleAtHead();
 
   config.globalResources(
@@ -67,7 +71,7 @@ function configure(config) {
   let viewEngine = config.container.get(ViewEngine);
   let styleResourcePlugin = {
     fetch(address) {
-      return { [address]: _createCSSResource(address) };
+      return { [address]: _createCSSResource(address, options.removeInjectedStylesOnBeforeUnbind) };
     }
   };
   ['.css', '.less', '.sass', '.scss', '.styl'].forEach(ext => viewEngine.addResourcePlugin(ext, styleResourcePlugin));
