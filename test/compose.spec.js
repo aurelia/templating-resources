@@ -2,7 +2,6 @@ import './setup';
 import { TaskQueue } from 'aurelia-task-queue';
 import { Compose } from '../src/compose';
 import * as LogManager from 'aurelia-logging';
-const logger = LogManager.getLogger('templating-resources');
 
 describe('Compose', () => {
   let elementMock;
@@ -373,25 +372,24 @@ describe('Compose', () => {
   describe('after failing a composition', () => {
     let error;
     beforeEach(done => {
-      spyOn(logger, 'error');
       compositionEngineMock.compose.and.stub;
       compositionEngineMock.compose.and.callFake(() => Promise.reject(error = new Error('".compose" test error')));
       updateBindable('viewModel', './some-vm');
       taskQueue.queueMicroTask(done);
     });
 
-    it('logs the error', done => {
-      sut.pendingTask.then(() => {
-        expect(logger.error).toHaveBeenCalledWith(error);
+    it('re-throws errors', done => {
+      sut.pendingTask.then(() => done.fail('"pendingTask" should be rejected'), reason => {
+        expect(reason).toBe(error);
         done();
-      }).catch(done.fail);
+      });
     });
 
-    it('clears pending composition', done => {
-      sut.pendingTask.then(() => {
+    it('completes pending composition', done => {
+      sut.pendingTask.then(() => done.fail('"pendingTask" should be rejected'), () => {
         expect(sut.pendingTask).not.toBeTruthy();
         done();
-      }).catch(done.fail);
+      });
     });
   });
 });

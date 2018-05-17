@@ -8,8 +8,6 @@ import {
 } from 'aurelia-templating';
 import {DOM} from 'aurelia-pal';
 
-const logger = LogManager.getLogger('templating-resources');
-
 /**
 * Used to compose a new view / view-model template or bind to an existing instance.
 */
@@ -191,14 +189,20 @@ function processChanges(composer: Compose) {
     });
   }
 
-  composer.pendingTask = composer.pendingTask.catch(e => {
-    logger.error(e);
-  }).then(() => {
-    composer.pendingTask = null;
-    if (!isEmpty(composer.changes)) {
-      processChanges(composer);
-    }
-  });
+  composer.pendingTask = composer.pendingTask
+    .then(() => {
+      completeCompositionTask(composer);
+    }, reason => {
+      completeCompositionTask(composer);
+      throw reason;
+    });
+}
+
+function completeCompositionTask(composer) {
+  composer.pendingTask = null;
+  if (!isEmpty(composer.changes)) {
+    processChanges(composer);
+  }
 }
 
 function requestUpdate(composer: Compose) {
