@@ -1,3 +1,17 @@
+<a name="1.6.0"></a>
+# [1.6.0](https://github.com/aurelia/templating-resources/compare/1.5.4...1.6.0) (2018-03-18)
+
+
+### Bug Fixes
+
+* **analyze-view-factory:** add else to lifecycleOptionalBehaviors ([5958a65](https://github.com/aurelia/templating-resources/commit/5958a65))
+* **analyze-view-factory:** add hide to lifecycleOptionalBehaviors ([cd8df6d](https://github.com/aurelia/templating-resources/commit/cd8df6d)), closes [#334](https://github.com/aurelia/templating-resources/issues/334)
+* **debounce:** debounce binding call instead updatesource ([e9fb62c](https://github.com/aurelia/templating-resources/commit/e9fb62c))
+* **throttle-test:** remove early return ([b80ecc3](https://github.com/aurelia/templating-resources/commit/b80ecc3))
+* **UpdateTrigger:** sync with binding ([3969dc6](https://github.com/aurelia/templating-resources/commit/3969dc6))
+
+
+
 <a name="1.5.4"></a>
 ## [1.5.4](https://github.com/aurelia/templating-resources/compare/1.5.3...1.5.4) (2017-10-27)
 

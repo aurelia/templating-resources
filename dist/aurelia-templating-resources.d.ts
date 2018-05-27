@@ -26,10 +26,11 @@ import {
 import {
   createOverrideContext,
   bindingMode,
-  EventManager,
+  EventSubscriber,
   BindingBehavior,
   ValueConverter,
   sourceContext,
+  targetContext,
   DataAttributeObserver,
   mergeSplice,
   valueConverter,
@@ -92,8 +93,6 @@ export declare class With {
   unbind(): any;
 }
 export declare class UpdateTriggerBindingBehavior {
-  static inject: any;
-  constructor(eventManager?: any);
   bind(binding?: any, source?: any, ...events: any[]): any;
   unbind(binding?: any, source?: any): any;
 }

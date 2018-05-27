@@ -1,7 +1,7 @@
 import * as LogManager from 'aurelia-logging';
 import {inject,Container,Optional} from 'aurelia-dependency-injection';
 import {BoundViewFactory,ViewSlot,customAttribute,templateController,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,CompositionContext,noView,View,ViewEngine,Animator,TargetInstruction} from 'aurelia-templating';
-import {createOverrideContext,bindingMode,EventManager,BindingBehavior,ValueConverter,sourceContext,DataAttributeObserver,mergeSplice,valueConverter,ObserverLocator} from 'aurelia-binding';
+import {createOverrideContext,bindingMode,EventSubscriber,BindingBehavior,ValueConverter,sourceContext,targetContext,DataAttributeObserver,mergeSplice,valueConverter,ObserverLocator} from 'aurelia-binding';
 import {TaskQueue} from 'aurelia-task-queue';
 import {DOM,FEATURE} from 'aurelia-pal';
 import {Loader} from 'aurelia-loader';
@@ -65,20 +65,15 @@ export class With {
 }
 
 const eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
-const notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way bindings on input/select elements.';
+const notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way/ from-view bindings on input/select elements.';
 
 export class UpdateTriggerBindingBehavior {
-  static inject = [EventManager];
-
-  constructor(eventManager) {
-    this.eventManager = eventManager;
-  }
 
   bind(binding, source, ...events) {
     if (events.length === 0) {
       throw new Error(eventNamesRequired);
     }
-    if (binding.mode !== bindingMode.twoWay) {
+    if (binding.mode !== bindingMode.twoWay && binding.mode !== bindingMode.fromView) {
       throw new Error(notApplicableMessage);
     }
 
@@ -93,12 +88,13 @@ export class UpdateTriggerBindingBehavior {
     targetObserver.originalHandler = binding.targetObserver.handler;
 
     // replace the element subscribe function with one that uses the correct events.
-    let handler = this.eventManager.createElementHandler(events);
+    let handler = new EventSubscriber(events);
     targetObserver.handler = handler;
   }
 
   unbind(binding, source) {
     // restore the state of the binding.
+    binding.targetObserver.handler.dispose();
     binding.targetObserver.handler = binding.targetObserver.originalHandler;
     binding.targetObserver.originalHandler = null;
   }
@@ -551,28 +547,39 @@ export function _createDynamicElement(name: string, viewUrl: string, bindableNam
   return DynamicElement;
 }
 
-function debounce(newValue) {
-  let state = this.debounceState;
-  if (state.immediate) {
-    state.immediate = false;
-    this.debouncedMethod(newValue);
+const unset = {};
+
+function debounceCallSource(event) {
+  const state = this.debounceState;
+  clearTimeout(state.timeoutId);
+  state.timeoutId = setTimeout(() => this.debouncedMethod(event), state.delay);
+}
+
+function debounceCall(context, newValue, oldValue) {
+  const state = this.debounceState;
+  clearTimeout(state.timeoutId);
+  if (context !== state.callContextToDebounce) {
+    state.oldValue = unset;
+    this.debouncedMethod(context, newValue, oldValue);
     return;
   }
-  clearTimeout(state.timeoutId);
-  state.timeoutId = setTimeout(
-    () => this.debouncedMethod(newValue),
-    state.delay);
+  if (state.oldValue === unset) {
+    state.oldValue = oldValue;
+  }
+  state.timeoutId = setTimeout(() => {
+    const ov = state.oldValue;
+    state.oldValue = unset;
+    this.debouncedMethod(context, newValue, ov);
+  }, state.delay);
 }
 
 export class DebounceBindingBehavior {
   bind(binding, source, delay = 200) {
-    // determine which method to debounce.
-    let methodToDebounce = 'updateTarget'; // one-way bindings or interpolation bindings
-    if (binding.callSource) {
-      methodToDebounce = 'callSource';     // listener and call bindings
-    } else if (binding.updateSource && binding.mode === bindingMode.twoWay) {
-      methodToDebounce = 'updateSource';   // two-way bindings
-    }
+    const isCallSource = binding.callSource !== undefined;
+    const methodToDebounce = isCallSource ? 'callSource' : 'call';
+    const debouncer = isCallSource ? debounceCallSource : debounceCall;
+    const mode = binding.mode;
+    const callContextToDebounce = mode === bindingMode.twoWay || mode === bindingMode.fromView ? targetContext : sourceContext;
 
     // stash the original method and it's name.
     // note: a generic name like "originalMethod" is not used to avoid collisions
@@ -581,19 +588,20 @@ export class DebounceBindingBehavior {
     binding.debouncedMethod.originalName = methodToDebounce;
 
     // replace the original method with the debouncing version.
-    binding[methodToDebounce] = debounce;
+    binding[methodToDebounce] = debouncer;
 
     // create the debounce state.
     binding.debounceState = {
-      delay: delay,
-      timeoutId: null,
-      immediate: methodToDebounce === 'updateTarget' // should not delay initial target update that occurs during bind.
+      callContextToDebounce,
+      delay,
+      timeoutId: 0,
+      oldValue: unset
     };
   }
 
   unbind(binding, source) {
     // restore the state of the binding.
-    let methodToRestore = binding.debouncedMethod.originalName;
+    const methodToRestore = binding.debouncedMethod.originalName;
     binding[methodToRestore] = binding.debouncedMethod;
     binding.debouncedMethod = null;
     clearTimeout(binding.debounceState.timeoutId);
@@ -958,7 +966,7 @@ export class AttrBindingBehavior {
 * Behaviors that do not require the composition lifecycle callbacks when replacing
 * their binding context.
 */
-export const lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'with'];
+export const lifecycleOptionalBehaviors = ['focus', 'if', 'else', 'repeat', 'show', 'hide', 'with'];
 
 function behaviorRequiresLifecycle(instruction) {
   let t = instruction.type;

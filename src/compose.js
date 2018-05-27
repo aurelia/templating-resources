@@ -8,8 +8,6 @@ import {
 } from 'aurelia-templating';
 import {DOM} from 'aurelia-pal';
 
-const logger = LogManager.getLogger('templating-resources');
-
 /**
 * Used to compose a new view / view-model template or bind to an existing instance.
 */
@@ -89,7 +87,9 @@ export class Compose {
     this.changes.view = this.view;
     this.changes.viewModel = this.viewModel;
     this.changes.model = this.model;
-    processChanges(this);
+    if (!this.pendingTask) {
+      processChanges(this);
+    }
   }
 
   /**
@@ -97,7 +97,6 @@ export class Compose {
   */
   unbind() {
     this.changes = Object.create(null);
-    this.pendingTask = null;
     this.bindingContext = null;
     this.overrideContext = null;
     let returnToCache = true;
@@ -190,19 +189,20 @@ function processChanges(composer: Compose) {
     });
   }
 
-  composer.pendingTask = composer.pendingTask.catch(e => {
-    logger.error(e);
-  }).then(() => {
-    if (!composer.pendingTask) {
-      // the element has been unbound
-      return;
-    }
+  composer.pendingTask = composer.pendingTask
+    .then(() => {
+      completeCompositionTask(composer);
+    }, reason => {
+      completeCompositionTask(composer);
+      throw reason;
+    });
+}
 
-    composer.pendingTask = null;
-    if (!isEmpty(composer.changes)) {
-      processChanges(composer);
-    }
-  });
+function completeCompositionTask(composer) {
+  composer.pendingTask = null;
+  if (!isEmpty(composer.changes)) {
+    processChanges(composer);
+  }
 }
 
 function requestUpdate(composer: Compose) {

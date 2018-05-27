@@ -59,7 +59,7 @@ System.register([], function (_export, _context) {
   return {
     setters: [],
     execute: function () {
-      _export('lifecycleOptionalBehaviors', lifecycleOptionalBehaviors = ['focus', 'if', 'repeat', 'show', 'with']);
+      _export('lifecycleOptionalBehaviors', lifecycleOptionalBehaviors = ['focus', 'if', 'else', 'repeat', 'show', 'hide', 'with']);
 
       _export('lifecycleOptionalBehaviors', lifecycleOptionalBehaviors);
     }

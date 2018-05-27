@@ -1,17 +1,13 @@
-var _class, _temp;
 
 
-
-import { bindingMode, EventManager } from 'aurelia-binding';
+import { bindingMode, EventSubscriber } from 'aurelia-binding';
 
 var eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
-var notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way bindings on input/select elements.';
+var notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way/ from-view bindings on input/select elements.';
 
-export var UpdateTriggerBindingBehavior = (_temp = _class = function () {
-  function UpdateTriggerBindingBehavior(eventManager) {
+export var UpdateTriggerBindingBehavior = function () {
+  function UpdateTriggerBindingBehavior() {
     
-
-    this.eventManager = eventManager;
   }
 
   UpdateTriggerBindingBehavior.prototype.bind = function bind(binding, source) {
@@ -22,7 +18,7 @@ export var UpdateTriggerBindingBehavior = (_temp = _class = function () {
     if (events.length === 0) {
       throw new Error(eventNamesRequired);
     }
-    if (binding.mode !== bindingMode.twoWay) {
+    if (binding.mode !== bindingMode.twoWay && binding.mode !== bindingMode.fromView) {
       throw new Error(notApplicableMessage);
     }
 
@@ -34,14 +30,15 @@ export var UpdateTriggerBindingBehavior = (_temp = _class = function () {
 
     targetObserver.originalHandler = binding.targetObserver.handler;
 
-    var handler = this.eventManager.createElementHandler(events);
+    var handler = new EventSubscriber(events);
     targetObserver.handler = handler;
   };
 
   UpdateTriggerBindingBehavior.prototype.unbind = function unbind(binding, source) {
+    binding.targetObserver.handler.dispose();
     binding.targetObserver.handler = binding.targetObserver.originalHandler;
     binding.targetObserver.originalHandler = null;
   };
 
   return UpdateTriggerBindingBehavior;
-}(), _class.inject = [EventManager], _temp);
+}();

@@ -8,16 +8,12 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
 
   
 
-  var _class, _temp;
-
   var eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
-  var notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way bindings on input/select elements.';
+  var notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way/ from-view bindings on input/select elements.';
 
-  var UpdateTriggerBindingBehavior = exports.UpdateTriggerBindingBehavior = (_temp = _class = function () {
-    function UpdateTriggerBindingBehavior(eventManager) {
+  var UpdateTriggerBindingBehavior = exports.UpdateTriggerBindingBehavior = function () {
+    function UpdateTriggerBindingBehavior() {
       
-
-      this.eventManager = eventManager;
     }
 
     UpdateTriggerBindingBehavior.prototype.bind = function bind(binding, source) {
@@ -28,7 +24,7 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
       if (events.length === 0) {
         throw new Error(eventNamesRequired);
       }
-      if (binding.mode !== _aureliaBinding.bindingMode.twoWay) {
+      if (binding.mode !== _aureliaBinding.bindingMode.twoWay && binding.mode !== _aureliaBinding.bindingMode.fromView) {
         throw new Error(notApplicableMessage);
       }
 
@@ -40,15 +36,16 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
 
       targetObserver.originalHandler = binding.targetObserver.handler;
 
-      var handler = this.eventManager.createElementHandler(events);
+      var handler = new _aureliaBinding.EventSubscriber(events);
       targetObserver.handler = handler;
     };
 
     UpdateTriggerBindingBehavior.prototype.unbind = function unbind(binding, source) {
+      binding.targetObserver.handler.dispose();
       binding.targetObserver.handler = binding.targetObserver.originalHandler;
       binding.targetObserver.originalHandler = null;
     };
 
     return UpdateTriggerBindingBehavior;
-  }(), _class.inject = [_aureliaBinding.EventManager], _temp);
+  }();
 });
