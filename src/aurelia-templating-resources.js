@@ -1,4 +1,3 @@
-import {PLATFORM} from 'aurelia-pal';
 import {Compose} from './compose';
 import {If} from './if';
 import {Else} from './else';
@@ -13,7 +12,7 @@ import {ViewEngine} from 'aurelia-templating';
 import {_createCSSResource} from './css-resource';
 import {HTMLSanitizer} from './html-sanitizer';
 import {AttrBindingBehavior} from './attr-binding-behavior';
-import {OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior} from './binding-mode-behaviors';
+import {OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, FromViewBindingBehavior, ToViewBindingBehavior} from './binding-mode-behaviors';
 import {ThrottleBindingBehavior} from './throttle-binding-behavior';
 import {DebounceBindingBehavior} from './debounce-binding-behavior';
 import {SelfBindingBehavior} from './self-binding-behavior';
@@ -43,23 +42,26 @@ function configure(config) {
   injectAureliaHideStyleAtHead();
 
   config.globalResources(
-    PLATFORM.moduleName('./compose'),
-    PLATFORM.moduleName('./if'),
-    PLATFORM.moduleName('./else'),
-    PLATFORM.moduleName('./with'),
-    PLATFORM.moduleName('./repeat'),
-    PLATFORM.moduleName('./show'),
-    PLATFORM.moduleName('./hide'),
-    PLATFORM.moduleName('./replaceable'),
-    PLATFORM.moduleName('./sanitize-html'),
-    PLATFORM.moduleName('./focus'),
-    PLATFORM.moduleName('./binding-mode-behaviors'),
-    PLATFORM.moduleName('./self-binding-behavior'),
-    PLATFORM.moduleName('./throttle-binding-behavior'),
-    PLATFORM.moduleName('./debounce-binding-behavior'),
-    PLATFORM.moduleName('./signal-binding-behavior'),
-    PLATFORM.moduleName('./update-trigger-binding-behavior'),
-    PLATFORM.moduleName('./attr-binding-behavior')
+    Compose,
+    If,
+    Else,
+    With,
+    Repeat,
+    Show,
+    Hide,
+    Replaceable,
+    Focus,
+    SanitizeHTMLValueConverter,
+    OneTimeBindingBehavior,
+    OneWayBindingBehavior,
+    ToViewBindingBehavior,
+    FromViewBindingBehavior,
+    TwoWayBindingBehavior,
+    ThrottleBindingBehavior,
+    DebounceBindingBehavior,
+    SignalBindingBehavior,
+    UpdateTriggerBindingBehavior,
+    AttrBindingBehavior
   );
 
   configureHtmlResourcePlugin(config);
@@ -89,6 +91,8 @@ export {
   AttrBindingBehavior,
   OneTimeBindingBehavior,
   OneWayBindingBehavior,
+  ToViewBindingBehavior,
+  FromViewBindingBehavior,
   TwoWayBindingBehavior,
   ThrottleBindingBehavior,
   DebounceBindingBehavior,

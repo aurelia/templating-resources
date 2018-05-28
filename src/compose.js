@@ -1,5 +1,4 @@
-import {Container, inject} from 'aurelia-dependency-injection';
-import * as LogManager from 'aurelia-logging';
+import {Container} from 'aurelia-dependency-injection';
 import {TaskQueue} from 'aurelia-task-queue';
 import {
   CompositionEngine, CompositionContext,
@@ -13,8 +12,11 @@ import {DOM} from 'aurelia-pal';
 */
 @customElement('compose')
 @noView
-@inject(DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue)
 export class Compose {
+
+  static inject() {
+    return [DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue];
+  }
   /**
   * Model to bind the custom element to.
   *

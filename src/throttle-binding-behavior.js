@@ -1,4 +1,4 @@
-import {bindingMode} from 'aurelia-binding';
+import {bindingMode, bindingBehavior} from 'aurelia-binding';
 
 function throttle(newValue) {
   let state = this.throttleState;
@@ -22,6 +22,7 @@ function throttle(newValue) {
   }
 }
 
+@bindingBehavior('throttle')
 export class ThrottleBindingBehavior {
   bind(binding, source, delay = 200) {
     // determine which method to throttle.

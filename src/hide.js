@@ -1,4 +1,4 @@
-import {inject, Optional} from 'aurelia-dependency-injection';
+import {Optional} from 'aurelia-dependency-injection';
 import {customAttribute, Animator} from 'aurelia-templating';
 import {DOM} from 'aurelia-pal';
 import {injectAureliaHideStyleAtBoundary, aureliaHideClassName} from './aurelia-hide-style';
@@ -8,8 +8,12 @@ import {injectAureliaHideStyleAtBoundary, aureliaHideClassName} from './aurelia-
 * - different from "if" in that the markup is still added to the DOM, simply not shown.
 */
 @customAttribute('hide')
-@inject(DOM.Element, Animator, Optional.of(DOM.boundary, true))
 export class Hide {
+
+  static inject() {
+    return [DOM.Element, Animator, Optional.of(DOM.boundary, true)];
+  }
+
   /**
   * Creates a new instance of Hide.
   * @param element Target element to conditionally hide.
