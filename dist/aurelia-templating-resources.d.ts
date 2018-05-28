@@ -66,27 +66,27 @@ export declare interface RepeatStrategy {
 * Creates a binding context for decandant elements to bind to.
 */
 export declare class With {
-
+  
   /**
     * Creates an instance of With.
     * @param viewFactory The factory generating the view.
     * @param viewSlot The slot the view is injected in to.
     */
   constructor(viewFactory?: any, viewSlot?: any);
-
+  
   /**
     * Binds the With with provided binding context and override context.
     * @param bindingContext The binding context.
     * @param overrideContext An override context for binding.
     */
   bind(bindingContext?: any, overrideContext?: any): any;
-
+  
   /**
     * Invoked everytime the bound value changes.
     * @param newValue The new value.
     */
   valueChanged(newValue?: any): any;
-
+  
   /**
     * Unbinds With
     */
@@ -109,20 +109,20 @@ export declare class SelfBindingBehavior {
 * Marks any part of a view to be replacable by the consumer.
 */
 export declare class Replaceable {
-
+  
   /**
     * @param viewFactory target The factory generating the view.
     * @param viewSlot viewSlot The slot the view is injected in to.
     */
   constructor(viewFactory?: any, viewSlot?: any);
-
+  
   /**
     * Binds the replaceable to the binding context and override context.
     * @param bindingContext The binding context.
     * @param overrideContext An override context for binding.
     */
   bind(bindingContext?: any, overrideContext?: any): any;
-
+  
   /**
     * Unbinds the replaceable.
     */
@@ -198,7 +198,7 @@ export declare class IfCore {
 * Default Html Sanitizer to prevent script injection.
 */
 export declare class HTMLSanitizer {
-
+  
   /**
     * Sanitizes the provided input.
     * @param input The input to be sanitized.
@@ -210,25 +210,25 @@ export declare class HTMLSanitizer {
 * CustomAttribute that binds provided DOM element's focus attribute with a property on the viewmodel.
 */
 export declare class Focus {
-
+  
   /**
     * Creates an instance of Focus.
     * @paramelement Target element on where attribute is placed on.
     * @param taskQueue The TaskQueue instance.
     */
   constructor(element?: any, taskQueue?: any);
-
+  
   /**
     * Invoked everytime the bound value changes.
     * @param newValue The new value.
     */
   valueChanged(newValue?: any): any;
-
+  
   /**
     * Invoked when the attribute is attached to the DOM.
     */
   attached(): any;
-
+  
   /**
     * Invoked when the attribute is detached from the DOM.
     */
@@ -248,7 +248,7 @@ export declare class Compose {
   view: any;
   viewModel: any;
   swapOrder: any;
-
+  
   /**
     * Creates an instance of Compose.
     * @param element The Compose element.
@@ -259,14 +259,14 @@ export declare class Compose {
     * @param taskQueue The TaskQueue instance.
     */
   constructor(element?: any, container?: any, compositionEngine?: any, viewSlot?: any, viewResources?: any, taskQueue?: any);
-
+  
   /**
     * Invoked when the component has been created.
     *
     * @param owningView The view that this component was created inside of.
     */
   created(owningView: View): any;
-
+  
   /**
     * Used to set the bindingContext.
     *
@@ -274,26 +274,26 @@ export declare class Compose {
     * @param overrideContext The context in which the view model is executed in.
     */
   bind(bindingContext?: any, overrideContext?: any): any;
-
+  
   /**
     * Unbinds the Compose.
     */
   unbind(): any;
-
+  
   /**
     * Invoked everytime the bound model changes.
     * @param newValue The new value.
     * @param oldValue The old value.
     */
   modelChanged(newValue?: any, oldValue?: any): any;
-
+  
   /**
     * Invoked everytime the bound view changes.
     * @param newValue The new value.
     * @param oldValue The old value.
     */
   viewChanged(newValue?: any, oldValue?: any): any;
-
+  
   /**
       * Invoked everytime the bound view model changes.
       * @param newValue The new value.
@@ -309,12 +309,6 @@ export declare class OneTimeBindingBehavior {
   constructor();
 }
 export declare class OneWayBindingBehavior {
-  constructor();
-}
-export declare class ToViewBindingBehavior {
-  constructor();
-}
-export declare class FromViewBindingBehavior {
   constructor();
 }
 export declare class TwoWayBindingBehavior {
@@ -341,21 +335,21 @@ export declare function viewsRequireLifecycle(viewFactory?: any): any;
 */
 export declare class AbstractRepeater {
   constructor(options?: any);
-
+  
   /**
      * Returns the number of views the repeater knows about.
      *
      * @return {Number}  the number of views.
      */
   viewCount(): any;
-
+  
   /**
      * Returns all of the repeaters views as an array.
      *
      * @return {Array} The repeater's array of views;
      */
   views(): any;
-
+  
   /**
      * Returns a single view from the repeater at the provided index.
      *
@@ -363,14 +357,14 @@ export declare class AbstractRepeater {
      * @return {View|ViewSlot} The requested view.
      */
   view(index?: any): any;
-
+  
   /**
      * Returns the matcher function to be used by the repeater, or null if strict matching is to be performed.
      *
      * @return {Function|null} The requested matcher function.
      */
   matcher(): any;
-
+  
   /**
      * Adds a view to the repeater, binding the view to the
      * provided contexts.
@@ -379,7 +373,7 @@ export declare class AbstractRepeater {
      * @param {Object} overrideContext A secondary binding context that can override the primary context.
      */
   addView(bindingContext?: any, overrideContext?: any): any;
-
+  
   /**
      * Inserts a view to the repeater at a specific index, binding the view to the
      * provided contexts.
@@ -389,7 +383,7 @@ export declare class AbstractRepeater {
      * @param {Object} overrideContext A secondary binding context that can override the primary context.
      */
   insertView(index?: any, bindingContext?: any, overrideContext?: any): any;
-
+  
   /**
      * Moves a view across the repeater.
      *
@@ -397,7 +391,7 @@ export declare class AbstractRepeater {
      * @param {Number} sourceIndex The index where the view should be placed at.
      */
   moveView(sourceIndex?: any, targetIndex?: any): any;
-
+  
   /**
      * Removes all views from the repeater.
      * @param {Boolean} returnToCache Should the view be returned to the view cache?
@@ -405,7 +399,7 @@ export declare class AbstractRepeater {
      * @return {Promise|null}
      */
   removeAllViews(returnToCache?: boolean, skipAnimation?: boolean): any;
-
+  
   /**
      * Removes an array of Views from the repeater.
      *
@@ -415,7 +409,7 @@ export declare class AbstractRepeater {
      * @return {Promise|null}
      */
   removeViews(viewsToRemove: Array<View>, returnToCache?: boolean, skipAnimation?: boolean): any;
-
+  
   /**
      * Removes a view from the repeater at a specific index.
      *
@@ -425,7 +419,7 @@ export declare class AbstractRepeater {
      * @return {Promise|null}
      */
   removeView(index: number, returnToCache?: boolean, skipAnimation?: boolean): any;
-
+  
   /**
      * Forces a particular view to update it's bindings, called as part of
      * an in-place processing of items for better performance
@@ -439,21 +433,21 @@ export declare class AbstractRepeater {
 * A strategy for repeating a template over an array.
 */
 export declare class ArrayRepeatStrategy {
-
+  
   /**
     * Gets an observer for the specified collection.
     * @param observerLocator The observer locator instance.
     * @param items The items to be observed.
     */
   getCollectionObserver(observerLocator?: any, items?: any): any;
-
+  
   /**
     * Handle the repeat's collection instance changing.
     * @param repeat The repeater instance.
     * @param items The new array instance.
     */
   instanceChanged(repeat?: any, items?: any): any;
-
+  
   /**
     * Handle the repeat's collection instance mutating.
     * @param repeat The repeat instance.
@@ -467,19 +461,19 @@ export declare class ArrayRepeatStrategy {
 * A strategy for repeating a template over a Map.
 */
 export declare class MapRepeatStrategy {
-
+  
   /**
     * Gets a Map observer.
     * @param items The items to be observed.
     */
   getCollectionObserver(observerLocator?: any, items?: any): any;
-
+  
   /**
     * Process the provided Map entries.
     * @param items The entries to process.
     */
   instanceChanged(repeat?: any, items?: any): any;
-
+  
   /**
     * Handle changes in a Map collection.
     * @param map The underlying Map collection.
@@ -492,12 +486,12 @@ export declare class MapRepeatStrategy {
 * A strategy for repeating a template over a number.
 */
 export declare class NumberRepeatStrategy {
-
+  
   /**
     * Return the strategies collection observer. In this case none.
     */
   getCollectionObserver(): any;
-
+  
   /**
     * Process the provided Number.
     * @param value The Number of how many time to iterate.
@@ -509,19 +503,19 @@ export declare class NumberRepeatStrategy {
 * A strategy for repeating a template over a Set.
 */
 export declare class SetRepeatStrategy {
-
+  
   /**
     * Gets a Set observer.
     * @param items The items to be observed.
     */
   getCollectionObserver(observerLocator?: any, items?: any): any;
-
+  
   /**
     * Process the provided Set entries.
     * @param items The entries to process.
     */
   instanceChanged(repeat?: any, items?: any): any;
-
+  
   /**
     * Handle changes in a Set collection.
     * @param repeat The repeat instance.
@@ -542,14 +536,14 @@ export declare class Else extends IfCore {
 export declare class If extends IfCore {
   condition: any;
   swapOrder: 'before' | 'with' | 'after';
-
+  
   /**
     * Binds the if to the binding context and override context
     * @param bindingContext The binding context
     * @param overrideContext An override context for binding.
     */
   bind(bindingContext?: any, overrideContext?: any): any;
-
+  
   /**
     * Invoked everytime value property changes.
     * @param newValue The new value
@@ -561,13 +555,13 @@ export declare class If extends IfCore {
 * Simple html sanitization converter to preserve whitelisted elements and attributes on a bound property containing html.
 */
 export declare class SanitizeHTMLValueConverter {
-
+  
   /**
      * Creates an instanse of the value converter.
      * @param sanitizer The html sanitizer.
      */
   constructor(sanitizer?: any);
-
+  
   /**
     * Process the provided markup that flows to the view.
     * @param untrustedMarkup The untrusted markup to be sanitized.
@@ -589,7 +583,7 @@ export declare class SignalBindingBehavior {
 * - different from "if" in that the markup is still added to the DOM, simply not shown.
 */
 export declare class Hide {
-
+  
   /**
     * Creates a new instance of Hide.
     * @param element Target element to conditionally hide.
@@ -597,18 +591,18 @@ export declare class Hide {
     * @param domBoundary The DOM boundary. Used when the behavior appears within a component that utilizes the shadow DOM.
     */
   constructor(element?: any, animator?: any, domBoundary?: any);
-
+  
   /**
     * Invoked when the behavior is created.
     */
   created(): any;
-
+  
   /**
     * Invoked everytime the bound value changes.
     * @param newValue The new value.
     */
   valueChanged(newValue?: any): any;
-
+  
   /**
     * Binds the Hide attribute.
     */
@@ -620,7 +614,7 @@ export declare class Hide {
 * - different from "if" in that the markup is still added to the DOM, simply not shown.
 */
 export declare class Show {
-
+  
   /**
     * Creates a new instance of Show.
     * @param element Target element to conditionally show.
@@ -628,18 +622,18 @@ export declare class Show {
     * @param domBoundary The DOM boundary. Used when the behavior appears within a component that utilizes the shadow DOM.
     */
   constructor(element?: any, animator?: any, domBoundary?: any);
-
+  
   /**
     * Invoked when the behavior is created.
     */
   created(): any;
-
+  
   /**
     * Invoked everytime the bound value changes.
     * @param newValue The new value.
     */
   valueChanged(newValue?: any): any;
-
+  
   /**
     * Binds the Show attribute.
     */
@@ -655,18 +649,18 @@ export declare class Show {
 * Custom strategies can be plugged in as well.
 */
 export declare class RepeatStrategyLocator {
-
+  
   /**
     * Creates a new RepeatStrategyLocator.
     */
   constructor();
-
+  
   /**
     * Adds a repeat strategy to be located when repeating a template over different collection types.
     * @param strategy A repeat strategy that can iterate a specific collection type.
     */
   addStrategy(matcher: ((items: any) => boolean), strategy: RepeatStrategy): any;
-
+  
   /**
     * Gets the best strategy to handle iteration.
     */
@@ -682,7 +676,7 @@ export declare class Repeat extends AbstractRepeater {
   local: any;
   key: any;
   value: any;
-
+  
   /**
    * Creates an instance of Repeat.
    * @param viewFactory The factory generating the view
@@ -694,34 +688,34 @@ export declare class Repeat extends AbstractRepeater {
    */
   constructor(viewFactory?: any, instruction?: any, viewSlot?: any, viewResources?: any, observerLocator?: any, strategyLocator?: any);
   call(context?: any, changes?: any): any;
-
+  
   /**
     * Binds the repeat to the binding context and override context.
     * @param bindingContext The binding context.
     * @param overrideContext An override context for binding.
     */
   bind(bindingContext?: any, overrideContext?: any): any;
-
+  
   /**
     * Unbinds the repeat
     */
   unbind(): any;
-
+  
   /**
     * Invoked everytime the item property changes.
     */
   itemsChanged(): any;
-
+  
   /**
     * Invoked when the underlying collection changes.
     */
   handleCollectionMutated(collection?: any, changes?: any): any;
-
+  
   /**
     * Invoked when the underlying inner collection changes.
     */
   handleInnerCollectionMutated(collection?: any, changes?: any): any;
-
+  
   // @override AbstractRepeater
   viewCount(): any;
   views(): any;

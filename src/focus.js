@@ -1,6 +1,5 @@
 import {customAttribute} from 'aurelia-templating';
 import {bindingMode} from 'aurelia-binding';
-import {inject} from 'aurelia-dependency-injection';
 import {TaskQueue} from 'aurelia-task-queue';
 import {DOM} from 'aurelia-pal';
 
@@ -8,8 +7,11 @@ import {DOM} from 'aurelia-pal';
 * CustomAttribute that binds provided DOM element's focus attribute with a property on the viewmodel.
 */
 @customAttribute('focus', bindingMode.twoWay)
-@inject(DOM.Element, TaskQueue)
 export class Focus {
+
+  static inject() {
+    return [DOM.Element, TaskQueue];
+  }
   /**
   * Creates an instance of Focus.
   * @paramelement Target element on where attribute is placed on.
