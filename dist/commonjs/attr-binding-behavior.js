@@ -5,11 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.AttrBindingBehavior = undefined;
 
+var _dec, _class;
+
 var _aureliaBinding = require('aurelia-binding');
 
 
 
-var AttrBindingBehavior = exports.AttrBindingBehavior = function () {
+var AttrBindingBehavior = exports.AttrBindingBehavior = (_dec = (0, _aureliaBinding.bindingBehavior)('attr'), _dec(_class = function () {
   function AttrBindingBehavior() {
     
   }
@@ -21,4 +23,4 @@ var AttrBindingBehavior = exports.AttrBindingBehavior = function () {
   AttrBindingBehavior.prototype.unbind = function unbind(binding, source) {};
 
   return AttrBindingBehavior;
-}();
+}()) || _class);

@@ -3,6 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.SelfBindingBehavior = undefined;
+
+var _dec, _class;
+
+var _aureliaBinding = require('aurelia-binding');
 
 
 
@@ -16,7 +21,7 @@ function handleSelfEvent(event) {
   this.selfEventCallSource(event);
 }
 
-var SelfBindingBehavior = exports.SelfBindingBehavior = function () {
+var SelfBindingBehavior = exports.SelfBindingBehavior = (_dec = (0, _aureliaBinding.bindingBehavior)('self'), _dec(_class = function () {
   function SelfBindingBehavior() {
     
   }
@@ -33,4 +38,4 @@ var SelfBindingBehavior = exports.SelfBindingBehavior = function () {
   };
 
   return SelfBindingBehavior;
-}();
+}()) || _class);

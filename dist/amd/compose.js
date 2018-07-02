@@ -1,29 +1,10 @@
-define(['exports', 'aurelia-dependency-injection', 'aurelia-logging', 'aurelia-task-queue', 'aurelia-templating', 'aurelia-pal'], function (exports, _aureliaDependencyInjection, _aureliaLogging, _aureliaTaskQueue, _aureliaTemplating, _aureliaPal) {
+define(['exports', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-templating', 'aurelia-pal'], function (exports, _aureliaDependencyInjection, _aureliaTaskQueue, _aureliaTemplating, _aureliaPal) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.Compose = undefined;
-
-  var LogManager = _interopRequireWildcard(_aureliaLogging);
-
-  function _interopRequireWildcard(obj) {
-    if (obj && obj.__esModule) {
-      return obj;
-    } else {
-      var newObj = {};
-
-      if (obj != null) {
-        for (var key in obj) {
-          if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
-        }
-      }
-
-      newObj.default = obj;
-      return newObj;
-    }
-  }
 
   function _initDefineProp(target, property, descriptor, context) {
     if (!descriptor) return;
@@ -70,11 +51,13 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-logging', 'aurelia-t
     throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
   }
 
-  var _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4;
+  var _dec, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4;
 
-  var logger = LogManager.getLogger('templating-resources');
+  var Compose = exports.Compose = (_dec = (0, _aureliaTemplating.customElement)('compose'), _dec(_class = (0, _aureliaTemplating.noView)(_class = (_class2 = function () {
+    Compose.inject = function inject() {
+      return [_aureliaPal.DOM.Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue];
+    };
 
-  var Compose = exports.Compose = (_dec = (0, _aureliaTemplating.customElement)('compose'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaDependencyInjection.Container, _aureliaTemplating.CompositionEngine, _aureliaTemplating.ViewSlot, _aureliaTemplating.ViewResources, _aureliaTaskQueue.TaskQueue), _dec(_class = (0, _aureliaTemplating.noView)(_class = _dec2(_class = (_class2 = function () {
     function Compose(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
       
 
@@ -107,12 +90,13 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-logging', 'aurelia-t
       this.changes.view = this.view;
       this.changes.viewModel = this.viewModel;
       this.changes.model = this.model;
-      processChanges(this);
+      if (!this.pendingTask) {
+        processChanges(this);
+      }
     };
 
     Compose.prototype.unbind = function unbind() {
       this.changes = Object.create(null);
-      this.pendingTask = null;
       this.bindingContext = null;
       this.overrideContext = null;
       var returnToCache = true;
@@ -148,7 +132,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-logging', 'aurelia-t
   }), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, 'swapOrder', [_aureliaTemplating.bindable], {
     enumerable: true,
     initializer: null
-  })), _class2)) || _class) || _class) || _class);
+  })), _class2)) || _class) || _class);
 
 
   function isEmpty(obj) {
@@ -203,18 +187,19 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-logging', 'aurelia-t
       });
     }
 
-    composer.pendingTask = composer.pendingTask.catch(function (e) {
-      logger.error(e);
-    }).then(function () {
-      if (!composer.pendingTask) {
-        return;
-      }
-
-      composer.pendingTask = null;
-      if (!isEmpty(composer.changes)) {
-        processChanges(composer);
-      }
+    composer.pendingTask = composer.pendingTask.then(function () {
+      completeCompositionTask(composer);
+    }, function (reason) {
+      completeCompositionTask(composer);
+      throw reason;
     });
+  }
+
+  function completeCompositionTask(composer) {
+    composer.pendingTask = null;
+    if (!isEmpty(composer.changes)) {
+      processChanges(composer);
+    }
   }
 
   function requestUpdate(composer) {

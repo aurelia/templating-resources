@@ -1,4 +1,4 @@
-define(['exports', './binding-signaler'], function (exports, _bindingSignaler) {
+define(['exports', 'aurelia-binding', './binding-signaler'], function (exports, _aureliaBinding, _bindingSignaler) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -8,7 +8,9 @@ define(['exports', './binding-signaler'], function (exports, _bindingSignaler) {
 
   
 
-  var SignalBindingBehavior = exports.SignalBindingBehavior = function () {
+  var _dec, _class;
+
+  var SignalBindingBehavior = exports.SignalBindingBehavior = (_dec = (0, _aureliaBinding.bindingBehavior)('signal'), _dec(_class = function () {
     SignalBindingBehavior.inject = function inject() {
       return [_bindingSignaler.BindingSignaler];
     };
@@ -60,5 +62,5 @@ define(['exports', './binding-signaler'], function (exports, _bindingSignaler) {
     };
 
     return SignalBindingBehavior;
-  }();
+  }()) || _class);
 });

@@ -8,10 +8,12 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
 
   
 
+  var _dec, _class;
+
   var eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
   var notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way/ from-view bindings on input/select elements.';
 
-  var UpdateTriggerBindingBehavior = exports.UpdateTriggerBindingBehavior = function () {
+  var UpdateTriggerBindingBehavior = exports.UpdateTriggerBindingBehavior = (_dec = (0, _aureliaBinding.bindingBehavior)('updateTrigger'), _dec(_class = function () {
     function UpdateTriggerBindingBehavior() {
       
     }
@@ -47,5 +49,5 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
     };
 
     return UpdateTriggerBindingBehavior;
-  }();
+  }()) || _class);
 });

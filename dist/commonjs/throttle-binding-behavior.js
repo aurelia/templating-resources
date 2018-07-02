@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ThrottleBindingBehavior = undefined;
 
+var _dec, _class;
+
 var _aureliaBinding = require('aurelia-binding');
 
 
@@ -31,7 +33,7 @@ function throttle(newValue) {
   }
 }
 
-var ThrottleBindingBehavior = exports.ThrottleBindingBehavior = function () {
+var ThrottleBindingBehavior = exports.ThrottleBindingBehavior = (_dec = (0, _aureliaBinding.bindingBehavior)('throttle'), _dec(_class = function () {
   function ThrottleBindingBehavior() {
     
   }
@@ -67,4 +69,4 @@ var ThrottleBindingBehavior = exports.ThrottleBindingBehavior = function () {
   };
 
   return ThrottleBindingBehavior;
-}();
+}()) || _class);

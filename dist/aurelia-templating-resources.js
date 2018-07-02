@@ -1,7 +1,6 @@
-import * as LogManager from 'aurelia-logging';
 import {inject,Container,Optional} from 'aurelia-dependency-injection';
 import {BoundViewFactory,ViewSlot,customAttribute,templateController,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,CompositionContext,noView,View,ViewEngine,Animator,TargetInstruction} from 'aurelia-templating';
-import {createOverrideContext,bindingMode,EventSubscriber,BindingBehavior,ValueConverter,sourceContext,targetContext,DataAttributeObserver,mergeSplice,valueConverter,ObserverLocator} from 'aurelia-binding';
+import {createOverrideContext,bindingMode,EventSubscriber,bindingBehavior,BindingBehavior,ValueConverter,sourceContext,targetContext,DataAttributeObserver,mergeSplice,valueConverter,ObserverLocator} from 'aurelia-binding';
 import {TaskQueue} from 'aurelia-task-queue';
 import {DOM,FEATURE} from 'aurelia-pal';
 import {Loader} from 'aurelia-loader';
@@ -67,6 +66,7 @@ export class With {
 const eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
 const notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way/ from-view bindings on input/select elements.';
 
+@bindingBehavior('updateTrigger')
 export class UpdateTriggerBindingBehavior {
 
   bind(binding, source, ...events) {
@@ -122,6 +122,7 @@ function throttle(newValue) {
   }
 }
 
+@bindingBehavior('throttle')
 export class ThrottleBindingBehavior {
   bind(binding, source, delay = 200) {
     // determine which method to throttle.
@@ -169,6 +170,7 @@ function handleSelfEvent(event) {
   this.selfEventCallSource(event);
 }
 
+@bindingBehavior('self')
 export class SelfBindingBehavior {
   bind(binding, source) {
     if (!binding.callSource || !binding.targetEvent) throw new Error('Self binding behavior only supports event.');
@@ -463,8 +465,11 @@ export class HTMLSanitizer {
 * CustomAttribute that binds provided DOM element's focus attribute with a property on the viewmodel.
 */
 @customAttribute('focus', bindingMode.twoWay)
-@inject(DOM.Element, TaskQueue)
 export class Focus {
+
+  static inject() {
+    return [DOM.Element, TaskQueue];
+  }
   /**
   * Creates an instance of Focus.
   * @paramelement Target element on where attribute is placed on.
@@ -567,12 +572,13 @@ function debounceCall(context, newValue, oldValue) {
     state.oldValue = oldValue;
   }
   state.timeoutId = setTimeout(() => {
-    const ov = state.oldValue;
+    const _oldValue = state.oldValue;
     state.oldValue = unset;
-    this.debouncedMethod(context, newValue, ov);
+    this.debouncedMethod(context, newValue, _oldValue);
   }, state.delay);
 }
 
+@bindingBehavior('debounce')
 export class DebounceBindingBehavior {
   bind(binding, source, delay = 200) {
     const isCallSource = binding.callSource !== undefined;
@@ -685,15 +691,16 @@ export function _createCSSResource(address: string): Function {
   return ViewCSS;
 }
 
-const logger = LogManager.getLogger('templating-resources');
-
 /**
 * Used to compose a new view / view-model template or bind to an existing instance.
 */
 @customElement('compose')
 @noView
-@inject(DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue)
 export class Compose {
+
+  static inject() {
+    return [DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue];
+  }
   /**
   * Model to bind the custom element to.
   *
@@ -766,7 +773,9 @@ export class Compose {
     this.changes.view = this.view;
     this.changes.viewModel = this.viewModel;
     this.changes.model = this.model;
-    processChanges(this);
+    if (!this.pendingTask) {
+      processChanges(this);
+    }
   }
 
   /**
@@ -774,7 +783,6 @@ export class Compose {
   */
   unbind() {
     this.changes = Object.create(null);
-    this.pendingTask = null;
     this.bindingContext = null;
     this.overrideContext = null;
     let returnToCache = true;
@@ -867,19 +875,20 @@ function processChanges(composer: Compose) {
     });
   }
 
-  composer.pendingTask = composer.pendingTask.catch(e => {
-    logger.error(e);
-  }).then(() => {
-    if (!composer.pendingTask) {
-      // the element has been unbound
-      return;
-    }
+  composer.pendingTask = composer.pendingTask
+    .then(() => {
+      completeCompositionTask(composer);
+    }, reason => {
+      completeCompositionTask(composer);
+      throw reason;
+    });
+}
 
-    composer.pendingTask = null;
-    if (!isEmpty(composer.changes)) {
-      processChanges(composer);
-    }
-  });
+function completeCompositionTask(composer) {
+  composer.pendingTask = null;
+  if (!isEmpty(composer.changes)) {
+    processChanges(composer);
+  }
 }
 
 function requestUpdate(composer: Compose) {
@@ -919,6 +928,7 @@ let modeBindingBehavior = {
 };
 
 @mixin(modeBindingBehavior)
+@bindingBehavior('oneTime')
 export class OneTimeBindingBehavior {
   constructor() {
     this.mode = bindingMode.oneTime;
@@ -926,13 +936,31 @@ export class OneTimeBindingBehavior {
 }
 
 @mixin(modeBindingBehavior)
+@bindingBehavior('oneWay')
 export class OneWayBindingBehavior {
   constructor() {
-    this.mode = bindingMode.oneWay;
+    this.mode = bindingMode.toView;
   }
 }
 
 @mixin(modeBindingBehavior)
+@bindingBehavior('toView')
+export class ToViewBindingBehavior {
+  constructor() {
+    this.mode = bindingMode.toView;
+  }
+}
+
+@mixin(modeBindingBehavior)
+@bindingBehavior('fromView')
+export class FromViewBindingBehavior {
+  constructor() {
+    this.mode = bindingMode.fromView;
+  }
+}
+
+@mixin(modeBindingBehavior)
+@bindingBehavior('twoWay')
 export class TwoWayBindingBehavior {
   constructor() {
     this.mode = bindingMode.twoWay;
@@ -954,6 +982,7 @@ export function injectAureliaHideStyleAtBoundary(domBoundary) {
   }
 }
 
+@bindingBehavior('attr')
 export class AttrBindingBehavior {
   bind(binding, source) {
     binding.targetObserver = new DataAttributeObserver(binding.target, binding.targetProperty);
@@ -1837,6 +1866,7 @@ export function configure(config) {
   });
 }
 
+@bindingBehavior('signal')
 export class SignalBindingBehavior {
   static inject() { return [BindingSignaler]; }
   signals;
@@ -1891,8 +1921,12 @@ export class SignalBindingBehavior {
 * - different from "if" in that the markup is still added to the DOM, simply not shown.
 */
 @customAttribute('hide')
-@inject(DOM.Element, Animator, Optional.of(DOM.boundary, true))
 export class Hide {
+
+  static inject() {
+    return [DOM.Element, Animator, Optional.of(DOM.boundary, true)];
+  }
+
   /**
   * Creates a new instance of Hide.
   * @param element Target element to conditionally hide.
@@ -1937,8 +1971,12 @@ export class Hide {
 * - different from "if" in that the markup is still added to the DOM, simply not shown.
 */
 @customAttribute('show')
-@inject(DOM.Element, Animator, Optional.of(DOM.boundary, true))
 export class Show {
+
+  static inject() {
+    return [DOM.Element, Animator, Optional.of(DOM.boundary, true)];
+  }
+
   /**
   * Creates a new instance of Show.
   * @param element Target element to conditionally show.
@@ -2147,7 +2185,11 @@ export class Repeat extends AbstractRepeater {
     if (!this.isOneTime && !this._observeInnerCollection()) {
       this._observeCollection();
     }
+    this.ignoreMutation = true;
     this.strategy.instanceChanged(this, items);
+    this.observerLocator.taskQueue.queueMicroTask(() => {
+      this.ignoreMutation = false;
+    });
   }
 
   _getInnerCollection() {
@@ -2163,6 +2205,9 @@ export class Repeat extends AbstractRepeater {
   */
   handleCollectionMutated(collection, changes) {
     if (!this.collectionObserver) {
+      return;
+    }
+    if (this.ignoreMutation) {
       return;
     }
     this.strategy.instanceMutated(this, collection, changes);

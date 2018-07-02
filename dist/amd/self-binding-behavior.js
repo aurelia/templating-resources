@@ -1,11 +1,14 @@
-define(['exports'], function (exports) {
+define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
+  exports.SelfBindingBehavior = undefined;
 
   
+
+  var _dec, _class;
 
   function findOriginalEventTarget(event) {
     return event.path && event.path[0] || event.deepPath && event.deepPath[0] || event.target;
@@ -17,7 +20,7 @@ define(['exports'], function (exports) {
     this.selfEventCallSource(event);
   }
 
-  var SelfBindingBehavior = exports.SelfBindingBehavior = function () {
+  var SelfBindingBehavior = exports.SelfBindingBehavior = (_dec = (0, _aureliaBinding.bindingBehavior)('self'), _dec(_class = function () {
     function SelfBindingBehavior() {
       
     }
@@ -34,5 +37,5 @@ define(['exports'], function (exports) {
     };
 
     return SelfBindingBehavior;
-  }();
+  }()) || _class);
 });

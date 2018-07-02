@@ -3,13 +3,12 @@
 System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-pal', './aurelia-hide-style'], function (_export, _context) {
   "use strict";
 
-  var inject, Optional, customAttribute, Animator, DOM, injectAureliaHideStyleAtBoundary, aureliaHideClassName, _dec, _dec2, _class, Hide;
+  var Optional, customAttribute, Animator, DOM, injectAureliaHideStyleAtBoundary, aureliaHideClassName, _dec, _class, Hide;
 
   
 
   return {
     setters: [function (_aureliaDependencyInjection) {
-      inject = _aureliaDependencyInjection.inject;
       Optional = _aureliaDependencyInjection.Optional;
     }, function (_aureliaTemplating) {
       customAttribute = _aureliaTemplating.customAttribute;
@@ -21,7 +20,11 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
       aureliaHideClassName = _aureliaHideStyle.aureliaHideClassName;
     }],
     execute: function () {
-      _export('Hide', Hide = (_dec = customAttribute('hide'), _dec2 = inject(DOM.Element, Animator, Optional.of(DOM.boundary, true)), _dec(_class = _dec2(_class = function () {
+      _export('Hide', Hide = (_dec = customAttribute('hide'), _dec(_class = function () {
+        Hide.inject = function inject() {
+          return [DOM.Element, Animator, Optional.of(DOM.boundary, true)];
+        };
+
         function Hide(element, animator, domBoundary) {
           
 
@@ -47,7 +50,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-templating', 'aurelia-
         };
 
         return Hide;
-      }()) || _class) || _class));
+      }()) || _class));
 
       _export('Hide', Hide);
     }

@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Hide = undefined;
 
-var _dec, _dec2, _class;
+var _dec, _class;
 
 var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
@@ -17,7 +17,11 @@ var _aureliaHideStyle = require('./aurelia-hide-style');
 
 
 
-var Hide = exports.Hide = (_dec = (0, _aureliaTemplating.customAttribute)('hide'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)), _dec(_class = _dec2(_class = function () {
+var Hide = exports.Hide = (_dec = (0, _aureliaTemplating.customAttribute)('hide'), _dec(_class = function () {
+  Hide.inject = function inject() {
+    return [_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)];
+  };
+
   function Hide(element, animator, domBoundary) {
     
 
@@ -43,4 +47,4 @@ var Hide = exports.Hide = (_dec = (0, _aureliaTemplating.customAttribute)('hide'
   };
 
   return Hide;
-}()) || _class) || _class);
+}()) || _class);

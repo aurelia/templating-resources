@@ -1,9 +1,9 @@
 'use strict';
 
-System.register([], function (_export, _context) {
+System.register(['aurelia-binding'], function (_export, _context) {
   "use strict";
 
-  var SelfBindingBehavior;
+  var bindingBehavior, _dec, _class, SelfBindingBehavior;
 
   
 
@@ -18,9 +18,11 @@ System.register([], function (_export, _context) {
   }
 
   return {
-    setters: [],
+    setters: [function (_aureliaBinding) {
+      bindingBehavior = _aureliaBinding.bindingBehavior;
+    }],
     execute: function () {
-      _export('SelfBindingBehavior', SelfBindingBehavior = function () {
+      _export('SelfBindingBehavior', SelfBindingBehavior = (_dec = bindingBehavior('self'), _dec(_class = function () {
         function SelfBindingBehavior() {
           
         }
@@ -37,7 +39,7 @@ System.register([], function (_export, _context) {
         };
 
         return SelfBindingBehavior;
-      }());
+      }()) || _class));
 
       _export('SelfBindingBehavior', SelfBindingBehavior);
     }

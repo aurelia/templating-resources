@@ -5,11 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SignalBindingBehavior = undefined;
 
+var _dec, _class;
+
+var _aureliaBinding = require('aurelia-binding');
+
 var _bindingSignaler = require('./binding-signaler');
 
 
 
-var SignalBindingBehavior = exports.SignalBindingBehavior = function () {
+var SignalBindingBehavior = exports.SignalBindingBehavior = (_dec = (0, _aureliaBinding.bindingBehavior)('signal'), _dec(_class = function () {
   SignalBindingBehavior.inject = function inject() {
     return [_bindingSignaler.BindingSignaler];
   };
@@ -61,4 +65,4 @@ var SignalBindingBehavior = exports.SignalBindingBehavior = function () {
   };
 
   return SignalBindingBehavior;
-}();
+}()) || _class);

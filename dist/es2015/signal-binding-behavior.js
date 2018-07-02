@@ -1,6 +1,9 @@
+var _dec, _class;
+
+import { bindingBehavior } from 'aurelia-binding';
 import { BindingSignaler } from './binding-signaler';
 
-export let SignalBindingBehavior = class SignalBindingBehavior {
+export let SignalBindingBehavior = (_dec = bindingBehavior('signal'), _dec(_class = class SignalBindingBehavior {
   static inject() {
     return [BindingSignaler];
   }
@@ -49,4 +52,4 @@ export let SignalBindingBehavior = class SignalBindingBehavior {
       bindings.splice(bindings.indexOf(binding), 1);
     }
   }
-};
+}) || _class);

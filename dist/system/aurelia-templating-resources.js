@@ -1,14 +1,14 @@
 'use strict';
 
-System.register(['aurelia-pal', './compose', './if', './else', './with', './repeat', './show', './hide', './sanitize-html', './replaceable', './focus', 'aurelia-templating', './css-resource', './html-sanitizer', './attr-binding-behavior', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './self-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy', './repeat-utilities', './analyze-view-factory', './aurelia-hide-style'], function (_export, _context) {
+System.register(['./compose', './if', './else', './with', './repeat', './show', './hide', './sanitize-html', './replaceable', './focus', 'aurelia-templating', './css-resource', './html-sanitizer', './attr-binding-behavior', './binding-mode-behaviors', './throttle-binding-behavior', './debounce-binding-behavior', './self-binding-behavior', './signal-binding-behavior', './binding-signaler', './update-trigger-binding-behavior', './abstract-repeater', './repeat-strategy-locator', './html-resource-plugin', './null-repeat-strategy', './array-repeat-strategy', './map-repeat-strategy', './set-repeat-strategy', './number-repeat-strategy', './repeat-utilities', './analyze-view-factory', './aurelia-hide-style'], function (_export, _context) {
   "use strict";
 
-  var PLATFORM, Compose, If, Else, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, ViewEngine, _createCSSResource, HTMLSanitizer, AttrBindingBehavior, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SelfBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle, injectAureliaHideStyleAtHead;
+  var Compose, If, Else, With, Repeat, Show, Hide, SanitizeHTMLValueConverter, Replaceable, Focus, ViewEngine, _createCSSResource, HTMLSanitizer, AttrBindingBehavior, OneTimeBindingBehavior, OneWayBindingBehavior, TwoWayBindingBehavior, FromViewBindingBehavior, ToViewBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SelfBindingBehavior, SignalBindingBehavior, BindingSignaler, UpdateTriggerBindingBehavior, AbstractRepeater, RepeatStrategyLocator, configureHtmlResourcePlugin, NullRepeatStrategy, ArrayRepeatStrategy, MapRepeatStrategy, SetRepeatStrategy, NumberRepeatStrategy, createFullOverrideContext, updateOverrideContext, getItemsSourceExpression, isOneTime, updateOneTimeBinding, unwrapExpression, viewsRequireLifecycle, injectAureliaHideStyleAtHead;
 
   function configure(config) {
     injectAureliaHideStyleAtHead();
 
-    config.globalResources(PLATFORM.moduleName('./compose'), PLATFORM.moduleName('./if'), PLATFORM.moduleName('./else'), PLATFORM.moduleName('./with'), PLATFORM.moduleName('./repeat'), PLATFORM.moduleName('./show'), PLATFORM.moduleName('./hide'), PLATFORM.moduleName('./replaceable'), PLATFORM.moduleName('./sanitize-html'), PLATFORM.moduleName('./focus'), PLATFORM.moduleName('./binding-mode-behaviors'), PLATFORM.moduleName('./self-binding-behavior'), PLATFORM.moduleName('./throttle-binding-behavior'), PLATFORM.moduleName('./debounce-binding-behavior'), PLATFORM.moduleName('./signal-binding-behavior'), PLATFORM.moduleName('./update-trigger-binding-behavior'), PLATFORM.moduleName('./attr-binding-behavior'));
+    config.globalResources(Compose, If, Else, With, Repeat, Show, Hide, Replaceable, Focus, SanitizeHTMLValueConverter, OneTimeBindingBehavior, OneWayBindingBehavior, ToViewBindingBehavior, FromViewBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SignalBindingBehavior, UpdateTriggerBindingBehavior, AttrBindingBehavior);
 
     configureHtmlResourcePlugin(config);
 
@@ -26,9 +26,7 @@ System.register(['aurelia-pal', './compose', './if', './else', './with', './repe
   }
 
   return {
-    setters: [function (_aureliaPal) {
-      PLATFORM = _aureliaPal.PLATFORM;
-    }, function (_compose) {
+    setters: [function (_compose) {
       Compose = _compose.Compose;
     }, function (_if) {
       If = _if.If;
@@ -60,6 +58,8 @@ System.register(['aurelia-pal', './compose', './if', './else', './with', './repe
       OneTimeBindingBehavior = _bindingModeBehaviors.OneTimeBindingBehavior;
       OneWayBindingBehavior = _bindingModeBehaviors.OneWayBindingBehavior;
       TwoWayBindingBehavior = _bindingModeBehaviors.TwoWayBindingBehavior;
+      FromViewBindingBehavior = _bindingModeBehaviors.FromViewBindingBehavior;
+      ToViewBindingBehavior = _bindingModeBehaviors.ToViewBindingBehavior;
     }, function (_throttleBindingBehavior) {
       ThrottleBindingBehavior = _throttleBindingBehavior.ThrottleBindingBehavior;
     }, function (_debounceBindingBehavior) {
@@ -130,6 +130,10 @@ System.register(['aurelia-pal', './compose', './if', './else', './with', './repe
       _export('OneTimeBindingBehavior', OneTimeBindingBehavior);
 
       _export('OneWayBindingBehavior', OneWayBindingBehavior);
+
+      _export('ToViewBindingBehavior', ToViewBindingBehavior);
+
+      _export('FromViewBindingBehavior', FromViewBindingBehavior);
 
       _export('TwoWayBindingBehavior', TwoWayBindingBehavior);
 

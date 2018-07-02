@@ -1,4 +1,3 @@
-import * as LogManager from 'aurelia-logging';
 import {
   inject,
   Container,
@@ -27,6 +26,7 @@ import {
   createOverrideContext,
   bindingMode,
   EventSubscriber,
+  bindingBehavior,
   BindingBehavior,
   ValueConverter,
   sourceContext,
@@ -210,6 +210,7 @@ export declare class HTMLSanitizer {
 * CustomAttribute that binds provided DOM element's focus attribute with a property on the viewmodel.
 */
 export declare class Focus {
+  static inject(): any;
   
   /**
     * Creates an instance of Focus.
@@ -244,6 +245,7 @@ export declare class DebounceBindingBehavior {
 * Used to compose a new view / view-model template or bind to an existing instance.
 */
 export declare class Compose {
+  static inject(): any;
   model: any;
   view: any;
   viewModel: any;
@@ -309,6 +311,12 @@ export declare class OneTimeBindingBehavior {
   constructor();
 }
 export declare class OneWayBindingBehavior {
+  constructor();
+}
+export declare class ToViewBindingBehavior {
+  constructor();
+}
+export declare class FromViewBindingBehavior {
   constructor();
 }
 export declare class TwoWayBindingBehavior {
@@ -583,6 +591,7 @@ export declare class SignalBindingBehavior {
 * - different from "if" in that the markup is still added to the DOM, simply not shown.
 */
 export declare class Hide {
+  static inject(): any;
   
   /**
     * Creates a new instance of Hide.
@@ -614,6 +623,7 @@ export declare class Hide {
 * - different from "if" in that the markup is still added to the DOM, simply not shown.
 */
 export declare class Show {
+  static inject(): any;
   
   /**
     * Creates a new instance of Show.

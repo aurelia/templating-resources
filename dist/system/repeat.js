@@ -161,6 +161,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
         };
 
         Repeat.prototype.itemsChanged = function itemsChanged() {
+          var _this2 = this;
+
           this._unsubscribeCollection();
 
           if (!this.scope) {
@@ -176,7 +178,11 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           if (!this.isOneTime && !this._observeInnerCollection()) {
             this._observeCollection();
           }
+          this.ignoreMutation = true;
           this.strategy.instanceChanged(this, items);
+          this.observerLocator.taskQueue.queueMicroTask(function () {
+            _this2.ignoreMutation = false;
+          });
         };
 
         Repeat.prototype._getInnerCollection = function _getInnerCollection() {
@@ -191,11 +197,14 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           if (!this.collectionObserver) {
             return;
           }
+          if (this.ignoreMutation) {
+            return;
+          }
           this.strategy.instanceMutated(this, collection, changes);
         };
 
         Repeat.prototype.handleInnerCollectionMutated = function handleInnerCollectionMutated(collection, changes) {
-          var _this2 = this;
+          var _this3 = this;
 
           if (!this.collectionObserver) {
             return;
@@ -207,7 +216,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-binding', 'aurelia-tem
           this.ignoreMutation = true;
           var newItems = this.sourceExpression.evaluate(this.scope, this.lookupFunctions);
           this.observerLocator.taskQueue.queueMicroTask(function () {
-            return _this2.ignoreMutation = false;
+            return _this3.ignoreMutation = false;
           });
 
           if (newItems === this.items) {

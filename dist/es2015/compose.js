@@ -1,4 +1,4 @@
-var _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4;
+var _dec, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4;
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -43,15 +43,17 @@ function _initializerWarningHelper(descriptor, context) {
   throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
-import { Container, inject } from 'aurelia-dependency-injection';
-import * as LogManager from 'aurelia-logging';
+import { Container } from 'aurelia-dependency-injection';
 import { TaskQueue } from 'aurelia-task-queue';
 import { CompositionEngine, CompositionContext, ViewSlot, ViewResources, customElement, bindable, noView, View } from 'aurelia-templating';
 import { DOM } from 'aurelia-pal';
 
-const logger = LogManager.getLogger('templating-resources');
+export let Compose = (_dec = customElement('compose'), _dec(_class = noView(_class = (_class2 = class Compose {
 
-export let Compose = (_dec = customElement('compose'), _dec2 = inject(DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue), _dec(_class = noView(_class = _dec2(_class = (_class2 = class Compose {
+  static inject() {
+    return [DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue];
+  }
+
   constructor(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
     _initDefineProp(this, 'model', _descriptor, this);
 
@@ -82,12 +84,13 @@ export let Compose = (_dec = customElement('compose'), _dec2 = inject(DOM.Elemen
     this.changes.view = this.view;
     this.changes.viewModel = this.viewModel;
     this.changes.model = this.model;
-    processChanges(this);
+    if (!this.pendingTask) {
+      processChanges(this);
+    }
   }
 
   unbind() {
     this.changes = Object.create(null);
-    this.pendingTask = null;
     this.bindingContext = null;
     this.overrideContext = null;
     let returnToCache = true;
@@ -121,7 +124,7 @@ export let Compose = (_dec = customElement('compose'), _dec2 = inject(DOM.Elemen
 }), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, 'swapOrder', [bindable], {
   enumerable: true,
   initializer: null
-})), _class2)) || _class) || _class) || _class);
+})), _class2)) || _class) || _class);
 
 function isEmpty(obj) {
   for (const key in obj) {
@@ -175,18 +178,19 @@ function processChanges(composer) {
     });
   }
 
-  composer.pendingTask = composer.pendingTask.catch(e => {
-    logger.error(e);
-  }).then(() => {
-    if (!composer.pendingTask) {
-      return;
-    }
-
-    composer.pendingTask = null;
-    if (!isEmpty(composer.changes)) {
-      processChanges(composer);
-    }
+  composer.pendingTask = composer.pendingTask.then(() => {
+    completeCompositionTask(composer);
+  }, reason => {
+    completeCompositionTask(composer);
+    throw reason;
   });
+}
+
+function completeCompositionTask(composer) {
+  composer.pendingTask = null;
+  if (!isEmpty(composer.changes)) {
+    processChanges(composer);
+  }
 }
 
 function requestUpdate(composer) {

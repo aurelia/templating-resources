@@ -1,8 +1,10 @@
+var _dec, _class;
 
 
-import { DataAttributeObserver } from 'aurelia-binding';
 
-export var AttrBindingBehavior = function () {
+import { DataAttributeObserver, bindingBehavior } from 'aurelia-binding';
+
+export var AttrBindingBehavior = (_dec = bindingBehavior('attr'), _dec(_class = function () {
   function AttrBindingBehavior() {
     
   }
@@ -14,4 +16,4 @@ export var AttrBindingBehavior = function () {
   AttrBindingBehavior.prototype.unbind = function unbind(binding, source) {};
 
   return AttrBindingBehavior;
-}();
+}()) || _class);

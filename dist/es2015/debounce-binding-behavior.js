@@ -1,4 +1,6 @@
-import { bindingMode, sourceContext, targetContext } from 'aurelia-binding';
+var _dec, _class;
+
+import { bindingMode, sourceContext, targetContext, bindingBehavior } from 'aurelia-binding';
 
 const unset = {};
 
@@ -20,13 +22,13 @@ function debounceCall(context, newValue, oldValue) {
     state.oldValue = oldValue;
   }
   state.timeoutId = setTimeout(() => {
-    const ov = state.oldValue;
+    const _oldValue = state.oldValue;
     state.oldValue = unset;
-    this.debouncedMethod(context, newValue, ov);
+    this.debouncedMethod(context, newValue, _oldValue);
   }, state.delay);
 }
 
-export let DebounceBindingBehavior = class DebounceBindingBehavior {
+export let DebounceBindingBehavior = (_dec = bindingBehavior('debounce'), _dec(_class = class DebounceBindingBehavior {
   bind(binding, source, delay = 200) {
     const isCallSource = binding.callSource !== undefined;
     const methodToDebounce = isCallSource ? 'callSource' : 'call';
@@ -54,4 +56,4 @@ export let DebounceBindingBehavior = class DebounceBindingBehavior {
     clearTimeout(binding.debounceState.timeoutId);
     binding.debounceState = null;
   }
-};
+}) || _class);

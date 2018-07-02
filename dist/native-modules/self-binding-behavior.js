@@ -1,4 +1,8 @@
+var _dec, _class;
 
+
+
+import { bindingBehavior } from 'aurelia-binding';
 
 function findOriginalEventTarget(event) {
   return event.path && event.path[0] || event.deepPath && event.deepPath[0] || event.target;
@@ -10,7 +14,7 @@ function handleSelfEvent(event) {
   this.selfEventCallSource(event);
 }
 
-export var SelfBindingBehavior = function () {
+export var SelfBindingBehavior = (_dec = bindingBehavior('self'), _dec(_class = function () {
   function SelfBindingBehavior() {
     
   }
@@ -27,4 +31,4 @@ export var SelfBindingBehavior = function () {
   };
 
   return SelfBindingBehavior;
-}();
+}()) || _class);

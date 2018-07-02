@@ -5,13 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Focus = undefined;
 
-var _dec, _dec2, _class;
+var _dec, _class;
 
 var _aureliaTemplating = require('aurelia-templating');
 
 var _aureliaBinding = require('aurelia-binding');
-
-var _aureliaDependencyInjection = require('aurelia-dependency-injection');
 
 var _aureliaTaskQueue = require('aurelia-task-queue');
 
@@ -19,7 +17,11 @@ var _aureliaPal = require('aurelia-pal');
 
 
 
-var Focus = exports.Focus = (_dec = (0, _aureliaTemplating.customAttribute)('focus', _aureliaBinding.bindingMode.twoWay), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTaskQueue.TaskQueue), _dec(_class = _dec2(_class = function () {
+var Focus = exports.Focus = (_dec = (0, _aureliaTemplating.customAttribute)('focus', _aureliaBinding.bindingMode.twoWay), _dec(_class = function () {
+  Focus.inject = function inject() {
+    return [_aureliaPal.DOM.Element, _aureliaTaskQueue.TaskQueue];
+  };
+
   function Focus(element, taskQueue) {
     
 
@@ -76,4 +78,4 @@ var Focus = exports.Focus = (_dec = (0, _aureliaTemplating.customAttribute)('foc
   };
 
   return Focus;
-}()) || _class) || _class);
+}()) || _class);

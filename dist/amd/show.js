@@ -8,9 +8,13 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
 
   
 
-  var _dec, _dec2, _class;
+  var _dec, _class;
 
-  var Show = exports.Show = (_dec = (0, _aureliaTemplating.customAttribute)('show'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)), _dec(_class = _dec2(_class = function () {
+  var Show = exports.Show = (_dec = (0, _aureliaTemplating.customAttribute)('show'), _dec(_class = function () {
+    Show.inject = function inject() {
+      return [_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)];
+    };
+
     function Show(element, animator, domBoundary) {
       
 
@@ -36,5 +40,5 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
     };
 
     return Show;
-  }()) || _class) || _class);
+  }()) || _class);
 });

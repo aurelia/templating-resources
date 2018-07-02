@@ -8,6 +8,8 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
 
   
 
+  var _dec, _class;
+
   function throttle(newValue) {
     var _this = this;
 
@@ -30,7 +32,7 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
     }
   }
 
-  var ThrottleBindingBehavior = exports.ThrottleBindingBehavior = function () {
+  var ThrottleBindingBehavior = exports.ThrottleBindingBehavior = (_dec = (0, _aureliaBinding.bindingBehavior)('throttle'), _dec(_class = function () {
     function ThrottleBindingBehavior() {
       
     }
@@ -66,5 +68,5 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
     };
 
     return ThrottleBindingBehavior;
-  }();
+  }()) || _class);
 });

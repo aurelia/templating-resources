@@ -1,4 +1,6 @@
-import { bindingMode } from 'aurelia-binding';
+var _dec, _class;
+
+import { bindingMode, bindingBehavior } from 'aurelia-binding';
 
 function throttle(newValue) {
   let state = this.throttleState;
@@ -20,7 +22,7 @@ function throttle(newValue) {
   }
 }
 
-export let ThrottleBindingBehavior = class ThrottleBindingBehavior {
+export let ThrottleBindingBehavior = (_dec = bindingBehavior('throttle'), _dec(_class = class ThrottleBindingBehavior {
   bind(binding, source, delay = 200) {
     let methodToThrottle = 'updateTarget';
     if (binding.callSource) {
@@ -48,4 +50,4 @@ export let ThrottleBindingBehavior = class ThrottleBindingBehavior {
     clearTimeout(binding.throttleState.timeoutId);
     binding.throttleState = null;
   }
-};
+}) || _class);

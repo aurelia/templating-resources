@@ -3,7 +3,7 @@
 System.register(['aurelia-binding'], function (_export, _context) {
   "use strict";
 
-  var bindingMode, ThrottleBindingBehavior;
+  var bindingMode, bindingBehavior, _dec, _class, ThrottleBindingBehavior;
 
   
 
@@ -32,9 +32,10 @@ System.register(['aurelia-binding'], function (_export, _context) {
   return {
     setters: [function (_aureliaBinding) {
       bindingMode = _aureliaBinding.bindingMode;
+      bindingBehavior = _aureliaBinding.bindingBehavior;
     }],
     execute: function () {
-      _export('ThrottleBindingBehavior', ThrottleBindingBehavior = function () {
+      _export('ThrottleBindingBehavior', ThrottleBindingBehavior = (_dec = bindingBehavior('throttle'), _dec(_class = function () {
         function ThrottleBindingBehavior() {
           
         }
@@ -70,7 +71,7 @@ System.register(['aurelia-binding'], function (_export, _context) {
         };
 
         return ThrottleBindingBehavior;
-      }());
+      }()) || _class));
 
       _export('ThrottleBindingBehavior', ThrottleBindingBehavior);
     }

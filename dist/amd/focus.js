@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-pal'], function (exports, _aureliaTemplating, _aureliaBinding, _aureliaDependencyInjection, _aureliaTaskQueue, _aureliaPal) {
+define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-task-queue', 'aurelia-pal'], function (exports, _aureliaTemplating, _aureliaBinding, _aureliaTaskQueue, _aureliaPal) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -8,9 +8,13 @@ define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-dependency-
 
   
 
-  var _dec, _dec2, _class;
+  var _dec, _class;
 
-  var Focus = exports.Focus = (_dec = (0, _aureliaTemplating.customAttribute)('focus', _aureliaBinding.bindingMode.twoWay), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTaskQueue.TaskQueue), _dec(_class = _dec2(_class = function () {
+  var Focus = exports.Focus = (_dec = (0, _aureliaTemplating.customAttribute)('focus', _aureliaBinding.bindingMode.twoWay), _dec(_class = function () {
+    Focus.inject = function inject() {
+      return [_aureliaPal.DOM.Element, _aureliaTaskQueue.TaskQueue];
+    };
+
     function Focus(element, taskQueue) {
       
 
@@ -67,5 +71,5 @@ define(['exports', 'aurelia-templating', 'aurelia-binding', 'aurelia-dependency-
     };
 
     return Focus;
-  }()) || _class) || _class);
+  }()) || _class);
 });

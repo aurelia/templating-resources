@@ -3,7 +3,7 @@
 System.register(['aurelia-binding'], function (_export, _context) {
   "use strict";
 
-  var bindingMode, EventSubscriber, eventNamesRequired, notApplicableMessage, UpdateTriggerBindingBehavior;
+  var bindingMode, EventSubscriber, bindingBehavior, _dec, _class, eventNamesRequired, notApplicableMessage, UpdateTriggerBindingBehavior;
 
   
 
@@ -11,12 +11,13 @@ System.register(['aurelia-binding'], function (_export, _context) {
     setters: [function (_aureliaBinding) {
       bindingMode = _aureliaBinding.bindingMode;
       EventSubscriber = _aureliaBinding.EventSubscriber;
+      bindingBehavior = _aureliaBinding.bindingBehavior;
     }],
     execute: function () {
       eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
       notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way/ from-view bindings on input/select elements.';
 
-      _export('UpdateTriggerBindingBehavior', UpdateTriggerBindingBehavior = function () {
+      _export('UpdateTriggerBindingBehavior', UpdateTriggerBindingBehavior = (_dec = bindingBehavior('updateTrigger'), _dec(_class = function () {
         function UpdateTriggerBindingBehavior() {
           
         }
@@ -52,7 +53,7 @@ System.register(['aurelia-binding'], function (_export, _context) {
         };
 
         return UpdateTriggerBindingBehavior;
-      }());
+      }()) || _class));
 
       _export('UpdateTriggerBindingBehavior', UpdateTriggerBindingBehavior);
     }

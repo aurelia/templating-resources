@@ -1,18 +1,20 @@
 'use strict';
 
-System.register(['./binding-signaler'], function (_export, _context) {
+System.register(['aurelia-binding', './binding-signaler'], function (_export, _context) {
   "use strict";
 
-  var BindingSignaler, SignalBindingBehavior;
+  var bindingBehavior, BindingSignaler, _dec, _class, SignalBindingBehavior;
 
   
 
   return {
-    setters: [function (_bindingSignaler) {
+    setters: [function (_aureliaBinding) {
+      bindingBehavior = _aureliaBinding.bindingBehavior;
+    }, function (_bindingSignaler) {
       BindingSignaler = _bindingSignaler.BindingSignaler;
     }],
     execute: function () {
-      _export('SignalBindingBehavior', SignalBindingBehavior = function () {
+      _export('SignalBindingBehavior', SignalBindingBehavior = (_dec = bindingBehavior('signal'), _dec(_class = function () {
         SignalBindingBehavior.inject = function inject() {
           return [BindingSignaler];
         };
@@ -64,7 +66,7 @@ System.register(['./binding-signaler'], function (_export, _context) {
         };
 
         return SignalBindingBehavior;
-      }());
+      }()) || _class));
 
       _export('SignalBindingBehavior', SignalBindingBehavior);
     }

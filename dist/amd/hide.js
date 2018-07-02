@@ -8,9 +8,13 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
 
   
 
-  var _dec, _dec2, _class;
+  var _dec, _class;
 
-  var Hide = exports.Hide = (_dec = (0, _aureliaTemplating.customAttribute)('hide'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)), _dec(_class = _dec2(_class = function () {
+  var Hide = exports.Hide = (_dec = (0, _aureliaTemplating.customAttribute)('hide'), _dec(_class = function () {
+    Hide.inject = function inject() {
+      return [_aureliaPal.DOM.Element, _aureliaTemplating.Animator, _aureliaDependencyInjection.Optional.of(_aureliaPal.DOM.boundary, true)];
+    };
+
     function Hide(element, animator, domBoundary) {
       
 
@@ -36,5 +40,5 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-templating', 'aureli
     };
 
     return Hide;
-  }()) || _class) || _class);
+  }()) || _class);
 });

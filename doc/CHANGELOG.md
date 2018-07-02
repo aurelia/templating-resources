@@ -1,3 +1,8 @@
+<a name="1.7.0"></a>
+# [1.7.0](https://github.com/aurelia/templating-resources/compare/1.6.1...1.7.0) (2018-07-02)
+
+* Updated resources to use new framework configuration api.
+
 <a name="1.6.0"></a>
 # [1.6.0](https://github.com/aurelia/templating-resources/compare/1.5.4...1.6.0) (2018-03-18)
 

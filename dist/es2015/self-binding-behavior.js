@@ -1,3 +1,7 @@
+var _dec, _class;
+
+import { bindingBehavior } from 'aurelia-binding';
+
 function findOriginalEventTarget(event) {
   return event.path && event.path[0] || event.deepPath && event.deepPath[0] || event.target;
 }
@@ -8,7 +12,7 @@ function handleSelfEvent(event) {
   this.selfEventCallSource(event);
 }
 
-export let SelfBindingBehavior = class SelfBindingBehavior {
+export let SelfBindingBehavior = (_dec = bindingBehavior('self'), _dec(_class = class SelfBindingBehavior {
   bind(binding, source) {
     if (!binding.callSource || !binding.targetEvent) throw new Error('Self binding behavior only supports event.');
     binding.selfEventCallSource = binding.callSource;
@@ -19,4 +23,4 @@ export let SelfBindingBehavior = class SelfBindingBehavior {
     binding.callSource = binding.selfEventCallSource;
     binding.selfEventCallSource = null;
   }
-};
+}) || _class);

@@ -1,13 +1,17 @@
-var _dec, _dec2, _class;
+var _dec, _class;
 
 
 
-import { inject, Optional } from 'aurelia-dependency-injection';
+import { Optional } from 'aurelia-dependency-injection';
 import { customAttribute, Animator } from 'aurelia-templating';
 import { DOM } from 'aurelia-pal';
 import { injectAureliaHideStyleAtBoundary, aureliaHideClassName } from './aurelia-hide-style';
 
-export var Hide = (_dec = customAttribute('hide'), _dec2 = inject(DOM.Element, Animator, Optional.of(DOM.boundary, true)), _dec(_class = _dec2(_class = function () {
+export var Hide = (_dec = customAttribute('hide'), _dec(_class = function () {
+  Hide.inject = function inject() {
+    return [DOM.Element, Animator, Optional.of(DOM.boundary, true)];
+  };
+
   function Hide(element, animator, domBoundary) {
     
 
@@ -33,4 +37,4 @@ export var Hide = (_dec = customAttribute('hide'), _dec2 = inject(DOM.Element, A
   };
 
   return Hide;
-}()) || _class) || _class);
+}()) || _class);

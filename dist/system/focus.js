@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-pal'], function (_export, _context) {
+System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-task-queue', 'aurelia-pal'], function (_export, _context) {
   "use strict";
 
-  var customAttribute, bindingMode, inject, TaskQueue, DOM, _dec, _dec2, _class, Focus;
+  var customAttribute, bindingMode, TaskQueue, DOM, _dec, _class, Focus;
 
   
 
@@ -12,15 +12,17 @@ System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-in
       customAttribute = _aureliaTemplating.customAttribute;
     }, function (_aureliaBinding) {
       bindingMode = _aureliaBinding.bindingMode;
-    }, function (_aureliaDependencyInjection) {
-      inject = _aureliaDependencyInjection.inject;
     }, function (_aureliaTaskQueue) {
       TaskQueue = _aureliaTaskQueue.TaskQueue;
     }, function (_aureliaPal) {
       DOM = _aureliaPal.DOM;
     }],
     execute: function () {
-      _export('Focus', Focus = (_dec = customAttribute('focus', bindingMode.twoWay), _dec2 = inject(DOM.Element, TaskQueue), _dec(_class = _dec2(_class = function () {
+      _export('Focus', Focus = (_dec = customAttribute('focus', bindingMode.twoWay), _dec(_class = function () {
+        Focus.inject = function inject() {
+          return [DOM.Element, TaskQueue];
+        };
+
         function Focus(element, taskQueue) {
           
 
@@ -77,7 +79,7 @@ System.register(['aurelia-templating', 'aurelia-binding', 'aurelia-dependency-in
         };
 
         return Focus;
-      }()) || _class) || _class));
+      }()) || _class));
 
       _export('Focus', Focus);
     }

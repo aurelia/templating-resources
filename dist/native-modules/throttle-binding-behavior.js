@@ -1,6 +1,8 @@
+var _dec, _class;
 
 
-import { bindingMode } from 'aurelia-binding';
+
+import { bindingMode, bindingBehavior } from 'aurelia-binding';
 
 function throttle(newValue) {
   var _this = this;
@@ -24,7 +26,7 @@ function throttle(newValue) {
   }
 }
 
-export var ThrottleBindingBehavior = function () {
+export var ThrottleBindingBehavior = (_dec = bindingBehavior('throttle'), _dec(_class = function () {
   function ThrottleBindingBehavior() {
     
   }
@@ -60,4 +62,4 @@ export var ThrottleBindingBehavior = function () {
   };
 
   return ThrottleBindingBehavior;
-}();
+}()) || _class);

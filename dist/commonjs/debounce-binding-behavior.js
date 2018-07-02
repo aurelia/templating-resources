@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.DebounceBindingBehavior = undefined;
 
+var _dec, _class;
+
 var _aureliaBinding = require('aurelia-binding');
 
 
@@ -35,13 +37,13 @@ function debounceCall(context, newValue, oldValue) {
     state.oldValue = oldValue;
   }
   state.timeoutId = setTimeout(function () {
-    var ov = state.oldValue;
+    var _oldValue = state.oldValue;
     state.oldValue = unset;
-    _this2.debouncedMethod(context, newValue, ov);
+    _this2.debouncedMethod(context, newValue, _oldValue);
   }, state.delay);
 }
 
-var DebounceBindingBehavior = exports.DebounceBindingBehavior = function () {
+var DebounceBindingBehavior = exports.DebounceBindingBehavior = (_dec = (0, _aureliaBinding.bindingBehavior)('debounce'), _dec(_class = function () {
   function DebounceBindingBehavior() {
     
   }
@@ -77,4 +79,4 @@ var DebounceBindingBehavior = exports.DebounceBindingBehavior = function () {
   };
 
   return DebounceBindingBehavior;
-}();
+}()) || _class);

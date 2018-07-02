@@ -1,12 +1,16 @@
-var _dec, _dec2, _class;
+var _dec, _class;
 
 import { customAttribute } from 'aurelia-templating';
 import { bindingMode } from 'aurelia-binding';
-import { inject } from 'aurelia-dependency-injection';
 import { TaskQueue } from 'aurelia-task-queue';
 import { DOM } from 'aurelia-pal';
 
-export let Focus = (_dec = customAttribute('focus', bindingMode.twoWay), _dec2 = inject(DOM.Element, TaskQueue), _dec(_class = _dec2(_class = class Focus {
+export let Focus = (_dec = customAttribute('focus', bindingMode.twoWay), _dec(_class = class Focus {
+
+  static inject() {
+    return [DOM.Element, TaskQueue];
+  }
+
   constructor(element, taskQueue) {
     this.element = element;
     this.taskQueue = taskQueue;
@@ -57,4 +61,4 @@ export let Focus = (_dec = customAttribute('focus', bindingMode.twoWay), _dec2 =
       this.value = false;
     }
   }
-}) || _class) || _class);
+}) || _class);

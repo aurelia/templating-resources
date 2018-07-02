@@ -1,8 +1,11 @@
+var _dec, _class;
 
 
+
+import { bindingBehavior } from 'aurelia-binding';
 import { BindingSignaler } from './binding-signaler';
 
-export var SignalBindingBehavior = function () {
+export var SignalBindingBehavior = (_dec = bindingBehavior('signal'), _dec(_class = function () {
   SignalBindingBehavior.inject = function inject() {
     return [BindingSignaler];
   };
@@ -54,4 +57,4 @@ export var SignalBindingBehavior = function () {
   };
 
   return SignalBindingBehavior;
-}();
+}()) || _class);

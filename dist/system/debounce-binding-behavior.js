@@ -3,7 +3,7 @@
 System.register(['aurelia-binding'], function (_export, _context) {
   "use strict";
 
-  var bindingMode, sourceContext, targetContext, unset, DebounceBindingBehavior;
+  var bindingMode, sourceContext, targetContext, bindingBehavior, _dec, _class, unset, DebounceBindingBehavior;
 
   
 
@@ -31,9 +31,9 @@ System.register(['aurelia-binding'], function (_export, _context) {
       state.oldValue = oldValue;
     }
     state.timeoutId = setTimeout(function () {
-      var ov = state.oldValue;
+      var _oldValue = state.oldValue;
       state.oldValue = unset;
-      _this2.debouncedMethod(context, newValue, ov);
+      _this2.debouncedMethod(context, newValue, _oldValue);
     }, state.delay);
   }
 
@@ -42,11 +42,12 @@ System.register(['aurelia-binding'], function (_export, _context) {
       bindingMode = _aureliaBinding.bindingMode;
       sourceContext = _aureliaBinding.sourceContext;
       targetContext = _aureliaBinding.targetContext;
+      bindingBehavior = _aureliaBinding.bindingBehavior;
     }],
     execute: function () {
       unset = {};
 
-      _export('DebounceBindingBehavior', DebounceBindingBehavior = function () {
+      _export('DebounceBindingBehavior', DebounceBindingBehavior = (_dec = bindingBehavior('debounce'), _dec(_class = function () {
         function DebounceBindingBehavior() {
           
         }
@@ -82,7 +83,7 @@ System.register(['aurelia-binding'], function (_export, _context) {
         };
 
         return DebounceBindingBehavior;
-      }());
+      }()) || _class));
 
       _export('DebounceBindingBehavior', DebounceBindingBehavior);
     }

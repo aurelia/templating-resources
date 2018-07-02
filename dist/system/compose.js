@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['aurelia-dependency-injection', 'aurelia-logging', 'aurelia-task-queue', 'aurelia-templating', 'aurelia-pal'], function (_export, _context) {
+System.register(['aurelia-dependency-injection', 'aurelia-task-queue', 'aurelia-templating', 'aurelia-pal'], function (_export, _context) {
   "use strict";
 
-  var Container, inject, LogManager, TaskQueue, CompositionEngine, CompositionContext, ViewSlot, ViewResources, customElement, bindable, noView, View, DOM, _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, logger, Compose;
+  var Container, TaskQueue, CompositionEngine, CompositionContext, ViewSlot, ViewResources, customElement, bindable, noView, View, DOM, _dec, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, Compose;
 
   function _initDefineProp(target, property, descriptor, context) {
     if (!descriptor) return;
@@ -102,18 +102,19 @@ System.register(['aurelia-dependency-injection', 'aurelia-logging', 'aurelia-tas
       });
     }
 
-    composer.pendingTask = composer.pendingTask.catch(function (e) {
-      logger.error(e);
-    }).then(function () {
-      if (!composer.pendingTask) {
-        return;
-      }
-
-      composer.pendingTask = null;
-      if (!isEmpty(composer.changes)) {
-        processChanges(composer);
-      }
+    composer.pendingTask = composer.pendingTask.then(function () {
+      completeCompositionTask(composer);
+    }, function (reason) {
+      completeCompositionTask(composer);
+      throw reason;
     });
+  }
+
+  function completeCompositionTask(composer) {
+    composer.pendingTask = null;
+    if (!isEmpty(composer.changes)) {
+      processChanges(composer);
+    }
   }
 
   function requestUpdate(composer) {
@@ -129,9 +130,6 @@ System.register(['aurelia-dependency-injection', 'aurelia-logging', 'aurelia-tas
   return {
     setters: [function (_aureliaDependencyInjection) {
       Container = _aureliaDependencyInjection.Container;
-      inject = _aureliaDependencyInjection.inject;
-    }, function (_aureliaLogging) {
-      LogManager = _aureliaLogging;
     }, function (_aureliaTaskQueue) {
       TaskQueue = _aureliaTaskQueue.TaskQueue;
     }, function (_aureliaTemplating) {
@@ -147,9 +145,11 @@ System.register(['aurelia-dependency-injection', 'aurelia-logging', 'aurelia-tas
       DOM = _aureliaPal.DOM;
     }],
     execute: function () {
-      logger = LogManager.getLogger('templating-resources');
+      _export('Compose', Compose = (_dec = customElement('compose'), _dec(_class = noView(_class = (_class2 = function () {
+        Compose.inject = function inject() {
+          return [DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue];
+        };
 
-      _export('Compose', Compose = (_dec = customElement('compose'), _dec2 = inject(DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue), _dec(_class = noView(_class = _dec2(_class = (_class2 = function () {
         function Compose(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
           
 
@@ -182,12 +182,13 @@ System.register(['aurelia-dependency-injection', 'aurelia-logging', 'aurelia-tas
           this.changes.view = this.view;
           this.changes.viewModel = this.viewModel;
           this.changes.model = this.model;
-          processChanges(this);
+          if (!this.pendingTask) {
+            processChanges(this);
+          }
         };
 
         Compose.prototype.unbind = function unbind() {
           this.changes = Object.create(null);
-          this.pendingTask = null;
           this.bindingContext = null;
           this.overrideContext = null;
           var returnToCache = true;
@@ -223,7 +224,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-logging', 'aurelia-tas
       }), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, 'swapOrder', [bindable], {
         enumerable: true,
         initializer: null
-      })), _class2)) || _class) || _class) || _class));
+      })), _class2)) || _class) || _class));
 
       _export('Compose', Compose);
     }

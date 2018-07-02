@@ -8,7 +8,9 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
 
   
 
-  var AttrBindingBehavior = exports.AttrBindingBehavior = function () {
+  var _dec, _class;
+
+  var AttrBindingBehavior = exports.AttrBindingBehavior = (_dec = (0, _aureliaBinding.bindingBehavior)('attr'), _dec(_class = function () {
     function AttrBindingBehavior() {
       
     }
@@ -20,5 +22,5 @@ define(['exports', 'aurelia-binding'], function (exports, _aureliaBinding) {
     AttrBindingBehavior.prototype.unbind = function unbind(binding, source) {};
 
     return AttrBindingBehavior;
-  }();
+  }()) || _class);
 });
