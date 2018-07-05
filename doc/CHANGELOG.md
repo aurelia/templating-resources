@@ -1,3 +1,13 @@
+<a name="1.7.1"></a>
+## [1.7.1](https://github.com/aurelia/templating-resources/compare/1.7.0...1.7.1) (2018-07-05)
+
+
+### Bug Fixes
+
+* fix missing self binding behavior ([85827d0](https://github.com/aurelia/templating-resources/commit/85827d0))
+
+
+
 <a name="1.7.0"></a>
 # [1.7.0](https://github.com/aurelia/templating-resources/compare/1.6.1...1.7.0) (2018-07-02)
 
