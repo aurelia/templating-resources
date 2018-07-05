@@ -59,6 +59,7 @@ function configure(config) {
     TwoWayBindingBehavior,
     ThrottleBindingBehavior,
     DebounceBindingBehavior,
+    SelfBindingBehavior,
     SignalBindingBehavior,
     UpdateTriggerBindingBehavior,
     AttrBindingBehavior
