@@ -105,6 +105,29 @@ export function isOneTime(expression) {
 }
 
 /**
+ * Forces all one-time bindings in that view to reevaluate.
+ */
+export function updateBindings(view) {
+  const $view = view as View & { bindings: any[]; controllers: any[] };
+  let j = $view.bindings.length;
+  while (j--) {
+    updateOneTimeBinding($view.bindings[j]);
+  }
+  j = $view.controllers.length;
+  while (j--) {
+    let k = $view.controllers[j].boundProperties.length;
+    while (k--) {
+      if ($view.controllers[j].viewModel && $view.controllers[j].viewModel.updateOneTimeBindings) {
+        $view.controllers[j].viewModel.updateOneTimeBindings();
+      }
+      let binding = $view.controllers[j].boundProperties[k].binding;
+      updateOneTimeBinding(binding);
+    }
+  }
+}
+
+
+/**
  * Forces a binding instance to reevaluate.
  */
 export function updateOneTimeBinding(binding) {
