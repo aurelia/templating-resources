@@ -12,6 +12,7 @@ export class IfCore {
     // state anymore, so we use `showing` for that.
     // Eventually, `showing` and `value` should be consistent.
     this.showing = false;
+    this.cache = true;
   }
 
   bind(bindingContext, overrideContext) {
@@ -67,7 +68,7 @@ export class IfCore {
     return this.viewSlot.add(this.view); // Promise or void
   }
 
-  _hide(cacheView = true) {
+  _hide() {
     if (!this.showing) {
       return;
     }
@@ -77,17 +78,15 @@ export class IfCore {
 
     if (removed instanceof Promise) {
       return removed.then(() => {
-        this._unbindView(cacheView);
+        this._unbindView();
       });
     } else {
-      this._unbindView(cacheView);
+      this._unbindView();
     }
   }
 
-  _unbindView(cache = true) {
-    if (cache === 'false') {
-      cache = false;
-    }
+  _unbindView() {
+    const cache = this.cache === 'false' ? false : !!this.cache;
     this.view.unbind();
     if (!cache) {
       this.view = null;
