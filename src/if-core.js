@@ -67,7 +67,7 @@ export class IfCore {
     return this.viewSlot.add(this.view); // Promise or void
   }
 
-  _hide() {
+  _hide(cacheView = true) {
     if (!this.showing) {
       return;
     }
@@ -76,9 +76,17 @@ export class IfCore {
     let removed = this.viewSlot.remove(this.view); // Promise or View
 
     if (removed instanceof Promise) {
-      return removed.then(() => this.view.unbind());
+      return removed.then(() => {
+        this.view.unbind();
+        if (!cacheView) {
+          this.view = null;
+        }
+      });
+    } else {
+      this.view.unbind();
+      if (!cacheView) {
+        this.view = null;
+      }
     }
-
-    this.view.unbind();
   }
 }

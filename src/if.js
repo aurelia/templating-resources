@@ -12,6 +12,7 @@ import {IfCore} from './if-core';
 export class If extends IfCore {
   @bindable({ primaryProperty: true }) condition: any;
   @bindable swapOrder: "before"|"with"|"after";
+  @bindable cache: boolean = true;
 
   /**
   * Binds the if to the binding context and override context
@@ -23,7 +24,7 @@ export class If extends IfCore {
     if (this.condition) {
       this._show();
     } else {
-      this._hide();
+      this._hide(this.cache);
     }
   }
 
@@ -44,7 +45,7 @@ export class If extends IfCore {
     if (this.elseVm) {
       promise = show ? this._swap(this.elseVm, this) : this._swap(this, this.elseVm);
     } else {
-      promise = show ? this._show() : this._hide();
+      promise = show ? this._show() : this._hide(this.cache);
     }
 
     if (promise) {
@@ -61,11 +62,11 @@ export class If extends IfCore {
   _swap(remove, add) {
     switch (this.swapOrder) {
     case 'before':
-      return Promise.resolve(add._show()).then(() => remove._hide());
+      return Promise.resolve(add._show()).then(() => remove._hide(this.cache));
     case 'with':
-      return Promise.all([ remove._hide(), add._show() ]);
+      return Promise.all([ remove._hide(this.cache), add._show() ]);
     default:  // "after", default and unknown values
-      let promise = remove._hide();
+      let promise = remove._hide(this.cache);
       return promise ? promise.then(() => add._show()) : add._show();
     }
   }
