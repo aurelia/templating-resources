@@ -77,16 +77,20 @@ export class IfCore {
 
     if (removed instanceof Promise) {
       return removed.then(() => {
-        this.view.unbind();
-        if (!cacheView) {
-          this.view = null;
-        }
+        this._unbindView(cacheView);
       });
     } else {
-      this.view.unbind();
-      if (!cacheView) {
-        this.view = null;
-      }
+      this._unbindView(cacheView);
+    }
+  }
+
+  _unbindView(cache = true) {
+    if (cache === 'false') {
+      cache = false;
+    }
+    this.view.unbind();
+    if (!cache) {
+      this.view = null;
     }
   }
 }
