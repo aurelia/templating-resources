@@ -12,6 +12,7 @@ export class IfCore {
     // state anymore, so we use `showing` for that.
     // Eventually, `showing` and `value` should be consistent.
     this.showing = false;
+    this.cache = true;
   }
 
   bind(bindingContext, overrideContext) {
@@ -76,9 +77,19 @@ export class IfCore {
     let removed = this.viewSlot.remove(this.view); // Promise or View
 
     if (removed instanceof Promise) {
-      return removed.then(() => this.view.unbind());
+      return removed.then(() => {
+        this._unbindView();
+      });
+    } else {
+      this._unbindView();
     }
+  }
 
+  _unbindView() {
+    const cache = this.cache === 'false' ? false : !!this.cache;
     this.view.unbind();
+    if (!cache) {
+      this.view = null;
+    }
   }
 }

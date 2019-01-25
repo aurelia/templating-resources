@@ -154,6 +154,42 @@ describe('if', () => {
     expect(sut.view.unbind).toHaveBeenCalled();
   });
 
+  it('should set the view instance to null after correctly unbound when caching is turned off', () => {
+    sut.condition = false;
+    sut.showing = true;
+    const view = {isBound: false, unbind: jasmine.createSpy('unbind')};
+    sut.view = view;
+    sut.cache = false;
+    let bindingContext = 42;
+    let overrideContext = 24;
+
+    spyOn(sut, '_hide').and.callThrough();
+
+    sut.bind(bindingContext, overrideContext);
+
+    expect(sut._hide).toHaveBeenCalled();
+    expect(view.unbind).toHaveBeenCalled();
+    expect(sut.view).toBeNull();
+  });
+
+  it('should set the view instance to null after correctly unbound when caching is turned off by string "false"', () => {
+    sut.condition = false;
+    sut.showing = true;
+    const view = {isBound: false, unbind: jasmine.createSpy('unbind')};
+    sut.view = view;
+    sut.cache = 'false';
+    let bindingContext = 42;
+    let overrideContext = 24;
+
+    spyOn(sut, '_hide').and.callThrough();
+
+    sut.bind(bindingContext, overrideContext);
+
+    expect(sut._hide).toHaveBeenCalled();
+    expect(view.unbind).toHaveBeenCalled();
+    expect(sut.view).toBeNull();
+  });
+
   it('should show the view when provided value is truthy and currently not showing', () => {
     sut.showing = false;
     sut.view = new ViewMock();
