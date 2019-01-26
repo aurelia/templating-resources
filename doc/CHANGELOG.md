@@ -1,3 +1,10 @@
+<a name="1.8.0"></a>
+# [1.8.0](https://github.com/aurelia/templating-resources/compare/1.7.2...1.8.0) (2019-01-26)
+
+### Features
+
+* Add ability to turn off caching for if/else
+
 <a name="1.7.1"></a>
 ## [1.7.1](https://github.com/aurelia/templating-resources/compare/1.7.0...1.7.1) (2018-07-05)
 

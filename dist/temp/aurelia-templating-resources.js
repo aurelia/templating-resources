@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Repeat = exports.RepeatStrategyLocator = exports.Show = exports.Hide = exports.SignalBindingBehavior = exports.SanitizeHTMLValueConverter = exports.If = exports.Else = exports.SetRepeatStrategy = exports.NumberRepeatStrategy = exports.MapRepeatStrategy = exports.ArrayRepeatStrategy = exports.AbstractRepeater = exports.lifecycleOptionalBehaviors = exports.AttrBindingBehavior = exports.aureliaHideClassName = exports.TwoWayBindingBehavior = exports.FromViewBindingBehavior = exports.ToViewBindingBehavior = exports.OneWayBindingBehavior = exports.OneTimeBindingBehavior = exports.BindingSignaler = exports.Compose = exports.DebounceBindingBehavior = exports.Focus = exports.HTMLSanitizer = exports.IfCore = exports.NullRepeatStrategy = exports.Replaceable = exports.SelfBindingBehavior = exports.ThrottleBindingBehavior = exports.UpdateTriggerBindingBehavior = exports.With = undefined;
 
-var _dec, _dec2, _class, _dec3, _class2, _dec4, _class3, _dec5, _class4, _dec6, _dec7, _class5, _dec8, _class6, _dec11, _class8, _dec13, _class10, _desc, _value, _class11, _descriptor, _descriptor2, _descriptor3, _descriptor4, _dec14, _dec15, _class14, _dec16, _dec17, _class15, _dec18, _dec19, _class16, _dec20, _dec21, _class17, _dec22, _dec23, _class18, _dec24, _class19, _dec25, _dec26, _class20, _dec27, _dec28, _dec29, _class21, _desc2, _value2, _class22, _descriptor5, _descriptor6, _dec30, _dec31, _class24, _dec32, _class25, _dec33, _class26, _dec34, _class27, _dec35, _dec36, _class28, _desc3, _value3, _class29, _descriptor7, _descriptor8, _descriptor9, _descriptor10;
+var _dec, _dec2, _class, _dec3, _class2, _dec4, _class3, _dec5, _class4, _dec6, _dec7, _class5, _dec8, _class6, _dec11, _class8, _dec13, _class10, _desc, _value, _class11, _descriptor, _descriptor2, _descriptor3, _descriptor4, _dec14, _dec15, _class14, _dec16, _dec17, _class15, _dec18, _dec19, _class16, _dec20, _dec21, _class17, _dec22, _dec23, _class18, _dec24, _class19, _dec25, _dec26, _class20, _dec27, _dec28, _dec29, _class21, _desc2, _value2, _class22, _descriptor5, _descriptor6, _descriptor7, _dec30, _dec31, _class24, _dec32, _class25, _dec33, _class26, _dec34, _class27, _dec35, _dec36, _class28, _desc3, _value3, _class29, _descriptor8, _descriptor9, _descriptor10, _descriptor11;
 
 exports.updateOverrideContexts = updateOverrideContexts;
 exports.createFullOverrideContext = createFullOverrideContext;
@@ -398,6 +398,7 @@ var IfCore = exports.IfCore = function () {
     this.overrideContext = null;
 
     this.showing = false;
+    this.cache = true;
   }
 
   IfCore.prototype.bind = function bind(bindingContext, overrideContext) {
@@ -458,11 +459,19 @@ var IfCore = exports.IfCore = function () {
 
     if (removed instanceof Promise) {
       return removed.then(function () {
-        return _this2.view.unbind();
+        _this2._unbindView();
       });
     }
 
+    this._unbindView();
+  };
+
+  IfCore.prototype._unbindView = function _unbindView() {
+    var cache = this.cache === 'false' ? false : !!this.cache;
     this.view.unbind();
+    if (!cache) {
+      this.view = null;
+    }
   };
 
   return IfCore;
@@ -1616,7 +1625,7 @@ var If = exports.If = (_dec27 = (0, _aureliaTemplating.customAttribute)('if'), _
       args[_key2] = arguments[_key2];
     }
 
-    return _ret = (_temp = (_this15 = _possibleConstructorReturn(this, _IfCore2.call.apply(_IfCore2, [this].concat(args))), _this15), _initDefineProp(_this15, 'condition', _descriptor5, _this15), _initDefineProp(_this15, 'swapOrder', _descriptor6, _this15), _temp), _possibleConstructorReturn(_this15, _ret);
+    return _ret = (_temp = (_this15 = _possibleConstructorReturn(this, _IfCore2.call.apply(_IfCore2, [this].concat(args))), _this15), _initDefineProp(_this15, 'condition', _descriptor5, _this15), _initDefineProp(_this15, 'swapOrder', _descriptor6, _this15), _initDefineProp(_this15, 'cache', _descriptor7, _this15), _temp), _possibleConstructorReturn(_this15, _ret);
   }
 
   If.prototype.bind = function bind(bindingContext, overrideContext) {
@@ -1680,6 +1689,11 @@ var If = exports.If = (_dec27 = (0, _aureliaTemplating.customAttribute)('if'), _
 }), _descriptor6 = _applyDecoratedDescriptor(_class22.prototype, 'swapOrder', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
+}), _descriptor7 = _applyDecoratedDescriptor(_class22.prototype, 'cache', [_aureliaTemplating.bindable], {
+  enumerable: true,
+  initializer: function initializer() {
+    return true;
+  }
 })), _class22)) || _class21) || _class21) || _class21);
 var SanitizeHTMLValueConverter = exports.SanitizeHTMLValueConverter = (_dec30 = (0, _aureliaBinding.valueConverter)('sanitizeHTML'), _dec31 = (0, _aureliaDependencyInjection.inject)(HTMLSanitizer), _dec30(_class24 = _dec31(_class24 = function () {
   function SanitizeHTMLValueConverter(sanitizer) {
@@ -1901,13 +1915,13 @@ var Repeat = exports.Repeat = (_dec35 = (0, _aureliaTemplating.customAttribute)(
       viewsRequireLifecycle: viewsRequireLifecycle(viewFactory)
     }));
 
-    _initDefineProp(_this17, 'items', _descriptor7, _this17);
+    _initDefineProp(_this17, 'items', _descriptor8, _this17);
 
-    _initDefineProp(_this17, 'local', _descriptor8, _this17);
+    _initDefineProp(_this17, 'local', _descriptor9, _this17);
 
-    _initDefineProp(_this17, 'key', _descriptor9, _this17);
+    _initDefineProp(_this17, 'key', _descriptor10, _this17);
 
-    _initDefineProp(_this17, 'value', _descriptor10, _this17);
+    _initDefineProp(_this17, 'value', _descriptor11, _this17);
 
     _this17.viewFactory = viewFactory;
     _this17.instruction = instruction;
@@ -2121,16 +2135,16 @@ var Repeat = exports.Repeat = (_dec35 = (0, _aureliaTemplating.customAttribute)(
   };
 
   return Repeat;
-}(AbstractRepeater), (_descriptor7 = _applyDecoratedDescriptor(_class29.prototype, 'items', [_aureliaTemplating.bindable], {
+}(AbstractRepeater), (_descriptor8 = _applyDecoratedDescriptor(_class29.prototype, 'items', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor8 = _applyDecoratedDescriptor(_class29.prototype, 'local', [_aureliaTemplating.bindable], {
+}), _descriptor9 = _applyDecoratedDescriptor(_class29.prototype, 'local', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor9 = _applyDecoratedDescriptor(_class29.prototype, 'key', [_aureliaTemplating.bindable], {
+}), _descriptor10 = _applyDecoratedDescriptor(_class29.prototype, 'key', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
-}), _descriptor10 = _applyDecoratedDescriptor(_class29.prototype, 'value', [_aureliaTemplating.bindable], {
+}), _descriptor11 = _applyDecoratedDescriptor(_class29.prototype, 'value', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
 })), _class29)) || _class28) || _class28) || _class28);

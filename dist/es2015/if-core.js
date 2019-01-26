@@ -8,6 +8,7 @@ export let IfCore = class IfCore {
     this.overrideContext = null;
 
     this.showing = false;
+    this.cache = true;
   }
 
   bind(bindingContext, overrideContext) {
@@ -65,9 +66,19 @@ export let IfCore = class IfCore {
     let removed = this.viewSlot.remove(this.view);
 
     if (removed instanceof Promise) {
-      return removed.then(() => this.view.unbind());
+      return removed.then(() => {
+        this._unbindView();
+      });
     }
 
+    this._unbindView();
+  }
+
+  _unbindView() {
+    const cache = this.cache === 'false' ? false : !!this.cache;
     this.view.unbind();
+    if (!cache) {
+      this.view = null;
+    }
   }
 };

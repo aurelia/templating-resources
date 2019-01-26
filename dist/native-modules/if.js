@@ -1,4 +1,4 @@
-var _dec, _dec2, _dec3, _class, _desc, _value, _class2, _descriptor, _descriptor2;
+var _dec, _dec2, _dec3, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3;
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -65,7 +65,7 @@ export var If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _IfCore.call.apply(_IfCore, [this].concat(args))), _this), _initDefineProp(_this, 'condition', _descriptor, _this), _initDefineProp(_this, 'swapOrder', _descriptor2, _this), _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _IfCore.call.apply(_IfCore, [this].concat(args))), _this), _initDefineProp(_this, 'condition', _descriptor, _this), _initDefineProp(_this, 'swapOrder', _descriptor2, _this), _initDefineProp(_this, 'cache', _descriptor3, _this), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   If.prototype.bind = function bind(bindingContext, overrideContext) {
@@ -129,4 +129,9 @@ export var If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
 }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, 'swapOrder', [bindable], {
   enumerable: true,
   initializer: null
+}), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, 'cache', [bindable], {
+  enumerable: true,
+  initializer: function initializer() {
+    return true;
+  }
 })), _class2)) || _class) || _class) || _class);

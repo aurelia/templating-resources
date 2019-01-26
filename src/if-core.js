@@ -80,9 +80,9 @@ export class IfCore {
       return removed.then(() => {
         this._unbindView();
       });
-    } else {
-      this._unbindView();
     }
+
+    this._unbindView();
   }
 
   _unbindView() {

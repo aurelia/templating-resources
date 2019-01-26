@@ -3,7 +3,7 @@
 System.register(['aurelia-templating', 'aurelia-dependency-injection', './if-core'], function (_export, _context) {
   "use strict";
 
-  var BoundViewFactory, ViewSlot, bindable, customAttribute, templateController, inject, IfCore, _dec, _dec2, _dec3, _class, _desc, _value, _class2, _descriptor, _descriptor2, If;
+  var BoundViewFactory, ViewSlot, bindable, customAttribute, templateController, inject, IfCore, _dec, _dec2, _dec3, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, If;
 
   function _initDefineProp(target, property, descriptor, context) {
     if (!descriptor) return;
@@ -99,7 +99,7 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', './if-cor
             args[_key] = arguments[_key];
           }
 
-          return _ret = (_temp = (_this = _possibleConstructorReturn(this, _IfCore.call.apply(_IfCore, [this].concat(args))), _this), _initDefineProp(_this, 'condition', _descriptor, _this), _initDefineProp(_this, 'swapOrder', _descriptor2, _this), _temp), _possibleConstructorReturn(_this, _ret);
+          return _ret = (_temp = (_this = _possibleConstructorReturn(this, _IfCore.call.apply(_IfCore, [this].concat(args))), _this), _initDefineProp(_this, 'condition', _descriptor, _this), _initDefineProp(_this, 'swapOrder', _descriptor2, _this), _initDefineProp(_this, 'cache', _descriptor3, _this), _temp), _possibleConstructorReturn(_this, _ret);
         }
 
         If.prototype.bind = function bind(bindingContext, overrideContext) {
@@ -163,6 +163,11 @@ System.register(['aurelia-templating', 'aurelia-dependency-injection', './if-cor
       }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, 'swapOrder', [bindable], {
         enumerable: true,
         initializer: null
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, 'cache', [bindable], {
+        enumerable: true,
+        initializer: function initializer() {
+          return true;
+        }
       })), _class2)) || _class) || _class) || _class));
 
       _export('If', If);

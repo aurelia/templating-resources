@@ -1,4 +1,4 @@
-var _dec, _dec2, _dec3, _class, _desc, _value, _class2, _descriptor, _descriptor2;
+var _dec, _dec2, _dec3, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3;
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -51,7 +51,7 @@ export let If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
   constructor(...args) {
     var _temp;
 
-    return _temp = super(...args), _initDefineProp(this, 'condition', _descriptor, this), _initDefineProp(this, 'swapOrder', _descriptor2, this), _temp;
+    return _temp = super(...args), _initDefineProp(this, 'condition', _descriptor, this), _initDefineProp(this, 'swapOrder', _descriptor2, this), _initDefineProp(this, 'cache', _descriptor3, this), _temp;
   }
 
   bind(bindingContext, overrideContext) {
@@ -107,4 +107,9 @@ export let If = (_dec = customAttribute('if'), _dec2 = inject(BoundViewFactory, 
 }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, 'swapOrder', [bindable], {
   enumerable: true,
   initializer: null
+}), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, 'cache', [bindable], {
+  enumerable: true,
+  initializer: function () {
+    return true;
+  }
 })), _class2)) || _class) || _class) || _class);

@@ -544,6 +544,7 @@ export declare class Else extends IfCore {
 export declare class If extends IfCore {
   condition: any;
   swapOrder: 'before' | 'with' | 'after';
+  cache: boolean | string;
   
   /**
     * Binds the if to the binding context and override context

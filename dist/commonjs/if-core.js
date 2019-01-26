@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -17,6 +17,7 @@ var IfCore = exports.IfCore = function () {
     this.overrideContext = null;
 
     this.showing = false;
+    this.cache = true;
   }
 
   IfCore.prototype.bind = function bind(bindingContext, overrideContext) {
@@ -77,11 +78,19 @@ var IfCore = exports.IfCore = function () {
 
     if (removed instanceof Promise) {
       return removed.then(function () {
-        return _this.view.unbind();
+        _this._unbindView();
       });
     }
 
+    this._unbindView();
+  };
+
+  IfCore.prototype._unbindView = function _unbindView() {
+    var cache = this.cache === 'false' ? false : !!this.cache;
     this.view.unbind();
+    if (!cache) {
+      this.view = null;
+    }
   };
 
   return IfCore;

@@ -75,7 +75,7 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', './if-c
     throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
   }
 
-  var _dec, _dec2, _dec3, _class, _desc, _value, _class2, _descriptor, _descriptor2;
+  var _dec, _dec2, _dec3, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3;
 
   var If = exports.If = (_dec = (0, _aureliaTemplating.customAttribute)('if'), _dec2 = (0, _aureliaDependencyInjection.inject)(_aureliaTemplating.BoundViewFactory, _aureliaTemplating.ViewSlot), _dec3 = (0, _aureliaTemplating.bindable)({ primaryProperty: true }), _dec(_class = (0, _aureliaTemplating.templateController)(_class = _dec2(_class = (_class2 = function (_IfCore) {
     _inherits(If, _IfCore);
@@ -89,7 +89,7 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', './if-c
         args[_key] = arguments[_key];
       }
 
-      return _ret = (_temp = (_this = _possibleConstructorReturn(this, _IfCore.call.apply(_IfCore, [this].concat(args))), _this), _initDefineProp(_this, 'condition', _descriptor, _this), _initDefineProp(_this, 'swapOrder', _descriptor2, _this), _temp), _possibleConstructorReturn(_this, _ret);
+      return _ret = (_temp = (_this = _possibleConstructorReturn(this, _IfCore.call.apply(_IfCore, [this].concat(args))), _this), _initDefineProp(_this, 'condition', _descriptor, _this), _initDefineProp(_this, 'swapOrder', _descriptor2, _this), _initDefineProp(_this, 'cache', _descriptor3, _this), _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     If.prototype.bind = function bind(bindingContext, overrideContext) {
@@ -153,5 +153,10 @@ define(['exports', 'aurelia-templating', 'aurelia-dependency-injection', './if-c
   }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, 'swapOrder', [_aureliaTemplating.bindable], {
     enumerable: true,
     initializer: null
+  }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, 'cache', [_aureliaTemplating.bindable], {
+    enumerable: true,
+    initializer: function initializer() {
+      return true;
+    }
   })), _class2)) || _class) || _class) || _class);
 });

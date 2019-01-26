@@ -1,5 +1,5 @@
-define(["exports"], function (exports) {
-  "use strict";
+define(['exports'], function (exports) {
+  'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -18,6 +18,7 @@ define(["exports"], function (exports) {
       this.overrideContext = null;
 
       this.showing = false;
+      this.cache = true;
     }
 
     IfCore.prototype.bind = function bind(bindingContext, overrideContext) {
@@ -78,11 +79,19 @@ define(["exports"], function (exports) {
 
       if (removed instanceof Promise) {
         return removed.then(function () {
-          return _this.view.unbind();
+          _this._unbindView();
         });
       }
 
+      this._unbindView();
+    };
+
+    IfCore.prototype._unbindView = function _unbindView() {
+      var cache = this.cache === 'false' ? false : !!this.cache;
       this.view.unbind();
+      if (!cache) {
+        this.view = null;
+      }
     };
 
     return IfCore;

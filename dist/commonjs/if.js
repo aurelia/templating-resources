@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.If = undefined;
 
-var _dec, _dec2, _dec3, _class, _desc, _value, _class2, _descriptor, _descriptor2;
+var _dec, _dec2, _dec3, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3;
 
 var _aureliaTemplating = require('aurelia-templating');
 
@@ -74,7 +74,7 @@ var If = exports.If = (_dec = (0, _aureliaTemplating.customAttribute)('if'), _de
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _IfCore.call.apply(_IfCore, [this].concat(args))), _this), _initDefineProp(_this, 'condition', _descriptor, _this), _initDefineProp(_this, 'swapOrder', _descriptor2, _this), _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _IfCore.call.apply(_IfCore, [this].concat(args))), _this), _initDefineProp(_this, 'condition', _descriptor, _this), _initDefineProp(_this, 'swapOrder', _descriptor2, _this), _initDefineProp(_this, 'cache', _descriptor3, _this), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   If.prototype.bind = function bind(bindingContext, overrideContext) {
@@ -138,4 +138,9 @@ var If = exports.If = (_dec = (0, _aureliaTemplating.customAttribute)('if'), _de
 }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, 'swapOrder', [_aureliaTemplating.bindable], {
   enumerable: true,
   initializer: null
+}), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, 'cache', [_aureliaTemplating.bindable], {
+  enumerable: true,
+  initializer: function initializer() {
+    return true;
+  }
 })), _class2)) || _class) || _class) || _class);

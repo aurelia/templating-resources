@@ -375,6 +375,7 @@ export class IfCore {
     // state anymore, so we use `showing` for that.
     // Eventually, `showing` and `value` should be consistent.
     this.showing = false;
+    this.cache = true;
   }
 
   bind(bindingContext, overrideContext) {
@@ -439,10 +440,20 @@ export class IfCore {
     let removed = this.viewSlot.remove(this.view); // Promise or View
 
     if (removed instanceof Promise) {
-      return removed.then(() => this.view.unbind());
+      return removed.then(() => {
+        this._unbindView();
+      });
     }
 
+    this._unbindView();
+  }
+
+  _unbindView() {
+    const cache = this.cache === 'false' ? false : !!this.cache;
     this.view.unbind();
+    if (!cache) {
+      this.view = null;
+    }
   }
 }
 
@@ -1753,6 +1764,7 @@ export class Else extends IfCore {
 export class If extends IfCore {
   @bindable({ primaryProperty: true }) condition: any;
   @bindable swapOrder: "before"|"with"|"after";
+  @bindable cache: boolean|string = true;
 
   /**
   * Binds the if to the binding context and override context

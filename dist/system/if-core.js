@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 System.register([], function (_export, _context) {
   "use strict";
@@ -10,7 +10,7 @@ System.register([], function (_export, _context) {
   return {
     setters: [],
     execute: function () {
-      _export("IfCore", IfCore = function () {
+      _export('IfCore', IfCore = function () {
         function IfCore(viewFactory, viewSlot) {
           
 
@@ -21,6 +21,7 @@ System.register([], function (_export, _context) {
           this.overrideContext = null;
 
           this.showing = false;
+          this.cache = true;
         }
 
         IfCore.prototype.bind = function bind(bindingContext, overrideContext) {
@@ -81,17 +82,25 @@ System.register([], function (_export, _context) {
 
           if (removed instanceof Promise) {
             return removed.then(function () {
-              return _this.view.unbind();
+              _this._unbindView();
             });
           }
 
+          this._unbindView();
+        };
+
+        IfCore.prototype._unbindView = function _unbindView() {
+          var cache = this.cache === 'false' ? false : !!this.cache;
           this.view.unbind();
+          if (!cache) {
+            this.view = null;
+          }
         };
 
         return IfCore;
       }());
 
-      _export("IfCore", IfCore);
+      _export('IfCore', IfCore);
     }
   };
 });
