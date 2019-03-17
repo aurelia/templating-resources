@@ -1,5 +1,7 @@
 /*eslint padded-blocks:0*/
 import {useView, customElement, bindable, useShadowDOM} from 'aurelia-templating';
+import { getLogger } from 'aurelia-logging';
+
 export function _createDynamicElement({ name, viewUrl, bindableNames, useShadowDOMmode } : {
   name: string,
   viewUrl: string,
@@ -31,8 +33,13 @@ export function _createDynamicElement({ name, viewUrl, bindableNames, useShadowD
     useShadowDOM(DynamicElement);
     break;
 
-  default:
+  case null:
     // Do not use shadow dom
+    break;
+    
+  default:
+    getLogger('aurelia-html-only-element')
+      .warn(`Expected 'use-shadow-dom' value to be "close", "open" or "", received ${useShadowDOMmode}`)
     break;
   }
 
