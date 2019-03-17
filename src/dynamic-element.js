@@ -36,10 +36,10 @@ export function _createDynamicElement({ name, viewUrl, bindableNames, useShadowD
   case null:
     // Do not use shadow dom
     break;
-    
+
   default:
     getLogger('aurelia-html-only-element')
-      .warn(`Expected 'use-shadow-dom' value to be "close", "open" or "", received ${useShadowDOMmode}`)
+      .warn(`Expected 'use-shadow-dom' value to be "close", "open" or "", received ${useShadowDOMmode}`);
     break;
   }
 
