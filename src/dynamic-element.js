@@ -1,6 +1,11 @@
 /*eslint padded-blocks:0*/
 import {useView, customElement, bindable, useShadowDOM} from 'aurelia-templating';
-export function _createDynamicElement(name: string, viewUrl: string, bindableNames: string[], shouldUseShadowDOM: boolean): Function {
+export function _createDynamicElement({ name, viewUrl, bindableNames, useShadowDOMmode } : { 
+  name: string, 
+  viewUrl: string, 
+  bindableNames: string[], 
+  useShadowDOMmode: null | '' | 'open' | 'closed'
+}): Function {
   @customElement(name)
   @useView(viewUrl)
   class DynamicElement {
@@ -13,8 +18,18 @@ export function _createDynamicElement(name: string, viewUrl: string, bindableNam
     bindable(bindableNames[i])(DynamicElement);
   }
 
-  if (shouldUseShadowDOM) {
-    useShadowDOM(DynamicElement);
+  switch (useShadowDOMmode) {
+    case 'open':
+      useShadowDOM({ mode: 'open' })(DynamicElement);
+      break;
+    
+    case 'closed':
+      useShadowDOM({ mode: 'closed' })(DynamicElement);
+      break;
+      
+    case '':
+      useShadowDOM(DynamicElement);
+      break;
   }
 
   return DynamicElement;
