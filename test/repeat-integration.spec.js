@@ -1031,29 +1031,6 @@ describe('Repeat array (pure)', describeArrayTests.bind(this, true));
 
 describe('Repeat array (not pure)', describeArrayTests.bind(this, false));
 
-xdescribe('instancesChanges and instancesMutated together', () => {
-  it('handles  together correctly', () => {
-    let template = `<template><section if.bind='show'><div repeat.for="item of items">\${item}</div></section></template>`;
-    let viewModel = {
-      show: false,
-      // items: [{ a: 'a' }, { a: 'b' }]
-      items: null,
-    };
-    let controller = createController(template, viewModel, false);
-    let taskQueue = container.get(TaskQueue);
-    taskQueue.queueMicroTask(() => {
-      viewModel.show = true;
-      viewModel.items = ['a', 'b', 'c', 'd'];
-      viewModel.items.splice(1, 1, { a: 'bb' });
-      viewModel.items.push({ a: 'aa' });
-    });
-    taskQueue.flushMicroTaskQueue();
-    taskQueue.queueMicroTask(() => {
-      console.log(host.children.length, select(controller, 'div').length);
-    });
-  });
-});
-
 describe('Repeat map [k, v]', () => {
   let viewModel, controller;
   let obj = {};
