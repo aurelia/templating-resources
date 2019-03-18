@@ -25,5 +25,5 @@ jobs:
           key: node10-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: gulp build
-      - run: gulp test
+      - run: node ./node_modules/gulp/bin/gulp.js build
+      - run: node ./node_modules/gulp/bin/gulp.js test
