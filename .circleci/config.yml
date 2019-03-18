@@ -1,23 +1,29 @@
-#####
-# Circle CI
+# Javascript Node CircleCI 2.0 configuration file
 #
-# For running docker images on circle ci, see: https://circleci.com/docs/docker
-# For circle.yml explanation, see: https://circleci.com/docs/manually
-#####
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:10.12-stretch-browsers
+    steps:
+      - checkout
+      
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - node10-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - node10-dependencies-
 
-machine:
-  node:
-    version: 4.2.6
+      - run: npm install
 
-dependencies:
-  pre:
-    - npm install -g gulp
-    - npm install -g jspm
-  override:
-    - npm install
-    - jspm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: node10-dependencies-{{ checksum "package.json" }}
 
-test:
-  override:
-    - gulp build
-    - gulp test
+      # run tests!
+      - run: gulp build
+      - run: gulp test
