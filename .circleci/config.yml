@@ -18,8 +18,7 @@ jobs:
           - node10-dependencies-
 
       - run: npm install
-      - run: npm i -g jspm
-      - run: jspm install
+      - run: ./node_modules/.bin/jspm install
 
       - save_cache:
           paths:
