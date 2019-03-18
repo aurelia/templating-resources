@@ -101,7 +101,6 @@
     "gulp-util": "^3.0.7",
     "insert": "^1.0.1",
     "jasmine-core": "^2.4.1",
-    "jspm": "^0.16.53",
     "karma": "^3.1.4",
     "karma-babel-preprocessor": "^6.0.1",
     "karma-chrome-launcher": "^2.2.0",
