@@ -1,0 +1,9 @@
+version: 2.1
+
+orbs:
+  v1: aurelia/v1@volatile
+
+workflows:
+  main:
+    jobs:
+      - v1/build_test

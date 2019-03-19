@@ -20,6 +20,11 @@
     "type": "git",
     "url": "http://github.com/aurelia/templating-resources"
   },
+  "scripts": {
+    "test": "node ./node_modules/gulp/bin/gulp.js test",
+    "build": "node ./node_modules/gulp/bin/gulp.js build",
+    "cut-release": "node ./node_modules/gulp/bin/gulp.js prepare-release"
+  },  
   "jspm": {
     "registry": "npm",
     "jspmPackage": true,
@@ -108,6 +113,7 @@
     "gulp-util": "^3.0.7",
     "insert": "^1.0.1",
     "jasmine-core": "^2.4.1",
+    "jspm": "^0.16.54",
     "karma": "^1.1.2",
     "karma-babel-preprocessor": "^6.0.1",
     "karma-chrome-launcher": "^1.0.1",
