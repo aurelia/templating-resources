@@ -6,23 +6,24 @@ export function getElementName(address) {
 }
 
 export function configure(config) {
-  let viewEngine = config.container.get(ViewEngine);
-  let loader = config.aurelia.loader;
+  const viewEngine = config.container.get(ViewEngine);
+  const loader = config.aurelia.loader;
 
   viewEngine.addResourcePlugin('.html', {
-    'fetch': function(address) {
-      return loader.loadTemplate(address).then(registryEntry => {
-        let bindable = registryEntry.template.getAttribute('bindable');
-        let elementName = getElementName(address);
+    'fetch': function(viewUrl) {
+      return loader.loadTemplate(viewUrl).then(registryEntry => {
+        let bindableNames = registryEntry.template.getAttribute('bindable');
+        const useShadowDOMmode: null | '' | 'open' | 'closed' = registryEntry.template.getAttribute('use-shadow-dom');
+        const name = getElementName(viewUrl);
 
-        if (bindable) {
-          bindable = bindable.split(',').map(x => x.trim());
+        if (bindableNames) {
+          bindableNames = bindableNames.split(',').map(x => x.trim());
           registryEntry.template.removeAttribute('bindable');
         } else {
-          bindable = [];
+          bindableNames = [];
         }
 
-        return { [elementName]: _createDynamicElement(elementName, address, bindable) };
+        return { [name]: _createDynamicElement({name, viewUrl, bindableNames, useShadowDOMmode}) };
       });
     }
   });
