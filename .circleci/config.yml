@@ -1,23 +1,9 @@
-#####
-# Circle CI
-#
-# For running docker images on circle ci, see: https://circleci.com/docs/docker
-# For circle.yml explanation, see: https://circleci.com/docs/manually
-#####
+version: 2.1
 
-machine:
-  node:
-    version: 4.2.6
+orbs:
+  v1: aurelia/v1@volatile
 
-dependencies:
-  pre:
-    - npm install -g gulp
-    - npm install -g jspm
-  override:
-    - npm install
-    - jspm install
-
-test:
-  override:
-    - gulp build
-    - gulp test
+workflows:
+  main:
+    jobs:
+      - v1/build_test

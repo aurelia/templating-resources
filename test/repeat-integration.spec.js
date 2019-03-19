@@ -1031,7 +1031,7 @@ describe('Repeat array (pure)', describeArrayTests.bind(this, true));
 
 describe('Repeat array (not pure)', describeArrayTests.bind(this, false));
 
-describe('instancesChanges and instancesMutated together', () => {
+xdescribe('instancesChanges and instancesMutated together', () => {
   it('handles  together correctly', () => {
     let template = `<template><section if.bind='show'><div repeat.for="item of items">\${item}</div></section></template>`;
     let viewModel = {
