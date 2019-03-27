@@ -1,3 +1,24 @@
+<a name="1.9.0"></a>
+# [1.9.0](https://github.com/aurelia/templating-resources/compare/1.8.0...1.9.0) (2019-03-27)
+
+
+### Bug Fixes
+
+* **ci:** update ci config, deps, scripts ([e794135](https://github.com/aurelia/templating-resources/commit/e794135))
+* **ci:** update deps, jspm deps, test deps, ci ([1ac0c77](https://github.com/aurelia/templating-resources/commit/1ac0c77))
+* improve typescript typings of SignalBindingBehavior.bind ([347f125](https://github.com/aurelia/templating-resources/commit/347f125)), closes [#338](https://github.com/aurelia/templating-resources/issues/338)
+
+
+### Features
+
+* **html-resource-plugin, dynamic-element:** Add shadow dom support ([56d29e9](https://github.com/aurelia/templating-resources/commit/56d29e9)), closes [#368](https://github.com/aurelia/templating-resources/issues/368)
+* **html-resource-plugin, dynamic-element:** Add shadow dom support ([43e9434](https://github.com/aurelia/templating-resources/commit/43e9434)), closes [#368](https://github.com/aurelia/templating-resources/issues/368)
+* **html-resource-plugin, dynamic-element:** Add shadow dom support ([ac04d3e](https://github.com/aurelia/templating-resources/commit/ac04d3e)), closes [#368](https://github.com/aurelia/templating-resources/issues/368)
+* **html-resource-plugin, dynamic-element:** Add shadow dom support ([ddd19a1](https://github.com/aurelia/templating-resources/commit/ddd19a1)), closes [#368](https://github.com/aurelia/templating-resources/issues/368)
+* **html-resource-plugin, dynamic-element:** Add shadow dom support ([7264c35](https://github.com/aurelia/templating-resources/commit/7264c35)), closes [#367](https://github.com/aurelia/templating-resources/issues/367)
+
+
+
 <a name="1.8.0"></a>
 # [1.8.0](https://github.com/aurelia/templating-resources/compare/1.7.2...1.8.0) (2019-01-26)
 

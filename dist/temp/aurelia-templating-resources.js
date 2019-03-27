@@ -29,6 +29,8 @@ var _aureliaTemplating = require('aurelia-templating');
 
 var _aureliaBinding = require('aurelia-binding');
 
+var _aureliaLogging = require('aurelia-logging');
+
 var _aureliaTaskQueue = require('aurelia-task-queue');
 
 var _aureliaPal = require('aurelia-pal');
@@ -482,6 +484,8 @@ var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 var HTMLSanitizer = exports.HTMLSanitizer = function () {
   function HTMLSanitizer() {
     _classCallCheck(this, HTMLSanitizer);
+
+    (0, _aureliaLogging.getLogger)('html-sanitizer').warn('CAUTION: The default HTMLSanitizer does NOT provide security against a wide variety of sophisticated XSS attacks,\n      and should not be relied on for sanitizing input from unknown sources.\n      Please see https://aurelia.io/docs/binding/basics#element-content for instructions on how to use a secure solution like DOMPurify or sanitize-html.');
   }
 
   HTMLSanitizer.prototype.sanitize = function sanitize(input) {
@@ -553,9 +557,13 @@ var Focus = exports.Focus = (_dec8 = (0, _aureliaTemplating.customAttribute)('fo
 
   return Focus;
 }()) || _class6);
-function _createDynamicElement(name, viewUrl, bindableNames) {
+function _createDynamicElement(_ref) {
   var _dec9, _dec10, _class7;
 
+  var name = _ref.name,
+      viewUrl = _ref.viewUrl,
+      bindableNames = _ref.bindableNames,
+      useShadowDOMmode = _ref.useShadowDOMmode;
   var DynamicElement = (_dec9 = (0, _aureliaTemplating.customElement)(name), _dec10 = (0, _aureliaTemplating.useView)(viewUrl), _dec9(_class7 = _dec10(_class7 = function () {
     function DynamicElement() {
       _classCallCheck(this, DynamicElement);
@@ -568,9 +576,32 @@ function _createDynamicElement(name, viewUrl, bindableNames) {
     return DynamicElement;
   }()) || _class7) || _class7);
 
+
   for (var i = 0, ii = bindableNames.length; i < ii; ++i) {
     (0, _aureliaTemplating.bindable)(bindableNames[i])(DynamicElement);
   }
+
+  switch (useShadowDOMmode) {
+    case 'open':
+      (0, _aureliaTemplating.useShadowDOM)({ mode: 'open' })(DynamicElement);
+      break;
+
+    case 'closed':
+      (0, _aureliaTemplating.useShadowDOM)({ mode: 'closed' })(DynamicElement);
+      break;
+
+    case '':
+      (0, _aureliaTemplating.useShadowDOM)(DynamicElement);
+      break;
+
+    case null:
+      break;
+
+    default:
+      (0, _aureliaLogging.getLogger)('aurelia-html-only-element').warn('Expected \'use-shadow-dom\' value to be "close", "open" or "", received ' + useShadowDOMmode);
+      break;
+  }
+
   return DynamicElement;
 }
 
@@ -1722,23 +1753,24 @@ function configure(config) {
   var loader = config.aurelia.loader;
 
   viewEngine.addResourcePlugin('.html', {
-    'fetch': function fetch(address) {
-      return loader.loadTemplate(address).then(function (registryEntry) {
-        var _ref;
+    'fetch': function fetch(viewUrl) {
+      return loader.loadTemplate(viewUrl).then(function (registryEntry) {
+        var _ref2;
 
-        var bindable = registryEntry.template.getAttribute('bindable');
-        var elementName = getElementName(address);
+        var bindableNames = registryEntry.template.getAttribute('bindable');
+        var useShadowDOMmode = registryEntry.template.getAttribute('use-shadow-dom');
+        var name = getElementName(viewUrl);
 
-        if (bindable) {
-          bindable = bindable.split(',').map(function (x) {
+        if (bindableNames) {
+          bindableNames = bindableNames.split(',').map(function (x) {
             return x.trim();
           });
           registryEntry.template.removeAttribute('bindable');
         } else {
-          bindable = [];
+          bindableNames = [];
         }
 
-        return _ref = {}, _ref[elementName] = _createDynamicElement(elementName, address, bindable), _ref;
+        return _ref2 = {}, _ref2[name] = _createDynamicElement({ name: name, viewUrl: viewUrl, bindableNames: bindableNames, useShadowDOMmode: useShadowDOMmode }), _ref2;
       });
     }
   });
@@ -1759,13 +1791,17 @@ var SignalBindingBehavior = exports.SignalBindingBehavior = (_dec32 = (0, _aurel
     if (!binding.updateTarget) {
       throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
     }
-    if (arguments.length === 3) {
-      var name = arguments[2];
+
+    for (var _len3 = arguments.length, names = Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
+      names[_key3 - 2] = arguments[_key3];
+    }
+
+    if (names.length === 1) {
+      var name = names[0];
       var bindings = this.signals[name] || (this.signals[name] = []);
       bindings.push(binding);
       binding.signalName = name;
-    } else if (arguments.length > 3) {
-      var names = Array.prototype.slice.call(arguments, 2);
+    } else if (names.length > 1) {
       var i = names.length;
       while (i--) {
         var _name = names[i];
@@ -1782,10 +1818,10 @@ var SignalBindingBehavior = exports.SignalBindingBehavior = (_dec32 = (0, _aurel
     var name = binding.signalName;
     binding.signalName = null;
     if (Array.isArray(name)) {
-      var names = name;
-      var i = names.length;
+      var _names = name;
+      var i = _names.length;
       while (i--) {
-        var n = names[i];
+        var n = _names[i];
         var bindings = this.signals[n];
         bindings.splice(bindings.indexOf(binding), 1);
       }

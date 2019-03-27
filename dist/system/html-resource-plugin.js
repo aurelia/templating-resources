@@ -17,23 +17,24 @@ System.register(['aurelia-templating', './dynamic-element'], function (_export, 
     var loader = config.aurelia.loader;
 
     viewEngine.addResourcePlugin('.html', {
-      'fetch': function fetch(address) {
-        return loader.loadTemplate(address).then(function (registryEntry) {
+      'fetch': function fetch(viewUrl) {
+        return loader.loadTemplate(viewUrl).then(function (registryEntry) {
           var _ref;
 
-          var bindable = registryEntry.template.getAttribute('bindable');
-          var elementName = getElementName(address);
+          var bindableNames = registryEntry.template.getAttribute('bindable');
+          var useShadowDOMmode = registryEntry.template.getAttribute('use-shadow-dom');
+          var name = getElementName(viewUrl);
 
-          if (bindable) {
-            bindable = bindable.split(',').map(function (x) {
+          if (bindableNames) {
+            bindableNames = bindableNames.split(',').map(function (x) {
               return x.trim();
             });
             registryEntry.template.removeAttribute('bindable');
           } else {
-            bindable = [];
+            bindableNames = [];
           }
 
-          return _ref = {}, _ref[elementName] = _createDynamicElement(elementName, address, bindable), _ref;
+          return _ref = {}, _ref[name] = _createDynamicElement({ name: name, viewUrl: viewUrl, bindableNames: bindableNames, useShadowDOMmode: useShadowDOMmode }), _ref;
         });
       }
     });

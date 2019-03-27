@@ -20,13 +20,17 @@ export var SignalBindingBehavior = (_dec = bindingBehavior('signal'), _dec(_clas
     if (!binding.updateTarget) {
       throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
     }
-    if (arguments.length === 3) {
-      var name = arguments[2];
+
+    for (var _len = arguments.length, names = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+      names[_key - 2] = arguments[_key];
+    }
+
+    if (names.length === 1) {
+      var name = names[0];
       var bindings = this.signals[name] || (this.signals[name] = []);
       bindings.push(binding);
       binding.signalName = name;
-    } else if (arguments.length > 3) {
-      var names = Array.prototype.slice.call(arguments, 2);
+    } else if (names.length > 1) {
       var i = names.length;
       while (i--) {
         var _name = names[i];
@@ -43,10 +47,10 @@ export var SignalBindingBehavior = (_dec = bindingBehavior('signal'), _dec(_clas
     var name = binding.signalName;
     binding.signalName = null;
     if (Array.isArray(name)) {
-      var names = name;
-      var i = names.length;
+      var _names = name;
+      var i = _names.length;
       while (i--) {
-        var n = names[i];
+        var n = _names[i];
         var bindings = this.signals[n];
         bindings.splice(bindings.indexOf(binding), 1);
       }

@@ -1,6 +1,7 @@
 import {inject,Container,Optional} from 'aurelia-dependency-injection';
-import {BoundViewFactory,ViewSlot,customAttribute,templateController,useView,customElement,bindable,ViewResources,resource,ViewCompileInstruction,CompositionEngine,CompositionContext,noView,View,ViewEngine,Animator,TargetInstruction} from 'aurelia-templating';
+import {BoundViewFactory,ViewSlot,customAttribute,templateController,useView,customElement,bindable,useShadowDOM,ViewResources,resource,ViewCompileInstruction,CompositionEngine,CompositionContext,noView,View,ViewEngine,Animator,TargetInstruction} from 'aurelia-templating';
 import {createOverrideContext,bindingMode,EventSubscriber,bindingBehavior,BindingBehavior,ValueConverter,sourceContext,targetContext,DataAttributeObserver,mergeSplice,valueConverter,ObserverLocator} from 'aurelia-binding';
+import {getLogger} from 'aurelia-logging';
 import {TaskQueue} from 'aurelia-task-queue';
 import {DOM,FEATURE} from 'aurelia-pal';
 import {Loader} from 'aurelia-loader';
@@ -463,6 +464,13 @@ const SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 * Default Html Sanitizer to prevent script injection.
 */
 export class HTMLSanitizer {
+  constructor() {
+    getLogger('html-sanitizer')
+      .warn(`CAUTION: The default HTMLSanitizer does NOT provide security against a wide variety of sophisticated XSS attacks,
+      and should not be relied on for sanitizing input from unknown sources.
+      Please see https://aurelia.io/docs/binding/basics#element-content for instructions on how to use a secure solution like DOMPurify or sanitize-html.`);
+  }
+
   /**
   * Sanitizes the provided input.
   * @param input The input to be sanitized.
@@ -549,7 +557,12 @@ export class Focus {
 }
 
 /*eslint padded-blocks:0*/
-export function _createDynamicElement(name: string, viewUrl: string, bindableNames: string[]): Function {
+export function _createDynamicElement({ name, viewUrl, bindableNames, useShadowDOMmode } : {
+  name: string,
+  viewUrl: string,
+  bindableNames: string[],
+  useShadowDOMmode: null | '' | 'open' | 'closed'
+}): Function {
   @customElement(name)
   @useView(viewUrl)
   class DynamicElement {
@@ -557,9 +570,34 @@ export function _createDynamicElement(name: string, viewUrl: string, bindableNam
       this.$parent = bindingContext;
     }
   }
+
   for (let i = 0, ii = bindableNames.length; i < ii; ++i) {
     bindable(bindableNames[i])(DynamicElement);
   }
+
+  switch (useShadowDOMmode) {
+  case 'open':
+    useShadowDOM({ mode: 'open' })(DynamicElement);
+    break;
+
+  case 'closed':
+    useShadowDOM({ mode: 'closed' })(DynamicElement);
+    break;
+
+  case '':
+    useShadowDOM(DynamicElement);
+    break;
+
+  case null:
+    // Do not use shadow dom
+    break;
+
+  default:
+    getLogger('aurelia-html-only-element')
+      .warn(`Expected 'use-shadow-dom' value to be "close", "open" or "", received ${useShadowDOMmode}`);
+    break;
+  }
+
   return DynamicElement;
 }
 
@@ -1856,23 +1894,24 @@ export function getElementName(address) {
 }
 
 export function configure(config) {
-  let viewEngine = config.container.get(ViewEngine);
-  let loader = config.aurelia.loader;
+  const viewEngine = config.container.get(ViewEngine);
+  const loader = config.aurelia.loader;
 
   viewEngine.addResourcePlugin('.html', {
-    'fetch': function(address) {
-      return loader.loadTemplate(address).then(registryEntry => {
-        let bindable = registryEntry.template.getAttribute('bindable');
-        let elementName = getElementName(address);
+    'fetch': function(viewUrl) {
+      return loader.loadTemplate(viewUrl).then(registryEntry => {
+        let bindableNames = registryEntry.template.getAttribute('bindable');
+        const useShadowDOMmode: null | '' | 'open' | 'closed' = registryEntry.template.getAttribute('use-shadow-dom');
+        const name = getElementName(viewUrl);
 
-        if (bindable) {
-          bindable = bindable.split(',').map(x => x.trim());
+        if (bindableNames) {
+          bindableNames = bindableNames.split(',').map(x => x.trim());
           registryEntry.template.removeAttribute('bindable');
         } else {
-          bindable = [];
+          bindableNames = [];
         }
 
-        return { [elementName]: _createDynamicElement(elementName, address, bindable) };
+        return { [name]: _createDynamicElement({name, viewUrl, bindableNames, useShadowDOMmode}) };
       });
     }
   });
@@ -1887,17 +1926,16 @@ export class SignalBindingBehavior {
     this.signals = bindingSignaler.signals;
   }
 
-  bind(binding, source) {
+  bind(binding, source, ...names) {
     if (!binding.updateTarget) {
       throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
     }
-    if (arguments.length === 3) {
-      let name = arguments[2];
+    if (names.length === 1) {
+      let name = names[0];
       let bindings = this.signals[name] || (this.signals[name] = []);
       bindings.push(binding);
       binding.signalName = name;
-    } else if (arguments.length > 3) {
-      let names = Array.prototype.slice.call(arguments, 2);
+    } else if (names.length > 1) {
       let i = names.length;
       while (i--) {
         let name = names[i];

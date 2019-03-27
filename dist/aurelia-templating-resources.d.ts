@@ -11,6 +11,7 @@ import {
   useView,
   customElement,
   bindable,
+  useShadowDOM,
   ViewResources,
   resource,
   ViewCompileInstruction,
@@ -36,6 +37,9 @@ import {
   valueConverter,
   ObserverLocator
 } from 'aurelia-binding';
+import {
+  getLogger
+} from 'aurelia-logging';
 import {
   TaskQueue
 } from 'aurelia-task-queue';
@@ -198,6 +202,7 @@ export declare class IfCore {
 * Default Html Sanitizer to prevent script injection.
 */
 export declare class HTMLSanitizer {
+  constructor();
   
   /**
     * Sanitizes the provided input.
@@ -583,7 +588,7 @@ export declare class SignalBindingBehavior {
   static inject(): any;
   signals: any;
   constructor(bindingSignaler?: any);
-  bind(binding?: any, source?: any): any;
+  bind(binding?: any, source?: any, ...names: any[]): any;
   unbind(binding?: any, source?: any): any;
 }
 

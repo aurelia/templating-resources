@@ -13,17 +13,16 @@ export let SignalBindingBehavior = (_dec = bindingBehavior('signal'), _dec(_clas
     this.signals = bindingSignaler.signals;
   }
 
-  bind(binding, source) {
+  bind(binding, source, ...names) {
     if (!binding.updateTarget) {
       throw new Error('Only property bindings and string interpolation bindings can be signaled.  Trigger, delegate and call bindings cannot be signaled.');
     }
-    if (arguments.length === 3) {
-      let name = arguments[2];
+    if (names.length === 1) {
+      let name = names[0];
       let bindings = this.signals[name] || (this.signals[name] = []);
       bindings.push(binding);
       binding.signalName = name;
-    } else if (arguments.length > 3) {
-      let names = Array.prototype.slice.call(arguments, 2);
+    } else if (names.length > 1) {
       let i = names.length;
       while (i--) {
         let name = names[i];
