@@ -1,3 +1,13 @@
+<a name="1.9.1"></a>
+## [1.9.1](https://github.com/aurelia/templating-resources/compare/1.9.0...1.9.1) (2019-03-28)
+
+
+### Bug Fixes
+
+* **html-sanitizer:** only warn if sanitization is attempted ([82beb9b](https://github.com/aurelia/templating-resources/commit/82beb9b))
+
+
+
 <a name="1.9.0"></a>
 # [1.9.0](https://github.com/aurelia/templating-resources/compare/1.8.0...1.9.0) (2019-03-27)
 

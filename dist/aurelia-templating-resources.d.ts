@@ -202,7 +202,6 @@ export declare class IfCore {
 * Default Html Sanitizer to prevent script injection.
 */
 export declare class HTMLSanitizer {
-  constructor();
   
   /**
     * Sanitizes the provided input.
