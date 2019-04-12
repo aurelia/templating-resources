@@ -221,7 +221,7 @@ export class Repeat extends AbstractRepeater {
       for (let i = 0; i < instructionIds.length; i++) {
         const expressions = instructions[instructionIds[i]].expressions;
         if (expressions) {
-          for (let ii = 0; i < expressions.length; i++) {
+          for (let ii = 0; ii < expressions.length; ii++) {
             if (expressions[ii].targetProperty === 'matcher') {
               const matcherBinding = expressions[ii];
               expressions.splice(ii, 1);
