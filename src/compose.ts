@@ -1,43 +1,39 @@
-import {Container} from 'aurelia-dependency-injection';
-import {TaskQueue} from 'aurelia-task-queue';
-import {
-  CompositionEngine, CompositionContext,
-  ViewSlot, ViewResources, customElement,
-  bindable, noView, View
-} from 'aurelia-templating';
-import {DOM} from 'aurelia-pal';
+import { Container } from 'aurelia-dependency-injection';
+import { DOM } from 'aurelia-pal';
+import { TaskQueue } from 'aurelia-task-queue';
+import { bindable, CompositionContext, CompositionEngine, customElement, noView, View, ViewResources, ViewSlot } from 'aurelia-templating';
 
 /**
-* Used to compose a new view / view-model template or bind to an existing instance.
-*/
-@customElement('compose')
+ * Used to compose a new view / view-model template or bind to an existing instance.
+ */
 @noView
+@customElement('compose')
 export class Compose {
 
   static inject() {
     return [DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue];
   }
   /**
-  * Model to bind the custom element to.
-  *
-  * @property model
-  * @type {CustomElement}
-  */
-  @bindable model;
+   * Model to bind the custom element to.
+   *
+   * @property model
+   * @type {CustomElement}
+   */
+  @bindable model: any;
   /**
-  * View to bind the custom element to.
-  *
-  * @property view
-  * @type {HtmlElement}
-  */
-  @bindable view;
+   * View to bind the custom element to.
+   *
+   * @property view
+   * @type {HtmlElement}
+   */
+  @bindable view: any;
   /**
-  * View-model to bind the custom element's template to.
-  *
-  * @property viewModel
-  * @type {Class}
-  */
-  @bindable viewModel;
+   * View-model to bind the custom element's template to.
+   *
+   * @property viewModel
+   * @type {Class}
+   */
+  @bindable viewModel: any;
 
   /**
    * SwapOrder to control the swapping order of the custom element's view.
@@ -45,17 +41,74 @@ export class Compose {
    * @property view
    * @type {String}
    */
-  @bindable swapOrder;
+  @bindable swapOrder: any;
+  
+  /**
+   *@internal
+   */
+  element: any;
+  /**
+   *@internal
+   */
+  container: any;
+  /**
+   *@internal
+   */
+  compositionEngine: any;
+  /**
+   *@internal
+   */
+  viewSlot: any;
+  /**
+   *@internal
+   */
+  viewResources: any;
+  /**
+   *@internal
+   */
+  taskQueue: any;
+  /**
+   *@internal
+   */
+  currentController: any;
+  /**
+   *@internal
+   */
+  currentViewModel: any;
+  /**
+   *@internal
+   */
+  changes: any;
+  /**
+   *@internal
+   */
+  owningView: View;
+  /**
+   *@internal
+   */
+  bindingContext: any;
+  /**
+   *@internal
+   */
+  overrideContext: any;
+  /**
+   *@internal
+   */
+  pendingTask: any;
+  /**
+   *@internal
+   */
+  updateRequested: any;
 
   /**
-  * Creates an instance of Compose.
-  * @param element The Compose element.
-  * @param container The dependency injection container instance.
-  * @param compositionEngine CompositionEngine instance to compose the element.
-  * @param viewSlot The slot the view is injected in to.
-  * @param viewResources Collection of resources used to compile the the view.
-  * @param taskQueue The TaskQueue instance.
-  */
+   * Creates an instance of Compose.
+   * @param element The Compose element.
+   * @param container The dependency injection container instance.
+   * @param compositionEngine CompositionEngine instance to compose the element.
+   * @param viewSlot The slot the view is injected in to.
+   * @param viewResources Collection of resources used to compile the the view.
+   * @param taskQueue The TaskQueue instance.
+   */
   constructor(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
     this.element = element;
     this.container = container;
@@ -69,20 +122,20 @@ export class Compose {
   }
 
   /**
-  * Invoked when the component has been created.
-  *
-  * @param owningView The view that this component was created inside of.
-  */
+   * Invoked when the component has been created.
+   *
+   * @param owningView The view that this component was created inside of.
+   */
   created(owningView: View) {
     this.owningView = owningView;
   }
 
   /**
-  * Used to set the bindingContext.
-  *
-  * @param bindingContext The context in which the view model is executed in.
-  * @param overrideContext The context in which the view model is executed in.
-  */
+   * Used to set the bindingContext.
+   *
+   * @param bindingContext The context in which the view model is executed in.
+   * @param overrideContext The context in which the view model is executed in.
+   */
   bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;
@@ -95,8 +148,8 @@ export class Compose {
   }
 
   /**
-  * Unbinds the Compose.
-  */
+   * Unbinds the Compose.
+   */
   unbind() {
     this.changes = Object.create(null);
     this.bindingContext = null;
@@ -107,30 +160,30 @@ export class Compose {
   }
 
   /**
-  * Invoked everytime the bound model changes.
-  * @param newValue The new value.
-  * @param oldValue The old value.
-  */
+   * Invoked everytime the bound model changes.
+   * @param newValue The new value.
+   * @param oldValue The old value.
+   */
   modelChanged(newValue, oldValue) {
     this.changes.model = newValue;
     requestUpdate(this);
   }
 
   /**
-  * Invoked everytime the bound view changes.
-  * @param newValue The new value.
-  * @param oldValue The old value.
-  */
+   * Invoked everytime the bound view changes.
+   * @param newValue The new value.
+   * @param oldValue The old value.
+   */
   viewChanged(newValue, oldValue) {
     this.changes.view = newValue;
     requestUpdate(this);
   }
 
   /**
-    * Invoked everytime the bound view model changes.
-    * @param newValue The new value.
-    * @param oldValue The old value.
-    */
+   * Invoked everytime the bound view model changes.
+   * @param newValue The new value.
+   * @param oldValue The old value.
+   */
   viewModelChanged(newValue, oldValue) {
     this.changes.viewModel = newValue;
     requestUpdate(this);
@@ -138,7 +191,7 @@ export class Compose {
 }
 
 function isEmpty(obj) {
-  for (const key in obj) {
+  for (const _ in obj) {
     return false;
   }
   return true;
@@ -178,7 +231,7 @@ function processChanges(composer: Compose) {
       view: composer.view,
       viewModel: composer.currentViewModel || composer.viewModel,
       model: composer.model
-    };
+    } as CompositionContext;
 
     // apply changes
     instruction = Object.assign(instruction, changes);

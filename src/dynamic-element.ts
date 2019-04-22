@@ -11,6 +11,7 @@ export function _createDynamicElement({ name, viewUrl, bindableNames, useShadowD
   @customElement(name)
   @useView(viewUrl)
   class DynamicElement {
+    $parent: any;
     bind(bindingContext) {
       this.$parent = bindingContext;
     }

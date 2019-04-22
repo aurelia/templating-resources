@@ -4,22 +4,30 @@ import {DOM} from 'aurelia-pal';
 import {injectAureliaHideStyleAtBoundary, aureliaHideClassName} from './aurelia-hide-style';
 
 /**
-* Binding to conditionally show markup in the DOM based on the value.
-* - different from "if" in that the markup is still added to the DOM, simply not shown.
-*/
+ * Binding to conditionally show markup in the DOM based on the value.
+ * - different from "if" in that the markup is still added to the DOM, simply not shown.
+ */
 @customAttribute('show')
 export class Show {
 
+  /**@internal*/
+  element: any;
+  /**@internal*/
+  animator: any;
+  /**@internal*/
+  domBoundary: any;
+
+  /**@internal */
   static inject() {
     return [DOM.Element, Animator, Optional.of(DOM.boundary, true)];
   }
 
   /**
-  * Creates a new instance of Show.
-  * @param element Target element to conditionally show.
-  * @param animator The animator that conditionally adds or removes the aurelia-hide css class.
-  * @param domBoundary The DOM boundary. Used when the behavior appears within a component that utilizes the shadow DOM.
-  */
+   * Creates a new instance of Show.
+   * @param element Target element to conditionally show.
+   * @param animator The animator that conditionally adds or removes the aurelia-hide css class.
+   * @param domBoundary The DOM boundary. Used when the behavior appears within a component that utilizes the shadow DOM.
+   */
   constructor(element, animator, domBoundary) {
     this.element = element;
     this.animator = animator;
@@ -27,16 +35,16 @@ export class Show {
   }
 
   /**
-  * Invoked when the behavior is created.
-  */
+   * Invoked when the behavior is created.
+   */
   created() {
     injectAureliaHideStyleAtBoundary(this.domBoundary);
   }
 
   /**
-  * Invoked everytime the bound value changes.
-  * @param newValue The new value.
-  */
+   * Invoked everytime the bound value changes.
+   * @param newValue The new value.
+   */
   valueChanged(newValue) {
     if (newValue) {
       this.animator.removeClass(this.element, aureliaHideClassName);
@@ -46,9 +54,12 @@ export class Show {
   }
 
   /**
-  * Binds the Show attribute.
-  */
+   * Binds the Show attribute.
+   */
   bind(bindingContext) {
     this.valueChanged(this.value);
+  }
+  value(value: any) {
+    throw new Error("Method not implemented.");
   }
 }

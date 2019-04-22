@@ -1,4 +1,4 @@
-import {sourceContext} from 'aurelia-binding';
+import { sourceContext } from 'aurelia-binding';
 
 export class BindingSignaler {
   signals = {};

@@ -1,3 +1,5 @@
+import { View } from 'aurelia-templating';
+
 /**
 * An abstract base class for elements and attributes that repeat
 * views.
@@ -15,7 +17,7 @@ export class AbstractRepeater {
    *
    * @return {Number}  the number of views.
    */
-  viewCount() {
+  viewCount(): number {
     throw new Error('subclass must implement `viewCount`');
   }
 
@@ -24,7 +26,7 @@ export class AbstractRepeater {
    *
    * @return {Array} The repeater's array of views;
    */
-  views() {
+  views(): any[] {
     throw new Error('subclass must implement `views`');
   }
 
@@ -34,7 +36,7 @@ export class AbstractRepeater {
    * @param {Number} index The index of the requested view.
    * @return {View|ViewSlot} The requested view.
    */
-  view(index) {
+  view(index): any {
     throw new Error('subclass must implement `view`');
   }
 

@@ -7,7 +7,7 @@ import {DOM, FEATURE} from 'aurelia-pal';
 
 let cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 
-function fixupCSSUrls(address, css) {
+function fixupCSSUrls(address: string, css: string) {
   if (typeof css !== 'string') {
     throw new Error(`Failed loading required CSS file: ${address}`);
   }
@@ -21,6 +21,23 @@ function fixupCSSUrls(address, css) {
 }
 
 class CSSResource {
+  /**
+   *@internal
+   */
+  address: string;
+  /**
+   *@internal
+   */
+  _scoped: any;
+  /**
+   *@internal
+   */
+  _global: boolean;
+  /**
+   *@internal
+   */
+  _alreadyGloballyInjected: boolean;
+
   constructor(address: string) {
     this.address = address;
     this._scoped = null;
@@ -28,8 +45,8 @@ class CSSResource {
     this._alreadyGloballyInjected = false;
   }
 
-  initialize(container: Container, target: Function): void {
-    this._scoped = new target(this);
+  initialize(container: Container, Target: Function): void {
+    this._scoped = new (Target as any)(this);
   }
 
   register(registry: ViewResources, name?: string): void {
@@ -56,6 +73,9 @@ class CSSResource {
 }
 
 class CSSViewEngineHooks {
+  owner: CSSResource;
+  css: any;
+  _global: boolean;
   constructor(owner: CSSResource) {
     this.owner = owner;
     this.css = null;
@@ -63,9 +83,9 @@ class CSSViewEngineHooks {
 
   beforeCompile(content: DocumentFragment, resources: ViewResources, instruction: ViewCompileInstruction): void {
     if (instruction.targetShadowDOM) {
-      DOM.injectStyles(this.css, content, true);
+      DOM.injectStyles(this.css, content as any, true);
     } else if (FEATURE.scopedCSS) {
-      let styleNode = DOM.injectStyles(this.css, content, true);
+      let styleNode = DOM.injectStyles(this.css, content as any, true) as Element;
       styleNode.setAttribute('scoped', 'scoped');
     } else if (this._global && !this.owner._alreadyGloballyInjected) {
       DOM.injectStyles(this.css);

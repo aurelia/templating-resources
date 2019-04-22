@@ -1,13 +1,14 @@
-import {NullRepeatStrategy} from './null-repeat-strategy';
-import {ArrayRepeatStrategy} from './array-repeat-strategy';
-import {MapRepeatStrategy} from './map-repeat-strategy';
-import {SetRepeatStrategy} from './set-repeat-strategy';
-import {NumberRepeatStrategy} from './number-repeat-strategy';
+import { ArrayRepeatStrategy } from './array-repeat-strategy';
+import { MapRepeatStrategy } from './map-repeat-strategy';
+import { NullRepeatStrategy } from './null-repeat-strategy';
+import { NumberRepeatStrategy } from './number-repeat-strategy';
+import { Repeat } from './repeat';
+import { SetRepeatStrategy } from './set-repeat-strategy';
 
 /**
 * A strategy is for repeating a template over an iterable or iterable-like object.
 */
-interface RepeatStrategy {
+export interface RepeatStrategy {
   instanceChanged(repeat: Repeat, items: any): void;
   instanceMutated(repeat: Repeat, items: any, changes: any): void;
   getCollectionObserver(observerLocator: any, items: any): any;
@@ -18,6 +19,12 @@ interface RepeatStrategy {
 * Custom strategies can be plugged in as well.
 */
 export class RepeatStrategyLocator {
+
+  /**@internal*/
+  matchers: any[];
+  /**@internal*/
+  strategies: any[];
+
   /**
   * Creates a new RepeatStrategyLocator.
   */
@@ -25,11 +32,11 @@ export class RepeatStrategyLocator {
     this.matchers = [];
     this.strategies = [];
 
-    this.addStrategy(items => items === null || items === undefined, new NullRepeatStrategy());
+    this.addStrategy(items => items === null || items === undefined, new NullRepeatStrategy() as RepeatStrategy);
     this.addStrategy(items => items instanceof Array, new ArrayRepeatStrategy());
     this.addStrategy(items => items instanceof Map, new MapRepeatStrategy());
     this.addStrategy(items => items instanceof Set, new SetRepeatStrategy());
-    this.addStrategy(items => typeof items === 'number', new NumberRepeatStrategy());
+    this.addStrategy(items => typeof items === 'number', new NumberRepeatStrategy() as Partial<RepeatStrategy> as RepeatStrategy);
   }
 
   /**

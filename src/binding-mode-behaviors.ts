@@ -1,5 +1,5 @@
-import {bindingMode, bindingBehavior} from 'aurelia-binding';
-import {mixin} from 'aurelia-metadata';
+import { bindingBehavior, bindingMode } from 'aurelia-binding';
+import { mixin } from 'aurelia-metadata';
 
 let modeBindingBehavior = {
   bind(binding, source, lookupFunctions) {
@@ -16,6 +16,9 @@ let modeBindingBehavior = {
 @mixin(modeBindingBehavior)
 @bindingBehavior('oneTime')
 export class OneTimeBindingBehavior {
+
+  mode: bindingMode;
+
   constructor() {
     this.mode = bindingMode.oneTime;
   }
@@ -24,6 +27,9 @@ export class OneTimeBindingBehavior {
 @mixin(modeBindingBehavior)
 @bindingBehavior('oneWay')
 export class OneWayBindingBehavior {
+  
+  mode: bindingMode;
+
   constructor() {
     this.mode = bindingMode.toView;
   }
@@ -32,6 +38,9 @@ export class OneWayBindingBehavior {
 @mixin(modeBindingBehavior)
 @bindingBehavior('toView')
 export class ToViewBindingBehavior {
+  
+  mode: bindingMode;
+
   constructor() {
     this.mode = bindingMode.toView;
   }
@@ -40,6 +49,9 @@ export class ToViewBindingBehavior {
 @mixin(modeBindingBehavior)
 @bindingBehavior('fromView')
 export class FromViewBindingBehavior {
+  
+  mode: bindingMode;
+
   constructor() {
     this.mode = bindingMode.fromView;
   }
@@ -48,6 +60,9 @@ export class FromViewBindingBehavior {
 @mixin(modeBindingBehavior)
 @bindingBehavior('twoWay')
 export class TwoWayBindingBehavior {
+  
+  mode: bindingMode;
+
   constructor() {
     this.mode = bindingMode.twoWay;
   }

@@ -8,7 +8,7 @@ export function injectAureliaHideStyleAtHead() {
   DOM.injectStyles(aureliaHideClass);
 }
 
-export function injectAureliaHideStyleAtBoundary(domBoundary) {
+export function injectAureliaHideStyleAtBoundary(domBoundary: any) {
   if (FEATURE.shadowDOM && domBoundary && !domBoundary.hasAureliaHideStyle) {
     domBoundary.hasAureliaHideStyle = true;
     DOM.injectStyles(aureliaHideClass, domBoundary);

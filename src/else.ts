@@ -1,11 +1,17 @@
-import {BoundViewFactory, ViewSlot, customAttribute, templateController} from 'aurelia-templating';
-import {inject} from 'aurelia-dependency-injection';
-import {IfCore} from './if-core';
+import { inject } from 'aurelia-dependency-injection';
+import { BoundViewFactory, customAttribute, templateController, ViewSlot } from 'aurelia-templating';
+import { IfCore } from './if-core';
 
 @customAttribute('else')
 @templateController
 @inject(BoundViewFactory, ViewSlot)
 export class Else extends IfCore {
+
+  /**
+   * @internal
+   */
+  ifVm: any;
+
   constructor(viewFactory, viewSlot) {
     super(viewFactory, viewSlot);
     this._registerInIf();
@@ -27,7 +33,7 @@ export class Else extends IfCore {
     // The `if` node is expected to be a comment anchor, because of `@templateController`.
     // To simplify the code we basically walk up to the first Aurelia predecessor,
     // so having static tags in between (no binding) would work but is not intended to be supported.
-    let previous = this.viewSlot.anchor.previousSibling;
+    let previous = (this.viewSlot as ViewSlot & { anchor: any}).anchor.previousSibling;
     while (previous && !previous.au) {
       previous = previous.previousSibling;
     }

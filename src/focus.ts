@@ -4,19 +4,39 @@ import {TaskQueue} from 'aurelia-task-queue';
 import {DOM} from 'aurelia-pal';
 
 /**
-* CustomAttribute that binds provided DOM element's focus attribute with a property on the viewmodel.
-*/
+ * CustomAttribute that binds provided DOM element's focus attribute with a property on the viewmodel.
+ */
 @customAttribute('focus', bindingMode.twoWay)
 export class Focus {
+  /**
+   *@internal
+   */
+  element: any;
+  /**
+   *@internal
+   */
+  taskQueue: any;
+  /**
+   *@internal
+   */
+  isAttached: boolean;
+  /**
+   *@internal
+   */
+  needsApply: boolean;
+  /**
+   *@internal
+   */
+  value: any;
 
   static inject() {
     return [DOM.Element, TaskQueue];
   }
   /**
-  * Creates an instance of Focus.
-  * @paramelement Target element on where attribute is placed on.
-  * @param taskQueue The TaskQueue instance.
-  */
+   * Creates an instance of Focus.
+   * @paramelement Target element on where attribute is placed on.
+   * @param taskQueue The TaskQueue instance.
+   */
   constructor(element, taskQueue) {
     this.element = element;
     this.taskQueue = taskQueue;
@@ -25,9 +45,9 @@ export class Focus {
   }
 
   /**
-  * Invoked everytime the bound value changes.
-  * @param newValue The new value.
-  */
+   * Invoked everytime the bound value changes.
+   * @param newValue The new value.
+   */
   valueChanged(newValue) {
     if (this.isAttached) {
       this._apply();
@@ -49,8 +69,8 @@ export class Focus {
   }
 
   /**
-  * Invoked when the attribute is attached to the DOM.
-  */
+   * Invoked when the attribute is attached to the DOM.
+   */
   attached() {
     this.isAttached = true;
     if (this.needsApply) {
@@ -62,8 +82,8 @@ export class Focus {
   }
 
   /**
-  * Invoked when the attribute is detached from the DOM.
-  */
+   * Invoked when the attribute is detached from the DOM.
+   */
   detached() {
     this.isAttached = false;
     this.element.removeEventListener('focus', this);

@@ -1,8 +1,39 @@
+import { ViewFactory, ViewSlot } from "aurelia-templating";
+
 /**
 * For internal use only. May change without warning.
 */
 export class IfCore {
-  constructor(viewFactory, viewSlot) {
+  /**
+   * @internal
+   */
+  viewFactory: ViewFactory;
+  /**
+   * @internal
+   */
+  viewSlot: ViewSlot;
+  /**
+   * @internal
+   */
+  view: any;
+  /**
+   * @internal
+   */
+  bindingContext: any;
+  /**
+   * @internal
+   */
+  overrideContext: any;
+  /**
+   * @internal
+   */
+  showing: boolean;
+  /**
+   * @internal
+   */
+  cache: boolean | string;
+
+  constructor(viewFactory: ViewFactory, viewSlot: ViewSlot) {
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
     this.view = null;
@@ -57,7 +88,7 @@ export class IfCore {
     }
 
     if (this.view === null) {
-      this.view = this.viewFactory.create();
+      this.view = (this.viewFactory as any).create();
     }
 
     if (!this.view.isBound) {

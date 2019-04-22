@@ -13,6 +13,11 @@ export class If extends IfCore {
   @bindable({ primaryProperty: true }) condition: any;
   @bindable swapOrder: "before"|"with"|"after";
   @bindable cache: boolean|string = true;
+  
+  /**@internal*/
+  animating: any;
+  /**@internal*/
+  elseVm: any;
 
   /**
   * Binds the if to the binding context and override context

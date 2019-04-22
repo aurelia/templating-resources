@@ -8,7 +8,8 @@ import {
   ViewResources,
   customAttribute,
   bindable,
-  templateController
+  templateController,
+  View
 } from 'aurelia-templating';
 import {RepeatStrategyLocator} from './repeat-strategy-locator';
 import {
@@ -51,6 +52,37 @@ export class Repeat extends AbstractRepeater {
   * @property value
   */
   @bindable value
+  
+  /**@internal*/
+  viewFactory: any;
+  /**@internal*/
+  instruction: any;
+  /**@internal*/
+  viewSlot: any;
+  /**@internal*/
+  lookupFunctions: any;
+  /**@internal*/
+  observerLocator: any;
+  /**@internal*/
+  strategyLocator: any;
+  /**@internal*/
+  ignoreMutation: boolean;
+  /**@internal*/
+  sourceExpression: any;
+  /**@internal*/
+  isOneTime: any;
+  /**@internal*/
+  viewsRequireLifecycle: any;
+  /**@internal*/
+  scope: { bindingContext: any; overrideContext: any; };
+  /**@internal*/
+  matcherBinding: any;
+  /**@internal*/
+  collectionObserver: any;
+  /**@internal*/
+  strategy: any;
+  /**@internal */
+  callContext: 'handleCollectionMutated' | 'handleInnerCollectionMutated';
 
   /**
  * Creates an instance of Repeat.
@@ -270,15 +302,16 @@ export class Repeat extends AbstractRepeater {
   }
 
   updateBindings(view: View) {
-    let j = view.bindings.length;
+    const $view = view as View & { bindings: any[]; controllers: any[] };
+    let j = $view.bindings.length;
     while (j--) {
-      updateOneTimeBinding(view.bindings[j]);
+      updateOneTimeBinding($view.bindings[j]);
     }
-    j = view.controllers.length;
+    j = $view.controllers.length;
     while (j--) {
-      let k = view.controllers[j].boundProperties.length;
+      let k = $view.controllers[j].boundProperties.length;
       while (k--) {
-        let binding = view.controllers[j].boundProperties[k].binding;
+        let binding = $view.controllers[j].boundProperties[k].binding;
         updateOneTimeBinding(binding);
       }
     }

@@ -3,6 +3,8 @@ import {BindingSignaler} from './binding-signaler';
 
 @bindingBehavior('signal')
 export class SignalBindingBehavior {
+
+  /**@internal */
   static inject() { return [BindingSignaler]; }
   signals;
 

@@ -9,9 +9,9 @@ import {
 const oneTime = bindingMode.oneTime;
 
 /**
-* Update the override context.
-* @param startIndex index in collection where to start updating.
-*/
+ * Update the override context.
+ * @param startIndex index in collection where to start updating.
+ */
 export function updateOverrideContexts(views, startIndex) {
   let length = views.length;
 
@@ -25,13 +25,13 @@ export function updateOverrideContexts(views, startIndex) {
 }
 
 /**
-  * Creates a complete override context.
-  * @param data The item's value.
-  * @param index The item's index.
-  * @param length The collections total length.
-  * @param key The key in a key/value pair.
-  */
-export function createFullOverrideContext(repeat, data, index, length, key) {
+ * Creates a complete override context.
+ * @param data The item's value.
+ * @param index The item's index.
+ * @param length The collections total length.
+ * @param key The key in a key/value pair.
+ */
+export function createFullOverrideContext(repeat, data, index, length, key?: string) {
   let bindingContext = {};
   let overrideContext = createOverrideContext(bindingContext, repeat.scope.overrideContext);
   // is key/value pair (Map)
@@ -46,11 +46,11 @@ export function createFullOverrideContext(repeat, data, index, length, key) {
 }
 
 /**
-* Updates the override context.
-* @param context The context to be updated.
-* @param index The context's index.
-* @param length The collection's length.
-*/
+ * Updates the override context.
+ * @param context The context to be updated.
+ * @param index The context's index.
+ * @param length The collection's length.
+ */
 export function updateOverrideContext(overrideContext, index, length) {
   let first = (index === 0);
   let last = (index === length - 1);
@@ -65,8 +65,8 @@ export function updateOverrideContext(overrideContext, index, length) {
 }
 
 /**
-* Gets a repeat instruction's source expression.
-*/
+ * Gets a repeat instruction's source expression.
+ */
 export function getItemsSourceExpression(instruction, attrName) {
   return instruction.behaviorInstructions
     .filter(bi => bi.originalAttrName === attrName)[0]
@@ -76,8 +76,8 @@ export function getItemsSourceExpression(instruction, attrName) {
 }
 
 /**
-* Unwraps an expression to expose the inner, pre-converted / behavior-free expression.
-*/
+ * Unwraps an expression to expose the inner, pre-converted / behavior-free expression.
+ */
 export function unwrapExpression(expression) {
   let unwrapped = false;
   while (expression instanceof BindingBehavior) {
@@ -91,8 +91,8 @@ export function unwrapExpression(expression) {
 }
 
 /**
-* Returns whether an expression has the OneTimeBindingBehavior applied.
-*/
+ * Returns whether an expression has the OneTimeBindingBehavior applied.
+ */
 export function isOneTime(expression) {
   while (expression instanceof BindingBehavior) {
     if (expression.name === 'oneTime') {
@@ -104,8 +104,8 @@ export function isOneTime(expression) {
 }
 
 /**
-* Forces a binding instance to reevaluate.
-*/
+ * Forces a binding instance to reevaluate.
+ */
 export function updateOneTimeBinding(binding) {
   if (binding.call && binding.mode === oneTime) {
     binding.call(sourceContext);
@@ -117,7 +117,7 @@ export function updateOneTimeBinding(binding) {
 /**
  * Returns the index of the element in an array, optionally using a matcher function.
  */
-export function indexOf(array, item, matcher, startIndex) {
+export function indexOf(array, item, matcher, startIndex?: number) {
   if (!matcher) {
     // native indexOf is more performant than a for loop
     return array.indexOf(item);

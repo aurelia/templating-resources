@@ -1,21 +1,21 @@
 import {createFullOverrideContext, updateOverrideContexts} from './repeat-utilities';
 
 /**
-* A strategy for repeating a template over a Map.
-*/
+ * A strategy for repeating a template over a Map.
+ */
 export class MapRepeatStrategy {
   /**
-  * Gets a Map observer.
-  * @param items The items to be observed.
-  */
+   * Gets a Map observer.
+   * @param items The items to be observed.
+   */
   getCollectionObserver(observerLocator, items) {
     return observerLocator.getMapObserver(items);
   }
 
   /**
-  * Process the provided Map entries.
-  * @param items The entries to process.
-  */
+   * Process the provided Map entries.
+   * @param items The entries to process.
+   */
   instanceChanged(repeat, items) {
     let removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
@@ -37,10 +37,10 @@ export class MapRepeatStrategy {
   }
 
   /**
-  * Handle changes in a Map collection.
-  * @param map The underlying Map collection.
-  * @param records The change records.
-  */
+   * Handle changes in a Map collection.
+   * @param map The underlying Map collection.
+   * @param records The change records.
+   */
   instanceMutated(repeat, map, records) {
     let key;
     let i;
@@ -96,8 +96,8 @@ export class MapRepeatStrategy {
   }
 
   _getViewIndexByKey(repeat, key) {
-    let i;
-    let ii;
+    let i: number;
+    let ii: number;
     let child;
 
     for (i = 0, ii = repeat.viewCount(); i < ii; ++i) {
