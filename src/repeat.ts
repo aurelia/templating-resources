@@ -22,35 +22,35 @@ import {viewsRequireLifecycle} from './analyze-view-factory';
 import {AbstractRepeater} from './abstract-repeater';
 
 /**
-* Binding to iterate over iterable objects (Array, Map and Number) to genereate a template for each iteration.
-*/
+ * Binding to iterate over iterable objects (Array, Map and Number) to genereate a template for each iteration.
+ */
 @customAttribute('repeat')
 @templateController
 @inject(BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, ObserverLocator, RepeatStrategyLocator)
 export class Repeat extends AbstractRepeater {
   /**
-  * List of items to bind the repeater to.
-  *
-  * @property items
-  */
+   * List of items to bind the repeater to.
+   *
+   * @property items
+   */
   @bindable items;
   /**
-  * Local variable which gets assigned on each iteration.
-  *
-  * @property local
-  */
+   * Local variable which gets assigned on each iteration.
+   *
+   * @property local
+   */
   @bindable local;
   /**
-  * Key when iterating over Maps.
-  *
-  * @property key
-  */
+   * Key when iterating over Maps.
+   *
+   * @property key
+   */
   @bindable key;
   /**
-  * Value when iterating over Maps.
-  *
-  * @property value
-  */
+   * Value when iterating over Maps.
+   *
+   * @property value
+   */
   @bindable value;
 
   /**@internal*/
@@ -139,6 +139,9 @@ export class Repeat extends AbstractRepeater {
     this._unsubscribeCollection();
   }
 
+  /**
+   * @internal
+   */
   _unsubscribeCollection() {
     if (this.collectionObserver) {
       this.collectionObserver.unsubscribe(this.callContext, this);
@@ -174,6 +177,9 @@ export class Repeat extends AbstractRepeater {
     });
   }
 
+  /**
+   * @internal
+   */
   _getInnerCollection() {
     let expression = unwrapExpression(this.sourceExpression);
     if (!expression) {
