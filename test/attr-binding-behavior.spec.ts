@@ -22,7 +22,7 @@ describe('AttrBindingBehavior', () => {
   it('should bind attribute value', done => {
     const source = { foo: 'bar' };
     const scope = createScopeForTest(source);
-    const target = document.createElement('div');
+    const target = document.createElement('div') as HTMLDivElement & { foo: any };
     const bindingExpression = bindingEngine.createBindingExpression('foo', `foo & attr`, bindingMode.oneWay, lookupFunctions);
     const binding = bindingExpression.createBinding(target);
     binding.bind(scope);

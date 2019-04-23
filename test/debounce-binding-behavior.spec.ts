@@ -8,6 +8,7 @@ import {
   ValueAttributeObserver,
   createScopeForTest
 } from 'aurelia-binding';
+import * as AureliaBinding from 'aurelia-binding';
 import { DebounceBindingBehavior } from '../src/debounce-binding-behavior';
 import { DOM } from 'aurelia-pal';
 
@@ -33,7 +34,7 @@ describe('DebounceBindingBehavior', () => {
   it('should debounce target updates', () => {
     let source = { foo: -1 };
     let scope = createScopeForTest(source);
-    let target = DOM.createElement('input');
+    let target = DOM.createElement('input') as HTMLInputElement;
     let delay = 150;
     let bindingExpression = bindingEngine.createBindingExpression(
       'value',
@@ -78,7 +79,7 @@ describe('DebounceBindingBehavior', () => {
   });
 
   it('should debounce source updates', () => {
-    let target = DOM.createElement('input');
+    let target = DOM.createElement('input') as HTMLInputElement;
     let delay = 150;
     let bindingExpression = bindingEngine.createBindingExpression(
       'value',
@@ -89,7 +90,7 @@ describe('DebounceBindingBehavior', () => {
     let binding = bindingExpression.createBinding(target);
     let originalCallMethod = binding.call;
 
-    let source = {};
+    let source = {} as { foo: any; };
     let scope = createScopeForTest(source);
 
     // overrides call
@@ -101,7 +102,7 @@ describe('DebounceBindingBehavior', () => {
       let tick = Math.floor(Math.random() * delay + delay / 3);
       let shouldUpdate = tick >= delay;
 
-      target.value = Math.floor(Math.random() * 10000);
+      target.value = Math.floor(Math.random() * 10000).toString();
       target.dispatchEvent(DOM.createCustomEvent('change'));
       // console.log({ tick, shouldUpdate, val: target.value, foo: source.foo });
 
@@ -121,7 +122,7 @@ describe('DebounceBindingBehavior', () => {
   it('should debounce call source', () => {
     let target = document.createElement('div');
     let delay = 150;
-    let bindingExpression = new ListenerExpression(
+    let bindingExpression = new (AureliaBinding as any).ListenerExpression(
       bindingEngine.observerLocator.eventManager,
       'mousemove',
       bindingEngine.parseExpression(`handleMouseMove($event) & debounce:${delay}`),
@@ -154,7 +155,7 @@ describe('DebounceBindingBehavior', () => {
       target.dispatchEvent(DOM.createCustomEvent('mousemove'));
       jasmine.clock().tick(tick);
 
-      callCount += shouldCall;
+      callCount += Number(shouldCall);
     }
 
     expect(callCount).toBe(viewModel.callCount);

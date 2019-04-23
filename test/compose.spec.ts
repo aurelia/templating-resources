@@ -111,7 +111,7 @@ describe('Compose', () => {
       sut.unbind();
       expect(sut.changes).toBeDefined();
       expect(sut.changes).not.toBe(expectedChanges);
-    })
+    });
   });
 
   describe('triggers composition', () => {
@@ -327,6 +327,7 @@ describe('Compose', () => {
     };
 
     beforeEach(done => {
+      // tslint:disable-next-line:no-unused-expression
       compositionEngineMock.compose.and.stub;
       compositionEngineMock.compose.and.callFake(() => new Promise(resolve => setTimeout(() => resolve(controller), 20)));
       updateBindable('viewModel', './some-vm');
@@ -336,14 +337,14 @@ describe('Compose', () => {
     it('sets the current controller', done => {
       sut.pendingTask.then(() => {
         expect(sut.currentController).toBe(controller);
-        done()
+        done();
       }, done.fail);
     });
 
     it('sets the current active view model', done => {
       sut.pendingTask.then(() => {
         expect(sut.currentViewModel).toBe(controller.viewModel);
-        done()
+        done();
       }, done.fail);
     });
 
@@ -372,6 +373,7 @@ describe('Compose', () => {
   describe('after failing a composition', () => {
     let error;
     beforeEach(done => {
+      // tslint:disable-next-line:no-unused-expression
       compositionEngineMock.compose.and.stub;
       compositionEngineMock.compose.and.callFake(() => Promise.reject(error = new Error('".compose" test error')));
       updateBindable('viewModel', './some-vm');
