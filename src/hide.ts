@@ -22,6 +22,7 @@ export class Hide {
    */
   domBoundary: any;
 
+  /**@internal */
   static inject() {
     return [DOM.Element, Animator, Optional.of(DOM.boundary, true)];
   }
@@ -64,6 +65,6 @@ export class Hide {
     this.valueChanged(this.value);
   }
   value(value: any) {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 }

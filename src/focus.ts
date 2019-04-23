@@ -29,6 +29,7 @@ export class Focus {
    */
   value: any;
 
+  /**@internal */
   static inject() {
     return [DOM.Element, TaskQueue];
   }

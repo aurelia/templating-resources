@@ -3,6 +3,8 @@ import { DOM } from 'aurelia-pal';
 import { TaskQueue } from 'aurelia-task-queue';
 import { bindable, CompositionContext, CompositionEngine, customElement, noView, View, ViewResources, ViewSlot } from 'aurelia-templating';
 
+
+
 /**
  * Used to compose a new view / view-model template or bind to an existing instance.
  */
@@ -10,9 +12,17 @@ import { bindable, CompositionContext, CompositionEngine, customElement, noView,
 @customElement('compose')
 export class Compose {
 
+  /**@internal */
   static inject() {
     return [DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue];
   }
+
+  /**
+   * A flag to instruct Compose to use legacy behaviors, including:
+   * - auto inherit binding context
+   */
+  static useLegacyBehavior = true;
+
   /**
    * Model to bind the custom element to.
    *
@@ -42,7 +52,12 @@ export class Compose {
    * @type {String}
    */
   @bindable swapOrder: any;
-  
+
+  /**
+   * Instructs the Composer to compose component with or without parent scope enabled
+   */
+  @bindable inheritBindingContext: any;
+
   /**
    *@internal
    */
@@ -118,6 +133,7 @@ export class Compose {
     this.taskQueue = taskQueue;
     this.currentController = null;
     this.currentViewModel = null;
+    this.inheritBindingContext = undefined;
     this.changes = Object.create(null);
   }
 
@@ -142,6 +158,9 @@ export class Compose {
     this.changes.view = this.view;
     this.changes.viewModel = this.viewModel;
     this.changes.model = this.model;
+    if (!Compose.useLegacyBehavior && this.inheritBindingContext === undefined) {
+      this.inheritBindingContext = false;
+    }
     if (!this.pendingTask) {
       processChanges(this);
     }
@@ -230,14 +249,20 @@ function processChanges(composer: Compose) {
     let instruction = {
       view: composer.view,
       viewModel: composer.currentViewModel || composer.viewModel,
-      model: composer.model
-    } as CompositionContext;
+      model: composer.model,
+      inheritBindingContext: composer.inheritBindingContext
+    } as CompositionContext & { inheritBindingContext?: boolean };
 
     // apply changes
     instruction = Object.assign(instruction, changes);
 
     // create context
     instruction = createInstruction(composer, instruction);
+
+    let inheritBindingContext = instruction.inheritBindingContext;
+    if (!inheritBindingContext && inheritBindingContext !== undefined && !instruction.viewModel) {
+      throw new Error('Invalid compose instruction. No view model is specified and "inheritBindingContext" is false');
+    }
     composer.pendingTask = composer.compositionEngine.compose(instruction).then(controller => {
       composer.currentController = controller;
       composer.currentViewModel = controller ? controller.viewModel : null;

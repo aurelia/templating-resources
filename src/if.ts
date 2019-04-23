@@ -11,9 +11,9 @@ import {IfCore} from './if-core';
 @inject(BoundViewFactory, ViewSlot)
 export class If extends IfCore {
   @bindable({ primaryProperty: true }) condition: any;
-  @bindable swapOrder: "before"|"with"|"after";
+  @bindable swapOrder: 'before'|'with'|'after';
   @bindable cache: boolean|string = true;
-  
+
   /**@internal*/
   animating: any;
   /**@internal*/

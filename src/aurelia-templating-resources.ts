@@ -38,7 +38,7 @@ import {
 import {viewsRequireLifecycle} from './analyze-view-factory';
 import {injectAureliaHideStyleAtHead} from './aurelia-hide-style';
 
-function configure(config) {
+function configure(config: any, { useLegacyBehavior = true } = {}) {
   injectAureliaHideStyleAtHead();
 
   config.globalResources(
@@ -64,6 +64,8 @@ function configure(config) {
     UpdateTriggerBindingBehavior,
     AttrBindingBehavior
   );
+
+  Compose.useLegacyBehavior = useLegacyBehavior;
 
   configureHtmlResourcePlugin(config);
 
