@@ -1,4 +1,7 @@
+import { Repeat } from '../src/repeat';
+
 export class ViewSlotMock {
+  children: any[];
   constructor() {
     this.children = [];
   }
@@ -23,6 +26,8 @@ export class ViewSlotMock {
 }
 
 export class ViewMock {
+  bindingContext: any;
+  overrideContext: any;
   bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;

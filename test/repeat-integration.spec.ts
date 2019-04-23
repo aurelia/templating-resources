@@ -17,6 +17,7 @@ import {metadata} from 'aurelia-metadata';
 import {TaskQueue} from 'aurelia-task-queue';
 import {ObserverLocator} from 'aurelia-binding';
 import {viewsRequireLifecycle} from '../src/analyze-view-factory';
+import './test-interfaces';
 
 // create the root container.
 let container = new Container();
@@ -29,17 +30,17 @@ function createViewResources(container) {
   let resources = new ViewResources();
 
   // repeat
-  let resource = metadata.get(metadata.resource, Repeat);
+  let resource = metadata.get(metadata.resource, Repeat) as HtmlBehaviorResource;
   resource.target = Repeat;
   resource.initialize(container, Repeat);
   resources.registerAttribute('repeat', resource, 'repeat');
   // if
-  resource = metadata.get(metadata.resource, If);
+  resource = metadata.get(metadata.resource, If) as HtmlBehaviorResource;
   resource.target = If;
   resource.initialize(container, If);
   resources.registerAttribute('if', resource, 'if');
   // compose
-  resource = metadata.get(metadata.resource, Compose);
+  resource = metadata.get(metadata.resource, Compose) as HtmlBehaviorResource;
   resource.target = Compose;
   resource.initialize(container, Compose);
   resources.registerElement('compose', resource);
@@ -56,7 +57,7 @@ function createViewResources(container) {
   resources.registerValueConverter('toLength', { toView: collection => collection ? (collection.length || collection.size || 0) : 0 });
 
   // no-op binding behavior
-  resources.registerBindingBehavior('noopBehavior', { bind: () => {}, unbind: () => {} });
+  resources.registerBindingBehavior('noopBehavior', { bind: () => {/**/}, unbind: () => {/**/} });
 
   // oneTime binding behavior
   resources.registerBindingBehavior('oneTime', new OneTimeBindingBehavior());
@@ -72,7 +73,7 @@ DOM.appendNode(host);
 let viewSlot = new ViewSlot(host, true);
 
 // creates a controller given a html template string and a viewmodel instance.
-function createController(template, viewModel, viewsRequireLifecycle) {
+function createController(template, viewModel, viewsRequireLifecycle?: boolean) {
   let childContainer = container.createChild();
 
   let viewFactory = viewCompiler.compile(template);
@@ -80,15 +81,18 @@ function createController(template, viewModel, viewsRequireLifecycle) {
   if (viewsRequireLifecycle !== undefined) {
     for (let id in viewFactory.instructions) {
       let targetInstruction = viewFactory.instructions[id];
-      for (let behaviorInstruction of targetInstruction.behaviorInstructions)
+      for (let behaviorInstruction of targetInstruction.behaviorInstructions) {
       if (behaviorInstruction.attrName === 'repeat') {
         behaviorInstruction.viewFactory._viewsRequireLifecycle = viewsRequireLifecycle;
+      }
       }
     }
   }
 
   let metadata = new HtmlBehaviorResource();
-  function App() {}
+  function App() {
+    //
+  }
   metadata.initialize(childContainer, App);
   metadata.elementName = metadata.htmlName = 'app';
 
@@ -277,7 +281,7 @@ function describeArrayTests(viewsRequireLifecycle) {
       validateState();
       nq(() => {
         viewModel.items.push('x');
-        viewModel.items.sort((a, b) => {});
+        viewModel.items.sort((a, b) => {/**/});
       });
       nq(() => validateState());
       nq(() => done());
@@ -855,8 +859,7 @@ function describeArrayTests(viewsRequireLifecycle) {
           expect(newDivs[0]).toBe(divs[1]);
           expect(newDivs[1]).toBe(divs[2]);
           expect(newDivs[2]).toBe(divs[0]);
-        }
-        else {
+        } else {
           expect(newDivs[0]).toBe(divs[0]);
           expect(newDivs[1]).toBe(divs[1]);
           expect(newDivs[2]).toBe(divs[2]);
@@ -1037,7 +1040,7 @@ xdescribe('instancesChanges and instancesMutated together', () => {
     let viewModel = {
       show: false,
       // items: [{ a: 'a' }, { a: 'b' }]
-      items: null,
+      items: null
     };
     let controller = createController(template, viewModel, false);
     let taskQueue = container.get(TaskQueue);
@@ -1090,7 +1093,13 @@ describe('Repeat map [k, v]', () => {
 
   beforeEach(() => {
     let template = `<template><div repeat.for="[k, v] of items">\${k},\${v}</div></template>`;
-    viewModel = { items: new Map([['a', 'b'], ['test', 0], [obj, null], ['hello world', undefined], [6, 7]]) };
+    viewModel = { items: new Map<any, any>([
+      ['a', 'b'],
+      ['test', 0],
+      [obj, null],
+      ['hello world', undefined],
+      [6, 7]
+    ]) };
     controller = createController(template, viewModel);
     validateState();
   });
@@ -1149,7 +1158,13 @@ describe('Repeat map [k, v]', () => {
 
   it('oneTime does not observe changes', () => {
     let template = `<template><div repeat.for="[k, v] of items & oneTime">\${k},\${v}</div></template>`;
-    viewModel = { items: new Map([['a', 'b'], ['test', 0], [obj, null], ['hello world', undefined], [6, 7]]) };
+    viewModel = { items: new Map<any, any>([
+      ['a', 'b'],
+      ['test', 0],
+      [obj, null],
+      ['hello world', undefined],
+      [6, 7]
+    ]) };
     controller = createController(template, viewModel);
     validateState();
     expect(hasMapSubscribers(viewModel.items)).toBe(false);
@@ -1166,7 +1181,7 @@ describe('Repeat set', () => {
     if (viewModel.items !== null && viewModel.items !== undefined) {
       const toString = x => x === null || x === undefined ? '' : x.toString();
       expectedContent = Array.from(viewModel.items.values()).map(item => `${toString(item)}`);
-      //let expectedContent = viewModel.items.map(x => x === null || x === undefined ? '' : x.toString());
+      // let expectedContent = viewModel.items.map(x => x === null || x === undefined ? '' : x.toString());
     }
     expect(selectContent(controller, 'div')).toEqual(expectedContent);
 
@@ -1193,7 +1208,7 @@ describe('Repeat set', () => {
   beforeEach(() => {
     let template = `<template><div repeat.for="item of items">\${item}</div></template>`;
     viewModel = { items: new Set(['a', 'b', 0, null, obj, undefined, 7]) };
-    //viewModel = { items: new Map([['a', 'b'], ['test', 0], [obj, null], ['hello world', undefined], [6, 7]]) };
+    // viewModel = { items: new Map([['a', 'b'], ['test', 0], [obj, null], ['hello world', undefined], [6, 7]]) };
     controller = createController(template, viewModel);
     validateState();
   });

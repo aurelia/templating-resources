@@ -12,7 +12,7 @@ describe('if', () => {
     viewSlot = new ViewSlotMock();
     taskQueue = new TaskQueue();
     viewFactory = new BoundViewFactoryMock();
-    sut = new If(viewFactory, viewSlot, taskQueue);
+    sut = new If(viewFactory, viewSlot);
   });
 
   it('should remove and unbind view when showing and provided value is falsy', () => {

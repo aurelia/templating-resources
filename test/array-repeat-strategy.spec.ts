@@ -47,7 +47,7 @@ describe('ArrayRepeatStrategy', () => {
       view3.bindingContext = { item: 'bar' };
       view3.overrideContext = {};
       viewSlot.children = [view1, view2, view3];
-      viewFactorySpy = spyOn(viewFactory, 'create').and.callFake(() => {});
+      viewFactorySpy = spyOn(viewFactory, 'create').and.callFake(() => {/**/});
     });
 
     it('should update binding context after views are unbinded', () => {
@@ -57,7 +57,7 @@ describe('ArrayRepeatStrategy', () => {
         index: 1,
         removed: ['qux']
       }];
-      spyOn(viewSlot, 'removeAt').and.callFake(() => { return new ViewMock();});
+      spyOn(viewSlot, 'removeAt').and.callFake(() => { return new ViewMock(); });
       strategy.instanceMutated(repeat, items, splices);
 
       expect(viewSlot.children[0].overrideContext.$index).toBe(0);
@@ -73,7 +73,7 @@ describe('ArrayRepeatStrategy', () => {
         viewSlot.children.splice(1, 1);
         return view;
       };
-      let animationPromise = new Promise(resolve => { resolve() }).then(() => removeAction());
+      let animationPromise = new Promise(resolve => { resolve(); }).then(() => removeAction());
       rmPromises.push(animationPromise);
       splices = [{
         addedCount: 0,
@@ -81,7 +81,7 @@ describe('ArrayRepeatStrategy', () => {
         removed: ['qux']
       }];
 
-      spyOn(viewSlot, 'removeAt').and.callFake(() => { return animationPromise });
+      spyOn(viewSlot, 'removeAt').and.callFake(() => { return animationPromise; });
 
       strategy.instanceMutated(repeat, items, splices);
 
@@ -98,7 +98,7 @@ describe('ArrayRepeatStrategy', () => {
     });
 
     it('should correctly handle adding item (i.e Array.prototype.push())', () => {
-      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlot, viewResourcesMock, new ObserverLocator());
+      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlot, viewResourcesMock, new ObserverLocator(), {});
       let bindingContext = {};
       repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
       splices = [{
@@ -107,7 +107,7 @@ describe('ArrayRepeatStrategy', () => {
         removed: []
       }];
       items = ['foo', 'qux', 'bar', 'norf'];
-      spyOn(viewSlot, 'removeAt').and.callFake(() => { return new ViewMock();});
+      spyOn(viewSlot, 'removeAt').and.callFake(() => { return new ViewMock(); });
       strategy.instanceMutated(repeat, items, splices);
 
       expect(viewSlot.children.length).toBe(4);
@@ -123,7 +123,7 @@ describe('ArrayRepeatStrategy', () => {
       view4.overrideContext = {};
       let viewSlotMock = new ViewSlotMock();
       viewSlotMock.children = [view1, view2, view3, view4];
-      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator());
+      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator(), {});
       let bindingContext = {};
       repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
       splices = [{
@@ -144,7 +144,7 @@ describe('ArrayRepeatStrategy', () => {
       view4.overrideContext = { item: 'norf' };
       let viewSlotMock = new ViewSlotMock();
       viewSlotMock.children = [view1, view2, view3, view4];
-      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator());
+      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator(), {});
       let bindingContext = {};
       repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
 
@@ -152,7 +152,7 @@ describe('ArrayRepeatStrategy', () => {
         addedCount: 2,
         index: 0,
         removed: ['foo']
-      },{
+      }, {
         addedCount: 1,
         index: 3,
         removed: ['bar', 'norf']
@@ -175,7 +175,7 @@ describe('ArrayRepeatStrategy', () => {
     it('moving animated item', done => {
       let viewSlotMock = new ViewSlotMock();
       viewSlotMock.children = [view1, view2, view3];
-      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator());
+      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator(), {});
       let bindingContext = {};
       repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
 
@@ -183,18 +183,18 @@ describe('ArrayRepeatStrategy', () => {
         viewSlot.children.splice(2, 1);
         return view2;
       };
-      let animationPromise = new Promise(resolve => { resolve() }).then(() => removeAction());
+      let animationPromise = new Promise(resolve => { resolve(); }).then(() => removeAction());
       splices = [{
         addedCount: 1,
         index: 0,
         removed: []
-      },{
+      }, {
         addedCount: 0,
         index: 2,
         removed: ['qux']
       }];
 
-      spyOn(viewSlot, 'removeAt').and.callFake(() => { return animationPromise });
+      spyOn(viewSlot, 'removeAt').and.callFake(() => { return animationPromise; });
       items = ['qux', 'foo', 'bar'];
 
       strategy.instanceMutated(repeat, items, splices);
@@ -255,8 +255,8 @@ describe('ArrayRepeatStrategy', () => {
           expect(viewSlot.children[0].bindingContext.item).toBe('qux');
           expect(viewSlot.children[1].bindingContext.item).toBe('Bar');
         })
-        .then(() => done())
-      })
-    })
+        .then(() => done());
+      });
+    });
   });
 });
