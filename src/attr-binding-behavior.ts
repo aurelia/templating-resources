@@ -6,5 +6,7 @@ export class AttrBindingBehavior {
     binding.targetObserver = new DataAttributeObserver(binding.target, binding.targetProperty);
   }
 
-  unbind(binding, source) {}
+  unbind(binding, source) {
+    // empty
+  }
 }

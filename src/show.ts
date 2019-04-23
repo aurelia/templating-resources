@@ -17,6 +17,8 @@ export class Show {
   /**@internal*/
   domBoundary: any;
 
+  value: any;
+
   /**@internal */
   static inject() {
     return [DOM.Element, Animator, Optional.of(DOM.boundary, true)];
@@ -58,8 +60,5 @@ export class Show {
    */
   bind(bindingContext) {
     this.valueChanged(this.value);
-  }
-  value(value: any) {
-    throw new Error("Method not implemented.");
   }
 }

@@ -2,7 +2,7 @@
 import {useView, customElement, bindable, useShadowDOM} from 'aurelia-templating';
 import { getLogger } from 'aurelia-logging';
 
-export function _createDynamicElement({ name, viewUrl, bindableNames, useShadowDOMmode } : {
+export function _createDynamicElement({ name, viewUrl, bindableNames, useShadowDOMmode }: {
   name: string,
   viewUrl: string,
   bindableNames: string[],

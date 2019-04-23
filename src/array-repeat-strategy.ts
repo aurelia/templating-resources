@@ -2,23 +2,23 @@ import {createFullOverrideContext, updateOverrideContexts, updateOverrideContext
 import {mergeSplice} from 'aurelia-binding';
 
 /**
-* A strategy for repeating a template over an array.
-*/
+ * A strategy for repeating a template over an array.
+ */
 export class ArrayRepeatStrategy {
   /**
-  * Gets an observer for the specified collection.
-  * @param observerLocator The observer locator instance.
-  * @param items The items to be observed.
-  */
+   * Gets an observer for the specified collection.
+   * @param observerLocator The observer locator instance.
+   * @param items The items to be observed.
+   */
   getCollectionObserver(observerLocator, items) {
     return observerLocator.getArrayObserver(items);
   }
 
   /**
-  * Handle the repeat's collection instance changing.
-  * @param repeat The repeater instance.
-  * @param items The new array instance.
-  */
+   * Handle the repeat's collection instance changing.
+   * @param repeat The repeater instance.
+   * @param items The new array instance.
+   */
   instanceChanged(repeat, items) {
     const itemsLength = items.length;
 
@@ -114,6 +114,9 @@ export class ArrayRepeatStrategy {
     }
   }
 
+  /**
+   * @internal
+   */
   _standardProcessInstanceChanged(repeat, items) {
     for (let i = 0, ii = items.length; i < ii; i++) {
       let overrideContext = createFullOverrideContext(repeat, items[i], i, ii);
@@ -121,6 +124,9 @@ export class ArrayRepeatStrategy {
     }
   }
 
+  /**
+   * @internal
+   */
   _inPlaceProcessItems(repeat, items) {
     let itemsLength = items.length;
     let viewsLength = repeat.viewCount();
@@ -157,11 +163,11 @@ export class ArrayRepeatStrategy {
   }
 
   /**
-  * Handle the repeat's collection instance mutating.
-  * @param repeat The repeat instance.
-  * @param array The modified array.
-  * @param splices Records of array changes.
-  */
+   * Handle the repeat's collection instance mutating.
+   * @param repeat The repeat instance.
+   * @param array The modified array.
+   * @param splices Records of array changes.
+   */
   instanceMutated(repeat, array, splices) {
     if (repeat.__queuedSplices) {
       for (let i = 0, ii = splices.length; i < ii; ++i) {
@@ -195,15 +201,16 @@ export class ArrayRepeatStrategy {
   }
 
   /**
-  * Run a normalised set of splices against the viewSlot children.
-  * @param repeat The repeat instance.
-  * @param array The modified array.
-  * @param splices Records of array changes.
-  * @return {Promise|undefined} A promise if animations have to be run.
-  * @pre The splices must be normalised so as:
-  *  * Any item added may not be later removed.
-  *  * Removals are ordered by asending index
-  */
+   * Run a normalised set of splices against the viewSlot children.
+   * @param repeat The repeat instance.
+   * @param array The modified array.
+   * @param splices Records of array changes.
+   * @return {Promise|undefined} A promise if animations have to be run.
+   * @pre The splices must be normalised so as:
+   *  * Any item added may not be later removed.
+   *  * Removals are ordered by asending index
+   * @internal
+   */
   _runSplices(repeat, array, splices) {
     let removeDelta = 0;
     let rmPromises = [];
@@ -235,6 +242,9 @@ export class ArrayRepeatStrategy {
     return undefined;
   }
 
+  /**
+   * @internal
+   */
   _handleAddedSplices(repeat, array, splices) {
     let spliceIndex;
     let spliceIndexLow;

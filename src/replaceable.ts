@@ -21,7 +21,7 @@ export class Replaceable {
    * @param viewSlot viewSlot The slot the view is injected in to.
    */
   constructor(viewFactory: ViewFactory, viewSlot: ViewSlot) {
-    this.viewFactory = viewFactory; //This is referenced internally in the Controller's bind method.
+    this.viewFactory = viewFactory; // This is referenced internally in the Controller's bind method.
     this.viewSlot = viewSlot;
     this.view = null;
   }

@@ -1,4 +1,4 @@
-import { ViewFactory, ViewSlot } from "aurelia-templating";
+import { ViewFactory, ViewSlot } from 'aurelia-templating';
 
 /**
 * For internal use only. May change without warning.
@@ -76,6 +76,9 @@ export class IfCore {
     this.view = null;
   }
 
+  /**
+   * @internal
+   */
   _show() {
     if (this.showing) {
       // Ensures the view is bound.
@@ -99,6 +102,9 @@ export class IfCore {
     return this.viewSlot.add(this.view); // Promise or void
   }
 
+  /**
+   * @internal
+   */
   _hide() {
     if (!this.showing) {
       return;
@@ -116,6 +122,9 @@ export class IfCore {
     this._unbindView();
   }
 
+  /**
+   * @internal
+   */
   _unbindView() {
     const cache = this.cache === 'false' ? false : !!this.cache;
     this.view.unbind();

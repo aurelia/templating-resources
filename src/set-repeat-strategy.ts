@@ -1,21 +1,21 @@
 import {createFullOverrideContext, updateOverrideContexts} from './repeat-utilities';
 
 /**
-* A strategy for repeating a template over a Set.
-*/
+ * A strategy for repeating a template over a Set.
+ */
 export class SetRepeatStrategy {
   /**
-  * Gets a Set observer.
-  * @param items The items to be observed.
-  */
+   * Gets a Set observer.
+   * @param items The items to be observed.
+   */
   getCollectionObserver(observerLocator, items) {
     return observerLocator.getSetObserver(items);
   }
 
   /**
-  * Process the provided Set entries.
-  * @param items The entries to process.
-  */
+   * Process the provided Set entries.
+   * @param items The entries to process.
+   */
   instanceChanged(repeat, items) {
     let removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
@@ -25,6 +25,9 @@ export class SetRepeatStrategy {
     this._standardProcessItems(repeat, items);
   }
 
+  /**
+   * @internal
+   */
   _standardProcessItems(repeat, items) {
     let index = 0;
     let overrideContext;
@@ -37,11 +40,11 @@ export class SetRepeatStrategy {
   }
 
   /**
-  * Handle changes in a Set collection.
-  * @param repeat The repeat instance.
-  * @param set The underlying Set collection.
-  * @param records The change records.
-  */
+   * Handle changes in a Set collection.
+   * @param repeat The repeat instance.
+   * @param set The underlying Set collection.
+   * @param records The change records.
+   */
   instanceMutated(repeat, set, records) {
     let value;
     let i;
@@ -85,6 +88,9 @@ export class SetRepeatStrategy {
     }
   }
 
+  /**
+   * @internal
+   */
   _getViewIndexByValue(repeat, value) {
     let i;
     let ii;

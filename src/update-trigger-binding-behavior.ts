@@ -1,5 +1,6 @@
 import { bindingMode, EventSubscriber, bindingBehavior } from 'aurelia-binding';
 
+// tslint:disable-next-line:max-line-length
 const eventNamesRequired = 'The updateTrigger binding behavior requires at least one event name argument: eg <input value.bind="firstName & updateTrigger:\'blur\'">';
 const notApplicableMessage = 'The updateTrigger binding behavior can only be applied to two-way/ from-view bindings on input/select elements.';
 

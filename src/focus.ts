@@ -57,6 +57,9 @@ export class Focus {
     }
   }
 
+  /**
+   * @internal
+   */
   _apply() {
     if (this.value) {
       this.taskQueue.queueMicroTask(() => {

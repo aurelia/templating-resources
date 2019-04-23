@@ -25,6 +25,9 @@ export class MapRepeatStrategy {
     this._standardProcessItems(repeat, items);
   }
 
+  /**
+   * @internal
+   */
   _standardProcessItems(repeat, items) {
     let index = 0;
     let overrideContext;
@@ -95,6 +98,9 @@ export class MapRepeatStrategy {
     }
   }
 
+  /**
+   * @internal
+   */
   _getViewIndexByKey(repeat, key) {
     let i: number;
     let ii: number;

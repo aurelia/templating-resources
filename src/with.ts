@@ -19,6 +19,8 @@ export class With {
   /**@internal*/
   view: any;
 
+  value: any;
+
   /**
    * Creates an instance of With.
    * @param viewFactory The factory generating the view.
@@ -39,9 +41,6 @@ export class With {
   bind(bindingContext, overrideContext) {
     this.parentOverrideContext = overrideContext;
     this.valueChanged(this.value);
-  }
-  value(value: any) {
-    throw new Error("Method not implemented.");
   }
 
   /**

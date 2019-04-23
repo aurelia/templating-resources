@@ -3,9 +3,9 @@ import {inject} from 'aurelia-dependency-injection';
 import {IfCore} from './if-core';
 
 /**
-* Binding to conditionally include or not include template logic depending on returned result
-* - value should be Boolean or will be treated as such (truthy / falsey)
-*/
+ * Binding to conditionally include or not include template logic depending on returned result
+ * - value should be Boolean or will be treated as such (truthy / falsey)
+ */
 @customAttribute('if')
 @templateController
 @inject(BoundViewFactory, ViewSlot)
@@ -20,10 +20,10 @@ export class If extends IfCore {
   elseVm: any;
 
   /**
-  * Binds the if to the binding context and override context
-  * @param bindingContext The binding context
-  * @param overrideContext An override context for binding.
-  */
+   * Binds the if to the binding context and override context
+   * @param bindingContext The binding context
+   * @param overrideContext An override context for binding.
+   */
   bind(bindingContext, overrideContext) {
     super.bind(bindingContext, overrideContext);
     if (this.condition) {
@@ -34,13 +34,16 @@ export class If extends IfCore {
   }
 
   /**
-  * Invoked everytime value property changes.
-  * @param newValue The new value
-  */
+   * Invoked everytime value property changes.
+   * @param newValue The new value
+   */
   conditionChanged(newValue) {
     this._update(newValue);
   }
 
+  /**
+   * @internal
+   */
   _update(show) {
     if (this.animating) {
       return;
@@ -64,6 +67,9 @@ export class If extends IfCore {
     }
   }
 
+  /**
+   * @internal
+   */
   _swap(remove, add) {
     switch (this.swapOrder) {
     case 'before':

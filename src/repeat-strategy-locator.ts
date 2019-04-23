@@ -6,8 +6,8 @@ import { Repeat } from './repeat';
 import { SetRepeatStrategy } from './set-repeat-strategy';
 
 /**
-* A strategy is for repeating a template over an iterable or iterable-like object.
-*/
+ * A strategy is for repeating a template over an iterable or iterable-like object.
+ */
 export interface RepeatStrategy {
   instanceChanged(repeat: Repeat, items: any): void;
   instanceMutated(repeat: Repeat, items: any, changes: any): void;
@@ -15,9 +15,9 @@ export interface RepeatStrategy {
 }
 
 /**
-* Locates the best strategy to best repeating a template over different types of collections.
-* Custom strategies can be plugged in as well.
-*/
+ * Locates the best strategy to best repeating a template over different types of collections.
+ * Custom strategies can be plugged in as well.
+ */
 export class RepeatStrategyLocator {
 
   /**@internal*/
@@ -26,8 +26,8 @@ export class RepeatStrategyLocator {
   strategies: any[];
 
   /**
-  * Creates a new RepeatStrategyLocator.
-  */
+   * Creates a new RepeatStrategyLocator.
+   */
   constructor() {
     this.matchers = [];
     this.strategies = [];
@@ -40,17 +40,17 @@ export class RepeatStrategyLocator {
   }
 
   /**
-  * Adds a repeat strategy to be located when repeating a template over different collection types.
-  * @param strategy A repeat strategy that can iterate a specific collection type.
-  */
+   * Adds a repeat strategy to be located when repeating a template over different collection types.
+   * @param strategy A repeat strategy that can iterate a specific collection type.
+   */
   addStrategy(matcher: (items: any) => boolean, strategy: RepeatStrategy) {
     this.matchers.push(matcher);
     this.strategies.push(strategy);
   }
 
   /**
-  * Gets the best strategy to handle iteration.
-  */
+   * Gets the best strategy to handle iteration.
+   */
   getStrategy(items: any): RepeatStrategy {
     let matchers = this.matchers;
 

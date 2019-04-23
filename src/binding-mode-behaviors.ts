@@ -27,7 +27,7 @@ export class OneTimeBindingBehavior {
 @mixin(modeBindingBehavior)
 @bindingBehavior('oneWay')
 export class OneWayBindingBehavior {
-  
+
   mode: bindingMode;
 
   constructor() {
@@ -38,7 +38,7 @@ export class OneWayBindingBehavior {
 @mixin(modeBindingBehavior)
 @bindingBehavior('toView')
 export class ToViewBindingBehavior {
-  
+
   mode: bindingMode;
 
   constructor() {
@@ -49,7 +49,7 @@ export class ToViewBindingBehavior {
 @mixin(modeBindingBehavior)
 @bindingBehavior('fromView')
 export class FromViewBindingBehavior {
-  
+
   mode: bindingMode;
 
   constructor() {
@@ -60,7 +60,7 @@ export class FromViewBindingBehavior {
 @mixin(modeBindingBehavior)
 @bindingBehavior('twoWay')
 export class TwoWayBindingBehavior {
-  
+
   mode: bindingMode;
 
   constructor() {

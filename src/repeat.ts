@@ -33,26 +33,26 @@ export class Repeat extends AbstractRepeater {
   *
   * @property items
   */
-  @bindable items
+  @bindable items;
   /**
   * Local variable which gets assigned on each iteration.
   *
   * @property local
   */
-  @bindable local
+  @bindable local;
   /**
   * Key when iterating over Maps.
   *
   * @property key
   */
-  @bindable key
+  @bindable key;
   /**
   * Value when iterating over Maps.
   *
   * @property value
   */
-  @bindable value
-  
+  @bindable value;
+
   /**@internal*/
   viewFactory: any;
   /**@internal*/
@@ -222,6 +222,9 @@ export class Repeat extends AbstractRepeater {
     }
   }
 
+  /**
+   * @internal
+   */
   _observeInnerCollection() {
     let items = this._getInnerCollection();
     let strategy = this.strategyLocator.getStrategy(items);
@@ -237,6 +240,9 @@ export class Repeat extends AbstractRepeater {
     return true;
   }
 
+  /**
+   * @internal
+   */
   _observeCollection() {
     let items = this.items;
     this.collectionObserver = this.strategy.getCollectionObserver(this.observerLocator, items);
@@ -246,6 +252,9 @@ export class Repeat extends AbstractRepeater {
     }
   }
 
+  /**
+   * @internal
+   */
   _captureAndRemoveMatcherBinding() {
     if (this.viewFactory.viewFactory) {
       const instructions = this.viewFactory.viewFactory.instructions;

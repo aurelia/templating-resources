@@ -27,6 +27,9 @@ export class Else extends IfCore {
     }
   }
 
+  /**
+   * @internal
+   */
   _registerInIf() {
     // We support the pattern <div if.bind="x"></div><div else></div>.
     // Obvisouly between the two, we must accepts text (spaces) and comments.

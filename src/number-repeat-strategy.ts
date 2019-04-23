@@ -1,20 +1,20 @@
 import {createFullOverrideContext, updateOverrideContexts} from './repeat-utilities';
 
 /**
-* A strategy for repeating a template over a number.
-*/
+ * A strategy for repeating a template over a number.
+ */
 export class NumberRepeatStrategy {
   /**
-  * Return the strategies collection observer. In this case none.
-  */
+   * Return the strategies collection observer. In this case none.
+   */
   getCollectionObserver() {
     return null;
   }
 
   /**
-  * Process the provided Number.
-  * @param value The Number of how many time to iterate.
-  */
+   * Process the provided Number.
+   * @param value The Number of how many time to iterate.
+   */
   instanceChanged(repeat, value) {
     let removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
     if (removePromise instanceof Promise) {
@@ -24,6 +24,9 @@ export class NumberRepeatStrategy {
     this._standardProcessItems(repeat, value);
   }
 
+  /**
+   * @internal
+   */
   _standardProcessItems(repeat, value) {
     let childrenLength = repeat.viewCount();
     let i;
