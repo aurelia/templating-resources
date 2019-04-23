@@ -107,6 +107,7 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^3.0.5",
+    "rimraf": "^2.6.3",
     "rollup": "^1.10.1",
     "rollup-plugin-typescript2": "^0.20.1",
     "ts-loader": "^5.4.3",
