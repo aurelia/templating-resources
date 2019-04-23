@@ -96,7 +96,7 @@
     "aurelia-bootstrapper": "^2.3.3",
     "aurelia-testing": "^1.0.0",
     "aurelia-webpack-plugin": "^3.0.0",
-    "dts-bundle-generator": "^3.0.0",
+    "dts-bundle-generator": "^2.1.0",
     "html-loader": "^0.5.5",
     "jasmine-core": "^3.2.1",
     "karma": "^4.1.0",
