@@ -8,6 +8,7 @@ import {
   // ValueAttributeObserver,
   createScopeForTest
 } from 'aurelia-binding';
+import * as AureliaBinding from 'aurelia-binding';
 import {SelfBindingBehavior} from '../src/self-binding-behavior';
 import {DOM} from 'aurelia-pal';
 
@@ -26,7 +27,7 @@ describe('SelfBindingBehavior', () => {
     let button = document.createElement('button');
     let target = document.createElement('div');
     target.appendChild(button);
-    let bindingExpression = new ListenerExpression(
+    let bindingExpression = new (AureliaBinding as any).ListenerExpression(
       bindingEngine.observerLocator.eventManager,
       'click',
       bindingEngine.parseExpression('handleClick($event) & self'),
@@ -42,7 +43,7 @@ describe('SelfBindingBehavior', () => {
       let sourceCalls = 0;
       let source = {
         handleClick: e => {
-          //console.info('source called');
+          // console.info('source called');
           sourceCalls++;
         }
       };
@@ -73,7 +74,7 @@ describe('SelfBindingBehavior', () => {
     let button = document.createElement('button');
     let target = document.createElement('div');
     target.appendChild(button);
-    let bindingExpression = new ListenerExpression(
+    let bindingExpression = new (AureliaBinding as any).ListenerExpression(
       bindingEngine.observerLocator.eventManager,
       'click',
       bindingEngine.parseExpression('handleClick($event) & self'),
@@ -89,7 +90,7 @@ describe('SelfBindingBehavior', () => {
       let sourceCalls = 0;
       let source = {
         handleClick: e => {
-          //console.info('source called');
+          // console.info('source called');
           sourceCalls++;
         }
       };
@@ -120,7 +121,7 @@ describe('SelfBindingBehavior', () => {
     let button = document.createElement('button');
     let target = document.createElement('div');
     target.appendChild(button);
-    let bindingExpression = new ListenerExpression(
+    let bindingExpression = new (AureliaBinding as any).ListenerExpression(
       bindingEngine.observerLocator.eventManager,
       'click',
       bindingEngine.parseExpression('handleClick($event) & self'),
@@ -136,7 +137,7 @@ describe('SelfBindingBehavior', () => {
       let sourceCalls = 0;
       let source = {
         handleClick: e => {
-          //console.info('source called');
+          // console.info('source called');
           sourceCalls++;
         }
       };

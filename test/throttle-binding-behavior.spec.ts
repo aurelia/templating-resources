@@ -8,6 +8,7 @@ import {
   ValueAttributeObserver,
   createScopeForTest
 } from 'aurelia-binding';
+import * as AureliaBinding from 'aurelia-binding';
 import {ThrottleBindingBehavior} from '../src/throttle-binding-behavior';
 import {DOM} from 'aurelia-pal';
 
@@ -41,18 +42,18 @@ describe('ThrottleBindingBehavior', () => {
       expect(observer.hasSubscribers()).toBe(true);
 
       // throttles
-      let lastTargetUpdate = new Date();
+      let lastTargetUpdate = new Date().getTime();
       let lastTargetValue = target.value;
       let targetUpdates = 0;
       let updateSourceInterval = setInterval(() => {
         source.foo++;
         if (target.value !== lastTargetValue) {
           // the target was updated... was it throttled?
-          let elapsed = new Date() - lastTargetUpdate;
+          let elapsed = new Date().getTime() - lastTargetUpdate;
           expect(elapsed).toBeGreaterThan(delay - 30);
           expect(elapsed).toBeLessThan(delay + 30);
           // increment
-          lastTargetUpdate = new Date();
+          lastTargetUpdate = new Date().getTime();
           lastTargetValue = target.value;
           targetUpdates++;
         }
@@ -93,7 +94,7 @@ describe('ThrottleBindingBehavior', () => {
           _foo = newValue;
           if (last !== null) {
             sourceUpdates++;
-            let elapsed = new Date() - last;
+            let elapsed = new Date().getTime() - last;
             expect(elapsed).toBeGreaterThan(delay - 30);
             expect(elapsed).toBeLessThan(delay + 30);
             expect(target.value).toBe(newValue);
@@ -116,7 +117,7 @@ describe('ThrottleBindingBehavior', () => {
       // throttles
       let updateSourceInterval = setInterval(() => {
         let newValue = (parseInt(target.value, 10) + 1).toString();
-        //console.info(`NOTIFYING:  newValue=${newValue}; oldValue=${target.value}`);
+        // console.info(`NOTIFYING:  newValue=${newValue}; oldValue=${target.value}`);
         target.value = newValue;
         target.dispatchEvent(DOM.createCustomEvent('change'));
       }, 20);
@@ -140,7 +141,7 @@ describe('ThrottleBindingBehavior', () => {
   it('should throttle call source', done => {
     let target = document.createElement('div');
     let delay = 150;
-    let bindingExpression = new ListenerExpression(
+    let bindingExpression = new (AureliaBinding as any).ListenerExpression(
       bindingEngine.observerLocator.eventManager,
       'mousemove',
       bindingEngine.parseExpression(`handleMouseMove($event) & throttle:${delay}`),
@@ -157,10 +158,10 @@ describe('ThrottleBindingBehavior', () => {
       let last = null;
       let source = {
         handleMouseMove: e => {
-          //console.info('source called');
+          // console.info('source called');
           if (last !== null) {
             sourceUpdates++;
-            let elapsed = new Date() - last;
+            let elapsed = new Date().getTime() - last;
             expect(elapsed).toBeGreaterThan(delay - 30);
             expect(elapsed).toBeLessThan(delay + 30);
           }
@@ -175,7 +176,7 @@ describe('ThrottleBindingBehavior', () => {
 
       // throttles
       let updateSourceInterval = setInterval(() => {
-        //console.info('dispatching');
+        // console.info('dispatching');
         target.dispatchEvent(DOM.createCustomEvent('mousemove'));
       }, 20);
 

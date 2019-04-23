@@ -22,9 +22,15 @@
   },
   "scripts": {
     "test": "karma start --single-run",
+    "test:watch": "karma start",
+    "test:debugger": "karma start --browsers ChromeDebugging",
     "build": "node ./node_modules/gulp/bin/gulp.js build",
     "cut-release": "node ./node_modules/gulp/bin/gulp.js prepare-release"
   },
+  "files": [
+    "dist",
+    "typings.json"
+  ],
   "jspm": {
     "registry": "npm",
     "jspmPackage": true,
