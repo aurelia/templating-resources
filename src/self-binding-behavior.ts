@@ -6,14 +6,16 @@ function findOriginalEventTarget(event) {
 
 function handleSelfEvent(event) {
   let target = findOriginalEventTarget(event);
-  if (this.target !== target) return;
+  if (this.target !== target) { return; }
   this.selfEventCallSource(event);
 }
 
 @bindingBehavior('self')
 export class SelfBindingBehavior {
   bind(binding, source) {
-    if (!binding.callSource || !binding.targetEvent) throw new Error('Self binding behavior only supports event.');
+    if (!binding.callSource || !binding.targetEvent) {
+      throw new Error('Self binding behavior only supports event.');
+    }
     binding.selfEventCallSource = binding.callSource;
     binding.callSource = handleSelfEvent;
   }
