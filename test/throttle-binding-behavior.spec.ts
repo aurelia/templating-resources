@@ -28,7 +28,7 @@ describe('ThrottleBindingBehavior', () => {
     let scope = createScopeForTest(source);
     let target = document.createElement('input');
     let delay = 150;
-    let bindingExpression = bindingEngine.createBindingExpression('value', `foo & throttle:${delay}`, bindingMode.oneWay, lookupFunctions);
+    let bindingExpression = bindingEngine.createBindingExpression('value', `foo & throttle:${delay}`, bindingMode.toView, lookupFunctions);
     let binding = bindingExpression.createBinding(target);
     let originalMethod = binding.updateTarget;
 

@@ -35,7 +35,7 @@ describe('binding mode behaviors', () => {
     bindingExpression = bindingEngine.createBindingExpression('value', 'foo & oneWay', bindingMode.twoWay, lookupFunctions);
     binding = bindingExpression.createBinding(target);
     binding.bind(scope);
-    expect(binding.mode).toBe(bindingMode.oneWay);
+    expect(binding.mode).toBe(bindingMode.toView);
     binding.unbind();
 
     // two way

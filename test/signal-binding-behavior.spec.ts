@@ -20,7 +20,7 @@ describe('SignalBindingBehavior', () => {
           return converterResult;
         }
       }
-    }
+    };
     lookupFunctions = {
       bindingBehaviors: name => bindingBehaviors[name],
       valueConverters: name => valueConverters[name]
@@ -41,7 +41,12 @@ describe('SignalBindingBehavior', () => {
     let source = { updateDateTime: new Date() };
     let scope = createScopeForTest(source);
     let target = document.createElement('input');
-    let bindingExpression = bindingEngine.createBindingExpression('value', `updateDateTime | testConverter & signal:'test'`, bindingMode.oneWay, lookupFunctions);
+    let bindingExpression = bindingEngine.createBindingExpression(
+      'value',
+      `updateDateTime | testConverter & signal:'test'`,
+      bindingMode.toView,
+      lookupFunctions
+    );
     let binding = bindingExpression.createBinding(target);
     converterResult = 'hello';
     binding.bind(scope);
@@ -55,7 +60,12 @@ describe('SignalBindingBehavior', () => {
     let source = { updateDateTime: new Date() };
     let scope = createScopeForTest(source);
     let target = document.createElement('input');
-    let bindingExpression = bindingEngine.createBindingExpression('value', `updateDateTime | testConverter & signal:'test'`, bindingMode.oneTime, lookupFunctions);
+    let bindingExpression = bindingEngine.createBindingExpression(
+      'value',
+      `updateDateTime | testConverter & signal:'test'`,
+      bindingMode.oneTime,
+      lookupFunctions
+    );
     let binding = bindingExpression.createBinding(target);
     converterResult = 'hello';
     binding.bind(scope);
@@ -73,7 +83,7 @@ describe('SignalBindingBehavior', () => {
       bindingEngine.observerLocator,
       'textContent',
       ['', bindingEngine.parseExpression(`updateDateTime | testConverter & signal:'test'`), ''],
-      bindingMode.oneWay,
+      bindingMode.toView,
       lookupFunctions
     );
 
@@ -90,7 +100,12 @@ describe('SignalBindingBehavior', () => {
     let source = { updateDateTime: new Date() };
     let scope = createScopeForTest(source);
     let target = document.createElement('input');
-    let bindingExpression = bindingEngine.createBindingExpression('value', `updateDateTime | testConverter & signal:'test':'another-test'`, bindingMode.oneWay, lookupFunctions);
+    let bindingExpression = bindingEngine.createBindingExpression(
+      'value',
+      `updateDateTime | testConverter & signal:'test':'another-test'`,
+      bindingMode.toView,
+      lookupFunctions
+    );
     let binding = bindingExpression.createBinding(target);
     converterResult = 'hello';
     binding.bind(scope);

@@ -39,7 +39,7 @@ describe('DebounceBindingBehavior', () => {
     let bindingExpression = bindingEngine.createBindingExpression(
       'value',
       `foo & debounce:${delay}`,
-      bindingMode.toView || bindingMode.oneWay,
+      bindingMode.toView,
       lookupFunctions
     );
     let binding = bindingExpression.createBinding(target);

@@ -23,7 +23,7 @@ describe('AttrBindingBehavior', () => {
     const source = { foo: 'bar' };
     const scope = createScopeForTest(source);
     const target = document.createElement('div') as HTMLDivElement & { foo: any };
-    const bindingExpression = bindingEngine.createBindingExpression('foo', `foo & attr`, bindingMode.oneWay, lookupFunctions);
+    const bindingExpression = bindingEngine.createBindingExpression('foo', `foo & attr`, bindingMode.toView, lookupFunctions);
     const binding = bindingExpression.createBinding(target);
     binding.bind(scope);
     expect(target.getAttribute('foo')).toBe('bar');
