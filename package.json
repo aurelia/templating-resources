@@ -24,7 +24,9 @@
     "test": "karma start --single-run",
     "test:watch": "karma start",
     "test:debugger": "karma start --browsers ChromeDebugging",
-    "build": "node ./node_modules/gulp/bin/gulp.js build",
+    "prebuild": "rimraf dist",
+    "build": "rollup -c",
+    "build:dts": "dts-bundle-generator -o dist/aurelia-templating-resources.d.ts src/aurelia-templating-resources.ts",
     "cut-release": "node ./node_modules/gulp/bin/gulp.js prepare-release"
   },
   "files": [
@@ -94,6 +96,7 @@
     "aurelia-bootstrapper": "^2.3.3",
     "aurelia-testing": "^1.0.0",
     "aurelia-webpack-plugin": "^3.0.0",
+    "dts-bundle-generator": "^3.0.0",
     "html-loader": "^0.5.5",
     "jasmine-core": "^3.2.1",
     "karma": "^4.1.0",
@@ -104,6 +107,8 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^3.0.5",
+    "rollup": "^1.10.1",
+    "rollup-plugin-typescript2": "^0.20.1",
     "ts-loader": "^5.4.3",
     "tslint": "^5.16.0",
     "typescript": "^3.3.4000",
