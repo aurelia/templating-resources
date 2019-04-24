@@ -49,12 +49,13 @@ export class With {
    */
   valueChanged(newValue) {
     let overrideContext = createOverrideContext(newValue, this.parentOverrideContext);
-    if (!this.view) {
-      this.view = this.viewFactory.create();
-      this.view.bind(newValue, overrideContext);
-      this.viewSlot.add(this.view);
+    let view = this.view;
+    if (!view) {
+      view = this.view = this.viewFactory.create();
+      view.bind(newValue, overrideContext);
+      this.viewSlot.add(view);
     } else {
-      this.view.bind(newValue, overrideContext);
+      view.bind(newValue, overrideContext);
     }
   }
 
@@ -62,10 +63,11 @@ export class With {
    * Unbinds With
    */
   unbind() {
+    let view = this.view;
     this.parentOverrideContext = null;
 
-    if (this.view) {
-      this.view.unbind();
+    if (view) {
+      view.unbind();
     }
   }
 }
