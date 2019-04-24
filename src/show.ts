@@ -48,10 +48,12 @@ export class Show {
    * @param newValue The new value.
    */
   valueChanged(newValue) {
+    let element = this.element;
+    let animator = this.animator;
     if (newValue) {
-      this.animator.removeClass(this.element, aureliaHideClassName);
+      animator.removeClass(element, aureliaHideClassName);
     } else {
-      this.animator.addClass(this.element, aureliaHideClassName);
+      animator.addClass(element, aureliaHideClassName);
     }
   }
 
