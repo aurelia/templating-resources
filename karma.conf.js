@@ -43,7 +43,7 @@ module.exports = function(config) {
         ]
       },
       plugins: [
-        new AureliaPlugin({ aureliaApp: undefined, dist: 'es2015' })
+        new AureliaPlugin({ dist: 'es2015' })
       ]
     },
     mime: {

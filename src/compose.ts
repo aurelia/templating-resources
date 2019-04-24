@@ -245,12 +245,13 @@ function processChanges(composer: Compose) {
     composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
     if (!composer.pendingTask) { return; }
   } else {
+    let inheritBindingContext = composer.inheritBindingContext;
     // init context
     let instruction = {
       view: composer.view,
       viewModel: composer.currentViewModel || composer.viewModel,
       model: composer.model,
-      inheritBindingContext: composer.inheritBindingContext
+      inheritBindingContext:  !inheritBindingContext || inheritBindingContext === 'false' ? false : true
     } as CompositionContext & { inheritBindingContext?: boolean };
 
     // apply changes
@@ -259,10 +260,6 @@ function processChanges(composer: Compose) {
     // create context
     instruction = createInstruction(composer, instruction);
 
-    let inheritBindingContext = instruction.inheritBindingContext;
-    if (!inheritBindingContext && inheritBindingContext !== undefined && !instruction.viewModel) {
-      throw new Error('Invalid compose instruction. No view model is specified and "inheritBindingContext" is false');
-    }
     composer.pendingTask = composer.compositionEngine.compose(instruction).then(controller => {
       composer.currentController = controller;
       composer.currentViewModel = controller ? controller.viewModel : null;

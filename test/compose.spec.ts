@@ -2,6 +2,7 @@ import './setup';
 import { TaskQueue } from 'aurelia-task-queue';
 import { Compose } from '../src/compose';
 import * as LogManager from 'aurelia-logging';
+import { View } from 'aurelia-framework';
 
 describe('Compose', () => {
   let elementMock;
@@ -9,8 +10,8 @@ describe('Compose', () => {
   let compositionEngineMock;
   let viewSlotMock;
   let viewResourcesMock;
-  let taskQueue;
-  let sut;
+  let taskQueue: TaskQueue;
+  let sut: Compose;
 
   function updateBindable(name, value) {
     const oldValue = sut[name];
@@ -38,7 +39,7 @@ describe('Compose', () => {
 
   describe('when created', () => {
     it('caches the owning view', () => {
-      const owningView = {};
+      const owningView = {} as any as View;
       sut.created(owningView);
       expect(sut.owningView).toBe(owningView);
     });
@@ -51,6 +52,21 @@ describe('Compose', () => {
       sut.bind(bindingContext, overrideContext);
       expect(sut.bindingContext).toBe(bindingContext);
       expect(sut.overrideContext).toBe(overrideContext);
+    });
+
+    it('sets "inheritBindingContext"', () => {
+      const bindingContext = {};
+      const overrideContext = {};
+      sut.bind(bindingContext, overrideContext);
+      expect(sut.inheritBindingContext).toBe(undefined);
+      Compose.traverseParentScope = false;
+      sut.bind(bindingContext, overrideContext);
+      expect(sut.inheritBindingContext).toBe(false);
+
+      sut.inheritBindingContext = undefined;
+      Compose.traverseParentScope = true;
+      sut.bind(bindingContext, overrideContext);
+      expect(sut.inheritBindingContext).toBe(undefined);
     });
 
     it('awaits ongoing update from previous lifecycle', done => {
@@ -116,7 +132,7 @@ describe('Compose', () => {
 
   describe('triggers composition', () => {
     it('when bound', () => {
-      sut.bind();
+      (sut as any).bind();
       expect(compositionEngineMock.compose).toHaveBeenCalledTimes(1);
     });
 
@@ -221,7 +237,7 @@ describe('Compose', () => {
     it('from all available data', done => {
       sut.bindingContext = createMock();
       sut.overrideContext = createMock();
-      sut.owningView = createMock();
+      sut.owningView = createMock() as any as View;
       sut.currentController = createMock();
       const viewModel = './some-vm';
       const view = './some-view.html';

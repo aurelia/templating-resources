@@ -47,6 +47,6 @@ describe('hide', () => {
 });
 
 class AnimatorMock {
-  addClass() {}
-  removeClass() {}
+  addClass() {/**/}
+  removeClass() {/**/}
 }

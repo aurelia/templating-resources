@@ -1,111 +1,111 @@
-﻿import './setup';
-import {TaskQueue} from 'aurelia-task-queue';
-import {Focus} from '../src/focus';
-import {DOM} from 'aurelia-pal';
+import './setup';
+import { TaskQueue } from 'aurelia-task-queue';
+import { Focus } from '../src/focus';
+import { DOM } from 'aurelia-pal';
 
 describe('focus', () => {
 
-    var focus, taskQueue, element, otherElement;
+  let focus: Focus, taskQueue: TaskQueue, element: HTMLElement, otherElement: HTMLElement;
 
-    function hasElementFocus() {
-        return document.activeElement === element;
-    }
+  function hasElementFocus() {
+    return document.activeElement === element;
+  }
 
-    function setBindedFocusValue(value) {
-        focus.value = value;
-        focus.valueChanged(value);
-    }
-    
-    beforeEach(() => {
-        element = document.createElement('input');
-        document.body.appendChild(element);
+  function setBindedFocusValue(value) {
+    focus.value = value;
+    focus.valueChanged(value);
+  }
 
-        otherElement = document.createElement('input');
-        document.body.appendChild(otherElement);
+  beforeEach(() => {
+    element = document.createElement('input');
+    document.body.appendChild(element);
 
-        taskQueue = new TaskQueue();
+    otherElement = document.createElement('input');
+    document.body.appendChild(otherElement);
 
-        focus = new Focus(element, taskQueue);
-    });
+    taskQueue = new TaskQueue();
 
-    it('should give initial focus when attached and value is true', () => {
-        setBindedFocusValue(true);
-        focus.attached();
+    focus = new Focus(element, taskQueue);
+  });
 
-        taskQueue.flushMicroTaskQueue();
-        expect(hasElementFocus()).toBe(true);
-    });
+  it('should give initial focus when attached and value is true', () => {
+    setBindedFocusValue(true);
+    focus.attached();
 
-    it('should not give initial focus when attached and value is false', () => {
-        focus.value = false;
-        focus.attached();
+    taskQueue.flushMicroTaskQueue();
+    expect(hasElementFocus()).toBe(true);
+  });
 
-        taskQueue.flushMicroTaskQueue();
-        expect(hasElementFocus()).toBe(false);
-    });
+  it('should not give initial focus when attached and value is false', () => {
+    focus.value = false;
+    focus.attached();
 
-    it('should give focus when value is set to true', () => {
-        focus.attached();
+    taskQueue.flushMicroTaskQueue();
+    expect(hasElementFocus()).toBe(false);
+  });
 
-        setBindedFocusValue(true);
+  it('should give focus when value is set to true', () => {
+    focus.attached();
 
-        taskQueue.flushMicroTaskQueue();
-        expect(hasElementFocus()).toBe(true);
-    });
+    setBindedFocusValue(true);
 
-    it('should remove focus when value is set to false', () => {
-        focus.attached();
-        setBindedFocusValue(true);
+    taskQueue.flushMicroTaskQueue();
+    expect(hasElementFocus()).toBe(true);
+  });
 
-        setBindedFocusValue(false);
+  it('should remove focus when value is set to false', () => {
+    focus.attached();
+    setBindedFocusValue(true);
 
-        expect(hasElementFocus()).toBe(false);
-    });
+    setBindedFocusValue(false);
 
-    it('should set focus value to true when element gets focus', () => {
-        focus.attached();
-        setBindedFocusValue(false);
+    expect(hasElementFocus()).toBe(false);
+  });
 
-        element.dispatchEvent(DOM.createCustomEvent('focus'));
+  it('should set focus value to true when element gets focus', () => {
+    focus.attached();
+    setBindedFocusValue(false);
 
-        expect(focus.value).toBe(true);
-    });
+    element.dispatchEvent(DOM.createCustomEvent('focus'));
 
-    it('should set focus value to false when element loses focus', () => {
-        focus.attached();
-        setBindedFocusValue(true);
+    expect(focus.value).toBe(true);
+  });
 
-        otherElement.focus();
-        element.dispatchEvent(DOM.createCustomEvent('blur'));
+  it('should set focus value to false when element loses focus', () => {
+    focus.attached();
+    setBindedFocusValue(true);
 
-        expect(focus.value).toBe(false);
-    });
+    otherElement.focus();
+    element.dispatchEvent(DOM.createCustomEvent('blur'));
 
-    it('should not set focus value to true when element gets focus and behavior is detached', () => {
-        focus.attached();
-        focus.detached();
-        setBindedFocusValue(false);
+    expect(focus.value).toBe(false);
+  });
 
-        element.dispatchEvent(DOM.createCustomEvent('focus'));
+  it('should not set focus value to true when element gets focus and behavior is detached', () => {
+    focus.attached();
+    focus.detached();
+    setBindedFocusValue(false);
 
-        expect(focus.value).toBe(false);
-    });
+    element.dispatchEvent(DOM.createCustomEvent('focus'));
 
-    it('should not set focus value to false when element loses focus and behavior is detached', () => {
-        focus.attached();
-        focus.detached();
-        setBindedFocusValue(true);
+    expect(focus.value).toBe(false);
+  });
 
-        element.dispatchEvent(DOM.createCustomEvent('blur'));
+  it('should not set focus value to false when element loses focus and behavior is detached', () => {
+    focus.attached();
+    focus.detached();
+    setBindedFocusValue(true);
 
-        expect(focus.value).toBe(true);
-    });
+    element.dispatchEvent(DOM.createCustomEvent('blur'));
 
-    afterEach(() => {
-        focus.detached();
-        element.parentNode.removeChild(element);
+    expect(focus.value).toBe(true);
+  });
 
-        focus = null;
-        element = null;
-    });
+  afterEach(() => {
+    focus.detached();
+    element.parentNode.removeChild(element);
+
+    focus = null;
+    element = null;
+  });
 });
