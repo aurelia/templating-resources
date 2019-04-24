@@ -4,7 +4,7 @@ import { bootstrap } from 'aurelia-bootstrapper';
 import { Compose } from '../src/compose';
 import { InlineViewStrategy, useView } from 'aurelia-framework';
 
-fdescribe('compose.integration.spec.ts', () => {
+describe('compose.integration.spec.ts', () => {
 
   it('composes with string as view model', async () => {
     const { component } = await bootstrapCompose(
