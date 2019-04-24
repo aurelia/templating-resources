@@ -31,9 +31,10 @@ export class UpdateTriggerBindingBehavior {
   }
 
   unbind(binding, source) {
+    let targetObserver = binding.targetObserver;
     // restore the state of the binding.
-    binding.targetObserver.handler.dispose();
-    binding.targetObserver.handler = binding.targetObserver.originalHandler;
-    binding.targetObserver.originalHandler = null;
+    targetObserver.handler.dispose();
+    targetObserver.handler = targetObserver.originalHandler;
+    targetObserver.originalHandler = null;
   }
 }
