@@ -155,9 +155,10 @@ export class Compose {
   bind(bindingContext, overrideContext) {
     this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;
-    this.changes.view = this.view;
-    this.changes.viewModel = this.viewModel;
-    this.changes.model = this.model;
+    let changes = this.changes;
+    changes.view = this.view;
+    changes.viewModel = this.viewModel;
+    changes.model = this.model;
     if (!Compose.traverseParentScope && this.inheritBindingContext === undefined) {
       this.inheritBindingContext = false;
     }
