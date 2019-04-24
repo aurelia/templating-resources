@@ -142,17 +142,19 @@ export class ArrayRepeatStrategy {
       let view = repeat.view(i);
       let last = i === itemsLength - 1;
       let middle = i !== 0 && !last;
+      let bindingContext = view.bindingContext;
+      let overrideContext = view.overrideContext;
       // any changes to the binding context?
-      if (view.bindingContext[local] === items[i]
-        && view.overrideContext.$middle === middle
-        && view.overrideContext.$last === last) {
+      if (bindingContext[local] === items[i]
+        && overrideContext.$middle === middle
+        && overrideContext.$last === last) {
         // no changes. continue...
         continue;
       }
       // update the binding context and refresh the bindings.
-      view.bindingContext[local] = items[i];
-      view.overrideContext.$middle = middle;
-      view.overrideContext.$last = last;
+      bindingContext[local] = items[i];
+      overrideContext.$middle = middle;
+      overrideContext.$last = last;
       repeat.updateBindings(view);
     }
     // add new views
@@ -246,8 +248,8 @@ export class ArrayRepeatStrategy {
    * @internal
    */
   _handleAddedSplices(repeat, array, splices) {
-    let spliceIndex;
-    let spliceIndexLow;
+    let spliceIndex: number;
+    let spliceIndexLow: number;
     let arrayLength = array.length;
     for (let i = 0, ii = splices.length; i < ii; ++i) {
       let splice = splices[i];
