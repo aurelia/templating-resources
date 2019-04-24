@@ -1,8 +1,8 @@
 import { ViewFactory, ViewSlot } from 'aurelia-templating';
 
 /**
-* For internal use only. May change without warning.
-*/
+ * For internal use only. May change without warning.
+ */
 export class IfCore {
   /**
    * @internal

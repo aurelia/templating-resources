@@ -38,7 +38,7 @@ import {
 import {viewsRequireLifecycle} from './analyze-view-factory';
 import {injectAureliaHideStyleAtHead} from './aurelia-hide-style';
 
-function configure(config: any, { useLegacyBehavior = true } = {}) {
+function configure(config: any, { autoTraverseParentScope = true } = {}) {
   injectAureliaHideStyleAtHead();
 
   config.globalResources(
@@ -65,7 +65,7 @@ function configure(config: any, { useLegacyBehavior = true } = {}) {
     AttrBindingBehavior
   );
 
-  Compose.useLegacyBehavior = useLegacyBehavior;
+  Compose.traverseParentScope = autoTraverseParentScope;
 
   configureHtmlResourcePlugin(config);
 

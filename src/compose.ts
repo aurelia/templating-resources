@@ -18,10 +18,10 @@ export class Compose {
   }
 
   /**
-   * A flag to instruct Compose to use legacy behaviors, including:
+   * A flag to instruct Compose to use legacy behaviors, including
    * - auto inherit binding context
    */
-  static useLegacyBehavior = true;
+  static traverseParentScope = true;
 
   /**
    * Model to bind the custom element to.
@@ -158,7 +158,7 @@ export class Compose {
     this.changes.view = this.view;
     this.changes.viewModel = this.viewModel;
     this.changes.model = this.model;
-    if (!Compose.useLegacyBehavior && this.inheritBindingContext === undefined) {
+    if (!Compose.traverseParentScope && this.inheritBindingContext === undefined) {
       this.inheritBindingContext = false;
     }
     if (!this.pendingTask) {
