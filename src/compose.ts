@@ -17,11 +17,12 @@ export class Compose {
     return [DOM.Element, Container, CompositionEngine, ViewSlot, ViewResources, TaskQueue];
   }
 
-  /**
-   * A flag to instruct Compose to use legacy behaviors, including
-   * - auto inherit binding context
-   */
-  static traverseParentScope = true;
+  // /**
+  //  * A flag to instruct Compose to use legacy behaviors, including
+  //  * - auto inherit binding context
+  //  */
+  // // commented out waiting for future work
+  // static traverseParentScope = true;
 
   /**
    * Model to bind the custom element to.
@@ -56,7 +57,8 @@ export class Compose {
   /**
    * Instructs the Composer to compose component with or without parent scope enabled
    */
-  @bindable inheritBindingContext: any;
+  // commented out waiting for future work
+  // @bindable inheritBindingContext: any;
 
   /**
    *@internal
@@ -133,7 +135,7 @@ export class Compose {
     this.taskQueue = taskQueue;
     this.currentController = null;
     this.currentViewModel = null;
-    this.inheritBindingContext = undefined;
+    // this.inheritBindingContext = undefined;
     this.changes = Object.create(null);
   }
 
@@ -159,9 +161,9 @@ export class Compose {
     changes.view = this.view;
     changes.viewModel = this.viewModel;
     changes.model = this.model;
-    if (!Compose.traverseParentScope && this.inheritBindingContext === undefined) {
-      this.inheritBindingContext = false;
-    }
+    // if (!Compose.traverseParentScope && this.inheritBindingContext === undefined) {
+    //   this.inheritBindingContext = false;
+    // }
     if (!this.pendingTask) {
       processChanges(this);
     }
@@ -246,13 +248,13 @@ function processChanges(composer: Compose) {
     composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
     if (!composer.pendingTask) { return; }
   } else {
-    let inheritBindingContext = composer.inheritBindingContext;
+    // let inheritBindingContext = composer.inheritBindingContext;
     // init context
     let instruction = {
       view: composer.view,
       viewModel: composer.currentViewModel || composer.viewModel,
-      model: composer.model,
-      inheritBindingContext:  !inheritBindingContext || inheritBindingContext === 'false' ? false : true
+      model: composer.model
+      // inheritBindingContext:  !inheritBindingContext || inheritBindingContext === 'false' ? false : true
     } as CompositionContext & { inheritBindingContext?: boolean };
 
     // apply changes

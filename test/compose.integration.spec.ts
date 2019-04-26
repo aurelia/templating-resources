@@ -131,37 +131,38 @@ describe('compose.integration.spec.ts', () => {
       component.dispose();
     });
 
-    xit('does not traverse when there "inherit-binding-context=false"', async () => {
-      const { component, compose } = await bootstrapCompose(
-        `<compose view-model.bind="viewModel" inherit-binding-context="false"></compose>`,
-        {
-          message: 'hello',
-          viewModel: class {
-            static $view = '<template>${message}</template>';
-          }
-        }
-      );
+    // commented out waiting for future work
+    // xit('does not traverse when there "inherit-binding-context=false"', async () => {
+    //   const { component, compose } = await bootstrapCompose(
+    //     `<compose view-model.bind="viewModel" inherit-binding-context="false"></compose>`,
+    //     {
+    //       message: 'hello',
+    //       viewModel: class {
+    //         static $view = '<template>${message}</template>';
+    //       }
+    //     }
+    //   );
 
-      expect(compose.inheritBindingContext).toBe('false', 'compose.inheritBindingContext === false');
-      expect(component.element.innerHTML).toBe('');
-      component.dispose();
-    });
+    //   expect(compose.inheritBindingContext).toBe('false', 'compose.inheritBindingContext === false');
+    //   expect(component.element.innerHTML).toBe('');
+    //   component.dispose();
+    // });
 
-    xit('does not traverse when there "inherit-binding-context=false"', async () => {
-      const { component, compose } = await bootstrapCompose(
-        `<compose view-model.bind="viewModel" inherit-binding-context.bind="false"></compose>`,
-        {
-          message: 'hello',
-          viewModel: class {
-            static $view = '<template>${message}</template>';
-          }
-        }
-      );
+    // xit('does not traverse when there "inherit-binding-context=false"', async () => {
+    //   const { component, compose } = await bootstrapCompose(
+    //     `<compose view-model.bind="viewModel" inherit-binding-context.bind="false"></compose>`,
+    //     {
+    //       message: 'hello',
+    //       viewModel: class {
+    //         static $view = '<template>${message}</template>';
+    //       }
+    //     }
+    //   );
 
-      expect(compose.inheritBindingContext).toBe('false', 'compose.inheritBindingContext === false');
-      expect(component.element.innerHTML).toBe('');
-      component.dispose();
-    });
+    //   expect(compose.inheritBindingContext).toBe('false', 'compose.inheritBindingContext === false');
+    //   expect(component.element.innerHTML).toBe('');
+    //   component.dispose();
+    // });
   });
 
   const bootstrapCompose = async <T>(view?: string, viewModel?: T) => {
