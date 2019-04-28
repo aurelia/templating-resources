@@ -65,8 +65,6 @@ function configure(config: any) {
     AttrBindingBehavior
   );
 
-  // Compose.traverseParentScope = autoTraverseParentScope;
-
   configureHtmlResourcePlugin(config);
 
   let viewEngine = config.container.get(ViewEngine);
