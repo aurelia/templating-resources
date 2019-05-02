@@ -1,3 +1,7 @@
+# [1.10.0](https://github.com/aurelia/templating-resources/compare/1.9.1...1.10.0) (2019-05-02)
+
+
+
 <a name="1.9.1"></a>
 ## [1.9.1](https://github.com/aurelia/templating-resources/compare/1.9.0...1.9.1) (2019-03-28)
 
