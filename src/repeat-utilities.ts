@@ -3,7 +3,8 @@ import {
   BindingBehavior,
   ValueConverter,
   sourceContext,
-  bindingMode
+  bindingMode,
+  OverrideContext
 } from 'aurelia-binding';
 
 const oneTime = bindingMode.oneTime;
@@ -31,7 +32,7 @@ export function updateOverrideContexts(views, startIndex) {
  * @param length The collections total length.
  * @param key The key in a key/value pair.
  */
-export function createFullOverrideContext(repeat, data, index, length, key?: string) {
+export function createFullOverrideContext(repeat, data, index, length, key?: string): OverrideContext {
   let bindingContext = {};
   let overrideContext = createOverrideContext(bindingContext, repeat.scope.overrideContext);
   // is key/value pair (Map)
