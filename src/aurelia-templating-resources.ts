@@ -37,6 +37,7 @@ import {
 } from './repeat-utilities';
 import {viewsRequireLifecycle} from './analyze-view-factory';
 import {injectAureliaHideStyleAtHead} from './aurelia-hide-style';
+import './interfaces';
 
 function configure(config: any) {
   injectAureliaHideStyleAtHead();
