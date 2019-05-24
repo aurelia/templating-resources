@@ -2,10 +2,12 @@ import './setup';
 import { StageComponent } from 'aurelia-testing';
 import { bootstrap } from 'aurelia-bootstrapper';
 import { waitForFrames } from './test-utilities';
+import { Repeat } from '../src/repeat';
 
 // https://github.com/aurelia/templating-resources/issues/378
 fdescribe('repeat.issue-378.spec.ts', () => {
   it('works with <div repeat[Array] /> -->> <... matcher />', async () => {
+    Repeat.useInnerMatcher = false;
     const model = new class {
       products = [
         { id: 0, name: 'Motherboard' },
@@ -45,9 +47,11 @@ fdescribe('repeat.issue-378.spec.ts', () => {
     expect(model.selectedProduct).toBe(model.products[2]);
 
     component.dispose();
+    Repeat.useInnerMatcher = true;
   });
 
   it('works with <div repeat[Map] /> -->> <... matcher />', async () => {
+    Repeat.useInnerMatcher = false;
     const model = new class {
       products = new Map([
         [0, 'Motherboard'],
@@ -87,17 +91,19 @@ fdescribe('repeat.issue-378.spec.ts', () => {
     expect(model.selectedProduct).toEqual(Array.from(model.products)[2]);
 
     component.dispose();
+    Repeat.useInnerMatcher = true;
   });
 
   describe('QA', () => {
     it('works with matcher', async () => {
       const model = new class App {
+
         components: any[];
         componentsAlternative: any;
         objComponents: any[];
         objComponentsAlternative: any[];
         amatcher: (a: any, b: any) => boolean;
-        matcherCalls: number;
+        matcherCallCount: number;
 
         constructor() {
           this.components = [];
@@ -113,9 +119,9 @@ fdescribe('repeat.issue-378.spec.ts', () => {
             this.objComponentsAlternative.push({ id: i, text: i - 1, cls: 'obj-comp-alt' });
           }
 
-          this.matcherCalls = 0;
+          this.matcherCallCount = 0;
           this.amatcher = (a, b) => {
-            this.matcherCalls++;
+            this.matcherCallCount++;
             return a.id === b.id;
           };
         }
@@ -130,18 +136,33 @@ fdescribe('repeat.issue-378.spec.ts', () => {
           this.objComponents = this.objComponents.slice(0).reverse();
         }
       };
-      const view = `
-        <button click.delegate="swapArrays()">Swap arrays</button>
+      const view =
+        `<button click.delegate="swapArrays()">Swap arrays</button>
         <br>
-        <template
+        <dummy
           repeat.for="obj of objComponents"
           matcher.bind="amatcher"
-          class="a-matcher \${obj.cls}">
-          [\${$index}]
-        </template>`;
+          class="a-matcher"
+          obj.bind="obj"
+          index.bind="$index">
+        </dummy>`;
 
       const component = StageComponent
-        .withResources()
+        .withResources([
+          class Dummy {
+            static $view = `<template class="\${obj.cls}" dataa-counter="\${counter}">[\${index}]</template>`;
+            static $resource = {
+              name: 'dummy',
+              bindables: ['obj', 'index']
+            };
+
+            counter = 0;
+
+            attached() {
+              this.counter++;
+            }
+          }
+        ] as any)
         .inView(view)
         .boundTo(model);
 
@@ -152,10 +173,10 @@ fdescribe('repeat.issue-378.spec.ts', () => {
       expect(document.querySelectorAll('.obj-comp').length).toBe(10);
 
       model.swapArrays();
-      await waitForFrames(2);
+      await waitForFrames(1);
 
       expect(document.querySelectorAll('.obj-comp-alt').length).toBe(10);
-      expect(model.matcherCalls).toBeGreaterThan(40);
+      expect(model.matcherCallCount).toBeGreaterThan(40);
 
       component.dispose();
     });
