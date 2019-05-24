@@ -5,7 +5,7 @@ import { waitForFrames } from './test-utilities';
 import { Repeat } from '../src/repeat';
 
 // https://github.com/aurelia/templating-resources/issues/378
-fdescribe('repeat.issue-378.spec.ts', () => {
+describe('repeat.issue-378.spec.ts', () => {
   it('works with <div repeat[Array] /> -->> <... matcher />', async () => {
     Repeat.useInnerMatcher = false;
     const model = new class {
