@@ -1,3 +1,12 @@
+# [1.11.0](https://github.com/aurelia/templating-resources/compare/1.10.0...1.11.0) (2019-05-30)
+
+
+### Bug Fixes
+
+* **typings:** explicit return typings for createFullOverrideContext ([abe97d3](https://github.com/aurelia/templating-resources/commit/abe97d3))
+
+
+
 # [1.10.0](https://github.com/aurelia/templating-resources/compare/1.9.1...1.10.0) (2019-05-02)
 
 

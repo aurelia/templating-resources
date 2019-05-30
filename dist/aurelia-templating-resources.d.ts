@@ -592,7 +592,7 @@ export declare class NumberRepeatStrategy {
  * @param length The collections total length.
  * @param key The key in a key/value pair.
  */
-export declare function createFullOverrideContext(repeat: any, data: any, index: any, length: any, key?: string): import("aurelia-binding").OverrideContext;
+export declare function createFullOverrideContext(repeat: any, data: any, index: any, length: any, key?: string): OverrideContext;
 /**
  * Updates the override context.
  * @param context The context to be updated.
