@@ -3,7 +3,22 @@ import { DOM } from 'aurelia-pal';
 import { TaskQueue } from 'aurelia-task-queue';
 import { bindable, CompositionContext, CompositionEngine, customElement, noView, View, ViewResources, ViewSlot } from 'aurelia-templating';
 
-
+/**
+ * Available activation strategies for the view and view-model bound to compose
+ *
+ * @export
+ * @enum {string}
+ */
+export enum ActivationStrategy {
+  /**
+   * Default activation strategy; the 'activate' lifecycle hook will be invoked when the model changes.
+   */
+  InvokeLifecycle = 'invoke-lifecycle',
+  /**
+   * The view/view-model will be recreated, when the "model" changes.
+   */
+  Replace = 'replace'
+}
 
 /**
  * Used to compose a new view / view-model template or bind to an existing instance.
@@ -38,6 +53,15 @@ export class Compose {
    * @type {Class}
    */
   @bindable viewModel: any;
+
+  /**
+   * Strategy to activate the view-model. Default is "invoke-lifecycle".
+   * Bind "replace" to recreate the view/view-model when the model changes.
+   *
+   * @property activationStrategy
+   * @type {ActivationStrategy}
+   */
+  @bindable activationStrategy: ActivationStrategy = ActivationStrategy.InvokeLifecycle;
 
   /**
    * SwapOrder to control the swapping order of the custom element's view.
@@ -226,7 +250,7 @@ function processChanges(composer: Compose) {
   const changes = composer.changes;
   composer.changes = Object.create(null);
 
-  if (!('view' in changes) && !('viewModel' in changes) && ('model' in changes)) {
+  if (!('view' in changes) && !('viewModel' in changes) && ('model' in changes) && composer.activationStrategy !== ActivationStrategy.Replace) {
     // just try to activate the current view model
     composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
     if (!composer.pendingTask) { return; }

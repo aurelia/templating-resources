@@ -1,6 +1,6 @@
 import './setup';
 import { TaskQueue } from 'aurelia-task-queue';
-import { Compose } from '../src/compose';
+import { Compose, ActivationStrategy } from '../src/compose';
 import * as LogManager from 'aurelia-logging';
 import { View } from 'aurelia-framework';
 
@@ -153,6 +153,17 @@ describe('Compose', () => {
       taskQueue.queueMicroTask(() => {
         expect(compositionEngineMock.compose).toHaveBeenCalledTimes(1);
         expect(compositionEngineMock.compose).toHaveBeenCalledWith(jasmine.objectContaining({ view }));
+        done();
+      });
+    });
+
+    it('when "model" changes and the activation-strategy is set to "replace"', done => {
+      const model = {};
+      sut.activationStrategy = ActivationStrategy.Replace;
+      updateBindable('model', model);
+      taskQueue.queueMicroTask(() => {
+        expect(compositionEngineMock.compose).toHaveBeenCalledTimes(1);
+        expect(compositionEngineMock.compose).toHaveBeenCalledWith(jasmine.objectContaining({ model }));
         done();
       });
     });
