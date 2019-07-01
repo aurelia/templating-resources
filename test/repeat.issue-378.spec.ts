@@ -1,11 +1,75 @@
 import './setup';
-import { StageComponent } from 'aurelia-testing';
+import * as AuBinding from 'aurelia-binding';
+import { StageComponent, ComponentTester } from 'aurelia-testing';
 import { bootstrap } from 'aurelia-bootstrapper';
 import { waitForFrames } from './test-utilities';
 import { Repeat } from '../src/repeat';
 
 // https://github.com/aurelia/templating-resources/issues/378
 describe('repeat.issue-378.spec.ts', () => {
+  it('extracts matcher binding corectly when matcher is on repeated element', async () => {
+    const model = new class {
+      products = [
+        { id: 0, name: 'Motherboard' },
+        { id: 1, name: 'CPU' },
+        { id: 2, name: 'Memory' }
+      ];
+
+      productMatcher = (a, b) => {
+        return a.id === b.id;
+      }
+
+      selectedProduct = { id: 1, name: 'CPU' };
+    };
+    const component: ComponentTester<Repeat> = StageComponent
+      .withResources()
+      .inView(`<label repeat.for="product of products" matcher.bind="productMatcher">
+          \${product.id} - \${product.name}
+        </label>`)
+      .boundTo(model);
+
+    await component.create(bootstrap);
+
+    const matcherBinding = component.viewModel.matcherBinding;
+    expect(matcherBinding).not.toBe(undefined, 'matcher binding should have existed');
+    expect(matcherBinding instanceof (AuBinding as any).BindingExpression).toBe(true, 'it should have been a binding expression');
+
+    // verify that it leaves attribute intact
+    // even when binding expression is extracted
+    // todo: should it remove it?
+    expect(
+      Array.from(component['host'].querySelectorAll('label'))
+        .filter((label: HTMLElement) => label.hasAttribute('matcher.bind')).length).toBe(3);
+  });
+
+  it('does not extracts matcher binding when matcher is on repeated <template/> element', async () => {
+    const model = new class {
+      products = [
+        { id: 0, name: 'Motherboard' },
+        { id: 1, name: 'CPU' },
+        { id: 2, name: 'Memory' }
+      ];
+
+      productMatcher = (a, b) => {
+        return a.id === b.id;
+      }
+
+      selectedProduct = { id: 1, name: 'CPU' };
+    };
+    const component: ComponentTester<Repeat> = StageComponent
+      .withResources()
+      .inView(`<template repeat.for="product of products" matcher.bind="productMatcher">
+          <span>\${product.id} - \${product.name}</span>
+        </template>`)
+      .boundTo(model);
+
+    await component.create(bootstrap);
+
+    const matcherBinding = component.viewModel.matcherBinding;
+    expect(matcherBinding).toBe(undefined, 'matcher binding should have existed');
+
+  });
+
   it('works with <div repeat[Array] /> -->> <... matcher />', async () => {
     Repeat.useInnerMatcher = false;
     const model = new class {

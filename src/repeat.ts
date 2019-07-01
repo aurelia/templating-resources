@@ -30,6 +30,13 @@ import {AbstractRepeater} from './abstract-repeater';
 @inject(BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, ObserverLocator, RepeatStrategyLocator)
 export class Repeat extends AbstractRepeater {
 
+  /**
+   * Setting this to `true` to enable legacy behavior, where a repeat would take first `matcher` binding
+   * any where inside its view if there's no `matcher` binding on the repeated element itself.
+   *
+   * Default value is true to avoid breaking change
+   * @default true
+   */
   static useInnerMatcher = true;
 
   /**
@@ -272,6 +279,7 @@ export class Repeat extends AbstractRepeater {
     if (viewFactory) {
       const template = viewFactory.template;
       const instructions = viewFactory.instructions;
+      // legacy behavior enabled when Repeat.useInnerMathcer === true
       if (Repeat.useInnerMatcher) {
         return extractMatcherBindingExpression(instructions);
       }
