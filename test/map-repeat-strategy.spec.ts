@@ -45,57 +45,64 @@ describe('MapRepeatStrategy', () => {
       view3.bindingContext = { item: ['john', 'doe'] };
       view3.overrideContext = {};
       viewSlot.children = [view1, view2, view3];
-      viewFactorySpy = spyOn(viewFactory, 'create').and.callFake(() => {});
+      viewFactorySpy = spyOn(viewFactory, 'create').and.callFake(() => {/**/});
     });
-  
+
     it('should correctly handle adding item (i.e Map.prototype.set())', () => {
-      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlot, viewResourcesMock, new ObserverLocator());
+      repeat = new Repeat(
+        new ViewFactoryMock(),
+        instructionMock,
+        viewSlot,
+        viewResourcesMock,
+        new ObserverLocator(),
+        null
+      );
       let bindingContext = {};
       repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
       records = [
-        {"type": "add", "object": {}, "key": 'norf'}
-      ]
+        {'type': 'add', 'object': {}, 'key': 'norf'}
+      ];
       items = new Map([['foo', 'bar'], ['qux', 'qax'], ['john', 'doe'], ['norf', 'narf']]);
-      spyOn(viewSlot, 'removeAt').and.callFake(() => { return new ViewMock();});
+      spyOn(viewSlot, 'removeAt').and.callFake(() => { return new ViewMock(); });
       strategy.instanceMutated(repeat, items, records);
-    
+
       expect(viewSlot.children.length).toBe(4);
       expect(viewSlot.children[3].bindingContext.key).toBe('norf');
       expect(viewSlot.children[3].overrideContext.$index).toBe(3);
       expect(viewSlot.children[3].overrideContext.$first).toBe(false);
       expect(viewSlot.children[3].overrideContext.$last).toBe(true);
     });
-  
+
     it('should correctly handle clear items (i.e Map.prototype.clear())', () => {
       let view4 = new ViewMock();
       view4.bindingContext = { item: ['norf', 'narf'] };
       view4.overrideContext = {};
       let viewSlotMock = new ViewSlotMock();
       viewSlotMock.children = [view1, view2, view3, view4];
-      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator());
+      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlotMock, viewResourcesMock, new ObserverLocator(), null);
       let bindingContext = {};
       repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
       records = [
-        {"type": "clear", "object": {}}
-      ]
+        {'type': 'clear', 'object': {}}
+      ];
       items = new Map();
       strategy.instanceMutated(repeat, items, records);
-    
+
       expect(viewSlotMock.children.length).toBe(0);
     });
-  
+
     it('should correctly handle adding items after clear (issue 287)', () => {
       viewSlot.children = [view1, view2, view3];
-      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlot, viewResourcesMock, new ObserverLocator());
+      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlot, viewResourcesMock, new ObserverLocator(), null);
       let bindingContext = {};
       repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
       records = [
-        {"type": "clear", "object": {}},
-        {"type": "add", "object": {}, "key": 'foo'},
-        {"type": "add", "object": {}, "key": 'qux'},
-        {"type": "add", "object": {}, "key": 'john'},
-        {"type": "add", "object": {}, "key": 'norf'}
-      ]
+        {'type': 'clear', 'object': {}},
+        {'type': 'add', 'object': {}, 'key': 'foo'},
+        {'type': 'add', 'object': {}, 'key': 'qux'},
+        {'type': 'add', 'object': {}, 'key': 'john'},
+        {'type': 'add', 'object': {}, 'key': 'norf'}
+      ];
       items = new Map([['foo', 'bar'], ['qux', 'qax'], ['john', 'doe'], ['norf', 'narf']]);
       strategy.instanceMutated(repeat, items, records);
 

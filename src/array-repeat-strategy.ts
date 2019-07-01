@@ -1,5 +1,6 @@
 import {createFullOverrideContext, updateOverrideContexts, updateOverrideContext, indexOf} from './repeat-utilities';
 import {mergeSplice} from 'aurelia-binding';
+import { Repeat } from './repeat';
 
 /**
  * A strategy for repeating a template over an array.
@@ -20,29 +21,30 @@ export class ArrayRepeatStrategy {
    * @param items The new array instance.
    */
   instanceChanged(repeat, items) {
+    const $repeat = repeat as Repeat;
     const itemsLength = items.length;
 
     // if the new instance does not contain any items,
     // just remove all views and don't do any further processing
     if (!items || itemsLength === 0) {
-      repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
+      $repeat.removeAllViews(true, !$repeat.viewsRequireLifecycle);
       return;
     }
 
-    const children = repeat.views();
+    const children = $repeat.views();
     const viewsLength = children.length;
 
     // likewise, if we previously didn't have any views,
     // simply make them and return
     if (viewsLength === 0) {
-      this._standardProcessInstanceChanged(repeat, items);
+      this._standardProcessInstanceChanged($repeat, items);
       return;
     }
 
-    if (repeat.viewsRequireLifecycle) {
+    if ($repeat.viewsRequireLifecycle) {
       const childrenSnapshot = children.slice(0);
-      const itemNameInBindingContext = repeat.local;
-      const matcher = repeat.matcher();
+      const itemNameInBindingContext = $repeat.local;
+      const matcher = $repeat.matcher();
 
       // the cache of the current state (it will be transformed along with the views to keep track of indicies)
       let itemsPreviouslyInViews = [];
@@ -65,7 +67,7 @@ export class ArrayRepeatStrategy {
       let removePromise;
 
       if (itemsPreviouslyInViews.length > 0) {
-        removePromise = repeat.removeViews(viewsToRemove, true, !repeat.viewsRequireLifecycle);
+        removePromise = $repeat.removeViews(viewsToRemove, true, !$repeat.viewsRequireLifecycle);
         updateViews = () => {
           // update views (create new and move existing)
           for (let index = 0; index < itemsLength; index++) {
@@ -74,8 +76,8 @@ export class ArrayRepeatStrategy {
             let view;
 
             if (indexOfView === -1) { // create views for new items
-              const overrideContext = createFullOverrideContext(repeat, items[index], index, itemsLength);
-              repeat.insertView(index, overrideContext.bindingContext, overrideContext);
+              const overrideContext = createFullOverrideContext($repeat, items[index], index, itemsLength);
+              $repeat.insertView(index, overrideContext.bindingContext, overrideContext);
               // reflect the change in our cache list so indicies are valid
               itemsPreviouslyInViews.splice(index, 0, undefined);
             } else if (indexOfView === index) { // leave unchanged items
@@ -83,7 +85,7 @@ export class ArrayRepeatStrategy {
               itemsPreviouslyInViews[indexOfView] = undefined;
             } else { // move the element to the right place
               view = children[indexOfView];
-              repeat.moveView(indexOfView, index);
+              $repeat.moveView(indexOfView, index);
               itemsPreviouslyInViews.splice(indexOfView, 1);
               itemsPreviouslyInViews.splice(index, 0, undefined);
             }
@@ -95,12 +97,12 @@ export class ArrayRepeatStrategy {
 
           // remove extraneous elements in case of duplicates,
           // also update binding contexts if objects changed using the matcher function
-          this._inPlaceProcessItems(repeat, items);
+          this._inPlaceProcessItems($repeat, items);
         };
       } else {
         // if all of the items are different, remove all and add all from scratch
-        removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
-        updateViews = () => this._standardProcessInstanceChanged(repeat, items);
+        removePromise = $repeat.removeAllViews(true, !$repeat.viewsRequireLifecycle);
+        updateViews = () => this._standardProcessInstanceChanged($repeat, items);
       }
 
       if (removePromise instanceof Promise) {
@@ -110,7 +112,7 @@ export class ArrayRepeatStrategy {
       }
     } else {
       // no lifecycle needed, use the fast in-place processing
-      this._inPlaceProcessItems(repeat, items);
+      this._inPlaceProcessItems($repeat, items);
     }
   }
 

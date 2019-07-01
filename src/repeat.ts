@@ -1,6 +1,6 @@
 /*eslint no-loop-func:0, no-unused-vars:0*/
 import {inject} from 'aurelia-dependency-injection';
-import {ObserverLocator} from 'aurelia-binding';
+import {ObserverLocator, BindingExpression} from 'aurelia-binding';
 import {
   BoundViewFactory,
   TargetInstruction,
@@ -9,7 +9,8 @@ import {
   customAttribute,
   bindable,
   templateController,
-  View
+  View,
+  ViewFactory
 } from 'aurelia-templating';
 import {RepeatStrategyLocator} from './repeat-strategy-locator';
 import {
@@ -28,6 +29,16 @@ import {AbstractRepeater} from './abstract-repeater';
 @templateController
 @inject(BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, ObserverLocator, RepeatStrategyLocator)
 export class Repeat extends AbstractRepeater {
+
+  /**
+   * Setting this to `true` to enable legacy behavior, where a repeat would take first `matcher` binding
+   * any where inside its view if there's no `matcher` binding on the repeated element itself.
+   *
+   * Default value is true to avoid breaking change
+   * @default true
+   */
+  static useInnerMatcher = true;
+
   /**
    * List of items to bind the repeater to.
    *
@@ -259,24 +270,34 @@ export class Repeat extends AbstractRepeater {
   }
 
   /**
+   * Capture and remove matcher binding is a way to cache matcher binding + reduce redundant work
+   * caused by multiple unnecessary matcher bindings
    * @internal
    */
   _captureAndRemoveMatcherBinding() {
-    if (this.viewFactory.viewFactory) {
-      const instructions = this.viewFactory.viewFactory.instructions;
-      const instructionIds = Object.keys(instructions);
-      for (let i = 0; i < instructionIds.length; i++) {
-        const expressions = instructions[instructionIds[i]].expressions;
-        if (expressions) {
-          for (let ii = 0; ii < expressions.length; ii++) {
-            if (expressions[ii].targetProperty === 'matcher') {
-              const matcherBinding = expressions[ii];
-              expressions.splice(ii, 1);
-              return matcherBinding;
-            }
-          }
-        }
+    const viewFactory: ViewFactory = this.viewFactory.viewFactory;
+    if (viewFactory) {
+      const template = viewFactory.template;
+      const instructions = viewFactory.instructions;
+      // legacy behavior enabled when Repeat.useInnerMathcer === true
+      if (Repeat.useInnerMatcher) {
+        return extractMatcherBindingExpression(instructions);
       }
+      // if the template has more than 1 immediate child element
+      // it's a repeat put on a <template/> element
+      // not valid for matcher binding
+      if (template.children.length > 1) {
+        return undefined;
+      }
+      // if the root element does not have any instruction
+      // it means there's no matcher binding
+      // no need to do any further work
+      const repeatedElement = template.firstElementChild;
+      if (!repeatedElement.hasAttribute('au-target-id')) {
+        return undefined;
+      }
+      const repeatedElementTargetId = repeatedElement.getAttribute('au-target-id');
+      return extractMatcherBindingExpression(instructions, repeatedElementTargetId);
     }
 
     return undefined;
@@ -286,7 +307,12 @@ export class Repeat extends AbstractRepeater {
   viewCount() { return this.viewSlot.children.length; }
   views() { return this.viewSlot.children; }
   view(index) { return this.viewSlot.children[index]; }
-  matcher() { return this.matcherBinding ? this.matcherBinding.sourceExpression.evaluate(this.scope, this.matcherBinding.lookupFunctions) : null; }
+  matcher() {
+    const matcherBinding = this.matcherBinding;
+    return matcherBinding
+      ? matcherBinding.sourceExpression.evaluate(this.scope, matcherBinding.lookupFunctions)
+      : null;
+  }
 
   addView(bindingContext, overrideContext) {
     let view = this.viewFactory.create();
@@ -332,3 +358,28 @@ export class Repeat extends AbstractRepeater {
     }
   }
 }
+
+/**
+ * Iterate a record of TargetInstruction and their expressions to find first binding expression that targets property named "matcher"
+ */
+const extractMatcherBindingExpression = (instructions: Record<string, TargetInstruction>, targetedElementId?: string): BindingExpression | undefined => {
+  const instructionIds = Object.keys(instructions);
+  for (let i = 0; i < instructionIds.length; i++) {
+    const instructionId = instructionIds[i];
+    // matcher binding can only works when root element is not a <template/>
+    // checking first el child
+    if (targetedElementId !== undefined && instructionId !== targetedElementId) {
+      continue;
+    }
+    const expressions = instructions[instructionId].expressions as BindingExpression[];
+    if (expressions) {
+      for (let ii = 0; ii < expressions.length; ii++) {
+        if (expressions[ii].targetProperty === 'matcher') {
+          const matcherBindingExpression = expressions[ii];
+          expressions.splice(ii, 1);
+          return matcherBindingExpression;
+        }
+      }
+    }
+  }
+};

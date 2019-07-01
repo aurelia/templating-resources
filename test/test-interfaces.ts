@@ -1,5 +1,8 @@
 import 'aurelia-templating';
 
+/**
+ * @internal
+ */
 declare module 'aurelia-templating' {
   interface HtmlBehaviorResource {
     elementName: string | null;

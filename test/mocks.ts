@@ -1,3 +1,4 @@
+// tslint:disable:no-empty
 import { Repeat } from '../src/repeat';
 
 export class ViewSlotMock {
@@ -5,21 +6,21 @@ export class ViewSlotMock {
   constructor() {
     this.children = [];
   }
-  removeAll(){
+  removeAll() {
     this.children.splice(0, this.children.length);
   }
-  add(view){
+  add(view) {
     this.children.push(view);
   }
-  insert(index, view){
-    if(index < 0) {
-      throw "negative index";
+  insert(index, view) {
+    if (index < 0) {
+      throw 'negative index';
     }
     this.children.splice(index, 0, view);
   }
-  removeAt(index){
-    if(index < 0) {
-      throw "negative index";
+  removeAt(index) {
+    if (index < 0) {
+      throw 'negative index';
     }
     this.children.splice(index, 1);
   }
@@ -32,30 +33,30 @@ export class ViewMock {
     this.bindingContext = bindingContext;
     this.overrideContext = overrideContext;
   }
-  attached(){}
-  detached(){}
-  unbind(){}
-  returnToCache(){}
+  attached() {}
+  detached() {}
+  unbind() {}
+  returnToCache() {}
 }
 
 export class BoundViewFactoryMock {
   _viewsRequireLifecycle = true;
-  create(){
-    return { bind(){} };
-  };
-  removeAll(){};
+  create() {
+    return { bind() {} };
+  }
+  removeAll() {}
 }
 
 export class ViewFactoryMock {
   _viewsRequireLifecycle = true;
-  create(){
+  create() {
     return new ViewMock();
   }
 }
 
 export class ArrayObserverMock {
-  subscribe(){};
-  unsubscribe(){};
+  subscribe() {}
+  unsubscribe() {}
 }
 
 export class RepeatStrategyMock {

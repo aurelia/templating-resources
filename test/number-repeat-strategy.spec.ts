@@ -6,7 +6,7 @@ import {Container} from 'aurelia-dependency-injection';
 import {Repeat} from '../src/repeat';
 import {RepeatStrategyLocator} from '../src/repeat-strategy-locator';
 import {NumberRepeatStrategy} from '../src/number-repeat-strategy';
-import {ViewSlotMock, BoundViewFactoryMock, RepeatStrategyMock, ViewMock, ArrayObserverMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
+import {ViewSlotMock, BoundViewFactoryMock, RepeatStrategyMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
 import {bootstrap} from 'aurelia-bootstrapper';
 
 describe('NumberRepeatStrategy', () => {
@@ -27,7 +27,7 @@ describe('NumberRepeatStrategy', () => {
     container.registerInstance(ObserverLocator, observerLocator);
     container.registerInstance(RepeatStrategyLocator, repeatStrategyLocator);
 
-    component = StageComponent.withResources().inView('<div repeat.for="item of items"></div>').boundTo({ items: [] })
+    component = StageComponent.withResources().inView('<div repeat.for="item of items"></div>').boundTo({ items: [] });
 
     component.create(bootstrap).then(() => {
       repeat = component.viewModel;
@@ -41,7 +41,7 @@ describe('NumberRepeatStrategy', () => {
 
   describe('instanceChanged', () => {
     beforeEach(() => {
-      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlot, viewResourcesMock, new ObserverLocator());
+      repeat = new Repeat(new ViewFactoryMock(), instructionMock, viewSlot, viewResourcesMock, new ObserverLocator(), null);
       let bindingContext = {};
       repeat.scope = { bindingContext, overrideContext: createOverrideContext(bindingContext) };
       viewSlot.children = [];

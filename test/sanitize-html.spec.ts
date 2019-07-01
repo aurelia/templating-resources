@@ -3,14 +3,14 @@ import {SanitizeHTMLValueConverter} from '../src/sanitize-html';
 import {HTMLSanitizer} from '../src/html-sanitizer';
 
 describe('SanitizeHtmlValueConverter', () => {
-  var converter;
+  let converter;
 
   beforeEach(() => {
     converter = new SanitizeHTMLValueConverter(new HTMLSanitizer());
   });
 
   it('defaultSanitizer should remove script tags', () => {
-    var a = '<script src="http://www.evil.org"></script>',
+    let a = '<script src="http://www.evil.org"></script>',
         b = '<div><script src="http://www.evil.org"></script></div>',
         c = 'foo <script src="http://www.evil.org"></script> bar',
         d = '<div></div>',

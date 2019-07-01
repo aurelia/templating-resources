@@ -43,7 +43,7 @@ describe('repeat', () => {
       view1 = new ViewMock();
       view2 = new ViewMock();
       viewSlot.children = [view1, view2];
-      spyOn(repeatStrategyLocator, 'getStrategy').and.callFake(() => { return repeatStrategyMock});
+      spyOn(repeatStrategyLocator, 'getStrategy').and.callFake(() => { return repeatStrategyMock; });
     });
 
     it('should do nothing if no items provided', () => {
@@ -69,7 +69,7 @@ describe('repeat', () => {
       spyOn(viewSlot, 'removeAll');
       repeat.unbind();
 
-      expect(viewSlot.removeAll).toHaveBeenCalled(); //With(true, true);
+      expect(viewSlot.removeAll).toHaveBeenCalled(); // With(true, true);
     });
 
     it('should unsubscribe collection', () => {
@@ -101,7 +101,7 @@ describe('repeat', () => {
 
   describe('itemsChanged', () => {
     beforeEach(() => {
-      spyOn(repeatStrategyLocator, 'getStrategy').and.callFake(() => { return repeatStrategyMock});
+      spyOn(repeatStrategyLocator, 'getStrategy').and.callFake(() => { return repeatStrategyMock; });
     });
 
     it('should unsubscribe collection', () => {
@@ -124,7 +124,7 @@ describe('repeat', () => {
     it('should subscribe to changes', () => {
       repeat.items = ['foo', 'bar'];
       let collectionObserver = new ArrayObserverMock();
-      spyOn(repeatStrategyMock, 'getCollectionObserver').and.callFake(() => { return collectionObserver });
+      spyOn(repeatStrategyMock, 'getCollectionObserver').and.callFake(() => { return collectionObserver; });
       spyOn(collectionObserver, 'subscribe');
       repeat.itemsChanged();
 
