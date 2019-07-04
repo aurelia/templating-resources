@@ -250,7 +250,7 @@ function processChanges(composer: Compose) {
   const changes = composer.changes;
   composer.changes = Object.create(null);
 
-  if (!('view' in changes) && !('viewModel' in changes) && ('model' in changes) && composer.activationStrategy !== ActivationStrategy.Replace) {
+  if (!('view' in changes) && !('viewModel' in changes) && ('model' in changes) && determineActivationStrategy(composer) !== ActivationStrategy.Replace) {
     // just try to activate the current view model
     composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
     if (!composer.pendingTask) { return; }
@@ -297,4 +297,13 @@ function requestUpdate(composer: Compose) {
     composer.updateRequested = false;
     processChanges(composer);
   });
+}
+
+function determineActivationStrategy(composer: Compose) {
+  let activationStrategy = composer.activationStrategy;
+  const vm = composer.currentViewModel;
+  if (vm && typeof vm.determineActivationStrategy === 'function') {
+    activationStrategy = vm.determineActivationStrategy();
+  }
+  return activationStrategy;
 }

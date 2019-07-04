@@ -1,8 +1,8 @@
 import './setup';
 import { StageComponent, ComponentTester } from 'aurelia-testing';
 import { bootstrap } from 'aurelia-bootstrapper';
-import { Compose } from '../src/compose';
-import { InlineViewStrategy, useView } from 'aurelia-framework';
+import { Compose, ActivationStrategy } from '../src/compose';
+import { InlineViewStrategy, useView, TaskQueue } from 'aurelia-framework';
 
 describe('compose.integration.spec.ts', () => {
 
@@ -79,6 +79,68 @@ describe('compose.integration.spec.ts', () => {
     expect(instanceCount).toBe(1, 'instance count === 1');
 
     component.dispose();
+  });
+
+  it('works with determineActivationStrategy() - replace', async () => {
+    const { component, compose } = await bootstrapCompose(
+      `<compose view-model.bind="viewModel"></compose>`,
+      {
+        viewModel: class {
+          // w/o the get view strategy, the initial composition fails, which results to undefined currentViewModel
+          getViewStrategy() {
+            return new InlineViewStrategy('<template></template>');
+          }
+
+          determineActivationStrategy() {
+            return ActivationStrategy.Replace;
+          }
+        }
+      }
+    );
+
+    const taskQueue = new TaskQueue();
+    spyOn(compose.compositionEngine, 'compose').and.callThrough();
+    const oldModel = compose.model;
+    compose.modelChanged({ a: 1 }, oldModel);
+
+    taskQueue.queueMicroTask(() => {
+      expect(compose.compositionEngine.compose).toHaveBeenCalledTimes(1);
+      component.dispose();
+    });
+
+  });
+
+  it('works with determineActivationStrategy() - invoke-lifecycle', async () => {
+    let activationCount = 0;
+    const { component, compose } = await bootstrapCompose(
+      `<compose view-model.bind="viewModel"></compose>`,
+      {
+        viewModel: class {
+          activate() {
+            activationCount++;
+          }
+
+          // w/o the get view strategy, the initial composition fails, which results to undefined currentViewModel
+          getViewStrategy() {
+            return new InlineViewStrategy('<template></template>');
+          }
+
+          determineActivationStrategy() {
+            return ActivationStrategy.InvokeLifecycle;
+          }
+        }
+      }
+    );
+
+    const taskQueue = new TaskQueue();
+
+    const oldModel = compose.model;
+    compose.modelChanged({}, oldModel);
+
+    taskQueue.queueMicroTask(() => {
+      expect(activationCount).toBe(2, 'activation count === 2');
+      component.dispose();
+    });
   });
 
   describe('scope traversing', () => {

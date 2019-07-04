@@ -167,12 +167,47 @@ describe('Compose', () => {
         done();
       });
     });
+
+    it('when "model" changes and the "determineActivationStrategy" hook in view-model returns "replace"', done => {
+      const model = {};
+      sut.currentViewModel = {
+        determineActivationStrategy() { return ActivationStrategy.Replace; }
+      };
+      updateBindable('model', model);
+      taskQueue.queueMicroTask(() => {
+        expect(compositionEngineMock.compose).toHaveBeenCalledTimes(1);
+        expect(compositionEngineMock.compose).toHaveBeenCalledWith(jasmine.objectContaining({ model }));
+        done();
+      });
+    });
   });
 
   describe('does not trigger composition', () => {
     it('when only "model" or "swapOrder" change', done => {
       updateBindable('model', {});
       updateBindable('swapOrder', 'after');
+      taskQueue.queueMicroTask(() => {
+        expect(compositionEngineMock.compose).not.toHaveBeenCalled();
+        done();
+      });
+    });
+
+    it('when "model" changes and the "determineActivationStrategy" hook in view-model returns "invoke-lifecycle"', done => {
+      const model = {};
+      sut.currentViewModel = {
+        determineActivationStrategy() { return ActivationStrategy.InvokeLifecycle; }
+      };
+      updateBindable('model', model);
+      taskQueue.queueMicroTask(() => {
+        expect(compositionEngineMock.compose).not.toHaveBeenCalled();
+        done();
+      });
+    });
+
+    it('when "model" changes and the "determineActivationStrategy" hook is not implemented in view-model', done => {
+      const model = {};
+      sut.currentViewModel = {};
+      updateBindable('model', model);
       taskQueue.queueMicroTask(() => {
         expect(compositionEngineMock.compose).not.toHaveBeenCalled();
         done();
