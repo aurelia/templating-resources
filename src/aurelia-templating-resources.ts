@@ -36,11 +36,16 @@ import {
   unwrapExpression
 } from './repeat-utilities';
 import {viewsRequireLifecycle} from './analyze-view-factory';
-import {injectAureliaHideStyleAtHead} from './aurelia-hide-style';
+import {injectAureliaHideStyleAtHead, AureliaHideStyle} from './aurelia-hide-style';
 import './interfaces';
 
-function configure(config: any) {
-  injectAureliaHideStyleAtHead();
+function configure(config: any, localConfig: any) {
+  let hideClass = localConfig.aureliaHideClass;
+  if (typeof(hideClass) === 'undefined') {
+    injectAureliaHideStyleAtHead();
+  } else {
+    AureliaHideStyle.instance().override(hideClass);
+  }
 
   config.globalResources(
     Compose,
