@@ -4,7 +4,7 @@ import { TaskQueue } from 'aurelia-task-queue';
 import { bindable, CompositionContext, CompositionEngine, customElement, noView, View, ViewResources, ViewSlot } from 'aurelia-templating';
 
 /**
- * Available activation strategies for the view and view-model bound to compose
+ * Available activation strategies for the view and view-model bound to `<compose/>` element
  *
  * @export
  * @enum {string}
@@ -250,11 +250,7 @@ function processChanges(composer: Compose) {
   const changes = composer.changes;
   composer.changes = Object.create(null);
 
-  if (!('view' in changes) && !('viewModel' in changes) && ('model' in changes) && determineActivationStrategy(composer) !== ActivationStrategy.Replace) {
-    // just try to activate the current view model
-    composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
-    if (!composer.pendingTask) { return; }
-  } else {
+  if (needsReInitialization(composer, changes)) {
     // init context
     let instruction = {
       view: composer.view,
@@ -272,6 +268,10 @@ function processChanges(composer: Compose) {
       composer.currentController = controller;
       composer.currentViewModel = controller ? controller.viewModel : null;
     });
+  } else {
+    // just try to activate the current view model
+    composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
+    if (!composer.pendingTask) { return; }
   }
 
   composer.pendingTask = composer.pendingTask
@@ -299,11 +299,14 @@ function requestUpdate(composer: Compose) {
   });
 }
 
-function determineActivationStrategy(composer: Compose) {
+function needsReInitialization(composer: Compose, changes: any) {
   let activationStrategy = composer.activationStrategy;
   const vm = composer.currentViewModel;
   if (vm && typeof vm.determineActivationStrategy === 'function') {
     activationStrategy = vm.determineActivationStrategy();
   }
-  return activationStrategy;
+
+  return 'view' in changes
+    || 'viewModel' in changes
+    || activationStrategy === ActivationStrategy.Replace;
 }

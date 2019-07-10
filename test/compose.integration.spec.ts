@@ -143,6 +143,40 @@ describe('compose.integration.spec.ts', () => {
     });
   });
 
+  [1, true, 'chaos', new Date(1900, 1, 1), {}].map((strategy) =>
+    it(`applies invoke-lifecycle strategy when determineActivationStrategy() returns unknown value such as ${strategy}`, async () => {
+      let activationCount = 0;
+      const { component, compose } = await bootstrapCompose(
+        `<compose view-model.bind="viewModel"></compose>`,
+        {
+          viewModel: class {
+            activate() {
+              activationCount++;
+            }
+
+            // w/o the get view strategy, the initial composition fails, which results to undefined currentViewModel
+            getViewStrategy() {
+              return new InlineViewStrategy('<template></template>');
+            }
+
+            determineActivationStrategy() {
+              return strategy;
+            }
+          }
+        }
+      );
+
+      const taskQueue = new TaskQueue();
+
+      const oldModel = compose.model;
+      compose.modelChanged({}, oldModel);
+
+      taskQueue.queueMicroTask(() => {
+        expect(activationCount).toBe(2, 'activation count === 2');
+        component.dispose();
+      });
+    }));
+
   describe('scope traversing', () => {
     it('traverses scope by default', async () => {
       const { component } = await bootstrapCompose(
