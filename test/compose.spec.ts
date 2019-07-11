@@ -213,6 +213,16 @@ describe('Compose', () => {
         done();
       });
     });
+
+    it('when "model" changes and the activation-strategy is set to unknown value', done => {
+      const model = {};
+      sut.activationStrategy = Math.random().toString() as ActivationStrategy;
+      updateBindable('model', model);
+      taskQueue.queueMicroTask(() => {
+        expect(compositionEngineMock.compose).not.toHaveBeenCalled();
+        done();
+      });
+    });
   });
 
   it('aggregates changes from single drain of the micro task queue', done => {
@@ -245,6 +255,19 @@ describe('Compose', () => {
     });
 
     it('activates the "currentViewModel" if there is no change requiring composition', done => {
+      const model = 42;
+      sut.activationStrategy = Math.random().toString() as ActivationStrategy;
+      sut.currentViewModel = jasmine.createSpyObj('currentViewModelSpy', ['activate']);
+      updateBindable('model', model);
+      taskQueue.queueMicroTask(() => {
+        expect(compositionEngineMock.compose).not.toHaveBeenCalled();
+        expect(sut.currentViewModel.activate).toHaveBeenCalledTimes(1);
+        expect(sut.currentViewModel.activate).toHaveBeenCalledWith(model);
+        done();
+      });
+    });
+
+    it('activates the "currentViewModel" if the activation strategy is unknown', done => {
       const model = 42;
       sut.currentViewModel = jasmine.createSpyObj('currentViewModelSpy', ['activate']);
       updateBindable('model', model);
