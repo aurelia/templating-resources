@@ -1,7 +1,7 @@
 import {Optional} from 'aurelia-dependency-injection';
 import {customAttribute, Animator} from 'aurelia-templating';
 import {DOM} from 'aurelia-pal';
-import {injectAureliaHideStyleAtBoundary, aureliaHideClassName} from './aurelia-hide-style';
+import {injectAureliaHideStyleAtBoundary, AureliaHideStyle} from './aurelia-hide-style';
 
 /**
  * Binding to conditionally show markup in the DOM based on the value.
@@ -51,9 +51,9 @@ export class Show {
     let element = this.element;
     let animator = this.animator;
     if (newValue) {
-      animator.removeClass(element, aureliaHideClassName);
+      animator.removeClass(element, AureliaHideStyle.instance().class());
     } else {
-      animator.addClass(element, aureliaHideClassName);
+      animator.addClass(element, AureliaHideStyle.instance().class());
     }
   }
 

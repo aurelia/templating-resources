@@ -41,7 +41,7 @@ describe('show', () => {
     let boundary = document.createElement('div');
     sut = new Show(target, animator, boundary);
     sut.created();
-    expect(boundary.hasAureliaHideStyle).toBe(true);
+    expect((boundary as any).hasAureliaHideStyle).toBe(true);
     FEATURE.shadowDOM = shadowDOM;
   });
 });

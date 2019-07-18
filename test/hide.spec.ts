@@ -1,6 +1,6 @@
 import './setup';
 import {Hide} from '../src/hide';
-import {aureliaHideClassName} from '../src/aurelia-hide-style';
+import {aureliaHideClassName, AureliaHideStyle} from '../src/aurelia-hide-style';
 import {FEATURE} from 'aurelia-pal';
 
 describe('hide', () => {
@@ -8,6 +8,7 @@ describe('hide', () => {
 
   beforeEach(() => {
     animator = new AnimatorMock();
+    AureliaHideStyle.instance();
   });
 
   it('should add aurelia-hide with animator.addClass when value is true', () => {
@@ -46,7 +47,7 @@ describe('hide', () => {
   });
 });
 
-class AnimatorMock {
+export class AnimatorMock {
   addClass() {/**/}
   removeClass() {/**/}
 }
