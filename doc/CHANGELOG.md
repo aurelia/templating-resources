@@ -1,3 +1,17 @@
+# [1.12.0](https://github.com/aurelia/templating-resources/compare/1.11.0...1.12.0) (2019-08-06)
+
+
+### Bug Fixes
+
+* **repeat:** ensure backward compat, fix tests ([62958e5](https://github.com/aurelia/templating-resources/commit/62958e5))
+* **repeat:** properly find matcher binding ([a579644](https://github.com/aurelia/templating-resources/commit/a579644))
+
+### Features
+
+* **compose:** [@bindable](https://github.com/bindable) activation-strategy ([4078883](https://github.com/aurelia/templating-resources/commit/4078883)), closes [#381](https://github.com/aurelia/templating-resources/issues/381)
+* **compose:** activation strategy hook in VM ([3aa3020](https://github.com/aurelia/templating-resources/commit/3aa3020)), closes [#381](https://github.com/aurelia/templating-resources/issues/381)
+
+
 # [1.11.0](https://github.com/aurelia/templating-resources/compare/1.10.0...1.11.0) (2019-05-30)
 
 

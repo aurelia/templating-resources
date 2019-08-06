@@ -48,8 +48,14 @@ function __decorate(decorators, target, key, desc) {
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 }
 
+var ActivationStrategy;
+(function (ActivationStrategy) {
+    ActivationStrategy["InvokeLifecycle"] = "invoke-lifecycle";
+    ActivationStrategy["Replace"] = "replace";
+})(ActivationStrategy || (ActivationStrategy = {}));
 var Compose = (function () {
     function Compose(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
+        this.activationStrategy = ActivationStrategy.InvokeLifecycle;
         this.element = element;
         this.container = container;
         this.compositionEngine = compositionEngine;
@@ -108,6 +114,9 @@ var Compose = (function () {
     ], Compose.prototype, "viewModel", void 0);
     __decorate([
         aureliaTemplating.bindable
+    ], Compose.prototype, "activationStrategy", void 0);
+    __decorate([
+        aureliaTemplating.bindable
     ], Compose.prototype, "swapOrder", void 0);
     Compose = __decorate([
         aureliaTemplating.noView,
@@ -142,13 +151,7 @@ function createInstruction(composer, instruction) {
 function processChanges(composer) {
     var changes = composer.changes;
     composer.changes = Object.create(null);
-    if (!('view' in changes) && !('viewModel' in changes) && ('model' in changes)) {
-        composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
-        if (!composer.pendingTask) {
-            return;
-        }
-    }
-    else {
+    if (needsReInitialization(composer, changes)) {
         var instruction = {
             view: composer.view,
             viewModel: composer.currentViewModel || composer.viewModel,
@@ -160,6 +163,12 @@ function processChanges(composer) {
             composer.currentController = controller;
             composer.currentViewModel = controller ? controller.viewModel : null;
         });
+    }
+    else {
+        composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
+        if (!composer.pendingTask) {
+            return;
+        }
     }
     composer.pendingTask = composer.pendingTask
         .then(function () {
@@ -184,6 +193,16 @@ function requestUpdate(composer) {
         composer.updateRequested = false;
         processChanges(composer);
     });
+}
+function needsReInitialization(composer, changes) {
+    var activationStrategy = composer.activationStrategy;
+    var vm = composer.currentViewModel;
+    if (vm && typeof vm.determineActivationStrategy === 'function') {
+        activationStrategy = vm.determineActivationStrategy();
+    }
+    return 'view' in changes
+        || 'viewModel' in changes
+        || activationStrategy === ActivationStrategy.Replace;
 }
 
 var IfCore = (function () {
@@ -489,21 +508,22 @@ var ArrayRepeatStrategy = (function () {
     };
     ArrayRepeatStrategy.prototype.instanceChanged = function (repeat, items) {
         var _this = this;
+        var $repeat = repeat;
         var itemsLength = items.length;
         if (!items || itemsLength === 0) {
-            repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
+            $repeat.removeAllViews(true, !$repeat.viewsRequireLifecycle);
             return;
         }
-        var children = repeat.views();
+        var children = $repeat.views();
         var viewsLength = children.length;
         if (viewsLength === 0) {
-            this._standardProcessInstanceChanged(repeat, items);
+            this._standardProcessInstanceChanged($repeat, items);
             return;
         }
-        if (repeat.viewsRequireLifecycle) {
+        if ($repeat.viewsRequireLifecycle) {
             var childrenSnapshot = children.slice(0);
-            var itemNameInBindingContext = repeat.local;
-            var matcher_1 = repeat.matcher();
+            var itemNameInBindingContext = $repeat.local;
+            var matcher_1 = $repeat.matcher();
             var itemsPreviouslyInViews_1 = [];
             var viewsToRemove = [];
             for (var index = 0; index < viewsLength; index++) {
@@ -519,15 +539,15 @@ var ArrayRepeatStrategy = (function () {
             var updateViews = void 0;
             var removePromise = void 0;
             if (itemsPreviouslyInViews_1.length > 0) {
-                removePromise = repeat.removeViews(viewsToRemove, true, !repeat.viewsRequireLifecycle);
+                removePromise = $repeat.removeViews(viewsToRemove, true, !$repeat.viewsRequireLifecycle);
                 updateViews = function () {
                     for (var index = 0; index < itemsLength; index++) {
                         var item = items[index];
                         var indexOfView = indexOf(itemsPreviouslyInViews_1, item, matcher_1, index);
                         var view = void 0;
                         if (indexOfView === -1) {
-                            var overrideContext = createFullOverrideContext(repeat, items[index], index, itemsLength);
-                            repeat.insertView(index, overrideContext.bindingContext, overrideContext);
+                            var overrideContext = createFullOverrideContext($repeat, items[index], index, itemsLength);
+                            $repeat.insertView(index, overrideContext.bindingContext, overrideContext);
                             itemsPreviouslyInViews_1.splice(index, 0, undefined);
                         }
                         else if (indexOfView === index) {
@@ -536,7 +556,7 @@ var ArrayRepeatStrategy = (function () {
                         }
                         else {
                             view = children[indexOfView];
-                            repeat.moveView(indexOfView, index);
+                            $repeat.moveView(indexOfView, index);
                             itemsPreviouslyInViews_1.splice(indexOfView, 1);
                             itemsPreviouslyInViews_1.splice(index, 0, undefined);
                         }
@@ -544,12 +564,12 @@ var ArrayRepeatStrategy = (function () {
                             updateOverrideContext(view.overrideContext, index, itemsLength);
                         }
                     }
-                    _this._inPlaceProcessItems(repeat, items);
+                    _this._inPlaceProcessItems($repeat, items);
                 };
             }
             else {
-                removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
-                updateViews = function () { return _this._standardProcessInstanceChanged(repeat, items); };
+                removePromise = $repeat.removeAllViews(true, !$repeat.viewsRequireLifecycle);
+                updateViews = function () { return _this._standardProcessInstanceChanged($repeat, items); };
             }
             if (removePromise instanceof Promise) {
                 removePromise.then(updateViews);
@@ -559,7 +579,7 @@ var ArrayRepeatStrategy = (function () {
             }
         }
         else {
-            this._inPlaceProcessItems(repeat, items);
+            this._inPlaceProcessItems($repeat, items);
         }
     };
     ArrayRepeatStrategy.prototype._standardProcessInstanceChanged = function (repeat, items) {
@@ -1027,6 +1047,7 @@ var Repeat = (function (_super) {
         _this.viewsRequireLifecycle = viewsRequireLifecycle(viewFactory);
         return _this;
     }
+    Repeat_1 = Repeat;
     Repeat.prototype.call = function (context, changes) {
         this[context](this.items, changes);
     };
@@ -1126,28 +1147,34 @@ var Repeat = (function (_super) {
         }
     };
     Repeat.prototype._captureAndRemoveMatcherBinding = function () {
-        if (this.viewFactory.viewFactory) {
-            var instructions = this.viewFactory.viewFactory.instructions;
-            var instructionIds = Object.keys(instructions);
-            for (var i = 0; i < instructionIds.length; i++) {
-                var expressions = instructions[instructionIds[i]].expressions;
-                if (expressions) {
-                    for (var ii = 0; ii < expressions.length; ii++) {
-                        if (expressions[ii].targetProperty === 'matcher') {
-                            var matcherBinding = expressions[ii];
-                            expressions.splice(ii, 1);
-                            return matcherBinding;
-                        }
-                    }
-                }
+        var viewFactory = this.viewFactory.viewFactory;
+        if (viewFactory) {
+            var template = viewFactory.template;
+            var instructions = viewFactory.instructions;
+            if (Repeat_1.useInnerMatcher) {
+                return extractMatcherBindingExpression(instructions);
             }
+            if (template.children.length > 1) {
+                return undefined;
+            }
+            var repeatedElement = template.firstElementChild;
+            if (!repeatedElement.hasAttribute('au-target-id')) {
+                return undefined;
+            }
+            var repeatedElementTargetId = repeatedElement.getAttribute('au-target-id');
+            return extractMatcherBindingExpression(instructions, repeatedElementTargetId);
         }
         return undefined;
     };
     Repeat.prototype.viewCount = function () { return this.viewSlot.children.length; };
     Repeat.prototype.views = function () { return this.viewSlot.children; };
     Repeat.prototype.view = function (index) { return this.viewSlot.children[index]; };
-    Repeat.prototype.matcher = function () { return this.matcherBinding ? this.matcherBinding.sourceExpression.evaluate(this.scope, this.matcherBinding.lookupFunctions) : null; };
+    Repeat.prototype.matcher = function () {
+        var matcherBinding = this.matcherBinding;
+        return matcherBinding
+            ? matcherBinding.sourceExpression.evaluate(this.scope, matcherBinding.lookupFunctions)
+            : null;
+    };
     Repeat.prototype.addView = function (bindingContext, overrideContext) {
         var view = this.viewFactory.create();
         view.bind(bindingContext, overrideContext);
@@ -1185,6 +1212,8 @@ var Repeat = (function (_super) {
             }
         }
     };
+    var Repeat_1;
+    Repeat.useInnerMatcher = true;
     __decorate([
         aureliaTemplating.bindable
     ], Repeat.prototype, "items", void 0);
@@ -1197,13 +1226,32 @@ var Repeat = (function (_super) {
     __decorate([
         aureliaTemplating.bindable
     ], Repeat.prototype, "value", void 0);
-    Repeat = __decorate([
+    Repeat = Repeat_1 = __decorate([
         aureliaTemplating.customAttribute('repeat'),
         aureliaTemplating.templateController,
         aureliaDependencyInjection.inject(aureliaTemplating.BoundViewFactory, aureliaTemplating.TargetInstruction, aureliaTemplating.ViewSlot, aureliaTemplating.ViewResources, aureliaBinding.ObserverLocator, RepeatStrategyLocator)
     ], Repeat);
     return Repeat;
 }(AbstractRepeater));
+var extractMatcherBindingExpression = function (instructions, targetedElementId) {
+    var instructionIds = Object.keys(instructions);
+    for (var i = 0; i < instructionIds.length; i++) {
+        var instructionId = instructionIds[i];
+        if (targetedElementId !== undefined && instructionId !== targetedElementId) {
+            continue;
+        }
+        var expressions = instructions[instructionId].expressions;
+        if (expressions) {
+            for (var ii = 0; ii < expressions.length; ii++) {
+                if (expressions[ii].targetProperty === 'matcher') {
+                    var matcherBindingExpression = expressions[ii];
+                    expressions.splice(ii, 1);
+                    return matcherBindingExpression;
+                }
+            }
+        }
+    }
+};
 
 var aureliaHideClassName = 'aurelia-hide';
 var aureliaHideClass = "." + aureliaHideClassName + " { display:none !important; }";

@@ -30,8 +30,14 @@ function __decorate(decorators, target, key, desc) {
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 }
 
+var ActivationStrategy;
+(function (ActivationStrategy) {
+    ActivationStrategy["InvokeLifecycle"] = "invoke-lifecycle";
+    ActivationStrategy["Replace"] = "replace";
+})(ActivationStrategy || (ActivationStrategy = {}));
 let Compose = class Compose {
     constructor(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
+        this.activationStrategy = ActivationStrategy.InvokeLifecycle;
         this.element = element;
         this.container = container;
         this.compositionEngine = compositionEngine;
@@ -91,6 +97,9 @@ __decorate([
 ], Compose.prototype, "viewModel", void 0);
 __decorate([
     bindable
+], Compose.prototype, "activationStrategy", void 0);
+__decorate([
+    bindable
 ], Compose.prototype, "swapOrder", void 0);
 Compose = __decorate([
     noView,
@@ -123,13 +132,7 @@ function createInstruction(composer, instruction) {
 function processChanges(composer) {
     const changes = composer.changes;
     composer.changes = Object.create(null);
-    if (!('view' in changes) && !('viewModel' in changes) && ('model' in changes)) {
-        composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
-        if (!composer.pendingTask) {
-            return;
-        }
-    }
-    else {
+    if (needsReInitialization(composer, changes)) {
         let instruction = {
             view: composer.view,
             viewModel: composer.currentViewModel || composer.viewModel,
@@ -141,6 +144,12 @@ function processChanges(composer) {
             composer.currentController = controller;
             composer.currentViewModel = controller ? controller.viewModel : null;
         });
+    }
+    else {
+        composer.pendingTask = tryActivateViewModel(composer.currentViewModel, changes.model);
+        if (!composer.pendingTask) {
+            return;
+        }
     }
     composer.pendingTask = composer.pendingTask
         .then(() => {
@@ -165,6 +174,16 @@ function requestUpdate(composer) {
         composer.updateRequested = false;
         processChanges(composer);
     });
+}
+function needsReInitialization(composer, changes) {
+    let activationStrategy = composer.activationStrategy;
+    const vm = composer.currentViewModel;
+    if (vm && typeof vm.determineActivationStrategy === 'function') {
+        activationStrategy = vm.determineActivationStrategy();
+    }
+    return 'view' in changes
+        || 'viewModel' in changes
+        || activationStrategy === ActivationStrategy.Replace;
 }
 
 class IfCore {
@@ -457,21 +476,22 @@ class ArrayRepeatStrategy {
         return observerLocator.getArrayObserver(items);
     }
     instanceChanged(repeat, items) {
+        const $repeat = repeat;
         const itemsLength = items.length;
         if (!items || itemsLength === 0) {
-            repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
+            $repeat.removeAllViews(true, !$repeat.viewsRequireLifecycle);
             return;
         }
-        const children = repeat.views();
+        const children = $repeat.views();
         const viewsLength = children.length;
         if (viewsLength === 0) {
-            this._standardProcessInstanceChanged(repeat, items);
+            this._standardProcessInstanceChanged($repeat, items);
             return;
         }
-        if (repeat.viewsRequireLifecycle) {
+        if ($repeat.viewsRequireLifecycle) {
             const childrenSnapshot = children.slice(0);
-            const itemNameInBindingContext = repeat.local;
-            const matcher = repeat.matcher();
+            const itemNameInBindingContext = $repeat.local;
+            const matcher = $repeat.matcher();
             let itemsPreviouslyInViews = [];
             const viewsToRemove = [];
             for (let index = 0; index < viewsLength; index++) {
@@ -487,15 +507,15 @@ class ArrayRepeatStrategy {
             let updateViews;
             let removePromise;
             if (itemsPreviouslyInViews.length > 0) {
-                removePromise = repeat.removeViews(viewsToRemove, true, !repeat.viewsRequireLifecycle);
+                removePromise = $repeat.removeViews(viewsToRemove, true, !$repeat.viewsRequireLifecycle);
                 updateViews = () => {
                     for (let index = 0; index < itemsLength; index++) {
                         const item = items[index];
                         const indexOfView = indexOf(itemsPreviouslyInViews, item, matcher, index);
                         let view;
                         if (indexOfView === -1) {
-                            const overrideContext = createFullOverrideContext(repeat, items[index], index, itemsLength);
-                            repeat.insertView(index, overrideContext.bindingContext, overrideContext);
+                            const overrideContext = createFullOverrideContext($repeat, items[index], index, itemsLength);
+                            $repeat.insertView(index, overrideContext.bindingContext, overrideContext);
                             itemsPreviouslyInViews.splice(index, 0, undefined);
                         }
                         else if (indexOfView === index) {
@@ -504,7 +524,7 @@ class ArrayRepeatStrategy {
                         }
                         else {
                             view = children[indexOfView];
-                            repeat.moveView(indexOfView, index);
+                            $repeat.moveView(indexOfView, index);
                             itemsPreviouslyInViews.splice(indexOfView, 1);
                             itemsPreviouslyInViews.splice(index, 0, undefined);
                         }
@@ -512,12 +532,12 @@ class ArrayRepeatStrategy {
                             updateOverrideContext(view.overrideContext, index, itemsLength);
                         }
                     }
-                    this._inPlaceProcessItems(repeat, items);
+                    this._inPlaceProcessItems($repeat, items);
                 };
             }
             else {
-                removePromise = repeat.removeAllViews(true, !repeat.viewsRequireLifecycle);
-                updateViews = () => this._standardProcessInstanceChanged(repeat, items);
+                removePromise = $repeat.removeAllViews(true, !$repeat.viewsRequireLifecycle);
+                updateViews = () => this._standardProcessInstanceChanged($repeat, items);
             }
             if (removePromise instanceof Promise) {
                 removePromise.then(updateViews);
@@ -527,7 +547,7 @@ class ArrayRepeatStrategy {
             }
         }
         else {
-            this._inPlaceProcessItems(repeat, items);
+            this._inPlaceProcessItems($repeat, items);
         }
     }
     _standardProcessInstanceChanged(repeat, items) {
@@ -954,7 +974,8 @@ class AbstractRepeater {
     }
 }
 
-let Repeat = class Repeat extends AbstractRepeater {
+var Repeat_1;
+let Repeat = Repeat_1 = class Repeat extends AbstractRepeater {
     constructor(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
         super({
             local: 'item',
@@ -1070,28 +1091,34 @@ let Repeat = class Repeat extends AbstractRepeater {
         }
     }
     _captureAndRemoveMatcherBinding() {
-        if (this.viewFactory.viewFactory) {
-            const instructions = this.viewFactory.viewFactory.instructions;
-            const instructionIds = Object.keys(instructions);
-            for (let i = 0; i < instructionIds.length; i++) {
-                const expressions = instructions[instructionIds[i]].expressions;
-                if (expressions) {
-                    for (let ii = 0; ii < expressions.length; ii++) {
-                        if (expressions[ii].targetProperty === 'matcher') {
-                            const matcherBinding = expressions[ii];
-                            expressions.splice(ii, 1);
-                            return matcherBinding;
-                        }
-                    }
-                }
+        const viewFactory = this.viewFactory.viewFactory;
+        if (viewFactory) {
+            const template = viewFactory.template;
+            const instructions = viewFactory.instructions;
+            if (Repeat_1.useInnerMatcher) {
+                return extractMatcherBindingExpression(instructions);
             }
+            if (template.children.length > 1) {
+                return undefined;
+            }
+            const repeatedElement = template.firstElementChild;
+            if (!repeatedElement.hasAttribute('au-target-id')) {
+                return undefined;
+            }
+            const repeatedElementTargetId = repeatedElement.getAttribute('au-target-id');
+            return extractMatcherBindingExpression(instructions, repeatedElementTargetId);
         }
         return undefined;
     }
     viewCount() { return this.viewSlot.children.length; }
     views() { return this.viewSlot.children; }
     view(index) { return this.viewSlot.children[index]; }
-    matcher() { return this.matcherBinding ? this.matcherBinding.sourceExpression.evaluate(this.scope, this.matcherBinding.lookupFunctions) : null; }
+    matcher() {
+        const matcherBinding = this.matcherBinding;
+        return matcherBinding
+            ? matcherBinding.sourceExpression.evaluate(this.scope, matcherBinding.lookupFunctions)
+            : null;
+    }
     addView(bindingContext, overrideContext) {
         let view = this.viewFactory.create();
         view.bind(bindingContext, overrideContext);
@@ -1130,6 +1157,7 @@ let Repeat = class Repeat extends AbstractRepeater {
         }
     }
 };
+Repeat.useInnerMatcher = true;
 __decorate([
     bindable
 ], Repeat.prototype, "items", void 0);
@@ -1142,11 +1170,30 @@ __decorate([
 __decorate([
     bindable
 ], Repeat.prototype, "value", void 0);
-Repeat = __decorate([
+Repeat = Repeat_1 = __decorate([
     customAttribute('repeat'),
     templateController,
     inject(BoundViewFactory, TargetInstruction, ViewSlot, ViewResources, ObserverLocator, RepeatStrategyLocator)
 ], Repeat);
+const extractMatcherBindingExpression = (instructions, targetedElementId) => {
+    const instructionIds = Object.keys(instructions);
+    for (let i = 0; i < instructionIds.length; i++) {
+        const instructionId = instructionIds[i];
+        if (targetedElementId !== undefined && instructionId !== targetedElementId) {
+            continue;
+        }
+        const expressions = instructions[instructionId].expressions;
+        if (expressions) {
+            for (let ii = 0; ii < expressions.length; ii++) {
+                if (expressions[ii].targetProperty === 'matcher') {
+                    const matcherBindingExpression = expressions[ii];
+                    expressions.splice(ii, 1);
+                    return matcherBindingExpression;
+                }
+            }
+        }
+    }
+};
 
 const aureliaHideClassName = 'aurelia-hide';
 const aureliaHideClass = `.${aureliaHideClassName} { display:none !important; }`;

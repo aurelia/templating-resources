@@ -1,6 +1,16 @@
 import { OverrideContext, bindingMode } from 'aurelia-binding';
 import { View, ViewFactory, ViewSlot } from 'aurelia-templating';
 
+declare enum ActivationStrategy {
+	/**
+	 * Default activation strategy; the 'activate' lifecycle hook will be invoked when the model changes.
+	 */
+	InvokeLifecycle = "invoke-lifecycle",
+	/**
+	 * The view/view-model will be recreated, when the "model" changes.
+	 */
+	Replace = "replace"
+}
 /**
  * Used to compose a new view / view-model template or bind to an existing instance.
  */
@@ -26,6 +36,14 @@ export declare class Compose {
 	 * @type {Class}
 	 */
 	viewModel: any;
+	/**
+	 * Strategy to activate the view-model. Default is "invoke-lifecycle".
+	 * Bind "replace" to recreate the view/view-model when the model changes.
+	 *
+	 * @property activationStrategy
+	 * @type {ActivationStrategy}
+	 */
+	activationStrategy: ActivationStrategy;
 	/**
 	 * SwapOrder to control the swapping order of the custom element's view.
 	 *
@@ -227,6 +245,14 @@ export declare class AbstractRepeater {
  * Binding to iterate over iterable objects (Array, Map and Number) to genereate a template for each iteration.
  */
 export declare class Repeat extends AbstractRepeater {
+	/**
+	 * Setting this to `true` to enable legacy behavior, where a repeat would take first `matcher` binding
+	 * any where inside its view if there's no `matcher` binding on the repeated element itself.
+	 *
+	 * Default value is true to avoid breaking change
+	 * @default true
+	 */
+	static useInnerMatcher: boolean;
 	/**
 	 * List of items to bind the repeater to.
 	 *
