@@ -286,13 +286,13 @@ export class Repeat extends AbstractRepeater {
       // if the template has more than 1 immediate child element
       // it's a repeat put on a <template/> element
       // not valid for matcher binding
-      if (template.children.length > 1) {
+      if (getChildrenCount(template) > 1) {
         return undefined;
       }
       // if the root element does not have any instruction
       // it means there's no matcher binding
       // no need to do any further work
-      const repeatedElement = template.firstElementChild;
+      const repeatedElement = getFirstElementChild(template);
       if (!repeatedElement.hasAttribute('au-target-id')) {
         return undefined;
       }
@@ -382,4 +382,36 @@ const extractMatcherBindingExpression = (instructions: Record<string, TargetInst
       }
     }
   }
+};
+
+/**
+ * Calculate the number of child elements of an element
+ *
+ * Note: API .childElementCount/.children are not available in IE11
+ */
+const getChildrenCount = (el: Element | DocumentFragment) => {
+  const childNodes = el.childNodes;
+  let count = 0;
+  for (let i = 0, ii = childNodes.length; ii > i; ++i) {
+    if (childNodes[i].nodeType === /* element */1) {
+      ++count;
+    }
+  }
+  return count;
+};
+
+/**
+ * Get the first child element of an element / doc fragment
+ *
+ * Note: API .firstElementChild is not available in IE11
+ */
+const getFirstElementChild = (el: Element | DocumentFragment) => {
+  let firstChild = el.firstChild as Element;
+  while (firstChild !== null) {
+    if (firstChild.nodeType === /* element */1) {
+      return firstChild;
+    }
+    firstChild = firstChild.nextSibling as Element;
+  }
+  return null;
 };
