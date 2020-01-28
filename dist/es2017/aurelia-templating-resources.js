@@ -1098,10 +1098,10 @@ let Repeat = Repeat_1 = class Repeat extends AbstractRepeater {
             if (Repeat_1.useInnerMatcher) {
                 return extractMatcherBindingExpression(instructions);
             }
-            if (template.children.length > 1) {
+            if (getChildrenCount(template) > 1) {
                 return undefined;
             }
-            const repeatedElement = template.firstElementChild;
+            const repeatedElement = getFirstElementChild(template);
             if (!repeatedElement.hasAttribute('au-target-id')) {
                 return undefined;
             }
@@ -1193,6 +1193,26 @@ const extractMatcherBindingExpression = (instructions, targetedElementId) => {
             }
         }
     }
+};
+const getChildrenCount = (el) => {
+    const childNodes = el.childNodes;
+    let count = 0;
+    for (let i = 0, ii = childNodes.length; ii > i; ++i) {
+        if (childNodes[i].nodeType === 1) {
+            ++count;
+        }
+    }
+    return count;
+};
+const getFirstElementChild = (el) => {
+    let firstChild = el.firstChild;
+    while (firstChild !== null) {
+        if (firstChild.nodeType === 1) {
+            return firstChild;
+        }
+        firstChild = firstChild.nextSibling;
+    }
+    return null;
 };
 
 const aureliaHideClassName = 'aurelia-hide';

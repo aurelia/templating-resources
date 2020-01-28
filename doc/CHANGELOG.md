@@ -1,3 +1,13 @@
+# [1.13.0](https://github.com/aurelia/templating-resources/compare/1.12.0...1.13.0) (2020-01-28)
+
+
+### Bug Fixes
+
+* **all:** change package.json module from es2015 back to native-modules ([6a8f0c8](https://github.com/aurelia/templating-resources/commit/6a8f0c8))
+* **repeat:** use utility fns for ie11 compat ([a59a2de](https://github.com/aurelia/templating-resources/commit/a59a2de))
+
+
+
 # [1.12.0](https://github.com/aurelia/templating-resources/compare/1.11.0...1.12.0) (2019-08-06)
 
 
