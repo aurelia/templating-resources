@@ -6,6 +6,9 @@ import {
   bindingMode,
   OverrideContext
 } from 'aurelia-binding';
+import {
+  View
+} from 'aurelia-templating';
 
 const oneTime = bindingMode.oneTime;
 
@@ -107,7 +110,7 @@ export function isOneTime(expression) {
 /**
  * Forces all one-time bindings in that view to reevaluate.
  */
-export function updateBindings(view) {
+export function updateBindings(view: View) {
   const $view = view as View & { bindings: any[]; controllers: any[] };
   let j = $view.bindings.length;
   while (j--) {
