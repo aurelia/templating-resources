@@ -2,7 +2,7 @@ import { Container, inject, Optional } from 'aurelia-dependency-injection';
 import { DOM, FEATURE } from 'aurelia-pal';
 import { TaskQueue } from 'aurelia-task-queue';
 import { CompositionEngine, ViewSlot, ViewResources, bindable, noView, customElement, customAttribute, templateController, BoundViewFactory, TargetInstruction, Animator, resource, useView, useShadowDOM, ViewEngine } from 'aurelia-templating';
-import { createOverrideContext, bindingMode, BindingBehavior, ValueConverter, sourceContext, mergeSplice, ObserverLocator, valueConverter, DataAttributeObserver, bindingBehavior, targetContext, EventSubscriber } from 'aurelia-binding';
+import { bindingMode, createOverrideContext, BindingBehavior, ValueConverter, sourceContext, mergeSplice, ObserverLocator, valueConverter, DataAttributeObserver, bindingBehavior, targetContext, EventSubscriber } from 'aurelia-binding';
 import { getLogger } from 'aurelia-logging';
 import { Loader } from 'aurelia-loader';
 import { relativeToFile } from 'aurelia-path';
@@ -186,6 +186,106 @@ function needsReInitialization(composer, changes) {
         || activationStrategy === ActivationStrategy.Replace;
 }
 
+const oneTime = bindingMode.oneTime;
+function updateOverrideContexts(views, startIndex) {
+    let length = views.length;
+    if (startIndex > 0) {
+        startIndex = startIndex - 1;
+    }
+    for (; startIndex < length; ++startIndex) {
+        updateOverrideContext(views[startIndex].overrideContext, startIndex, length);
+    }
+}
+function createFullOverrideContext(repeat, data, index, length, key) {
+    let bindingContext = {};
+    let overrideContext = createOverrideContext(bindingContext, repeat.scope.overrideContext);
+    if (typeof key !== 'undefined') {
+        bindingContext[repeat.key] = key;
+        bindingContext[repeat.value] = data;
+    }
+    else {
+        bindingContext[repeat.local] = data;
+    }
+    updateOverrideContext(overrideContext, index, length);
+    return overrideContext;
+}
+function updateOverrideContext(overrideContext, index, length) {
+    let first = (index === 0);
+    let last = (index === length - 1);
+    let even = index % 2 === 0;
+    overrideContext.$index = index;
+    overrideContext.$first = first;
+    overrideContext.$last = last;
+    overrideContext.$middle = !(first || last);
+    overrideContext.$odd = !even;
+    overrideContext.$even = even;
+}
+function getItemsSourceExpression(instruction, attrName) {
+    return instruction.behaviorInstructions
+        .filter(bi => bi.originalAttrName === attrName)[0]
+        .attributes
+        .items
+        .sourceExpression;
+}
+function unwrapExpression(expression) {
+    let unwrapped = false;
+    while (expression instanceof BindingBehavior) {
+        expression = expression.expression;
+    }
+    while (expression instanceof ValueConverter) {
+        expression = expression.expression;
+        unwrapped = true;
+    }
+    return unwrapped ? expression : null;
+}
+function isOneTime(expression) {
+    while (expression instanceof BindingBehavior) {
+        if (expression.name === 'oneTime') {
+            return true;
+        }
+        expression = expression.expression;
+    }
+    return false;
+}
+function updateBindings(view) {
+    const $view = view;
+    let j = $view.bindings.length;
+    while (j--) {
+        updateOneTimeBinding($view.bindings[j]);
+    }
+    j = $view.controllers.length;
+    while (j--) {
+        let k = $view.controllers[j].boundProperties.length;
+        while (k--) {
+            if ($view.controllers[j].viewModel && $view.controllers[j].viewModel.updateOneTimeBindings) {
+                $view.controllers[j].viewModel.updateOneTimeBindings();
+            }
+            let binding = $view.controllers[j].boundProperties[k].binding;
+            updateOneTimeBinding(binding);
+        }
+    }
+}
+function updateOneTimeBinding(binding) {
+    if (binding.call && binding.mode === oneTime) {
+        binding.call(sourceContext);
+    }
+    else if (binding.updateOneTimeBindings) {
+        binding.updateOneTimeBindings();
+    }
+}
+function indexOf(array, item, matcher, startIndex) {
+    if (!matcher) {
+        return array.indexOf(item);
+    }
+    const length = array.length;
+    for (let index = startIndex || 0; index < length; index++) {
+        if (matcher(array[index], item)) {
+            return index;
+        }
+    }
+    return -1;
+}
+
 class IfCore {
     constructor(viewFactory, viewSlot) {
         this.viewFactory = viewFactory;
@@ -199,6 +299,11 @@ class IfCore {
     bind(bindingContext, overrideContext) {
         this.bindingContext = bindingContext;
         this.overrideContext = overrideContext;
+    }
+    updateOneTimeBindings() {
+        if (this.view && this.view.isBound) {
+            updateBindings(this.view);
+        }
     }
     unbind() {
         if (this.view === null) {
@@ -388,88 +493,6 @@ With = __decorate([
     templateController,
     inject(BoundViewFactory, ViewSlot)
 ], With);
-
-const oneTime = bindingMode.oneTime;
-function updateOverrideContexts(views, startIndex) {
-    let length = views.length;
-    if (startIndex > 0) {
-        startIndex = startIndex - 1;
-    }
-    for (; startIndex < length; ++startIndex) {
-        updateOverrideContext(views[startIndex].overrideContext, startIndex, length);
-    }
-}
-function createFullOverrideContext(repeat, data, index, length, key) {
-    let bindingContext = {};
-    let overrideContext = createOverrideContext(bindingContext, repeat.scope.overrideContext);
-    if (typeof key !== 'undefined') {
-        bindingContext[repeat.key] = key;
-        bindingContext[repeat.value] = data;
-    }
-    else {
-        bindingContext[repeat.local] = data;
-    }
-    updateOverrideContext(overrideContext, index, length);
-    return overrideContext;
-}
-function updateOverrideContext(overrideContext, index, length) {
-    let first = (index === 0);
-    let last = (index === length - 1);
-    let even = index % 2 === 0;
-    overrideContext.$index = index;
-    overrideContext.$first = first;
-    overrideContext.$last = last;
-    overrideContext.$middle = !(first || last);
-    overrideContext.$odd = !even;
-    overrideContext.$even = even;
-}
-function getItemsSourceExpression(instruction, attrName) {
-    return instruction.behaviorInstructions
-        .filter(bi => bi.originalAttrName === attrName)[0]
-        .attributes
-        .items
-        .sourceExpression;
-}
-function unwrapExpression(expression) {
-    let unwrapped = false;
-    while (expression instanceof BindingBehavior) {
-        expression = expression.expression;
-    }
-    while (expression instanceof ValueConverter) {
-        expression = expression.expression;
-        unwrapped = true;
-    }
-    return unwrapped ? expression : null;
-}
-function isOneTime(expression) {
-    while (expression instanceof BindingBehavior) {
-        if (expression.name === 'oneTime') {
-            return true;
-        }
-        expression = expression.expression;
-    }
-    return false;
-}
-function updateOneTimeBinding(binding) {
-    if (binding.call && binding.mode === oneTime) {
-        binding.call(sourceContext);
-    }
-    else if (binding.updateOneTimeBindings) {
-        binding.updateOneTimeBindings();
-    }
-}
-function indexOf(array, item, matcher, startIndex) {
-    if (!matcher) {
-        return array.indexOf(item);
-    }
-    const length = array.length;
-    for (let index = startIndex || 0; index < length; index++) {
-        if (matcher(array[index], item)) {
-            return index;
-        }
-    }
-    return -1;
-}
 
 class ArrayRepeatStrategy {
     getCollectionObserver(observerLocator, items) {
@@ -895,7 +918,8 @@ function behaviorRequiresLifecycle(instruction) {
     let name = t.elementName !== null ? t.elementName : t.attributeName;
     return lifecycleOptionalBehaviors.indexOf(name) === -1 && (t.handlesAttached || t.handlesBind || t.handlesCreated || t.handlesDetached || t.handlesUnbind)
         || t.viewFactory && viewsRequireLifecycle(t.viewFactory)
-        || instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
+        || instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory)
+        || instruction.initiatedByBehavior;
 }
 function targetRequiresLifecycle(instruction) {
     let behaviors = instruction.behaviorInstructions;
@@ -1142,19 +1166,7 @@ let Repeat = Repeat_1 = class Repeat extends AbstractRepeater {
         return this.viewSlot.removeAt(index, returnToCache, skipAnimation);
     }
     updateBindings(view) {
-        const $view = view;
-        let j = $view.bindings.length;
-        while (j--) {
-            updateOneTimeBinding($view.bindings[j]);
-        }
-        j = $view.controllers.length;
-        while (j--) {
-            let k = $view.controllers[j].boundProperties.length;
-            while (k--) {
-                let binding = $view.controllers[j].boundProperties[k].binding;
-                updateOneTimeBinding(binding);
-            }
-        }
+        updateBindings(view);
     }
 };
 Repeat.useInnerMatcher = true;

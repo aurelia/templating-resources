@@ -193,6 +193,106 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-
             || activationStrategy === ActivationStrategy.Replace;
     }
 
+    var oneTime = aureliaBinding.bindingMode.oneTime;
+    function updateOverrideContexts(views, startIndex) {
+        var length = views.length;
+        if (startIndex > 0) {
+            startIndex = startIndex - 1;
+        }
+        for (; startIndex < length; ++startIndex) {
+            updateOverrideContext(views[startIndex].overrideContext, startIndex, length);
+        }
+    }
+    function createFullOverrideContext(repeat, data, index, length, key) {
+        var bindingContext = {};
+        var overrideContext = aureliaBinding.createOverrideContext(bindingContext, repeat.scope.overrideContext);
+        if (typeof key !== 'undefined') {
+            bindingContext[repeat.key] = key;
+            bindingContext[repeat.value] = data;
+        }
+        else {
+            bindingContext[repeat.local] = data;
+        }
+        updateOverrideContext(overrideContext, index, length);
+        return overrideContext;
+    }
+    function updateOverrideContext(overrideContext, index, length) {
+        var first = (index === 0);
+        var last = (index === length - 1);
+        var even = index % 2 === 0;
+        overrideContext.$index = index;
+        overrideContext.$first = first;
+        overrideContext.$last = last;
+        overrideContext.$middle = !(first || last);
+        overrideContext.$odd = !even;
+        overrideContext.$even = even;
+    }
+    function getItemsSourceExpression(instruction, attrName) {
+        return instruction.behaviorInstructions
+            .filter(function (bi) { return bi.originalAttrName === attrName; })[0]
+            .attributes
+            .items
+            .sourceExpression;
+    }
+    function unwrapExpression(expression) {
+        var unwrapped = false;
+        while (expression instanceof aureliaBinding.BindingBehavior) {
+            expression = expression.expression;
+        }
+        while (expression instanceof aureliaBinding.ValueConverter) {
+            expression = expression.expression;
+            unwrapped = true;
+        }
+        return unwrapped ? expression : null;
+    }
+    function isOneTime(expression) {
+        while (expression instanceof aureliaBinding.BindingBehavior) {
+            if (expression.name === 'oneTime') {
+                return true;
+            }
+            expression = expression.expression;
+        }
+        return false;
+    }
+    function updateBindings(view) {
+        var $view = view;
+        var j = $view.bindings.length;
+        while (j--) {
+            updateOneTimeBinding($view.bindings[j]);
+        }
+        j = $view.controllers.length;
+        while (j--) {
+            var k = $view.controllers[j].boundProperties.length;
+            while (k--) {
+                if ($view.controllers[j].viewModel && $view.controllers[j].viewModel.updateOneTimeBindings) {
+                    $view.controllers[j].viewModel.updateOneTimeBindings();
+                }
+                var binding = $view.controllers[j].boundProperties[k].binding;
+                updateOneTimeBinding(binding);
+            }
+        }
+    }
+    function updateOneTimeBinding(binding) {
+        if (binding.call && binding.mode === oneTime) {
+            binding.call(aureliaBinding.sourceContext);
+        }
+        else if (binding.updateOneTimeBindings) {
+            binding.updateOneTimeBindings();
+        }
+    }
+    function indexOf(array, item, matcher, startIndex) {
+        if (!matcher) {
+            return array.indexOf(item);
+        }
+        var length = array.length;
+        for (var index = startIndex || 0; index < length; index++) {
+            if (matcher(array[index], item)) {
+                return index;
+            }
+        }
+        return -1;
+    }
+
     var IfCore = (function () {
         function IfCore(viewFactory, viewSlot) {
             this.viewFactory = viewFactory;
@@ -206,6 +306,11 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-
         IfCore.prototype.bind = function (bindingContext, overrideContext) {
             this.bindingContext = bindingContext;
             this.overrideContext = overrideContext;
+        };
+        IfCore.prototype.updateOneTimeBindings = function () {
+            if (this.view && this.view.isBound) {
+                updateBindings(this.view);
+            }
         };
         IfCore.prototype.unbind = function () {
             if (this.view === null) {
@@ -405,88 +510,6 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-
         ], With);
         return With;
     }());
-
-    var oneTime = aureliaBinding.bindingMode.oneTime;
-    function updateOverrideContexts(views, startIndex) {
-        var length = views.length;
-        if (startIndex > 0) {
-            startIndex = startIndex - 1;
-        }
-        for (; startIndex < length; ++startIndex) {
-            updateOverrideContext(views[startIndex].overrideContext, startIndex, length);
-        }
-    }
-    function createFullOverrideContext(repeat, data, index, length, key) {
-        var bindingContext = {};
-        var overrideContext = aureliaBinding.createOverrideContext(bindingContext, repeat.scope.overrideContext);
-        if (typeof key !== 'undefined') {
-            bindingContext[repeat.key] = key;
-            bindingContext[repeat.value] = data;
-        }
-        else {
-            bindingContext[repeat.local] = data;
-        }
-        updateOverrideContext(overrideContext, index, length);
-        return overrideContext;
-    }
-    function updateOverrideContext(overrideContext, index, length) {
-        var first = (index === 0);
-        var last = (index === length - 1);
-        var even = index % 2 === 0;
-        overrideContext.$index = index;
-        overrideContext.$first = first;
-        overrideContext.$last = last;
-        overrideContext.$middle = !(first || last);
-        overrideContext.$odd = !even;
-        overrideContext.$even = even;
-    }
-    function getItemsSourceExpression(instruction, attrName) {
-        return instruction.behaviorInstructions
-            .filter(function (bi) { return bi.originalAttrName === attrName; })[0]
-            .attributes
-            .items
-            .sourceExpression;
-    }
-    function unwrapExpression(expression) {
-        var unwrapped = false;
-        while (expression instanceof aureliaBinding.BindingBehavior) {
-            expression = expression.expression;
-        }
-        while (expression instanceof aureliaBinding.ValueConverter) {
-            expression = expression.expression;
-            unwrapped = true;
-        }
-        return unwrapped ? expression : null;
-    }
-    function isOneTime(expression) {
-        while (expression instanceof aureliaBinding.BindingBehavior) {
-            if (expression.name === 'oneTime') {
-                return true;
-            }
-            expression = expression.expression;
-        }
-        return false;
-    }
-    function updateOneTimeBinding(binding) {
-        if (binding.call && binding.mode === oneTime) {
-            binding.call(aureliaBinding.sourceContext);
-        }
-        else if (binding.updateOneTimeBindings) {
-            binding.updateOneTimeBindings();
-        }
-    }
-    function indexOf(array, item, matcher, startIndex) {
-        if (!matcher) {
-            return array.indexOf(item);
-        }
-        var length = array.length;
-        for (var index = startIndex || 0; index < length; index++) {
-            if (matcher(array[index], item)) {
-                return index;
-            }
-        }
-        return -1;
-    }
 
     var ArrayRepeatStrategy = (function () {
         function ArrayRepeatStrategy() {
@@ -934,7 +957,8 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-
         var name = t.elementName !== null ? t.elementName : t.attributeName;
         return lifecycleOptionalBehaviors.indexOf(name) === -1 && (t.handlesAttached || t.handlesBind || t.handlesCreated || t.handlesDetached || t.handlesUnbind)
             || t.viewFactory && viewsRequireLifecycle(t.viewFactory)
-            || instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
+            || instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory)
+            || instruction.initiatedByBehavior;
     }
     function targetRequiresLifecycle(instruction) {
         var behaviors = instruction.behaviorInstructions;
@@ -1186,19 +1210,7 @@ define(['exports', 'aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-
             return this.viewSlot.removeAt(index, returnToCache, skipAnimation);
         };
         Repeat.prototype.updateBindings = function (view) {
-            var $view = view;
-            var j = $view.bindings.length;
-            while (j--) {
-                updateOneTimeBinding($view.bindings[j]);
-            }
-            j = $view.controllers.length;
-            while (j--) {
-                var k = $view.controllers[j].boundProperties.length;
-                while (k--) {
-                    var binding = $view.controllers[j].boundProperties[k].binding;
-                    updateOneTimeBinding(binding);
-                }
-            }
+            updateBindings(view);
         };
         var Repeat_1;
         Repeat.useInnerMatcher = true;
