@@ -22,6 +22,8 @@ import {
 import {viewsRequireLifecycle} from './analyze-view-factory';
 import {AbstractRepeater} from './abstract-repeater';
 
+const matcherExtractionMarker = '__marker_extracted__';
+
 /**
  * Binding to iterate over iterable objects (Array, Map and Number) to genereate a template for each iteration.
  */
@@ -135,7 +137,11 @@ export class Repeat extends AbstractRepeater {
   */
   bind(bindingContext, overrideContext) {
     this.scope = { bindingContext, overrideContext };
-    this.matcherBinding = this._captureAndRemoveMatcherBinding();
+    const instruction = this.instruction;
+    if (!(matcherExtractionMarker in instruction)) {
+      instruction[matcherExtractionMarker] = this._captureAndRemoveMatcherBinding();
+    }
+    this.matcherBinding = instruction[matcherExtractionMarker];
     this.itemsChanged();
   }
 
