@@ -9,7 +9,8 @@ function behaviorRequiresLifecycle(instruction) {
   let name = t.elementName !== null ? t.elementName : t.attributeName;
   return lifecycleOptionalBehaviors.indexOf(name) === -1 && (t.handlesAttached || t.handlesBind || t.handlesCreated || t.handlesDetached || t.handlesUnbind)
     || t.viewFactory && viewsRequireLifecycle(t.viewFactory)
-    || instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
+    || instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory)
+    || instruction.initiatedByBehavior;
 }
 
 function targetRequiresLifecycle(instruction) {

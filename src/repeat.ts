@@ -17,7 +17,7 @@ import {
   getItemsSourceExpression,
   unwrapExpression,
   isOneTime,
-  updateOneTimeBinding
+  updateBindings
 } from './repeat-utilities';
 import {viewsRequireLifecycle} from './analyze-view-factory';
 import {AbstractRepeater} from './abstract-repeater';
@@ -349,19 +349,7 @@ export class Repeat extends AbstractRepeater {
   }
 
   updateBindings(view: View) {
-    const $view = view as View & { bindings: any[]; controllers: any[] };
-    let j = $view.bindings.length;
-    while (j--) {
-      updateOneTimeBinding($view.bindings[j]);
-    }
-    j = $view.controllers.length;
-    while (j--) {
-      let k = $view.controllers[j].boundProperties.length;
-      while (k--) {
-        let binding = $view.controllers[j].boundProperties[k].binding;
-        updateOneTimeBinding(binding);
-      }
-    }
+    updateBindings(view);
   }
 }
 

@@ -1,6 +1,6 @@
 System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-queue', 'aurelia-templating', 'aurelia-binding', 'aurelia-logging', 'aurelia-loader', 'aurelia-path', 'aurelia-metadata'], function (exports, module) {
     'use strict';
-    var Container, inject, Optional, DOM, FEATURE, TaskQueue, CompositionEngine, ViewSlot, ViewResources, bindable, noView, customElement, customAttribute, templateController, BoundViewFactory, TargetInstruction, Animator, resource, useView, useShadowDOM, ViewEngine, createOverrideContext, bindingMode, BindingBehavior, ValueConverter, sourceContext, mergeSplice, ObserverLocator, valueConverter, DataAttributeObserver, bindingBehavior, targetContext, EventSubscriber, getLogger, Loader, relativeToFile, mixin;
+    var Container, inject, Optional, DOM, FEATURE, TaskQueue, CompositionEngine, ViewSlot, ViewResources, bindable, noView, customElement, customAttribute, templateController, BoundViewFactory, TargetInstruction, Animator, resource, useView, useShadowDOM, ViewEngine, bindingMode, createOverrideContext, BindingBehavior, ValueConverter, sourceContext, mergeSplice, ObserverLocator, valueConverter, DataAttributeObserver, bindingBehavior, targetContext, EventSubscriber, getLogger, Loader, relativeToFile, mixin;
     return {
         setters: [function (module) {
             Container = module.Container;
@@ -28,8 +28,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
             useShadowDOM = module.useShadowDOM;
             ViewEngine = module.ViewEngine;
         }, function (module) {
-            createOverrideContext = module.createOverrideContext;
             bindingMode = module.bindingMode;
+            createOverrideContext = module.createOverrideContext;
             BindingBehavior = module.BindingBehavior;
             ValueConverter = module.ValueConverter;
             sourceContext = module.sourceContext;
@@ -255,6 +255,106 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
                     || activationStrategy === ActivationStrategy.Replace;
             }
 
+            var oneTime = bindingMode.oneTime;
+            function updateOverrideContexts(views, startIndex) {
+                var length = views.length;
+                if (startIndex > 0) {
+                    startIndex = startIndex - 1;
+                }
+                for (; startIndex < length; ++startIndex) {
+                    updateOverrideContext(views[startIndex].overrideContext, startIndex, length);
+                }
+            }
+            function createFullOverrideContext(repeat, data, index, length, key) {
+                var bindingContext = {};
+                var overrideContext = createOverrideContext(bindingContext, repeat.scope.overrideContext);
+                if (typeof key !== 'undefined') {
+                    bindingContext[repeat.key] = key;
+                    bindingContext[repeat.value] = data;
+                }
+                else {
+                    bindingContext[repeat.local] = data;
+                }
+                updateOverrideContext(overrideContext, index, length);
+                return overrideContext;
+            }
+            function updateOverrideContext(overrideContext, index, length) {
+                var first = (index === 0);
+                var last = (index === length - 1);
+                var even = index % 2 === 0;
+                overrideContext.$index = index;
+                overrideContext.$first = first;
+                overrideContext.$last = last;
+                overrideContext.$middle = !(first || last);
+                overrideContext.$odd = !even;
+                overrideContext.$even = even;
+            }
+            function getItemsSourceExpression(instruction, attrName) {
+                return instruction.behaviorInstructions
+                    .filter(function (bi) { return bi.originalAttrName === attrName; })[0]
+                    .attributes
+                    .items
+                    .sourceExpression;
+            }
+            function unwrapExpression(expression) {
+                var unwrapped = false;
+                while (expression instanceof BindingBehavior) {
+                    expression = expression.expression;
+                }
+                while (expression instanceof ValueConverter) {
+                    expression = expression.expression;
+                    unwrapped = true;
+                }
+                return unwrapped ? expression : null;
+            }
+            function isOneTime(expression) {
+                while (expression instanceof BindingBehavior) {
+                    if (expression.name === 'oneTime') {
+                        return true;
+                    }
+                    expression = expression.expression;
+                }
+                return false;
+            }
+            function updateBindings(view) {
+                var $view = view;
+                var j = $view.bindings.length;
+                while (j--) {
+                    updateOneTimeBinding($view.bindings[j]);
+                }
+                j = $view.controllers.length;
+                while (j--) {
+                    var k = $view.controllers[j].boundProperties.length;
+                    while (k--) {
+                        if ($view.controllers[j].viewModel && $view.controllers[j].viewModel.updateOneTimeBindings) {
+                            $view.controllers[j].viewModel.updateOneTimeBindings();
+                        }
+                        var binding = $view.controllers[j].boundProperties[k].binding;
+                        updateOneTimeBinding(binding);
+                    }
+                }
+            }
+            function updateOneTimeBinding(binding) {
+                if (binding.call && binding.mode === oneTime) {
+                    binding.call(sourceContext);
+                }
+                else if (binding.updateOneTimeBindings) {
+                    binding.updateOneTimeBindings();
+                }
+            }
+            function indexOf(array, item, matcher, startIndex) {
+                if (!matcher) {
+                    return array.indexOf(item);
+                }
+                var length = array.length;
+                for (var index = startIndex || 0; index < length; index++) {
+                    if (matcher(array[index], item)) {
+                        return index;
+                    }
+                }
+                return -1;
+            }
+
             var IfCore = (function () {
                 function IfCore(viewFactory, viewSlot) {
                     this.viewFactory = viewFactory;
@@ -268,6 +368,11 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
                 IfCore.prototype.bind = function (bindingContext, overrideContext) {
                     this.bindingContext = bindingContext;
                     this.overrideContext = overrideContext;
+                };
+                IfCore.prototype.updateOneTimeBindings = function () {
+                    if (this.view && this.view.isBound) {
+                        updateBindings(this.view);
+                    }
                 };
                 IfCore.prototype.unbind = function () {
                     if (this.view === null) {
@@ -467,88 +572,6 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
                 ], With);
                 return With;
             }()));
-
-            var oneTime = bindingMode.oneTime;
-            function updateOverrideContexts(views, startIndex) {
-                var length = views.length;
-                if (startIndex > 0) {
-                    startIndex = startIndex - 1;
-                }
-                for (; startIndex < length; ++startIndex) {
-                    updateOverrideContext(views[startIndex].overrideContext, startIndex, length);
-                }
-            }
-            function createFullOverrideContext(repeat, data, index, length, key) {
-                var bindingContext = {};
-                var overrideContext = createOverrideContext(bindingContext, repeat.scope.overrideContext);
-                if (typeof key !== 'undefined') {
-                    bindingContext[repeat.key] = key;
-                    bindingContext[repeat.value] = data;
-                }
-                else {
-                    bindingContext[repeat.local] = data;
-                }
-                updateOverrideContext(overrideContext, index, length);
-                return overrideContext;
-            }
-            function updateOverrideContext(overrideContext, index, length) {
-                var first = (index === 0);
-                var last = (index === length - 1);
-                var even = index % 2 === 0;
-                overrideContext.$index = index;
-                overrideContext.$first = first;
-                overrideContext.$last = last;
-                overrideContext.$middle = !(first || last);
-                overrideContext.$odd = !even;
-                overrideContext.$even = even;
-            }
-            function getItemsSourceExpression(instruction, attrName) {
-                return instruction.behaviorInstructions
-                    .filter(function (bi) { return bi.originalAttrName === attrName; })[0]
-                    .attributes
-                    .items
-                    .sourceExpression;
-            }
-            function unwrapExpression(expression) {
-                var unwrapped = false;
-                while (expression instanceof BindingBehavior) {
-                    expression = expression.expression;
-                }
-                while (expression instanceof ValueConverter) {
-                    expression = expression.expression;
-                    unwrapped = true;
-                }
-                return unwrapped ? expression : null;
-            }
-            function isOneTime(expression) {
-                while (expression instanceof BindingBehavior) {
-                    if (expression.name === 'oneTime') {
-                        return true;
-                    }
-                    expression = expression.expression;
-                }
-                return false;
-            }
-            function updateOneTimeBinding(binding) {
-                if (binding.call && binding.mode === oneTime) {
-                    binding.call(sourceContext);
-                }
-                else if (binding.updateOneTimeBindings) {
-                    binding.updateOneTimeBindings();
-                }
-            }
-            function indexOf(array, item, matcher, startIndex) {
-                if (!matcher) {
-                    return array.indexOf(item);
-                }
-                var length = array.length;
-                for (var index = startIndex || 0; index < length; index++) {
-                    if (matcher(array[index], item)) {
-                        return index;
-                    }
-                }
-                return -1;
-            }
 
             var ArrayRepeatStrategy = exports('ArrayRepeatStrategy', (function () {
                 function ArrayRepeatStrategy() {
@@ -996,7 +1019,8 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
                 var name = t.elementName !== null ? t.elementName : t.attributeName;
                 return lifecycleOptionalBehaviors.indexOf(name) === -1 && (t.handlesAttached || t.handlesBind || t.handlesCreated || t.handlesDetached || t.handlesUnbind)
                     || t.viewFactory && viewsRequireLifecycle(t.viewFactory)
-                    || instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory);
+                    || instruction.viewFactory && viewsRequireLifecycle(instruction.viewFactory)
+                    || instruction.initiatedByBehavior;
             }
             function targetRequiresLifecycle(instruction) {
                 var behaviors = instruction.behaviorInstructions;
@@ -1248,19 +1272,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
                     return this.viewSlot.removeAt(index, returnToCache, skipAnimation);
                 };
                 Repeat.prototype.updateBindings = function (view) {
-                    var $view = view;
-                    var j = $view.bindings.length;
-                    while (j--) {
-                        updateOneTimeBinding($view.bindings[j]);
-                    }
-                    j = $view.controllers.length;
-                    while (j--) {
-                        var k = $view.controllers[j].boundProperties.length;
-                        while (k--) {
-                            var binding = $view.controllers[j].boundProperties[k].binding;
-                            updateOneTimeBinding(binding);
-                        }
-                    }
+                    updateBindings(view);
                 };
                 var Repeat_1;
                 Repeat.useInnerMatcher = true;
