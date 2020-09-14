@@ -1,3 +1,13 @@
+## [1.13.1](https://github.com/aurelia/templating-resources/compare/1.13.0...1.13.1) (2020-09-14)
+
+
+### Bug Fixes
+
+* **repeat:** add failing test to vereify multiple matcher extraction ([9795be6](https://github.com/aurelia/templating-resources/commit/9795be6))
+* **repeat:** ensure matcher extraction once ([0812425](https://github.com/aurelia/templating-resources/commit/0812425))
+
+
+
 # [1.13.0](https://github.com/aurelia/templating-resources/compare/1.12.0...1.13.0) (2020-01-28)
 
 

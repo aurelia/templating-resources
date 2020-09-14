@@ -975,6 +975,7 @@ class AbstractRepeater {
 }
 
 var Repeat_1;
+const matcherExtractionMarker = '__marker_extracted__';
 let Repeat = Repeat_1 = class Repeat extends AbstractRepeater {
     constructor(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
         super({
@@ -999,7 +1000,11 @@ let Repeat = Repeat_1 = class Repeat extends AbstractRepeater {
     }
     bind(bindingContext, overrideContext) {
         this.scope = { bindingContext, overrideContext };
-        this.matcherBinding = this._captureAndRemoveMatcherBinding();
+        const instruction = this.instruction;
+        if (!(matcherExtractionMarker in instruction)) {
+            instruction[matcherExtractionMarker] = this._captureAndRemoveMatcherBinding();
+        }
+        this.matcherBinding = instruction[matcherExtractionMarker];
         this.itemsChanged();
     }
     unbind() {

@@ -1026,6 +1026,7 @@ var AbstractRepeater = (function () {
     return AbstractRepeater;
 }());
 
+var matcherExtractionMarker = '__marker_extracted__';
 var Repeat = (function (_super) {
     __extends(Repeat, _super);
     function Repeat(viewFactory, instruction, viewSlot, viewResources, observerLocator, strategyLocator) {
@@ -1053,7 +1054,11 @@ var Repeat = (function (_super) {
     };
     Repeat.prototype.bind = function (bindingContext, overrideContext) {
         this.scope = { bindingContext: bindingContext, overrideContext: overrideContext };
-        this.matcherBinding = this._captureAndRemoveMatcherBinding();
+        var instruction = this.instruction;
+        if (!(matcherExtractionMarker in instruction)) {
+            instruction[matcherExtractionMarker] = this._captureAndRemoveMatcherBinding();
+        }
+        this.matcherBinding = instruction[matcherExtractionMarker];
         this.itemsChanged();
     };
     Repeat.prototype.unbind = function () {
