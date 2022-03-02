@@ -107,7 +107,7 @@
     "gulp-conventional-changelog": "^2.0.15",
     "html-loader": "^0.5.5",
     "jasmine-core": "^3.2.1",
-    "karma": "^4.1.0",
+    "karma": "^6.3.16",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",
     "karma-ie-launcher": "^1.0.0",
