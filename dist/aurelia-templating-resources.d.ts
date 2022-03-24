@@ -108,7 +108,7 @@ declare class IfCore {
  */
 export declare class If extends IfCore {
 	condition: any;
-	swapOrder: 'before' | 'with' | 'after';
+	swapOrder: "before" | "with" | "after";
 	cache: boolean | string;
 	/**
 	 * Binds the if to the binding context and override context
@@ -644,3 +644,5 @@ export declare function isOneTime(expression: any): boolean;
 export declare function updateOneTimeBinding(binding: any): void;
 export declare function viewsRequireLifecycle(viewFactory: any): any;
 export declare function configure(config: any): void;
+
+export {};

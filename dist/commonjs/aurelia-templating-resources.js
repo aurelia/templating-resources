@@ -7,10 +7,10 @@ var aureliaPal = require('aurelia-pal');
 var aureliaTaskQueue = require('aurelia-task-queue');
 var aureliaTemplating = require('aurelia-templating');
 var aureliaBinding = require('aurelia-binding');
-var aureliaLogging = require('aurelia-logging');
 var aureliaLoader = require('aurelia-loader');
 var aureliaPath = require('aurelia-path');
 var aureliaMetadata = require('aurelia-metadata');
+var aureliaLogging = require('aurelia-logging');
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -1084,7 +1084,7 @@ var Repeat = (function (_super) {
         var items = this.items;
         this.strategy = this.strategyLocator.getStrategy(items);
         if (!this.strategy) {
-            throw new Error("Value for '" + this.sourceExpression + "' is non-repeatable");
+            throw new Error("Value for '".concat(this.sourceExpression, "' is non-repeatable"));
         }
         if (!this.isOneTime && !this._observeInnerCollection()) {
             this._observeCollection();
@@ -1279,7 +1279,7 @@ var getFirstElementChild = function (el) {
 };
 
 var aureliaHideClassName = 'aurelia-hide';
-var aureliaHideClass = "." + aureliaHideClassName + " { display:none !important; }";
+var aureliaHideClass = ".".concat(aureliaHideClassName, " { display:none !important; }");
 function injectAureliaHideStyleAtHead() {
     aureliaPal.DOM.injectStyles(aureliaHideClass);
 }
@@ -1353,18 +1353,11 @@ var Hide = (function () {
     return Hide;
 }());
 
-var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
-var needsToWarn = true;
 var HTMLSanitizer = (function () {
     function HTMLSanitizer() {
     }
     HTMLSanitizer.prototype.sanitize = function (input) {
-        if (needsToWarn) {
-            needsToWarn = false;
-            aureliaLogging.getLogger('html-sanitizer')
-                .warn("CAUTION: The default HTMLSanitizer does NOT provide security against a wide variety of sophisticated XSS attacks,\nand should not be relied on for sanitizing input from unknown sources.\nPlease see https://aurelia.io/docs/binding/basics#element-content for instructions on how to use a secure solution like DOMPurify or sanitize-html.");
-        }
-        return input.replace(SCRIPT_REGEX, '');
+        throw new Error("To protect the application against a wide variety of sophisticated XSS attacks.\nPlease see https://aurelia.io/docs/binding/basics#element-content for instructions on how to use a secure solution like DOMPurify or sanitize-html.");
     };
     return HTMLSanitizer;
 }());
@@ -1472,7 +1465,7 @@ var Focus = (function () {
 var cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
 function fixupCSSUrls(address, css) {
     if (typeof css !== 'string') {
-        throw new Error("Failed loading required CSS file: " + address);
+        throw new Error("Failed loading required CSS file: ".concat(address));
     }
     return css.replace(cssUrlMatcher, function (match, p1) {
         var quote = p1.charAt(0);
@@ -1909,7 +1902,7 @@ function _createDynamicElement(_a) {
             break;
         default:
             aureliaLogging.getLogger('aurelia-html-only-element')
-                .warn("Expected 'use-shadow-dom' value to be \"close\", \"open\" or \"\", received " + useShadowDOMmode);
+                .warn("Expected 'use-shadow-dom' value to be \"close\", \"open\" or \"\", received ".concat(useShadowDOMmode));
             break;
     }
     return DynamicElement;
@@ -1918,7 +1911,7 @@ function _createDynamicElement(_a) {
 function getElementName(address) {
     return /([^\/^\?]+)\.html/i.exec(address)[1].toLowerCase();
 }
-function configure(config) {
+function configure$1(config) {
     var viewEngine = config.container.get(aureliaTemplating.ViewEngine);
     var loader = config.aurelia.loader;
     viewEngine.addResourcePlugin('.html', {
@@ -1941,10 +1934,10 @@ function configure(config) {
     });
 }
 
-function configure$1(config) {
+function configure(config) {
     injectAureliaHideStyleAtHead();
     config.globalResources(Compose, If, Else, With, Repeat, Show, Hide, Replaceable, Focus, SanitizeHTMLValueConverter, OneTimeBindingBehavior, OneWayBindingBehavior, ToViewBindingBehavior, FromViewBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SelfBindingBehavior, SignalBindingBehavior, UpdateTriggerBindingBehavior, AttrBindingBehavior);
-    configure(config);
+    configure$1(config);
     var viewEngine = config.container.get(aureliaTemplating.ViewEngine);
     var styleResourcePlugin = {
         fetch: function (address) {
@@ -1985,7 +1978,7 @@ exports.ToViewBindingBehavior = ToViewBindingBehavior;
 exports.TwoWayBindingBehavior = TwoWayBindingBehavior;
 exports.UpdateTriggerBindingBehavior = UpdateTriggerBindingBehavior;
 exports.With = With;
-exports.configure = configure$1;
+exports.configure = configure;
 exports.createFullOverrideContext = createFullOverrideContext;
 exports.getItemsSourceExpression = getItemsSourceExpression;
 exports.isOneTime = isOneTime;

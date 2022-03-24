@@ -1,12 +1,12 @@
 import { Container, inject, Optional } from 'aurelia-dependency-injection';
 import { DOM, FEATURE } from 'aurelia-pal';
 import { TaskQueue } from 'aurelia-task-queue';
-import { CompositionEngine, ViewSlot, ViewResources, bindable, noView, customElement, customAttribute, templateController, BoundViewFactory, TargetInstruction, Animator, resource, useView, useShadowDOM, ViewEngine } from 'aurelia-templating';
-import { createOverrideContext, bindingMode, BindingBehavior, ValueConverter, sourceContext, mergeSplice, ObserverLocator, valueConverter, DataAttributeObserver, bindingBehavior, targetContext, EventSubscriber } from 'aurelia-binding';
-import { getLogger } from 'aurelia-logging';
+import { bindable, noView, customElement, CompositionEngine, ViewSlot, ViewResources, customAttribute, templateController, BoundViewFactory, TargetInstruction, Animator, resource, useView, useShadowDOM, ViewEngine } from 'aurelia-templating';
+import { createOverrideContext, bindingMode, BindingBehavior, sourceContext, ValueConverter, mergeSplice, ObserverLocator, valueConverter, bindingBehavior, DataAttributeObserver, targetContext, EventSubscriber } from 'aurelia-binding';
 import { Loader } from 'aurelia-loader';
 import { relativeToFile } from 'aurelia-path';
 import { mixin } from 'aurelia-metadata';
+import { getLogger } from 'aurelia-logging';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -1293,18 +1293,10 @@ Hide = __decorate([
     customAttribute('hide')
 ], Hide);
 
-const SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
-let needsToWarn = true;
 class HTMLSanitizer {
     sanitize(input) {
-        if (needsToWarn) {
-            needsToWarn = false;
-            getLogger('html-sanitizer')
-                .warn(`CAUTION: The default HTMLSanitizer does NOT provide security against a wide variety of sophisticated XSS attacks,
-and should not be relied on for sanitizing input from unknown sources.
+        throw new Error(`To protect the application against a wide variety of sophisticated XSS attacks.
 Please see https://aurelia.io/docs/binding/basics#element-content for instructions on how to use a secure solution like DOMPurify or sanitize-html.`);
-        }
-        return input.replace(SCRIPT_REGEX, '');
     }
 }
 
@@ -1806,7 +1798,7 @@ function _createDynamicElement({ name, viewUrl, bindableNames, useShadowDOMmode 
 function getElementName(address) {
     return /([^\/^\?]+)\.html/i.exec(address)[1].toLowerCase();
 }
-function configure(config) {
+function configure$1(config) {
     const viewEngine = config.container.get(ViewEngine);
     const loader = config.aurelia.loader;
     viewEngine.addResourcePlugin('.html', {
@@ -1828,10 +1820,10 @@ function configure(config) {
     });
 }
 
-function configure$1(config) {
+function configure(config) {
     injectAureliaHideStyleAtHead();
     config.globalResources(Compose, If, Else, With, Repeat, Show, Hide, Replaceable, Focus, SanitizeHTMLValueConverter, OneTimeBindingBehavior, OneWayBindingBehavior, ToViewBindingBehavior, FromViewBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SelfBindingBehavior, SignalBindingBehavior, UpdateTriggerBindingBehavior, AttrBindingBehavior);
-    configure(config);
+    configure$1(config);
     let viewEngine = config.container.get(ViewEngine);
     let styleResourcePlugin = {
         fetch(address) {
@@ -1841,5 +1833,5 @@ function configure$1(config) {
     ['.css', '.less', '.sass', '.scss', '.styl'].forEach(ext => viewEngine.addResourcePlugin(ext, styleResourcePlugin));
 }
 
-export { AbstractRepeater, ArrayRepeatStrategy, AttrBindingBehavior, BindingSignaler, Compose, DebounceBindingBehavior, Else, Focus, FromViewBindingBehavior, HTMLSanitizer, Hide, If, MapRepeatStrategy, NullRepeatStrategy, NumberRepeatStrategy, OneTimeBindingBehavior, OneWayBindingBehavior, Repeat, RepeatStrategyLocator, Replaceable, SanitizeHTMLValueConverter, SelfBindingBehavior, SetRepeatStrategy, Show, SignalBindingBehavior, ThrottleBindingBehavior, ToViewBindingBehavior, TwoWayBindingBehavior, UpdateTriggerBindingBehavior, With, configure$1 as configure, createFullOverrideContext, getItemsSourceExpression, isOneTime, unwrapExpression, updateOneTimeBinding, updateOverrideContext, viewsRequireLifecycle };
+export { AbstractRepeater, ArrayRepeatStrategy, AttrBindingBehavior, BindingSignaler, Compose, DebounceBindingBehavior, Else, Focus, FromViewBindingBehavior, HTMLSanitizer, Hide, If, MapRepeatStrategy, NullRepeatStrategy, NumberRepeatStrategy, OneTimeBindingBehavior, OneWayBindingBehavior, Repeat, RepeatStrategyLocator, Replaceable, SanitizeHTMLValueConverter, SelfBindingBehavior, SetRepeatStrategy, Show, SignalBindingBehavior, ThrottleBindingBehavior, ToViewBindingBehavior, TwoWayBindingBehavior, UpdateTriggerBindingBehavior, With, configure, createFullOverrideContext, getItemsSourceExpression, isOneTime, unwrapExpression, updateOneTimeBinding, updateOverrideContext, viewsRequireLifecycle };
 //# sourceMappingURL=aurelia-templating-resources.js.map

@@ -1,6 +1,6 @@
-System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-queue', 'aurelia-templating', 'aurelia-binding', 'aurelia-logging', 'aurelia-loader', 'aurelia-path', 'aurelia-metadata'], function (exports, module) {
+System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-queue', 'aurelia-templating', 'aurelia-binding', 'aurelia-loader', 'aurelia-path', 'aurelia-metadata', 'aurelia-logging'], (function (exports) {
     'use strict';
-    var Container, inject, Optional, DOM, FEATURE, TaskQueue, CompositionEngine, ViewSlot, ViewResources, bindable, noView, customElement, customAttribute, templateController, BoundViewFactory, TargetInstruction, Animator, resource, useView, useShadowDOM, ViewEngine, createOverrideContext, bindingMode, BindingBehavior, ValueConverter, sourceContext, mergeSplice, ObserverLocator, valueConverter, DataAttributeObserver, bindingBehavior, targetContext, EventSubscriber, getLogger, Loader, relativeToFile, mixin;
+    var Container, inject, Optional, DOM, FEATURE, TaskQueue, bindable, noView, customElement, CompositionEngine, ViewSlot, ViewResources, customAttribute, templateController, BoundViewFactory, TargetInstruction, Animator, resource, useView, useShadowDOM, ViewEngine, createOverrideContext, bindingMode, BindingBehavior, ValueConverter, sourceContext, mergeSplice, ObserverLocator, valueConverter, DataAttributeObserver, bindingBehavior, targetContext, EventSubscriber, Loader, relativeToFile, mixin, getLogger;
     return {
         setters: [function (module) {
             Container = module.Container;
@@ -12,12 +12,12 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
         }, function (module) {
             TaskQueue = module.TaskQueue;
         }, function (module) {
-            CompositionEngine = module.CompositionEngine;
-            ViewSlot = module.ViewSlot;
-            ViewResources = module.ViewResources;
             bindable = module.bindable;
             noView = module.noView;
             customElement = module.customElement;
+            CompositionEngine = module.CompositionEngine;
+            ViewSlot = module.ViewSlot;
+            ViewResources = module.ViewResources;
             customAttribute = module.customAttribute;
             templateController = module.templateController;
             BoundViewFactory = module.BoundViewFactory;
@@ -41,18 +41,18 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
             targetContext = module.targetContext;
             EventSubscriber = module.EventSubscriber;
         }, function (module) {
-            getLogger = module.getLogger;
-        }, function (module) {
             Loader = module.Loader;
         }, function (module) {
             relativeToFile = module.relativeToFile;
         }, function (module) {
             mixin = module.mixin;
+        }, function (module) {
+            getLogger = module.getLogger;
         }],
-        execute: function () {
+        execute: (function () {
 
             exports({
-                configure: configure$1,
+                configure: configure,
                 createFullOverrideContext: createFullOverrideContext,
                 getItemsSourceExpression: getItemsSourceExpression,
                 isOneTime: isOneTime,
@@ -1134,7 +1134,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
                     var items = this.items;
                     this.strategy = this.strategyLocator.getStrategy(items);
                     if (!this.strategy) {
-                        throw new Error("Value for '" + this.sourceExpression + "' is non-repeatable");
+                        throw new Error("Value for '".concat(this.sourceExpression, "' is non-repeatable"));
                     }
                     if (!this.isOneTime && !this._observeInnerCollection()) {
                         this._observeCollection();
@@ -1329,7 +1329,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
             };
 
             var aureliaHideClassName = 'aurelia-hide';
-            var aureliaHideClass = "." + aureliaHideClassName + " { display:none !important; }";
+            var aureliaHideClass = ".".concat(aureliaHideClassName, " { display:none !important; }");
             function injectAureliaHideStyleAtHead() {
                 DOM.injectStyles(aureliaHideClass);
             }
@@ -1403,18 +1403,11 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
                 return Hide;
             }()));
 
-            var SCRIPT_REGEX = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
-            var needsToWarn = true;
             var HTMLSanitizer = exports('HTMLSanitizer', (function () {
                 function HTMLSanitizer() {
                 }
                 HTMLSanitizer.prototype.sanitize = function (input) {
-                    if (needsToWarn) {
-                        needsToWarn = false;
-                        getLogger('html-sanitizer')
-                            .warn("CAUTION: The default HTMLSanitizer does NOT provide security against a wide variety of sophisticated XSS attacks,\nand should not be relied on for sanitizing input from unknown sources.\nPlease see https://aurelia.io/docs/binding/basics#element-content for instructions on how to use a secure solution like DOMPurify or sanitize-html.");
-                    }
-                    return input.replace(SCRIPT_REGEX, '');
+                    throw new Error("To protect the application against a wide variety of sophisticated XSS attacks.\nPlease see https://aurelia.io/docs/binding/basics#element-content for instructions on how to use a secure solution like DOMPurify or sanitize-html.");
                 };
                 return HTMLSanitizer;
             }()));
@@ -1522,7 +1515,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
             var cssUrlMatcher = /url\((?!['"]data)([^)]+)\)/gi;
             function fixupCSSUrls(address, css) {
                 if (typeof css !== 'string') {
-                    throw new Error("Failed loading required CSS file: " + address);
+                    throw new Error("Failed loading required CSS file: ".concat(address));
                 }
                 return css.replace(cssUrlMatcher, function (match, p1) {
                     var quote = p1.charAt(0);
@@ -1959,7 +1952,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
                         break;
                     default:
                         getLogger('aurelia-html-only-element')
-                            .warn("Expected 'use-shadow-dom' value to be \"close\", \"open\" or \"\", received " + useShadowDOMmode);
+                            .warn("Expected 'use-shadow-dom' value to be \"close\", \"open\" or \"\", received ".concat(useShadowDOMmode));
                         break;
                 }
                 return DynamicElement;
@@ -1968,7 +1961,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
             function getElementName(address) {
                 return /([^\/^\?]+)\.html/i.exec(address)[1].toLowerCase();
             }
-            function configure(config) {
+            function configure$1(config) {
                 var viewEngine = config.container.get(ViewEngine);
                 var loader = config.aurelia.loader;
                 viewEngine.addResourcePlugin('.html', {
@@ -1991,10 +1984,10 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
                 });
             }
 
-            function configure$1(config) {
+            function configure(config) {
                 injectAureliaHideStyleAtHead();
                 config.globalResources(Compose, If, Else, With, Repeat, Show, Hide, Replaceable, Focus, SanitizeHTMLValueConverter, OneTimeBindingBehavior, OneWayBindingBehavior, ToViewBindingBehavior, FromViewBindingBehavior, TwoWayBindingBehavior, ThrottleBindingBehavior, DebounceBindingBehavior, SelfBindingBehavior, SignalBindingBehavior, UpdateTriggerBindingBehavior, AttrBindingBehavior);
-                configure(config);
+                configure$1(config);
                 var viewEngine = config.container.get(ViewEngine);
                 var styleResourcePlugin = {
                     fetch: function (address) {
@@ -2005,7 +1998,7 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
                 ['.css', '.less', '.sass', '.scss', '.styl'].forEach(function (ext) { return viewEngine.addResourcePlugin(ext, styleResourcePlugin); });
             }
 
-        }
+        })
     };
-});
+}));
 //# sourceMappingURL=aurelia-templating-resources.js.map
