@@ -11,7 +11,8 @@ gulp.task('changelog', function () {
       buffer: false
     })
     .pipe(conventionalChangelog({
-      preset: 'angular'
+      preset: 'angular',
+      releaseCount: 0
     }))
     .pipe(gulp.dest(paths.doc));
 });
