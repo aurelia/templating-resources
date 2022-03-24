@@ -1,6 +1,5 @@
 name: main
 on: [push]
-env:
 
 jobs:
 
@@ -12,4 +11,5 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 11
+      - run: npm ci
       - run: npm run cut-release
