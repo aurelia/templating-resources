@@ -38,7 +38,7 @@ describe('show', () => {
     let shadowDOM = FEATURE.shadowDOM;
     FEATURE.shadowDOM = true;
     let target = document.createElement('input');
-    let boundary = document.createElement('div');
+    let boundary = document.createElement('div') as HTMLDivElement & { hasAureliaHideStyle: boolean };
     sut = new Show(target, animator, boundary);
     sut.created();
     expect(boundary.hasAureliaHideStyle).toBe(true);

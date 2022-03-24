@@ -5,6 +5,7 @@ import {TaskQueue} from 'aurelia-task-queue';
 import {bootstrap} from 'aurelia-bootstrapper';
 import {ComponentTester} from 'aurelia-testing';
 
+
 describe('if', () => {
   let viewSlot, taskQueue, sut, viewFactory;
 
@@ -14,6 +15,7 @@ describe('if', () => {
     viewFactory = new BoundViewFactoryMock();
     sut = new If(viewFactory, viewSlot);
   });
+
 
   it('should remove and unbind view when showing and provided value is falsy', () => {
     let view = new ViewMock();
@@ -338,7 +340,7 @@ class ViewSlotMock {
 }
 
 class ViewMock {
-  bind() {}
+  bind(...args: unknown[]) {}
   unbind() {}
   returnToCache() {}
 }

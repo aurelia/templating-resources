@@ -19,7 +19,7 @@ describe('compose.integration.spec.ts', () => {
   it('works with @useView', async () => {
     let instanceCount = 0;
 
-    @useView('test/resources/view-model-1')
+    @useView('test/resources/view-model-1.html')
     class ViewModelClass {
       constructor() {
         instanceCount++;
@@ -32,7 +32,7 @@ describe('compose.integration.spec.ts', () => {
       }
     );
 
-    expect(component.element.innerHTML).toBe('', 'empty view');
+    expect(component.element.textContent.trim()).toBe('', 'empty view');
     expect(instanceCount).toBe(1, 'instance count === 1');
 
     component.dispose();
