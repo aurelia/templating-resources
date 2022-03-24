@@ -73,7 +73,7 @@ describe('ArrayRepeatStrategy', () => {
         viewSlot.children.splice(1, 1);
         return view;
       };
-      let animationPromise = new Promise(resolve => { resolve(); }).then(() => removeAction());
+      let animationPromise = new Promise<void>(resolve => { resolve(); }).then(() => removeAction());
       rmPromises.push(animationPromise);
       splices = [{
         addedCount: 0,
@@ -183,7 +183,7 @@ describe('ArrayRepeatStrategy', () => {
         viewSlot.children.splice(2, 1);
         return view2;
       };
-      let animationPromise = new Promise(resolve => { resolve(); }).then(() => removeAction());
+      let animationPromise = new Promise<void>(resolve => { resolve(); }).then(() => removeAction());
       splices = [{
         addedCount: 1,
         index: 0,

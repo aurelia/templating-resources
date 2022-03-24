@@ -1341,9 +1341,9 @@ describe('Repeat number', () => {
   });
 });
 
-describe('Repeat object converted to collection', () => {
-  let viewModel, controller;
-});
+// describe('Repeat object converted to collection', () => {
+//   let viewModel, controller;
+// });
 
 describe('analyze-view-factory', () => {
   it('analyzes repeat', () => {

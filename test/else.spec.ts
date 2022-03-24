@@ -13,7 +13,7 @@ describe('else', () => {
 
   beforeEach(() => {
     const fragment = document.createDocumentFragment();
-    const ifNode = document.createElement('div');
+    const ifNode = document.createElement('div') as HTMLDivElement & { au: { if: { viewModel: If } } };
     const elseNode = document.createElement('div');
     fragment.appendChild(ifNode);
     fragment.appendChild(elseNode);

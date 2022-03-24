@@ -55,8 +55,8 @@ export class ViewFactoryMock {
 }
 
 export class ArrayObserverMock {
-  subscribe() {}
-  unsubscribe() {}
+  subscribe(...args: unknown[]) {}
+  unsubscribe(...args: unknown[]) {}
 }
 
 export class RepeatStrategyMock {

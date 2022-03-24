@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var runSequence = require('run-sequence');
 var paths = require('./paths');
 // var fs = require('fs');
 var bump = require('gulp-bump');
@@ -12,7 +11,8 @@ gulp.task('changelog', function () {
       buffer: false
     })
     .pipe(conventionalChangelog({
-      preset: 'angular'
+      preset: 'angular',
+      releaseCount: 0
     }))
     .pipe(gulp.dest(paths.doc));
 });
@@ -25,13 +25,11 @@ gulp.task('bump-version', function() {
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('prepare-release', function(callback) {
-  return runSequence(
+gulp.task('prepare-release', gulp.series(
     // 'build',
     // 'lint',
     'bump-version',
     // 'doc',
     'changelog',
-    callback
-  );
-});
+  )
+);

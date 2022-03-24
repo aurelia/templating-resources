@@ -1,4 +1,4 @@
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 
 export default [
   {
@@ -11,12 +11,7 @@ export default [
     ],
     plugins: [
       typescript({
-        cacheRoot: '.rollupcache',
-        tsconfigOverride: {
-          compilerOptions: {
-            removeComments: true,
-          }
-        }
+        removeComments: true,
       })
     ]
   },
@@ -28,33 +23,23 @@ export default [
     }],
     plugins: [
       typescript({
-        cacheRoot: '.rollupcache',
-        tsconfigOverride: {
-          compilerOptions: {
-            target: 'es2017',
-            removeComments: true,
-          }
-        }
+        target: 'es2017',
+        removeComments: true,
       })
     ]
   },
   {
     input: 'src/aurelia-templating-resources.ts',
     output: [
-      { file: 'dist/amd/aurelia-templating-resources.js', format: 'amd', id: 'aurelia-templating-resources' },
+      { file: 'dist/amd/aurelia-templating-resources.js', format: 'amd', amd: { id: 'aurelia-templating-resources' } },
       { file: 'dist/commonjs/aurelia-templating-resources.js', format: 'cjs' },
       { file: 'dist/system/aurelia-templating-resources.js', format: 'system' },
       { file: 'dist/native-modules/aurelia-templating-resources.js', format: 'esm' },
     ],
     plugins: [
       typescript({
-        cacheRoot: '.rollupcache',
-        tsconfigOverride: {
-          compilerOptions: {
-            target: 'es5',
-            removeComments: true,
-          }
-        }
+        target: 'es5',
+        removeComments: true,
       })
     ]
   }
