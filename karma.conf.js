@@ -14,9 +14,10 @@ module.exports = function(config) {
     webpack: {
       mode: "development",
       entry: 'test/setup.ts',
+      watch: false,
       resolve: {
         extensions: [".ts", ".js"],
-        modules: ["src", 'test', "node_modules"],
+        modules: ["src", 'test', "node_modules"].map(m => path.resolve(__dirname, m)),
         alias: {
           src: path.resolve(__dirname, "src"),
           test: path.resolve(__dirname, 'test'),
