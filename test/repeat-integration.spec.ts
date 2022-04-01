@@ -1373,3 +1373,12 @@ describe('analyze-view-factory', () => {
     expect(viewsRequireLifecycle(viewFactory)).toBe(true);
   });
 });
+
+declare module 'aurelia-binding' {
+  interface InternalPropertyObserver {
+    hasSubscribers?(): boolean;
+  }
+  interface InternalCollectionObserver {
+    hasSubscribers?(): boolean;
+  }
+}
