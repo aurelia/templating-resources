@@ -4,7 +4,6 @@ import { TargetInstruction } from 'aurelia-templating';
 /**@internal */
 declare module 'aurelia-templating' {
   interface ViewFactory {
-    instructions: Record<string, TargetInstruction>;
     template: DocumentFragment;
   }
 }

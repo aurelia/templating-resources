@@ -68,6 +68,7 @@ class CSSResource {
           this._alreadyGloballyInjected = true;
           DOM.injectStyles(text);
         }
+        return this;
       });
   }
 }
