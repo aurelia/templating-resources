@@ -1376,9 +1376,9 @@ describe('analyze-view-factory', () => {
 
 declare module 'aurelia-binding' {
   interface InternalPropertyObserver {
-    hasSubscribers(): boolean;
+    hasSubscribers?(): boolean;
   }
   interface InternalCollectionObserver {
-    hasSubscribers(): boolean;
+    hasSubscribers?(): boolean;
   }
 }

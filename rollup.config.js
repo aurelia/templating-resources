@@ -1,45 +1,49 @@
 import typescript from '@rollup/plugin-typescript';
+import pkg from './package.json';
+
+const { name } = pkg;
+const inputFileName = `src/${name}.ts`;
 
 export default [
   {
-    input: 'src/aurelia-templating-resources.ts',
+    input: inputFileName,
     output: [
       {
-        file: 'dist/es2015/aurelia-templating-resources.js',
+        file: `dist/es2015/${name}.js`,
         format: 'esm'
       }
     ],
     plugins: [
       typescript({
-        removeComments: true,
+        removeComments: true
       })
     ]
   },
   {
-    input: 'src/aurelia-templating-resources.ts',
+    input: inputFileName,
     output: [{
-      file: 'dist/es2017/aurelia-templating-resources.js',
+      file: `dist/es2017/${name}.js`,
       format: 'esm'
     }],
     plugins: [
       typescript({
         target: 'es2017',
-        removeComments: true,
+        removeComments: true
       })
     ]
   },
   {
-    input: 'src/aurelia-templating-resources.ts',
+    input: inputFileName,
     output: [
-      { file: 'dist/amd/aurelia-templating-resources.js', format: 'amd', amd: { id: 'aurelia-templating-resources' } },
-      { file: 'dist/commonjs/aurelia-templating-resources.js', format: 'cjs' },
-      { file: 'dist/system/aurelia-templating-resources.js', format: 'system' },
-      { file: 'dist/native-modules/aurelia-templating-resources.js', format: 'esm' },
+      { file: `dist/amd/${name}.js`, format: 'amd', amd: { id: name } },
+      { file: `dist/commonjs/${name}.js`, format: 'cjs' },
+      { file: `dist/system/${name}.js`, format: 'system' },
+      { file: `dist/native-modules/${name}.js`, format: 'esm' }
     ],
     plugins: [
       typescript({
         target: 'es5',
-        removeComments: true,
+        removeComments: true
       })
     ]
   }
@@ -49,7 +53,7 @@ export default [
     'aurelia-dependency-injection',
     'aurelia-pal',
     'aurelia-templating',
-    'aurelia-templating-resources',
+    // 'aurelia-templating-resources',
     'aurelia-task-queue',
     'aurelia-logging',
     'aurelia-path',
@@ -57,5 +61,10 @@ export default [
     'aurelia-metadata'
   ];
   config.output.forEach(output => output.sourcemap = true);
+  config.onwarn = /** @param {import('rollup').RollupWarning} warning */ (warning, warn) => {
+    if (warning.code === 'CIRCULAR_DEPENDENCY') return;
+    warn(warning.message);
+  };
+
   return config;
 });
