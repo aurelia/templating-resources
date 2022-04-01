@@ -284,7 +284,7 @@ export class Repeat extends AbstractRepeater {
     const viewFactory: ViewFactory = this.viewFactory.viewFactory;
     if (viewFactory) {
       const template = viewFactory.template;
-      const instructions = viewFactory.instructions;
+      const instructions = viewFactory.instructions as Record<string, TargetInstruction>;
       // legacy behavior enabled when Repeat.useInnerMathcer === true
       if (Repeat.useInnerMatcher) {
         return extractMatcherBindingExpression(instructions);
