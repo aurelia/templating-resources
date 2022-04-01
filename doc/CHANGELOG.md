@@ -1,3 +1,12 @@
+## [1.14.1](https://github.com/aurelia/templating-resources/compare/1.14.0...1.14.1) (2022-04-01)
+
+
+### Bug Fixes
+
+* **dep:** upgrade vuln framework dep ([#416](https://github.com/aurelia/templating-resources/issues/416)) ([df5f730](https://github.com/aurelia/templating-resources/commit/df5f730e482eae440a547a497506a0d1fe60110b))
+
+
+
 # [1.14.0](https://github.com/aurelia/templating-resources/compare/1.13.1...1.14.0) (2022-03-24)
 
 
