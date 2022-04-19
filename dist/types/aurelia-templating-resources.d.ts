@@ -216,7 +216,7 @@ export declare class AbstractRepeater {
 	 * @param {Boolean} skipAnimation Should the removal animation be skipped?
 	 * @return {Promise|null}
 	 */
-	removeAllViews(returnToCache?: boolean, skipAnimation?: boolean): (any | Promise<any>)[];
+	removeAllViews(returnToCache?: boolean, skipAnimation?: boolean): any;
 	/**
 	 * Removes an array of Views from the repeater.
 	 *
@@ -224,7 +224,7 @@ export declare class AbstractRepeater {
 	 * @param {Boolean} returnToCache Should the view be returned to the view cache?
 	 * @param {Boolean} skipAnimation Should the removal animation be skipped?
 	 */
-	removeViews(viewsToRemove: Array<View>, returnToCache?: boolean, skipAnimation?: boolean): (any | Promise<any>)[];
+	removeViews(viewsToRemove: Array<View>, returnToCache?: boolean, skipAnimation?: boolean): any;
 	/**
 	 * Removes a view from the repeater at a specific index.
 	 *
@@ -232,7 +232,7 @@ export declare class AbstractRepeater {
 	 * @param {Boolean} returnToCache Should the view be returned to the view cache?
 	 * @param {Boolean} skipAnimation Should the removal animation be skipped?
 	 */
-	removeView(index: number, returnToCache?: boolean, skipAnimation?: boolean): any | Promise<any>;
+	removeView(index: number, returnToCache?: boolean, skipAnimation?: boolean): any;
 	/**
 	 * Forces a particular view to update it's bindings, called as part of
 	 * an in-place processing of items for better performance
