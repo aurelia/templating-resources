@@ -35,6 +35,7 @@ export class SignalBindingBehavior {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   unbind(binding, source) {
     let signals = this.signals;
     let name = binding.signalName;

@@ -281,7 +281,7 @@ function describeArrayTests(viewsRequireLifecycle) {
       validateState();
       nq(() => {
         viewModel.items.push('x');
-        viewModel.items.sort((a, b) => {/**/});
+        viewModel.items.sort(() => {/**/});
       });
       nq(() => validateState());
       nq(() => done());
@@ -557,9 +557,8 @@ function describeArrayTests(viewsRequireLifecycle) {
 
     it('handles removed all items', done => {
       let observer = observerLocator.getArrayObserver(viewModel.items);
-      let divs;
       nq(() => {
-        divs = select(controller, 'div');
+        select(controller, 'div');
         expect(observer.hasSubscribers()).toBe(true);
       });
       nq(() => {

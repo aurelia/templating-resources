@@ -47,9 +47,8 @@ export class Focus {
 
   /**
    * Invoked everytime the bound value changes.
-   * @param newValue The new value.
    */
-  valueChanged(newValue) {
+  valueChanged() {
     if (this.isAttached) {
       this._apply();
     } else {

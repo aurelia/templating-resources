@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { View } from 'aurelia-templating';
 
 /**
@@ -15,7 +16,7 @@ export class AbstractRepeater {
   /**
    * Returns the number of views the repeater knows about.
    *
-   * @return {Number}  the number of views.
+   * @return the number of views.
    */
   viewCount(): number {
     throw new Error('subclass must implement `viewCount`');
@@ -24,7 +25,7 @@ export class AbstractRepeater {
   /**
    * Returns all of the repeaters views as an array.
    *
-   * @return {Array} The repeater's array of views;
+   * @return The repeater's array of views;
    */
   views(): any[] {
     throw new Error('subclass must implement `views`');
@@ -33,19 +34,19 @@ export class AbstractRepeater {
   /**
    * Returns a single view from the repeater at the provided index.
    *
-   * @param {Number} index The index of the requested view.
+   * @param index The index of the requested view.
    * @return {View|ViewSlot} The requested view.
    */
-  view(index): any {
+  view(index: number): any {
     throw new Error('subclass must implement `view`');
   }
 
   /**
    * Returns the matcher function to be used by the repeater, or null if strict matching is to be performed.
    *
-   * @return {Function|null} The requested matcher function.
+   * @return The requested matcher function.
    */
-  matcher() {
+  matcher(): Function | null {
     throw new Error('subclass must implement `matcher`');
   }
 
@@ -56,7 +57,7 @@ export class AbstractRepeater {
    * @param {Object} bindingContext The binding context to bind the new view to.
    * @param {Object} overrideContext A secondary binding context that can override the primary context.
    */
-  addView(bindingContext, overrideContext) {
+  addView(bindingContext, overrideContext): any {
     throw new Error('subclass must implement `addView`');
   }
 
@@ -68,7 +69,7 @@ export class AbstractRepeater {
    * @param {Object} bindingContext The binding context to bind the new view to.
    * @param {Object} overrideContext A secondary binding context that can override the primary context.
    */
-  insertView(index, bindingContext, overrideContext) {
+  insertView(index, bindingContext, overrideContext): any {
     throw new Error('subclass must implement `insertView`');
   }
 
@@ -78,7 +79,7 @@ export class AbstractRepeater {
    * @param {Number} sourceIndex The index of the view to be moved.
    * @param {Number} sourceIndex The index where the view should be placed at.
    */
-  moveView(sourceIndex, targetIndex) {
+  moveView(sourceIndex, targetIndex): any {
     throw new Error('subclass must implement `moveView`');
   }
 
@@ -88,7 +89,7 @@ export class AbstractRepeater {
    * @param {Boolean} skipAnimation Should the removal animation be skipped?
    * @return {Promise|null}
    */
-  removeAllViews(returnToCache?: boolean, skipAnimation?: boolean) {
+  removeAllViews(returnToCache?: boolean, skipAnimation?: boolean): (any | Promise<any>)[] {
     throw new Error('subclass must implement `removeAllViews`');
   }
 
@@ -98,9 +99,8 @@ export class AbstractRepeater {
    * @param {Array} viewsToRemove The array of views to be removed.
    * @param {Boolean} returnToCache Should the view be returned to the view cache?
    * @param {Boolean} skipAnimation Should the removal animation be skipped?
-   * @return {Promise|null}
    */
-  removeViews(viewsToRemove: Array<View>, returnToCache?: boolean, skipAnimation?: boolean) {
+  removeViews(viewsToRemove: Array<View>, returnToCache?: boolean, skipAnimation?: boolean): (any | Promise<any>)[] {
     throw new Error('subclass must implement `removeView`');
   }
 
@@ -110,9 +110,8 @@ export class AbstractRepeater {
    * @param {Number} index The index of the view to be removed.
    * @param {Boolean} returnToCache Should the view be returned to the view cache?
    * @param {Boolean} skipAnimation Should the removal animation be skipped?
-   * @return {Promise|null}
    */
-  removeView(index: number, returnToCache?: boolean, skipAnimation?: boolean) {
+  removeView(index: number, returnToCache?: boolean, skipAnimation?: boolean): any | Promise<any> {
     throw new Error('subclass must implement `removeView`');
   }
 

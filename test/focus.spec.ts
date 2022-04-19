@@ -13,7 +13,7 @@ describe('focus', () => {
 
   function setBindedFocusValue(value) {
     focus.value = value;
-    focus.valueChanged(value);
+    focus.valueChanged();
   }
 
   beforeEach(() => {

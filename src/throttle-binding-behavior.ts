@@ -50,6 +50,7 @@ export class ThrottleBindingBehavior {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   unbind(binding, source) {
     // restore the state of the binding.
     let methodToRestore = binding.throttledMethod.originalName;

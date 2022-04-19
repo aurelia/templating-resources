@@ -16,7 +16,7 @@ describe('SignalBindingBehavior', () => {
     };
     let valueConverters = {
       testConverter: {
-        toView(value) {
+        toView() {
           return converterResult;
         }
       }
@@ -84,7 +84,8 @@ describe('SignalBindingBehavior', () => {
       'textContent',
       ['', bindingEngine.parseExpression(`updateDateTime | testConverter & signal:'test'`), ''],
       bindingMode.toView,
-      lookupFunctions
+      lookupFunctions,
+      undefined
     );
 
     let binding = bindingExpression.createBinding(target);

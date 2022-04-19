@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { bindingBehavior } from 'aurelia-binding';
 
 function findOriginalEventTarget(event) {

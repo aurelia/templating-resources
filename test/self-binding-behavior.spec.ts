@@ -3,7 +3,6 @@ import {Container} from 'aurelia-dependency-injection';
 import {
   // bindingMode,
   BindingEngine,
-  ListenerExpression,
   delegationStrategy,
   // ValueAttributeObserver,
   createScopeForTest
@@ -42,8 +41,7 @@ describe('SelfBindingBehavior', () => {
     function exerciseBehavior(callback) {
       let sourceCalls = 0;
       let source = {
-        handleClick: e => {
-          // console.info('source called');
+        handleClick: () => {
           sourceCalls++;
         }
       };
@@ -89,8 +87,7 @@ describe('SelfBindingBehavior', () => {
     function exerciseBehavior(callback) {
       let sourceCalls = 0;
       let source = {
-        handleClick: e => {
-          // console.info('source called');
+        handleClick: () => {
           sourceCalls++;
         }
       };
@@ -136,8 +133,7 @@ describe('SelfBindingBehavior', () => {
     function exerciseBehavior(callback) {
       let sourceCalls = 0;
       let source = {
-        handleClick: e => {
-          // console.info('source called');
+        handleClick: () => {
           sourceCalls++;
         }
       };

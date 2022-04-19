@@ -3,8 +3,6 @@ import {Container} from 'aurelia-dependency-injection';
 import {
   bindingMode,
   BindingEngine,
-  ListenerExpression,
-  ValueAttributeObserver,
   createScopeForTest
 } from 'aurelia-binding';
 import {UpdateTriggerBindingBehavior} from '../src/update-trigger-binding-behavior';

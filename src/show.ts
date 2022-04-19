@@ -60,6 +60,7 @@ export class Show {
   /**
    * Binds the Show attribute.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   bind(bindingContext) {
     this.valueChanged(this.value);
   }
