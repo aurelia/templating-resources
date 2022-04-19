@@ -1349,7 +1349,7 @@ let Focus = class Focus {
     static inject() {
         return [DOM.Element, TaskQueue];
     }
-    valueChanged(newValue) {
+    valueChanged() {
         if (this.isAttached) {
             this._apply();
         }
@@ -1430,7 +1430,7 @@ class CSSResource {
     load(container) {
         return container.get(Loader)
             .loadText(this.address)
-            .catch(err => null)
+            .catch(() => null)
             .then(text => {
             text = fixupCSSUrls(this.address, text);
             this._scoped.css = text;
