@@ -2,11 +2,13 @@ import { bindingBehavior, bindingMode } from 'aurelia-binding';
 import { mixin } from 'aurelia-metadata';
 
 let modeBindingBehavior = {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   bind(binding, source, lookupFunctions) {
     binding.originalMode = binding.mode;
     binding.mode = this.mode;
   },
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   unbind(binding, source) {
     binding.mode = binding.originalMode;
     binding.originalMode = null;

@@ -193,6 +193,7 @@ export class Compose {
    * @param newValue The new value.
    * @param oldValue The old value.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   modelChanged(newValue, oldValue) {
     this.changes.model = newValue;
     requestUpdate(this);
@@ -203,6 +204,7 @@ export class Compose {
    * @param newValue The new value.
    * @param oldValue The old value.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   viewChanged(newValue, oldValue) {
     this.changes.view = newValue;
     requestUpdate(this);
@@ -213,6 +215,7 @@ export class Compose {
    * @param newValue The new value.
    * @param oldValue The old value.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   viewModelChanged(newValue, oldValue) {
     this.changes.viewModel = newValue;
     requestUpdate(this);

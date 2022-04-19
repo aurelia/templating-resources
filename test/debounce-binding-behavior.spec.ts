@@ -3,9 +3,7 @@ import { Container } from 'aurelia-dependency-injection';
 import {
   bindingMode,
   BindingEngine,
-  ListenerExpression,
   delegationStrategy,
-  ValueAttributeObserver,
   createScopeForTest
 } from 'aurelia-binding';
 import * as AureliaBinding from 'aurelia-binding';
@@ -136,7 +134,7 @@ describe('DebounceBindingBehavior', () => {
 
     let viewModel = {
       callCount: 0,
-      handleMouseMove: e => {
+      handleMouseMove: () => {
         viewModel.callCount++;
       }
     };

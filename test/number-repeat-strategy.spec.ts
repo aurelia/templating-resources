@@ -1,16 +1,16 @@
 import './setup';
 import {ObserverLocator, createOverrideContext} from 'aurelia-binding';
-import {BoundViewFactory, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
+import {BoundViewFactory, ViewSlot, TargetInstruction, ViewResources} from 'aurelia-templating';
 import {StageComponent} from 'aurelia-testing';
 import {Container} from 'aurelia-dependency-injection';
 import {Repeat} from '../src/repeat';
 import {RepeatStrategyLocator} from '../src/repeat-strategy-locator';
 import {NumberRepeatStrategy} from '../src/number-repeat-strategy';
-import {ViewSlotMock, BoundViewFactoryMock, RepeatStrategyMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
+import {ViewSlotMock, BoundViewFactoryMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
 import {bootstrap} from 'aurelia-bootstrapper';
 
 describe('NumberRepeatStrategy', () => {
-  let repeat, strategy, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, repeatStrategyMock, component;
+  let repeat, strategy, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, component;
 
   beforeEach(done => {
     let container = new Container();
@@ -18,7 +18,6 @@ describe('NumberRepeatStrategy', () => {
     viewFactory = new BoundViewFactoryMock();
     observerLocator = new ObserverLocator();
     repeatStrategyLocator = new RepeatStrategyLocator();
-    repeatStrategyMock = new RepeatStrategyMock();
     strategy = new NumberRepeatStrategy();
     container.registerInstance(TargetInstruction, instructionMock);
     container.registerInstance(ViewResources, viewResourcesMock);

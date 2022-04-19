@@ -60,7 +60,7 @@ class CSSResource {
   load(container: Container): Promise<CSSResource> {
     return container.get(Loader)
       .loadText(this.address)
-      .catch(err => null)
+      .catch(() => null)
       .then(text => {
         text = fixupCSSUrls(this.address, text);
         this._scoped.css = text;

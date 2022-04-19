@@ -1,18 +1,15 @@
 import './setup';
 import {ObserverLocator, createOverrideContext} from 'aurelia-binding';
 import {StageComponent} from 'aurelia-testing';
-import {Container} from 'aurelia-dependency-injection';
 import {Repeat} from '../src/repeat';
 import {SetRepeatStrategy} from '../src/set-repeat-strategy';
 import {ViewSlotMock, BoundViewFactoryMock, ViewMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
 import {bootstrap} from 'aurelia-bootstrapper';
 
 describe('SetRepeatStrategy', () => {
-  let repeat, strategy, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, repeatStrategyMock, component;
+  let repeat, strategy, viewSlot, viewFactory, component;
 
   beforeEach(done => {
-    let aurelia;
-    let container = new Container();
     viewSlot = new ViewSlotMock();
     viewFactory = new BoundViewFactoryMock();
     strategy = new SetRepeatStrategy();
@@ -30,7 +27,7 @@ describe('SetRepeatStrategy', () => {
   });
 
   describe('instanceMutated', () => {
-    let view1, view2, view3, items, records, viewFactorySpy;
+    let view1, view2, view3, items, records;
 
     beforeEach(() => {
       strategy = new SetRepeatStrategy();
@@ -45,7 +42,7 @@ describe('SetRepeatStrategy', () => {
       view3.bindingContext = { item: 'bar' };
       view3.overrideContext = {};
       viewSlot.children = [view1, view2, view3];
-      viewFactorySpy = spyOn(viewFactory, 'create').and.callFake(() => {});
+      spyOn(viewFactory, 'create').and.callFake(() => {});
     });
 
     it('should correctly handle adding item (i.e Set.prototype.add())', () => {

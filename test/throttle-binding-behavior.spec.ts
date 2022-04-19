@@ -3,7 +3,6 @@ import {Container} from 'aurelia-dependency-injection';
 import {
   bindingMode,
   BindingEngine,
-  ListenerExpression,
   delegationStrategy,
   ValueAttributeObserver,
   createScopeForTest
@@ -157,8 +156,7 @@ describe('ThrottleBindingBehavior', () => {
       let sourceUpdates = 0;
       let last = null;
       let source = {
-        handleMouseMove: e => {
-          // console.info('source called');
+        handleMouseMove: () => {
           if (last !== null) {
             sourceUpdates++;
             let elapsed = new Date().getTime() - last;

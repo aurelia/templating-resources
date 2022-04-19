@@ -1,20 +1,21 @@
 import './setup';
 import {ObserverLocator, createOverrideContext} from 'aurelia-binding';
-import {BoundViewFactory, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
 import {StageComponent} from 'aurelia-testing';
-import {Container} from 'aurelia-dependency-injection';
 import {Repeat} from '../src/repeat';
-import {RepeatStrategyLocator} from '../src/repeat-strategy-locator';
 import {ArrayRepeatStrategy} from '../src/array-repeat-strategy';
 import {ViewSlotMock, BoundViewFactoryMock, ViewMock, ViewFactoryMock, instructionMock, viewResourcesMock} from './mocks';
 import {bootstrap} from 'aurelia-bootstrapper';
 
 describe('ArrayRepeatStrategy', () => {
-  let repeat, strategy, viewSlot, viewFactory, observerLocator, repeatStrategyLocator, repeatStrategyMock, component;
+  let repeat;
+  let strategy;
+  let viewSlot;
+  let viewFactory;
+  let component;
 
   beforeEach(done => {
-    let aurelia;
-    let container = new Container();
+    // let aurelia;
+    // let container = new Container();
     viewSlot = new ViewSlotMock();
     viewFactory = new BoundViewFactoryMock();
     strategy = new ArrayRepeatStrategy();

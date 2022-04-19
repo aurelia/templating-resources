@@ -58,6 +58,7 @@ export class DebounceBindingBehavior {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   unbind(binding, source) {
     // restore the state of the binding.
     const methodToRestore = binding.debouncedMethod.originalName;

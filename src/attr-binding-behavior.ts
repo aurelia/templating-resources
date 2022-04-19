@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {DataAttributeObserver, bindingBehavior} from 'aurelia-binding';
 
 @bindingBehavior('attr')

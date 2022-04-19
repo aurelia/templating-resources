@@ -1,6 +1,5 @@
 import './setup';
 import {If} from '../src/if';
-import {BoundViewFactory, ViewSlot, View} from 'aurelia-templating';
 import {TaskQueue} from 'aurelia-task-queue';
 import {bootstrap} from 'aurelia-bootstrapper';
 import {ComponentTester} from 'aurelia-testing';
@@ -218,7 +217,7 @@ describe('if', () => {
     let delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     let removeWithAnimation = animationDuration => {
-      return function(view) {
+      return function() {
         return delay(animationDuration).then(() => {
           this.children = [];
         });
@@ -287,7 +286,7 @@ describe('if', () => {
     it('should rebind even if the view is visible; issue #317', done => {
       let spy;
       component.create(bootstrap)
-        .then(_ => {
+        .then(() => {
           spy = spyOn(model, 'clicked');
           model.a = false;
           taskQueue.flushMicroTaskQueue();
@@ -312,7 +311,7 @@ describe('if', () => {
 
     it('should update view when rebound; issue #328', done => {
       component.create(bootstrap)
-        .then(_ => {
+        .then(() => {
           model.a = false;
           taskQueue.flushMicroTaskQueue();
           return new Promise(r => setTimeout(r, 1));
@@ -340,6 +339,7 @@ class ViewSlotMock {
 }
 
 class ViewMock {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   bind(...args: unknown[]) {}
   unbind() {}
   returnToCache() {}

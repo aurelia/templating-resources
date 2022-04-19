@@ -61,9 +61,12 @@ export class Hide {
   /**
    * Binds the Hide attribute.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   bind(bindingContext) {
     this.valueChanged(this.value);
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   value(value: any) {
     throw new Error('Method not implemented.');
   }

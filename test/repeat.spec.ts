@@ -1,9 +1,8 @@
 import './setup';
 import {ObserverLocator} from 'aurelia-binding';
-import {BoundViewFactory, ViewSlot, ViewFactory, ModuleAnalyzer, TargetInstruction, ViewResources} from 'aurelia-templating';
+import {BoundViewFactory, ViewSlot, TargetInstruction, ViewResources} from 'aurelia-templating';
 import {Container} from 'aurelia-dependency-injection';
 import {StageComponent} from 'aurelia-testing';
-import {Repeat} from '../src/repeat';
 import {RepeatStrategyLocator} from '../src/repeat-strategy-locator';
 import {ViewSlotMock, BoundViewFactoryMock, RepeatStrategyMock, ViewMock, ArrayObserverMock, instructionMock, viewResourcesMock} from './mocks';
 import {bootstrap} from 'aurelia-bootstrapper';

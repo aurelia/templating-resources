@@ -30,6 +30,7 @@ export class UpdateTriggerBindingBehavior {
     targetObserver.handler = handler;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   unbind(binding, source) {
     let targetObserver = binding.targetObserver;
     // restore the state of the binding.

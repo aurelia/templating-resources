@@ -221,6 +221,7 @@ export class Repeat extends AbstractRepeater {
   /**
   * Invoked when the underlying inner collection changes.
   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleInnerCollectionMutated(collection, changes) {
     if (!this.collectionObserver) {
       return;

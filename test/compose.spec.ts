@@ -1,7 +1,6 @@
 import './setup';
 import { TaskQueue } from 'aurelia-task-queue';
 import { Compose, ActivationStrategy } from '../src/compose';
-import * as LogManager from 'aurelia-logging';
 import { View } from 'aurelia-framework';
 
 describe('Compose', () => {

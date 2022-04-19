@@ -16,7 +16,7 @@ describe('SignalBindingBehavior', () => {
     };
     let valueConverters = {
       testConverter: {
-        toView(value) {
+        toView() {
           return converterResult;
         }
       }
