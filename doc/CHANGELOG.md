@@ -1,3 +1,14 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [1.14.2](https://github.com/aurelia/templating-resources/compare/1.14.1...1.14.2) (2022-04-19)
+
+
+### Bug Fixes
+
+* **typings:** ensure abstract repeater typings compat ([#418](https://github.com/aurelia/templating-resources/issues/418)) ([8a234b5](https://github.com/aurelia/templating-resources/commit/8a234b51252c5f8c44a649dd3bce02ab86bf0846))
+
 ## [1.14.1](https://github.com/aurelia/templating-resources/compare/1.14.0...1.14.1) (2022-04-01)
 
 
