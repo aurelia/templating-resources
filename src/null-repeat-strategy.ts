@@ -3,11 +3,11 @@
  * A strategy for repeating a template over null or undefined (does nothing)
  */
 export class NullRepeatStrategy {
-  instanceChanged(repeat, items) {
+  instanceChanged(repeat, items): void {
     repeat.removeAllViews(true);
   }
 
-  getCollectionObserver(observerLocator, items) {
+  getCollectionObserver(observerLocator, items): any {
     // empty
   }
 }
