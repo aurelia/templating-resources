@@ -82,10 +82,14 @@ describe('compose.integration.spec.ts', () => {
   });
 
   it('works with determineActivationStrategy() - replace', async () => {
+    let constructorCount = 0;
     const { component, compose } = await bootstrapCompose(
       `<compose view-model.bind="viewModel"></compose>`,
       {
         viewModel: class {
+          constructor() {
+            constructorCount++;
+          }
           // w/o the get view strategy, the initial composition fails, which results to undefined currentViewModel
           getViewStrategy() {
             return new InlineViewStrategy('<template></template>');
@@ -104,6 +108,7 @@ describe('compose.integration.spec.ts', () => {
     compose.modelChanged({ a: 1 }, oldModel);
 
     taskQueue.queueMicroTask(() => {
+      expect(constructorCount).toBe(2, 'constructor count === 2');
       expect(compose.compositionEngine.compose).toHaveBeenCalledTimes(1);
       component.dispose();
     });
@@ -111,11 +116,15 @@ describe('compose.integration.spec.ts', () => {
   });
 
   it('works with determineActivationStrategy() - invoke-lifecycle', async () => {
+    let constructorCount = 0;
     let activationCount = 0;
     const { component, compose } = await bootstrapCompose(
       `<compose view-model.bind="viewModel"></compose>`,
       {
         viewModel: class {
+          constructor() {
+            constructorCount++;
+          }
           activate() {
             activationCount++;
           }
@@ -138,6 +147,7 @@ describe('compose.integration.spec.ts', () => {
     compose.modelChanged({}, oldModel);
 
     taskQueue.queueMicroTask(() => {
+      expect(constructorCount).toBe(1, 'constructor count === 1');
       expect(activationCount).toBe(2, 'activation count === 2');
       component.dispose();
     });

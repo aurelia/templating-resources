@@ -253,11 +253,15 @@ function processChanges(composer: Compose) {
   const changes = composer.changes;
   composer.changes = Object.create(null);
 
-  if (needsReInitialization(composer, changes)) {
+  const activationStrategy = determineActivationStrategy(composer);
+  if (needsReInitialization(activationStrategy, changes)) {
+    //when using `replace` activation strategy - we cant force the creation of a new VM
+    const currentViewModel = activationStrategy === ActivationStrategy.Replace ? null : composer.currentViewModel;
+
     // init context
     let instruction = {
       view: composer.view,
-      viewModel: composer.currentViewModel || composer.viewModel,
+      viewModel: currentViewModel || composer.viewModel,
       model: composer.model
     } as CompositionContext;
 
@@ -302,13 +306,16 @@ function requestUpdate(composer: Compose) {
   });
 }
 
-function needsReInitialization(composer: Compose, changes: any) {
+function determineActivationStrategy(composer: Compose): ActivationStrategy {
   let activationStrategy = composer.activationStrategy;
   const vm = composer.currentViewModel;
   if (vm && typeof vm.determineActivationStrategy === 'function') {
     activationStrategy = vm.determineActivationStrategy();
   }
+  return activationStrategy;
+}
 
+function needsReInitialization(activationStrategy: ActivationStrategy, changes: any): boolean {
   return 'view' in changes
     || 'viewModel' in changes
     || activationStrategy === ActivationStrategy.Replace;
