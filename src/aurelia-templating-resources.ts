@@ -1,4 +1,4 @@
-import {Compose} from './compose';
+import {ActivationStrategy as ComposeActivationStrategy, Compose} from './compose';
 import {If} from './if';
 import {Else} from './else';
 import {With} from './with';
@@ -79,6 +79,7 @@ function configure(config: any) {
 
 export {
   Compose,
+  ComposeActivationStrategy,
   If,
   Else,
   With,
