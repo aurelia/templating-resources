@@ -527,7 +527,7 @@ export declare class RepeatStrategyLocator {
  */
 export declare class NullRepeatStrategy {
 	instanceChanged(repeat: any, items: any): void;
-	getCollectionObserver(observerLocator: any, items: any): void;
+	getCollectionObserver(observerLocator: any, items: any): any;
 }
 /**
  * A strategy for repeating a template over an array.
@@ -643,5 +643,9 @@ export declare function isOneTime(expression: any): boolean;
 export declare function updateOneTimeBinding(binding: any): void;
 export declare function viewsRequireLifecycle(viewFactory: any): any;
 export declare function configure(config: any): void;
+
+export {
+	ActivationStrategy as ComposeActivationStrategy,
+};
 
 export {};

@@ -38,14 +38,14 @@ define('aurelia-templating-resources', ['exports', 'aurelia-dependency-injection
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     }
 
-    var ActivationStrategy;
+    exports.ComposeActivationStrategy = void 0;
     (function (ActivationStrategy) {
         ActivationStrategy["InvokeLifecycle"] = "invoke-lifecycle";
         ActivationStrategy["Replace"] = "replace";
-    })(ActivationStrategy || (ActivationStrategy = {}));
+    })(exports.ComposeActivationStrategy || (exports.ComposeActivationStrategy = {}));
     var Compose = (function () {
         function Compose(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
-            this.activationStrategy = ActivationStrategy.InvokeLifecycle;
+            this.activationStrategy = exports.ComposeActivationStrategy.InvokeLifecycle;
             this.element = element;
             this.container = container;
             this.compositionEngine = compositionEngine;
@@ -192,7 +192,7 @@ define('aurelia-templating-resources', ['exports', 'aurelia-dependency-injection
         }
         return 'view' in changes
             || 'viewModel' in changes
-            || activationStrategy === ActivationStrategy.Replace;
+            || activationStrategy === exports.ComposeActivationStrategy.Replace;
     }
 
     var IfCore = (function () {

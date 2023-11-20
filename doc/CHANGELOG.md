@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.15.0](https://github.com/aurelia/templating-resources/compare/1.14.3...1.15.0) (2023-11-20)
+
+
+### Features
+
+* **compose:** export ComposeActivationStrategy ([#429](https://github.com/aurelia/templating-resources/issues/429)) ([fc27725](https://github.com/aurelia/templating-resources/commit/fc2772509da4a413ad48ddca2ad06eb4cf06d6e6)), closes [#427](https://github.com/aurelia/templating-resources/issues/427)
+
 ### [1.14.3](https://github.com/aurelia/templating-resources/compare/1.14.2...1.14.3) (2022-04-19)
 
 
