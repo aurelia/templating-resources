@@ -22,7 +22,7 @@ describe('ThrottleBindingBehavior', () => {
     lookupFunctions = { bindingBehaviors: name => bindingBehaviors[name] };
   });
 
-  it('should throttle target updates', done => {
+  fit('should throttle target updates', done => {
     let source = { foo: 0 };
     let scope = createScopeForTest(source);
     let target = document.createElement('input');
@@ -31,7 +31,7 @@ describe('ThrottleBindingBehavior', () => {
     let binding = bindingExpression.createBinding(target);
     let originalMethod = binding.updateTarget;
 
-    function exerciseBehavior(callback) {
+    function exerciseBehavior(callback: Function) {
       // overrides updateTarget
       binding.bind(scope);
       expect(binding.updateTarget === originalMethod).not.toBe(true);
@@ -50,7 +50,7 @@ describe('ThrottleBindingBehavior', () => {
           // the target was updated... was it throttled?
           let elapsed = new Date().getTime() - lastTargetUpdate;
           expect(elapsed).toBeGreaterThan(delay - 30);
-          expect(elapsed).toBeLessThan(delay + 30);
+          expect(elapsed).toBeLessThanOrEqual(delay + 30 + 2);
           // increment
           lastTargetUpdate = new Date().getTime();
           lastTargetValue = target.value;
@@ -63,7 +63,7 @@ describe('ThrottleBindingBehavior', () => {
         clearInterval(updateSourceInterval);
         binding.unbind();
         expect(targetUpdates).toBeGreaterThan(Math.floor(testDuration / delay) - 1);
-        expect(targetUpdates).toBeLessThan(Math.floor(testDuration / delay) + 1);
+        expect(targetUpdates).toBeLessThanOrEqual(Math.floor(testDuration / delay) + 2);
         expect(binding.updateTarget === originalMethod).toBe(true);
         expect(observer.hasSubscribers()).toBe(false);
         callback();

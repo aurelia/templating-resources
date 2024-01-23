@@ -100,11 +100,11 @@ System.register(['aurelia-dependency-injection', 'aurelia-pal', 'aurelia-task-qu
                 return c > 3 && r && Object.defineProperty(target, key, r), r;
             }
 
-            var ActivationStrategy;
+            var ActivationStrategy; exports('ComposeActivationStrategy', ActivationStrategy);
             (function (ActivationStrategy) {
                 ActivationStrategy["InvokeLifecycle"] = "invoke-lifecycle";
                 ActivationStrategy["Replace"] = "replace";
-            })(ActivationStrategy || (ActivationStrategy = {}));
+            })(ActivationStrategy || (exports('ComposeActivationStrategy', ActivationStrategy = {})));
             var Compose = exports('Compose', (function () {
                 function Compose(element, container, compositionEngine, viewSlot, viewResources, taskQueue) {
                     this.activationStrategy = ActivationStrategy.InvokeLifecycle;

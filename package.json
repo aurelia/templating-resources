@@ -1,6 +1,6 @@
 {
   "name": "aurelia-templating-resources",
-  "version": "1.14.3",
+  "version": "1.15.0",
   "description": "A standard set of behaviors, converters and other resources for use with the Aurelia templating library.",
   "keywords": [
     "aurelia",
@@ -64,7 +64,7 @@
     "aurelia-bootstrapper": "^2.3.3",
     "aurelia-framework": "^1.4.1",
     "aurelia-testing": "^1.0.0",
-    "aurelia-webpack-plugin": "^5.0.3",
+    "aurelia-webpack-plugin": "^5.0.6",
     "dts-bundle-generator": "^6.5.0",
     "eslint": "^8.12.0",
     "html-loader": "^0.5.5",
