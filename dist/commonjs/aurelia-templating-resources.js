@@ -153,10 +153,12 @@ function createInstruction(composer, instruction) {
 function processChanges(composer) {
     var changes = composer.changes;
     composer.changes = Object.create(null);
-    if (needsReInitialization(composer, changes)) {
+    var activationStrategy = determineActivationStrategy(composer);
+    if (needsReInitialization(activationStrategy, changes)) {
+        var currentViewModel = activationStrategy === exports.ComposeActivationStrategy.Replace ? null : composer.currentViewModel;
         var instruction = {
             view: composer.view,
-            viewModel: composer.currentViewModel || composer.viewModel,
+            viewModel: currentViewModel || composer.viewModel,
             model: composer.model
         };
         instruction = Object.assign(instruction, changes);
@@ -196,12 +198,15 @@ function requestUpdate(composer) {
         processChanges(composer);
     });
 }
-function needsReInitialization(composer, changes) {
+function determineActivationStrategy(composer) {
     var activationStrategy = composer.activationStrategy;
     var vm = composer.currentViewModel;
     if (vm && typeof vm.determineActivationStrategy === 'function') {
         activationStrategy = vm.determineActivationStrategy();
     }
+    return activationStrategy;
+}
+function needsReInitialization(activationStrategy, changes) {
     return 'view' in changes
         || 'viewModel' in changes
         || activationStrategy === exports.ComposeActivationStrategy.Replace;

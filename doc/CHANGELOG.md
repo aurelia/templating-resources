@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.15.1](https://github.com/aurelia/templating-resources/compare/1.15.0...1.15.1) (2024-01-23)
+
+
+### Bug Fixes
+
+* **compose:** properly handle replace strategy ([359c960](https://github.com/aurelia/templating-resources/commit/359c96038c9c4ecc3abda10e90af6b57a16ea37b))
+
 ## [1.15.0](https://github.com/aurelia/templating-resources/compare/1.14.3...1.15.0) (2023-11-20)
 
 
